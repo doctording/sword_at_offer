@@ -53,6 +53,10 @@ http://www.nowcoder.com/ta/coding-interviews?page=1
 
 * 快速幂方法
 
+* 边界, 符号， double/float判零问题
+
+* 位运算比除法, 取模等效率高
+
 # 13 调整数组顺序使奇数位于偶数前面 （？？）
 
 * 注意无序和有序的区别
