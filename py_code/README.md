@@ -26,6 +26,39 @@
 
 	用```[]```表示
 
+* 基础操作
+
+```
+len(list) 
+max(list)
+min(list)
+list.reverse()
+list.sort(cmp=None, key=None, reverse=False)
+```
+
+* 增
+
+```
+list.append(obj)
+list.insert(index, obj)
+```
+
+* 删
+```
+list.pop([index=-1])
+list.remove(obj)
+```
+
+* 查找
+
+```
+list.count(obj) // 统计某个元素在列表中出现的次数
+list[2] // 读取列表中第三个元素
+list[-2] // 读取列表中倒数第二个元素
+list[1:] // 从第二个元素开始截取列表
+list.index(obj) // 从列表中找出某个值第一个匹配项的索引位置
+```
+
 ### Tuple 元组
 
 ### Dictionary 字典
