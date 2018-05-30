@@ -26,20 +26,279 @@
 <div class="page_title">python基础知识</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#python">python 基础整理</a><ul>
-<li><a href="#_1">数据类型</a></li>
+<li><a href="#python">python基础</a><ul>
+<li><a href="#_1">数据类型</a><ul>
+<li><a href="#numbers">Numbers 数字</a></li>
+<li><a href="#string">String 字符串</a></li>
+<li><a href="#list">List 列表</a></li>
+<li><a href="#tuple">Tuple 元组</a></li>
+<li><a href="#dictionary">Dictionary 字典</a></li>
+<li><a href="#_2">其它类型</a></li>
+</ul>
+</li>
+<li><a href="#_3">条件语句</a></li>
+<li><a href="#for-while">for, while</a></li>
+<li><a href="#class">类 Class</a></li>
+<li><a href="#_4"></a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="python">python 基础整理</h1>
+<h1 id="python">python基础</h1>
 <h2 id="_1">数据类型</h2>
+<h3 id="numbers">Numbers 数字</h3>
+<div class="hlcode"><pre><span class="kt">int</span><span class="p">,</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">float</span><span class="p">,</span> <span class="kt">double</span>
+</pre></div>
+
+
+<h3 id="string">String 字符串</h3>
+<p>读取顺序</p>
+<div class="hlcode"><pre><span class="o">*</span> <span class="err">从左到右索引默认</span><span class="mi">0</span><span class="err">开始的，最大范围是字符串长度少</span><span class="mi">1</span>
+
+<span class="o">*</span> <span class="err">从右到左索引默认</span><span class="o">-</span><span class="mi">1</span><span class="err">开始的，最大范围是字符串开头</span>
+</pre></div>
+
+
+<p>转义字符用反斜杠 <code>\</code></p>
+<p>操作符 &amp; 格式化</p>
+<div class="hlcode"><pre><span class="o">+</span>
+<span class="o">*</span>
+<span class="p">[]</span>
+<span class="p">[</span><span class="o">:</span><span class="p">]</span>
+<span class="n">in</span>
+<span class="n">not</span> <span class="n">in</span>
+<span class="n">r</span><span class="o">/</span><span class="n">R</span>
+<span class="o">%</span>   <span class="c1">// 格式化</span>
+</pre></div>
+
+
+<p>常用方法</p>
+<div class="hlcode"><pre><span class="n">string</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">beg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+
+<span class="n">string</span><span class="p">.</span><span class="n">format</span><span class="p">()</span>
+
+<span class="n">string</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span>  <span class="n">num</span><span class="o">=</span><span class="n">string</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">str1</span><span class="p">))</span>
+
+<span class="n">string</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">beg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+</pre></div>
+
+
+<p>python三引号```允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符。</p>
+<h3 id="list">List 列表</h3>
+<div class="hlcode"><pre><span class="err">用```</span><span class="p">[]</span><span class="err">```表示</span>
+</pre></div>
+
+
+<ul>
+<li>基础操作</li>
+</ul>
+<div class="hlcode"><pre><span class="n">len</span><span class="p">(</span><span class="n">list</span><span class="p">)</span> 
+<span class="n">max</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+<span class="n">min</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+<span class="n">list</span><span class="p">.</span><span class="n">reverse</span><span class="p">()</span>
+<span class="n">list</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">cmp</span><span class="o">=</span><span class="n">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>增</li>
+</ul>
+<div class="hlcode"><pre><span class="n">list</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="n">list</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>删</li>
+</ul>
+<div class="hlcode"><pre><span class="n">list</span><span class="p">.</span><span class="n">pop</span><span class="p">([</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">list</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>查找</li>
+</ul>
+<div class="hlcode"><pre><span class="n">list</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c1">// 统计某个元素在列表中出现的次数</span>
+<span class="n">list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">// 读取列表中第三个元素</span>
+<span class="n">list</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="c1">// 读取列表中倒数第二个元素</span>
+<span class="n">list</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="p">]</span> <span class="c1">// 从第二个元素开始截取列表</span>
+<span class="n">list</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c1">// 从列表中找出某个值第一个匹配项的索引位置</span>
+</pre></div>
+
+
+<h3 id="tuple">Tuple 元组</h3>
+<h3 id="dictionary">Dictionary 字典</h3>
+<div class="hlcode"><pre><span class="err">用```</span><span class="p">{}</span><span class="err">```表示</span><span class="p">,</span> <span class="err">```</span><span class="n">key</span><span class="o">:</span><span class="n">value</span><span class="err">```</span><span class="p">,</span> <span class="err">通过</span><span class="n">key</span><span class="err">来读取</span><span class="p">,</span><span class="err">而非偏移</span>
+</pre></div>
+
+
+<h3 id="_2">其它类型</h3>
+<div class="hlcode"><pre><span class="n">True</span><span class="err">，</span><span class="n">False</span><span class="err">，</span><span class="n">None</span>
+</pre></div>
+
+
+<h2 id="_3">条件语句</h2>
+<ul>
+<li>注意条件后面的冒号<code>:</code>，else后面的冒号<code>:</code></li>
+</ul>
+<div class="hlcode"><pre><span class="k">if</span> <span class="err">判断条件：</span>
+    <span class="err">执行语句……</span>
+<span class="k">else</span><span class="err">：</span>
+    <span class="err">执行语句……</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="k">if</span> <span class="err">判断条件</span><span class="mi">1</span><span class="p">:</span>
+    <span class="err">执行语句</span><span class="mi">1</span><span class="err">……</span>
+<span class="k">elif</span> <span class="err">判断条件</span><span class="mi">2</span><span class="p">:</span>
+    <span class="err">执行语句</span><span class="mi">2</span><span class="err">……</span>
+<span class="k">elif</span> <span class="err">判断条件</span><span class="mi">3</span><span class="p">:</span>
+    <span class="err">执行语句</span><span class="mi">3</span><span class="err">……</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="err">执行语句</span><span class="mi">4</span><span class="err">……</span>
+</pre></div>
+
+
+<h2 id="for-while">for, while</h2>
+<table>
+<thead>
+<tr>
+<th>控制语句</th>
+<th align="left">描述</th>
+<th align="left"></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>break</td>
+<td align="left">在语句块执行过程中终止循环，并且跳出整个循环</td>
+<td align="left"></td>
+<td></td>
+</tr>
+<tr>
+<td>continue</td>
+<td align="left">在语句块执行过程中终止当前循环，跳出该次循环，执行下一次循环。</td>
+<td align="left"></td>
+<td></td>
+</tr>
+<tr>
+<td>pass</td>
+<td align="left">pass是空语句，是为了保持程序结构的完整性。</td>
+<td align="left"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>注意冒号<code>:</code>不要漏掉</li>
+</ul>
+<p>examples :</p>
+<div class="hlcode"><pre><span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="s">&#39;Python&#39;</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&#39;当前字母 :&#39;</span><span class="p">,</span> <span class="n">letter</span>
+
+<span class="n">fruits</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;banana&#39;</span><span class="p">,</span> <span class="s">&#39;apple&#39;</span><span class="p">,</span>  <span class="s">&#39;mango&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="n">fruits</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&#39;当前水果 :&#39;</span><span class="p">,</span> <span class="n">fruit</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="n">fruits</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;banana&#39;</span><span class="p">,</span> <span class="s">&#39;apple&#39;</span><span class="p">,</span>  <span class="s">&#39;mango&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fruits</span><span class="p">)):</span>
+   <span class="k">print</span> <span class="s">&#39;当前水果 :&#39;</span><span class="p">,</span> <span class="n">fruits</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">):</span>  <span class="c"># 迭代 10 到 20 之间的数字</span>
+   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">num</span><span class="p">):</span> <span class="c"># 根据因子迭代</span>
+      <span class="k">if</span> <span class="n">num</span><span class="o">%</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>      <span class="c"># 确定第一个因子</span>
+         <span class="n">j</span><span class="o">=</span><span class="n">num</span><span class="o">/</span><span class="n">i</span>          <span class="c"># 计算第二个因子</span>
+         <span class="k">print</span> <span class="s">&#39;</span><span class="si">%d</span><span class="s"> 等于 </span><span class="si">%d</span><span class="s"> * </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+         <span class="k">break</span>            <span class="c"># 跳出当前循环</span>
+   <span class="k">else</span><span class="p">:</span>                  <span class="c"># 循环的 else 部分</span>
+      <span class="k">print</span> <span class="n">num</span><span class="p">,</span> <span class="s">&#39;是一个质数&#39;</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">while</span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">):</span>
+   <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span>
+   <span class="k">while</span><span class="p">(</span><span class="n">j</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="n">j</span><span class="p">)):</span>
+      <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="n">j</span><span class="p">):</span> <span class="k">break</span>
+      <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span><span class="o">/</span><span class="n">j</span><span class="p">)</span> <span class="p">:</span> <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s">&quot; 是素数&quot;</span>
+   <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+
+
+<h2 id="class">类 Class</h2>
+<p>使用 class 语句来创建一个新类，class 之后为类的名称并以冒号结尾，简单的类例子如下：</p>
+<div class="hlcode"><pre><span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: UTF-8 -*-</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">:</span>
+   <span class="s">&#39;所有员工的基类&#39;</span>
+   <span class="n">empCount</span> <span class="o">=</span> <span class="mi">0</span>
+
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">salary</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="n">salary</span>
+      <span class="n">Employee</span><span class="o">.</span><span class="n">empCount</span> <span class="o">+=</span> <span class="mi">1</span>
+
+   <span class="k">def</span> <span class="nf">displayCount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+     <span class="k">print</span> <span class="s">&quot;Total Employee </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">Employee</span><span class="o">.</span><span class="n">empCount</span>
+
+   <span class="k">def</span> <span class="nf">displayEmployee</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">print</span> <span class="s">&quot;Name : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>  <span class="s">&quot;, Salary: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">salary</span>
+</pre></div>
+
+
+<ul>
+<li>实例化对象</li>
+</ul>
+<div class="hlcode"><pre><span class="s">&quot;创建 Employee 类的第一个对象&quot;</span>
+<span class="n">emp1</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span><span class="s">&quot;Zara&quot;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+<span class="s">&quot;创建 Employee 类的第二个对象&quot;</span>
+<span class="n">emp2</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span><span class="s">&quot;Manni&quot;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>访问属性</li>
+</ul>
+<p>使用点号 . 来访问对象的属性。使用如下类的名称访问类变量:</p>
+<div class="hlcode"><pre><span class="n">emp1</span><span class="o">.</span><span class="n">displayEmployee</span><span class="p">()</span>
+<span class="n">emp2</span><span class="o">.</span><span class="n">displayEmployee</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;Total Employee </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">Employee</span><span class="o">.</span><span class="n">empCount</span>
+</pre></div>
+
+
+<ul>
+<li>python对象销毁(垃圾回收)</li>
+</ul>
+<p>Python 使用了引用计数这一简单技术来跟踪和回收垃圾</p>
+<div class="hlcode"><pre><span class="n">a</span> <span class="o">=</span> <span class="mi">40</span>      <span class="c"># 创建对象  &lt;40&gt;</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span>       <span class="c"># 增加引用， &lt;40&gt; 的计数</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span>     <span class="c"># 增加引用.  &lt;40&gt; 的计数</span>
+
+<span class="k">del</span> <span class="n">a</span>       <span class="c"># 减少引用 &lt;40&gt; 的计数</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">100</span>     <span class="c"># 减少引用 &lt;40&gt; 的计数</span>
+<span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>   <span class="c"># 减少引用 &lt;40&gt; 的计数</span>
+</pre></div>
+
+
+<ul>
+<li>self代表类的实例，而非类</li>
+</ul>
+<p>类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称, 按照惯例它的名称是 self。</p>
+<h2 id="_4"></h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2018 .
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-05-30 14:12:33</p>
+        <p>Site Generated 2018-05-30 14:25:49</p>
       </span>
     </div>
 
