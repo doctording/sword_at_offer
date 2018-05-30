@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>16 合并两个排序的链表 - 剑指offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#sward_at_offer-py">sward_at_offer-py</a>&nbsp;&#187;&nbsp;16 合并两个排序的链表
+    <span class="updated">Page Updated&nbsp;
+      2018-05-30 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">16 合并两个排序的链表</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="c"># class ListNode:</span>
+<span class="c">#     def __init__(self, x):</span>
+<span class="c">#         self.val = x</span>
+<span class="c">#         self.next = None</span>
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="c"># 返回合并后列表</span>
+    <span class="k">def</span> <span class="nf">Merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pHead1</span><span class="p">,</span> <span class="n">pHead2</span><span class="p">):</span>
+        <span class="c"># write code here</span>
+        <span class="k">if</span> <span class="n">pHead1</span> <span class="o">==</span> <span class="bp">None</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">pHead2</span>
+        <span class="k">if</span> <span class="n">pHead2</span> <span class="o">==</span> <span class="bp">None</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">pHead1</span>
+
+        <span class="n">h2</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">h2</span>
+
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">pHead1</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">pHead2</span>
+
+        <span class="k">while</span> <span class="n">p1</span> <span class="o">!=</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">p2</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+            <span class="n">p1Next</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">p2Next</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">next</span>
+            <span class="k">if</span> <span class="n">p1</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">p2</span><span class="o">.</span><span class="n">val</span> <span class="p">:</span>
+                <span class="n">p1</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">t2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">p1</span>
+                <span class="n">t2</span> <span class="o">=</span> <span class="n">p1</span>
+
+                <span class="n">p1</span> <span class="o">=</span> <span class="n">p1Next</span>
+            <span class="k">elif</span> <span class="n">p1</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">p2</span><span class="o">.</span><span class="n">val</span> <span class="p">:</span>
+                <span class="n">p2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">t2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">p2</span>
+                <span class="n">t2</span> <span class="o">=</span> <span class="n">p2</span>
+
+                <span class="n">p2</span> <span class="o">=</span> <span class="n">p2Next</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">p1</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">t2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">p1</span>
+                <span class="n">t2</span> <span class="o">=</span> <span class="n">p1</span>
+
+                <span class="n">p2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">t2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">p2</span>
+                <span class="n">t2</span> <span class="o">=</span> <span class="n">p2</span>
+
+                <span class="n">p1</span> <span class="o">=</span> <span class="n">p1Next</span>
+                <span class="n">p2</span> <span class="o">=</span> <span class="n">p2Next</span>
+
+        <span class="k">if</span> <span class="n">p1</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+            <span class="k">while</span> <span class="n">p1</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+                <span class="n">p1Next</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">next</span>
+
+                <span class="n">p1</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">t2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">p1</span>
+                <span class="n">t2</span> <span class="o">=</span> <span class="n">p1</span>
+
+                <span class="n">p1</span> <span class="o">=</span> <span class="n">p1Next</span>
+
+        <span class="k">if</span> <span class="n">p2</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+             <span class="k">while</span> <span class="n">p2</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+                <span class="n">p2Next</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">next</span>
+
+                <span class="n">p2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">t2</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">p2</span>
+                <span class="n">t2</span> <span class="o">=</span> <span class="n">p2</span>
+
+                <span class="n">p2</span> <span class="o">=</span> <span class="n">p2Next</span>
+
+        <span class="k">return</span> <span class="n">h2</span><span class="o">.</span><span class="n">next</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2018 .
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2018-05-30 17:05:41</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
