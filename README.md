@@ -1,6 +1,4 @@
-请访问:
-
-https://doctording.github.io/sword_at_offer/
+请访问: https://doctording.github.io/sword_at_offer/
 
 # 剑指offer刷题说明
 
@@ -8,15 +6,15 @@ https://doctording.github.io/sword_at_offer/
 
 需要找到最优解法，参考学习牛客网**左程云**视频、牛客网算法讨论、《剑指offer》图书等。
 
-直接编辑器敲出代码 =》在纸上直接写出代码（注意时间/空间复杂度）
+直接编辑器敲出代码 =》在纸上直接写出代码（注意时间/空间复杂度）
 
-# 学习目的
+# 的学习目的
 
-* python基础语法巩固
+1. python基础语法巩固
 
-* 剑指offer基础算法巩固
+2. 剑指offer基础算法巩固
 
-* simiki 操作使用
+3. simiki 操作使用
 
 # simiki 部署使用
 
