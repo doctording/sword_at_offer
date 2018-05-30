@@ -27,6 +27,18 @@ $ simiki p # 本地运行：http://127.0.0.1:8000/sword_at_offer/
 $ ghp-import -p -m "Update output documentation" -r origin -b gh-pages output
 ```
 
-# tool.py 脚本使用
+# tool.py处理git提交
 
-利用脚本一键处理
+```bash
+$ python tool.py ["本次commit的描述信息"]
+```
+
+如
+```bash
+$ python tool.py "更新了README文档"
+```
+
+或者，默认的commit描述信息为："updated"
+```bash
+$ python tool.py
+```
