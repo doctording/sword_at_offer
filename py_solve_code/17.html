@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>17 树的子结构 - 剑指offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#py_solve_code">py_solve_code</a>&nbsp;&#187;&nbsp;17 树的子结构
+    <span class="updated">Page Updated&nbsp;
+      2018-05-31 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">17 树的子结构</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">子树，子结构</a></li>
+<li><a href="#_2">递归判断</a></li>
+</ul>
+</div>
+<h1 id="_1">子树，子结构</h1>
+<p><strong>子树</strong>的意思是包含了一个节点，就得包含这个节点下的所有节点，一棵大小为n的二叉树有n个子树，就是分别以每个节点为根的子树。</p>
+<p><strong>子结构</strong>的意思是包含了一个节点，可以只取左子树或者右子树，或者都不取。</p>
+<h1 id="_2">递归判断</h1>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="c"># class TreeNode:</span>
+<span class="c">#     def __init__(self, x):</span>
+<span class="c">#         self.val = x</span>
+<span class="c">#         self.left = None</span>
+<span class="c">#         self.right = None</span>
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">isSubTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c"># 子结构 允许p2为None </span>
+        <span class="k">if</span> <span class="n">p2</span> <span class="o">==</span> <span class="bp">None</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="c"># p2不为None， 则要求 p1 不为None ,且 p1.val == p2.val</span>
+        <span class="k">if</span> <span class="n">p1</span> <span class="o">==</span> <span class="bp">None</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">p1</span><span class="o">.</span><span class="n">val</span> <span class="o">!=</span> <span class="n">p2</span><span class="o">.</span><span class="n">val</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="n">p1</span><span class="o">.</span><span class="n">val</span> <span class="o">!=</span> <span class="n">p2</span><span class="o">.</span><span class="n">val</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSubTree</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSubTree</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">HasSubtree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pRoot1</span><span class="p">,</span> <span class="n">pRoot2</span><span class="p">):</span>
+        <span class="c"># write code here</span>
+        <span class="k">if</span> <span class="n">pRoot1</span> <span class="o">==</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">pRoot2</span> <span class="o">==</span> <span class="bp">None</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSubTree</span><span class="p">(</span><span class="n">pRoot1</span><span class="p">,</span> <span class="n">pRoot2</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">HasSubtree</span><span class="p">(</span><span class="n">pRoot1</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">pRoot2</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">HasSubtree</span><span class="p">(</span><span class="n">pRoot1</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">pRoot2</span><span class="p">)</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2018 .
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2018-05-31 08:28:44</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
