@@ -1,5 +1,5 @@
 ---
-title: "Python可变对象与不可变对象"
+title: "python可变对象与不可变对象,引用"
 layout: page
 date: 2018-05-30 00:00
 ---
@@ -62,8 +62,8 @@ print a, b # 2, [2, 1]
 
 如下图，**在函数中改变引用是无效的**；python函数参数传递：不是所谓传指，也不是所谓的传引用
 
-![https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_01.png]
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_01.png)
 
-![https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_02.png]
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_02.png)
 
 ---
