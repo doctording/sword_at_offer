@@ -62,8 +62,10 @@ print a, b # 2, [2, 1]
 
 如下图，**在函数中改变引用是无效的**；python函数参数传递：不是所谓传指，也不是所谓的传引用
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_01.png)
-
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_02.png)
+<div align="center">
+<img  style="border:1px solid #000;"  src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_01.png" 
+height="400" width="340" >
+<img style="border:1px solid #000;"   src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_02.png" height="400" width="340" >
+</div>
 
 ---
