@@ -151,13 +151,190 @@
 
 <h1 id="ac2">ac2</h1>
 <p>直接采用两个堆， 一个大堆，一个小堆，仍然利用上文的思路</p>
-<p>TODO</p>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="k">class</span> <span class="nc">BigHeap</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heap</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c"># 让下标从1开始</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c"># 大堆调整</span>
+    <span class="k">def</span> <span class="nf">adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">heap</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">pos</span>
+        <span class="k">while</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">l_k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span>
+            <span class="n">r_k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">r_k</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="k">return</span> <span class="bp">None</span>
+
+            <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 右边大</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">r_k</span>
+            <span class="k">elif</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 左边大</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">l_k</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 左边更大</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">l_k</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c"># 右边更大</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">r_k</span>
+
+    <span class="k">def</span> <span class="nf">Insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">isEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="c"># 返回根节点，并且自己调整</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">getTop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">SmallHeap</span><span class="p">()</span> <span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heap</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c"># 让下标从1开始</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c"># 小堆调整</span>
+    <span class="k">def</span> <span class="nf">adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">heap</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">pos</span>
+        <span class="k">while</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">l_k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span>
+            <span class="n">r_k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">r_k</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="k">return</span> <span class="bp">None</span>
+
+            <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 右边小</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">r_k</span>
+            <span class="k">elif</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 左边小</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">l_k</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 左边更小</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">l_k</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c"># 右边更小</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span>
+                    <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">r_k</span>
+
+    <span class="k">def</span> <span class="nf">Insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">isEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="c"># 返回根节点，并且自己调整</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">getTop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span> <span class="o">=</span> <span class="n">SmallHeap</span><span class="p">()</span> <span class="c"># 小堆 存储大于中位数的</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span> <span class="o">=</span> <span class="n">BigHeap</span><span class="p">()</span>   <span class="c"># 大堆 存储小于中位数的</span>
+
+    <span class="k">def</span> <span class="nf">Insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">isEmpty</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">getTop</span><span class="p">()</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">size</span> <span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">GetMedian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">getTop</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bHeap</span><span class="o">.</span><span class="n">getTop</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sHeap</span><span class="o">.</span><span class="n">getTop</span><span class="p">())</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-06-06 13:08:50</p>
+        <p>Site Generated 2018-06-06 17:34:30</p>
       </span>
     </div>
 
