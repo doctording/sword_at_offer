@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>29 最小的K个数 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#solved_by_python">solved_by_python</a>&nbsp;&#187;&nbsp;29 最小的K个数
+    <span class="updated">Page Updated&nbsp;
+      2018-06-01 08:47
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">29 最小的K个数</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#top-k">堆求解 Top K 问题</a></li>
+</ul>
+</div>
+<h1 id="top-k">堆求解 Top K 问题</h1>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="k">def</span> <span class="nf">adjust</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    数组构成最大堆，调整</span>
+<span class="sd">    :param heap: </span>
+<span class="sd">    :param n: </span>
+<span class="sd">    :param pos: </span>
+<span class="sd">    :return: </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">pos</span>
+    <span class="k">while</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">l_k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span>
+        <span class="n">r_k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">r_k</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>
+            <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 右边大</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span>
+            <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">r_k</span>
+        <span class="k">elif</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 左边大</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+            <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">l_k</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]:</span>  <span class="c"># 左边更大</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">l_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">l_k</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c"># 右边更大</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span>
+                <span class="n">heap</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">r_k</span>
+
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">GetLeastNumbers_Solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tinput</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="c"># write code here</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tinput</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">n</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">heap</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">heap</span> <span class="o">=</span> <span class="n">heap</span> <span class="o">+</span> <span class="n">tinput</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">k</span><span class="p">]</span>
+
+        <span class="c"># 构造初始化大堆</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">adjust</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="c">#print heap</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tinput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+
+            <span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tinput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c"># 调整最小堆</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="p">:</span>
+                <span class="n">adjust</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+
+            <span class="c">#print heap</span>
+
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">heap</span> <span class="o">=</span> <span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">heap</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">heap</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2018 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2018-06-05 15:26:53</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>04 重建二叉树 by pre & in order - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#solved_by_python">solved_by_python</a>&nbsp;&#187;&nbsp;04 重建二叉树 by pre & in order
+    <span class="updated">Page Updated&nbsp;
+      2018-05-30 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">04 重建二叉树 by pre & in order</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#1">解法1</a></li>
+<li><a href="#_1">完整测试代码</a></li>
+</ul>
+</div>
+<h1 id="1">解法1</h1>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="c"># class TreeNode:</span>
+<span class="c">#     def __init__(self, x):</span>
+<span class="c">#         self.val = x</span>
+<span class="c">#         self.left = None</span>
+<span class="c">#         self.right = None</span>
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">createTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="n">pL</span><span class="p">,</span> <span class="n">pR</span><span class="p">,</span> <span class="n">inL</span><span class="p">,</span> <span class="n">inR</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">pL</span> <span class="o">&gt;</span> <span class="n">pR</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="n">pre</span><span class="p">[</span><span class="n">pL</span><span class="p">])</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">inL</span>
+        <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">inR</span> <span class="ow">and</span> <span class="n">tin</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pre</span><span class="p">[</span><span class="n">pL</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="n">node</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createTree</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="n">pL</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pL</span> <span class="o">+</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">inL</span><span class="p">,</span> <span class="n">inL</span><span class="p">,</span> <span class="n">pos</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createTree</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="n">pL</span> <span class="o">+</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">inL</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pR</span><span class="p">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inR</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="c"># 返回构造的TreeNode根节点</span>
+    <span class="k">def</span> <span class="nf">reConstructBinaryTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">):</span>
+        <span class="c"># write code here</span>
+        <span class="n">n1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tin</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n1</span> <span class="o">!=</span> <span class="n">n2</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">createTree</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<h1 id="_1">完整测试代码</h1>
+<div class="hlcode"><pre><span class="c">#-*- coding:utf-8 -*-</span>
+<span class="k">class</span> <span class="nc">TreeNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">None</span>
+
+
+<span class="k">def</span> <span class="nf">inScan</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+        <span class="n">inScan</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="k">print</span> <span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">),</span> <span class="c"># 不换行输出</span>
+        <span class="n">inScan</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">preScan</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+        <span class="k">print</span> <span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">),</span>
+        <span class="n">preScan</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">preScan</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">createTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="n">pL</span><span class="p">,</span> <span class="n">pR</span><span class="p">,</span> <span class="n">inL</span><span class="p">,</span> <span class="n">inR</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pL</span> <span class="o">&gt;</span> <span class="n">pR</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="n">pre</span><span class="p">[</span><span class="n">pL</span><span class="p">])</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">inL</span>
+        <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">inR</span> <span class="ow">and</span> <span class="n">tin</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pre</span><span class="p">[</span><span class="n">pL</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="n">node</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createTree</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="n">pL</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pL</span> <span class="o">+</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">inL</span><span class="p">,</span> <span class="n">inL</span><span class="p">,</span> <span class="n">pos</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createTree</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="n">pL</span> <span class="o">+</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">inL</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pR</span><span class="p">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inR</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="c"># 返回构造的TreeNode根节点</span>
+    <span class="k">def</span> <span class="nf">reConstructBinaryTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">):</span>
+        <span class="c"># write code here</span>
+        <span class="n">n1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tin</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n1</span> <span class="o">!=</span> <span class="n">n2</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">createTree</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">Solution</span><span class="p">()</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+    <span class="n">tin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">reConstructBinaryTree</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tin</span><span class="p">)</span>
+    <span class="n">preScan</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">inScan</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2018 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2018-06-05 15:26:53</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
