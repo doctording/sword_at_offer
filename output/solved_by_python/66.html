@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>66 机器人的运动范围 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#solved_by_python">solved_by_python</a>&nbsp;&#187;&nbsp;66 机器人的运动范围
+    <span class="updated">Page Updated&nbsp;
+      2018-06-06 11:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">66 机器人的运动范围</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">错误思路</a></li>
+<li><a href="#dfs">普通DFS求解</a></li>
+</ul>
+</div>
+<h1 id="_1">错误思路</h1>
+<ul>
+<li>遍历每一行，找到右端第一个不能到达的点，以此为界，此界点前的点都可以到达，之后的点<br />
+机器人不可到达；</li>
+</ul>
+<p>这种思路有问题，机器人可以通过上一行或者下一行的格子进入此行界点之后的格子。<br />
+经过测试，发现确实也存在这种情况。</p>
+<p>例如： <code>(49，51)</code>可<strong>能</strong>通过<code>(50，51)</code>往上走得到，却<strong>不能</strong>通过<code>(49，50)</code>往右走得到</p>
+<div class="hlcode"><pre><span class="p">(</span><span class="mi">49</span><span class="p">,</span><span class="mi">49</span><span class="p">)</span> <span class="p">(</span><span class="mi">49</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span> <span class="p">(</span><span class="mi">49</span><span class="p">,</span><span class="mi">51</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">49</span><span class="p">)</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">51</span><span class="p">)</span>
+</pre></div>
+
+
+<h1 id="dfs">普通DFS求解</h1>
+<p>注意：</p>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">movingCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">def</span> <span class="nf">isOk</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">rows</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="n">cols</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">def</span> <span class="nf">sumxy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">+=</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">10</span>
+                <span class="n">x</span> <span class="o">/=</span> <span class="mi">10</span>
+            <span class="k">while</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">+=</span> <span class="n">y</span> <span class="o">%</span> <span class="mi">10</span>
+                <span class="n">y</span> <span class="o">/=</span> <span class="mi">10</span>
+            <span class="k">return</span> <span class="n">tmp</span>
+
+        <span class="k">def</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">vis</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">th</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">isOk</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vis</span><span class="p">[(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="bp">False</span> <span class="ow">and</span> <span class="n">sumxy</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">th</span> <span class="p">:</span>
+                <span class="n">vis</span><span class="p">[(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">dfs</span><span class="p">(</span><span class="n">vis</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">th</span><span class="p">)</span>
+                <span class="c">#vis[(x - 1) * cols + y] = False</span>
+
+            <span class="k">if</span> <span class="n">isOk</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vis</span><span class="p">[(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="bp">False</span>  <span class="ow">and</span> <span class="n">sumxy</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">th</span><span class="p">:</span>
+                <span class="n">vis</span><span class="p">[(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">dfs</span><span class="p">(</span><span class="n">vis</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">th</span><span class="p">)</span>
+                <span class="c">#vis[(x + 1) * cols + y] = False</span>
+
+            <span class="k">if</span> <span class="n">isOk</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vis</span><span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="bp">False</span>  <span class="ow">and</span> <span class="n">sumxy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">th</span><span class="p">:</span>
+                <span class="n">vis</span><span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">dfs</span><span class="p">(</span><span class="n">vis</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">th</span><span class="p">)</span>
+                <span class="c">#vis[x * cols + y - 1] = False</span>
+
+            <span class="k">if</span> <span class="n">isOk</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vis</span><span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="bp">False</span>  <span class="ow">and</span> <span class="n">sumxy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">th</span><span class="p">:</span>
+                <span class="n">vis</span><span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">cols</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">dfs</span><span class="p">(</span><span class="n">vis</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">th</span><span class="p">)</span>
+                <span class="c">#vis[x * cols + y + 1] = False</span>
+
+        <span class="n">vis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="p">)</span>
+        <span class="n">vis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">dfs</span><span class="p">(</span><span class="n">vis</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2018 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2018-06-06 13:08:50</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
