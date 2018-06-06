@@ -1,5 +1,9 @@
 请访问: https://doctording.github.io/sword_at_offer/
 
+对我，主要是复习巩固【学习目的】，自己原本打算找人的，所以还是算了。有兴趣的小伙伴可以检查补充，有问题可以issue或email。可以补充实现JS,C/C++,PHP等等语言版本，方便后续的复习。
+
+---
+
 # 剑指offer刷题说明
 
 刷题地址: http://www.nowcoder.com/ta/coding-interviews?page=1
@@ -8,13 +12,17 @@
 
 直接编辑器敲出代码 =》在纸上直接写出代码（注意时间/空间复杂度）
 
+剑指offer整体难度都不高，不过如果手撕代码的话，还是很锻炼的。
+
 # 学习目的
 
 1. python基础语法巩固
 
-2. 剑指offer基础算法巩固
+2. Java各种数据结构巩固
 
-3. simiki 操作使用
+3. 剑指offer基础算法巩固
+
+4. simiki 操作使用
 
 # simiki 部署使用
 
