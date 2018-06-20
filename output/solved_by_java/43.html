@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>43 左旋转字符串(String取substring) - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;43 左旋转字符串(String取substring)
+    <span class="updated">Page Updated&nbsp;
+      2018-06-13 11:20
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">43 左旋转字符串(String取substring)</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#substring-substr">substring(), substr()</a></li>
+</ul>
+</div>
+<h1 id="substring-substr">substring(), substr()</h1>
+<ul>
+<li>
+<p>substring 方法返回的子串包括 start 处的字符，但不包括 end 处的字符。如果省略该参数，那么返回的子串会一直到字符串的结尾。</p>
+</li>
+<li>
+<p>substr 方法用于返回一个从指定位置开始的指定长度的子字符串。如果 length 为 0 或负数，将返回一个空字符串。如果没有指定该参数，则子字符串将延续到stringObject的最后。</p>
+</li>
+</ul>
+<p>java1.8 中使用 substring()</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">LeftRotateString</span><span class="o">(</span><span class="n">String</span> <span class="n">str</span><span class="o">,</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="n">len</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">str</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">n</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">s2</span> <span class="o">+</span> <span class="n">s1</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2018 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2018-06-15 17:16:50</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
