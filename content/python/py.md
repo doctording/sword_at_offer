@@ -10,6 +10,22 @@ date: 2018-05-30 00:00
 
 ## 数据类型
 
+Python的`inspect`模块包含了大量的与反射、元数据相关的工具函数
+
+```python
+from inspect import isfunction
+
+  print type("aa") == str
+  print type([1,2]) == list
+  print type({"id":1}) == dict
+  print type((1,)) == tuple
+  print type(1.23) == float
+  print type(1) == int
+  a = None
+  print a == None
+  print isfunction(test1)
+```
+
 ### Numbers 数字
 
 	int, long, float, double
