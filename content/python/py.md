@@ -41,6 +41,7 @@ from inspect import isfunction
 转义字符用反斜杠 `\`
 
 操作符 & 格式化
+
 ```
 +
 *
@@ -53,27 +54,27 @@ r/R
 ```
 
 常用方法
-```
+
+```python
 string.find(str, beg=0, end=len(string))
 
 string.format()
 
-string.replace(str1, str2,  num=string.count(str1))
+string.replace(str1, str2, num=string.count(str1))
 
 string.count(str, beg=0, end=len(string))
 ```
 
 python三引号\```允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符。
 
-
 ### List 列表
 
-	用```[]```表示
+用```[]```表示
 
 * 基础操作
 
-```
-len(list) 
+```python
+len(list)
 max(list)
 min(list)
 list.reverse()
@@ -82,25 +83,51 @@ list.sort(cmp=None, key=None, reverse=False)
 
 * 增
 
-```
+```python
 list.append(obj)
 list.insert(index, obj)
 ```
 
 * 删
-```
+
+```python
 list.pop([index=-1])
 list.remove(obj)
 ```
 
 * 查找
 
+```python
+list.count(obj) # 统计某个元素在列表中出现的次数
+list[2] # 读取列表中第三个元素
+list[-2] # 读取列表中倒数第二个元素
+list[1:] # 从第二个元素开始截取列表
+list.index(obj) # 从列表中找出某个值第一个匹配项的索引位置
 ```
-list.count(obj) // 统计某个元素在列表中出现的次数
-list[2] // 读取列表中第三个元素
-list[-2] // 读取列表中倒数第二个元素
-list[1:] // 从第二个元素开始截取列表
-list.index(obj) // 从列表中找出某个值第一个匹配项的索引位置
+
+* 遍历（三种方法）
+
+```python
+# -*- coding:utf-8 -*-
+
+if __name__ == '__main__':
+    li = [{"id": 1},  "name", 1]
+
+    print "==="
+    for i in range(len(li)):
+        print i, li[i]
+
+    print "==="
+    for val in li:
+        print li.index(val), val
+
+    print "==="
+    for i, val in enumerate(li):
+        print i, val
+
+    print "==="
+    for i, val in enumerate(li,1):
+        print i, val
 ```
 
 ### Tuple 元组
@@ -112,6 +139,20 @@ list.index(obj) // 从列表中找出某个值第一个匹配项的索引位置
 ### 其它类型
 
     True，False，None
+
+#### False的情况
+
+1. False
+2. None
+3. 所有值为零的数
+    * 0（整数）
+    * 0.0（浮点数）
+    * 0L （长整数）
+    * 0.0+0.0j （复数）
+4. “”（空字符串）
+5. [] （空列表）
+6. () （空元组）
+7. {} ｛空字典｝
 
 ## 条件语句
 
@@ -183,6 +224,29 @@ while(i < 100):
    if (j > i/j) : print i, " 是素数"
    i = i + 1
 ```
+
+## 成员运算符
+
+```python
+in
+not in
+```
+
+字符串，列表或元组等，`x in y`: x在y序列中, 如果x在y序列中返回`True`
+
+## 逻辑运算符
+
+```python
+and
+or
+not
+```
+
+运算符	| 逻辑表达式	| 描述	| 实例
+-|-|-|-
+and	| x and y|	布尔"与" - 如果 x 为 False，x and y 返回 False，否则它返回 y 的计算值。	| (a and b) 返回 20。
+or	| x or y	|布尔"或"	- 如果 x 是非 0，它返回 x 的值，否则它返回 y 的计算值。	| (a or b) 返回 10。
+not	| not x|	布尔"非" - 如果 x 为 True，返回 False 。如果 x 为 False，它返回 True。	|not(a and b) 返回 False
 
 ## 类 Class
 
