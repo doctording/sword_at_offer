@@ -33,13 +33,18 @@
 <li><a href="#list">List 列表</a></li>
 <li><a href="#tuple">Tuple 元组</a></li>
 <li><a href="#dictionary">Dictionary 字典</a></li>
-<li><a href="#_2">其它类型</a></li>
+<li><a href="#_2">其它类型</a><ul>
+<li><a href="#false">False的情况</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_3">条件语句</a></li>
 <li><a href="#for-while">for, while</a></li>
+<li><a href="#_4">成员运算符</a></li>
+<li><a href="#_5">逻辑运算符</a></li>
 <li><a href="#class">类 Class</a></li>
-<li><a href="#_4"></a></li>
+<li><a href="#_6"></a></li>
 </ul>
 </li>
 </ul>
@@ -88,57 +93,80 @@
 
 
 <p>常用方法</p>
-<div class="hlcode"><pre><span class="n">string</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">beg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+<div class="hlcode"><pre><span class="n">string</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">beg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
 
-<span class="n">string</span><span class="p">.</span><span class="n">format</span><span class="p">()</span>
+<span class="n">string</span><span class="o">.</span><span class="n">format</span><span class="p">()</span>
 
-<span class="n">string</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span>  <span class="n">num</span><span class="o">=</span><span class="n">string</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">str1</span><span class="p">))</span>
+<span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">str1</span><span class="p">))</span>
 
-<span class="n">string</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">beg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+<span class="n">string</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">beg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
 </pre></div>
 
 
 <p>python三引号```允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符。</p>
 <h3 id="list">List 列表</h3>
-<div class="hlcode"><pre><span class="err">用```</span><span class="p">[]</span><span class="err">```表示</span>
-</pre></div>
-
-
+<p>用<code>[]</code>表示</p>
 <ul>
 <li>基础操作</li>
 </ul>
-<div class="hlcode"><pre><span class="n">len</span><span class="p">(</span><span class="n">list</span><span class="p">)</span> 
-<span class="n">max</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
-<span class="n">min</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
-<span class="n">list</span><span class="p">.</span><span class="n">reverse</span><span class="p">()</span>
-<span class="n">list</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">cmp</span><span class="o">=</span><span class="n">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+<div class="hlcode"><pre><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="nb">max</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="nb">min</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="nb">list</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+<span class="nb">list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 
 
 <ul>
 <li>增</li>
 </ul>
-<div class="hlcode"><pre><span class="n">list</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-<span class="n">list</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+<div class="hlcode"><pre><span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="nb">list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
 </pre></div>
 
 
 <ul>
 <li>删</li>
 </ul>
-<div class="hlcode"><pre><span class="n">list</span><span class="p">.</span><span class="n">pop</span><span class="p">([</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">list</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<div class="hlcode"><pre><span class="nb">list</span><span class="o">.</span><span class="n">pop</span><span class="p">([</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 </pre></div>
 
 
 <ul>
 <li>查找</li>
 </ul>
-<div class="hlcode"><pre><span class="n">list</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c1">// 统计某个元素在列表中出现的次数</span>
-<span class="n">list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">// 读取列表中第三个元素</span>
-<span class="n">list</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="c1">// 读取列表中倒数第二个元素</span>
-<span class="n">list</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="p">]</span> <span class="c1">// 从第二个元素开始截取列表</span>
-<span class="n">list</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c1">// 从列表中找出某个值第一个匹配项的索引位置</span>
+<div class="hlcode"><pre><span class="nb">list</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c"># 统计某个元素在列表中出现的次数</span>
+<span class="nb">list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c"># 读取列表中第三个元素</span>
+<span class="nb">list</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="c"># 读取列表中倒数第二个元素</span>
+<span class="nb">list</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c"># 从第二个元素开始截取列表</span>
+<span class="nb">list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c"># 从列表中找出某个值第一个匹配项的索引位置</span>
+</pre></div>
+
+
+<ul>
+<li>遍历（三种方法）</li>
+</ul>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">li</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>  <span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">print</span> <span class="s">&quot;===&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">li</span><span class="p">)):</span>
+        <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">print</span> <span class="s">&quot;===&quot;</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">li</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">li</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">val</span>
+
+    <span class="k">print</span> <span class="s">&quot;===&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span>
+
+    <span class="k">print</span> <span class="s">&quot;===&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">li</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span>
 </pre></div>
 
 
@@ -153,6 +181,22 @@
 </pre></div>
 
 
+<h4 id="false">False的情况</h4>
+<ol>
+<li>False</li>
+<li>None</li>
+<li>所有值为零的数<ul>
+<li>0（整数）</li>
+<li>0.0（浮点数）</li>
+<li>0L （长整数）</li>
+<li>0.0+0.0j （复数）</li>
+</ul>
+</li>
+<li>“”（空字符串）</li>
+<li>[] （空列表）</li>
+<li>() （空元组）</li>
+<li>{} ｛空字典｝</li>
+</ol>
 <h2 id="_3">条件语句</h2>
 <ul>
 <li>注意条件后面的冒号<code>:</code>，else后面的冒号<code>:</code></li>
@@ -247,6 +291,50 @@
 </pre></div>
 
 
+<h2 id="_4">成员运算符</h2>
+<div class="hlcode"><pre><span class="ow">in</span>
+<span class="ow">not</span> <span class="ow">in</span>
+</pre></div>
+
+
+<p>字符串，列表或元组等，<code>x in y</code>: x在y序列中, 如果x在y序列中返回<code>True</code></p>
+<h2 id="_5">逻辑运算符</h2>
+<div class="hlcode"><pre><span class="ow">and</span>
+<span class="ow">or</span>
+<span class="ow">not</span>
+</pre></div>
+
+
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>逻辑表达式</th>
+<th>描述</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>and</td>
+<td>x and y</td>
+<td>布尔"与" - 如果 x 为 False，x and y 返回 False，否则它返回 y 的计算值。</td>
+<td>(a and b) 返回 20。</td>
+</tr>
+<tr>
+<td>or</td>
+<td>x or y</td>
+<td>布尔"或"  - 如果 x 是非 0，它返回 x 的值，否则它返回 y 的计算值。</td>
+<td>(a or b) 返回 10。</td>
+</tr>
+<tr>
+<td>not</td>
+<td>not x</td>
+<td>布尔"非" - 如果 x 为 True，返回 False 。如果 x 为 False，它返回 True。</td>
+<td>not(a and b) 返回 False</td>
+</tr>
+</tbody>
+</table>
 <h2 id="class">类 Class</h2>
 <p>使用 class 语句来创建一个新类，class 之后为类的名称并以冒号结尾，简单的类例子如下：</p>
 <div class="hlcode"><pre><span class="c">#!/usr/bin/python</span>
@@ -307,13 +395,13 @@
 <li>self代表类的实例，而非类</li>
 </ul>
 <p>类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称, 按照惯例它的名称是 self。</p>
-<h2 id="_4"></h2>
+<h2 id="_6"></h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-09-02 22:13:53</p>
+        <p>Site Generated 2018-09-04 13:04:22</p>
       </span>
     </div>
 
