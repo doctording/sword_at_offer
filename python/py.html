@@ -30,32 +30,39 @@
 <li><a href="#_1">数据类型</a><ul>
 <li><a href="#numbers">Numbers 数字</a></li>
 <li><a href="#string">String 字符串</a></li>
-<li><a href="#list">List 列表</a></li>
+<li><a href="#list">List 列表</a><ul>
+<li><a href="#_2">基础操作</a></li>
+<li><a href="#_3">增</a></li>
+<li><a href="#_4">删</a></li>
+<li><a href="#_5">查找</a></li>
+<li><a href="#_6">遍历（三种方法）</a></li>
+</ul>
+</li>
 <li><a href="#tuple">Tuple 元组</a></li>
 <li><a href="#dictionary">Dictionary 字典</a><ul>
 <li><a href="#dict">dict遍历</a></li>
 <li><a href="#dict_1">dict取值注意点</a></li>
 </ul>
 </li>
-<li><a href="#_2">其它类型</a><ul>
+<li><a href="#_7">其它类型</a><ul>
 <li><a href="#false">False的情况</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_3">条件语句</a></li>
+<li><a href="#_8">条件语句</a></li>
 <li><a href="#for-while">for, while</a></li>
-<li><a href="#_4">成员运算符</a></li>
-<li><a href="#_5">逻辑运算符</a></li>
+<li><a href="#innot-in">成员运算符(in,not in)</a></li>
+<li><a href="#andornot">逻辑运算符(and,or,not)</a></li>
 <li><a href="#class">类 Class</a><ul>
-<li><a href="#_6">实例化对象</a></li>
-<li><a href="#_7">访问属性</a></li>
-<li><a href="#python_1">python对象销毁(垃圾回收)</a></li>
+<li><a href="#_9">实例化对象</a></li>
+<li><a href="#_10">访问属性</a></li>
+<li><a href="#python-">python对象销毁(垃圾回收-引用计数)</a></li>
 <li><a href="#self">self代表类的实例，而非类</a></li>
-<li><a href="#_8"></a></li>
+<li><a href="#_11"></a></li>
 </ul>
 </li>
-<li><a href="#_9"></a></li>
+<li><a href="#_12"></a></li>
 </ul>
 </li>
 </ul>
@@ -117,9 +124,7 @@
 <p>python三引号```允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符。</p>
 <h3 id="list">List 列表</h3>
 <p>用<code>[]</code>表示</p>
-<ul>
-<li>基础操作</li>
-</ul>
+<h4 id="_2">基础操作</h4>
 <div class="hlcode"><pre><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 <span class="nb">max</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 <span class="nb">min</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
@@ -128,25 +133,19 @@
 </pre></div>
 
 
-<ul>
-<li>增</li>
-</ul>
+<h4 id="_3">增</h4>
 <div class="hlcode"><pre><span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 <span class="nb">list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
 </pre></div>
 
 
-<ul>
-<li>删</li>
-</ul>
+<h4 id="_4">删</h4>
 <div class="hlcode"><pre><span class="nb">list</span><span class="o">.</span><span class="n">pop</span><span class="p">([</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">])</span>
 <span class="nb">list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 </pre></div>
 
 
-<ul>
-<li>查找</li>
-</ul>
+<h4 id="_5">查找</h4>
 <div class="hlcode"><pre><span class="nb">list</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c"># 统计某个元素在列表中出现的次数</span>
 <span class="nb">list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c"># 读取列表中第三个元素</span>
 <span class="nb">list</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="c"># 读取列表中倒数第二个元素</span>
@@ -155,9 +154,7 @@
 </pre></div>
 
 
-<ul>
-<li>遍历（三种方法）</li>
-</ul>
+<h4 id="_6">遍历（三种方法）</h4>
 <div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
@@ -239,7 +236,7 @@
 </pre></div>
 
 
-<h3 id="_2">其它类型</h3>
+<h3 id="_7">其它类型</h3>
 <div class="hlcode"><pre><span class="n">True</span><span class="err">，</span><span class="n">False</span><span class="err">，</span><span class="n">None</span>
 </pre></div>
 
@@ -260,7 +257,7 @@
 <li>() （空元组）</li>
 <li>{} ｛空字典｝</li>
 </ol>
-<h2 id="_3">条件语句</h2>
+<h2 id="_8">条件语句</h2>
 <ul>
 <li>注意条件后面的冒号<code>:</code>，else后面的冒号<code>:</code></li>
 </ul>
@@ -354,14 +351,14 @@
 </pre></div>
 
 
-<h2 id="_4">成员运算符</h2>
+<h2 id="innot-in">成员运算符(in,not in)</h2>
 <div class="hlcode"><pre><span class="ow">in</span>
 <span class="ow">not</span> <span class="ow">in</span>
 </pre></div>
 
 
 <p>字符串，列表或元组等，<code>x in y</code>: x在y序列中, 如果x在y序列中返回<code>True</code></p>
-<h2 id="_5">逻辑运算符</h2>
+<h2 id="andornot">逻辑运算符(and,or,not)</h2>
 <div class="hlcode"><pre><span class="ow">and</span>
 <span class="ow">or</span>
 <span class="ow">not</span>
@@ -420,7 +417,7 @@
 </pre></div>
 
 
-<h3 id="_6">实例化对象</h3>
+<h3 id="_9">实例化对象</h3>
 <div class="hlcode"><pre><span class="c"># 创建 Employee 类的第一个对象</span>
 <span class="n">emp1</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span><span class="s">&quot;Zara&quot;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
 <span class="c"># 创建 Employee 类的第二个对象</span>
@@ -428,7 +425,7 @@
 </pre></div>
 
 
-<h3 id="_7">访问属性</h3>
+<h3 id="_10">访问属性</h3>
 <p>使用点号 . 来访问对象的属性。使用如下类的名称访问类变量:</p>
 <div class="hlcode"><pre><span class="n">emp1</span><span class="o">.</span><span class="n">displayEmployee</span><span class="p">()</span>
 <span class="n">emp2</span><span class="o">.</span><span class="n">displayEmployee</span><span class="p">()</span>
@@ -436,7 +433,7 @@
 </pre></div>
 
 
-<h3 id="python_1">python对象销毁(垃圾回收)</h3>
+<h3 id="python-">python对象销毁(垃圾回收-引用计数)</h3>
 <p>Python 使用了引用计数这一简单技术来跟踪和回收垃圾</p>
 <div class="hlcode"><pre><span class="n">a</span> <span class="o">=</span> <span class="mi">40</span>      <span class="c"># 创建对象  &lt;40&gt;</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">a</span>       <span class="c"># 增加引用， &lt;40&gt; 的计数</span>
@@ -450,14 +447,14 @@
 
 <h3 id="self">self代表类的实例，而非类</h3>
 <p>类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称, 按照惯例它的名称是 self。</p>
-<h3 id="_8"></h3>
-<h2 id="_9"></h2>
+<h3 id="_11"></h3>
+<h2 id="_12"></h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-09-07 10:09:21</p>
+        <p>Site Generated 2018-09-07 10:20:38</p>
       </span>
     </div>
 
