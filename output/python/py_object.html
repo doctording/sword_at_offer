@@ -26,18 +26,21 @@
 <div class="page_title">python可变对象与不可变对象,引用</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#python">python基础</a></li>
+<li><a href="#_1">可变对象与不可变对象, 引用</a></li>
 </ul>
 </div>
-<h1 id="python">python基础</h1>
+<h1 id="_1">可变对象与不可变对象, 引用</h1>
 <p>Python在heap中分配的对象分成两类：<strong>可变对象</strong>(对象的内容可变)和<strong>不可变对象</strong>(对象内容不可变)。</p>
 <ul>
-<li>
-<p>不可变（immutable）：字符串(string)、数值型(number)、元组(tuple)</p>
-</li>
-<li>
-<p>可变（mutable）：字典型(dictionary)、列表型(list)</p>
-</li>
+<li>不可变（immutable）：字符串(string)、数值型(number)、元组(tuple)</li>
+</ul>
+<p>该对象所指向的内存中的值不能被改变。当改变某个变量时候，由于其所指的值不能被改变，相当于把原来的值复制一份后再改变，这会开辟一个新的地址，变量再指向这个新的地址。</p>
+<ul>
+<li>可变（mutable）：字典型(dictionary)、列表型(list)</li>
+</ul>
+<p>对象所指向的内存中的值可以被改变。变量（准确的说是引用）改变后，实际上是其所指的值直接发生改变，并没有发生复制行为，也没有开辟新的出地址，通俗点说就是原地改变。</p>
+<ul>
+<li>id() 函数用于获取对象的内存地址</li>
 </ul>
 <div class="hlcode"><pre><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>   <span class="c"># i -&gt; [地址1]</span>
 
@@ -48,41 +51,54 @@
 
 <p>例如</p>
 <div class="hlcode"><pre><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 
 <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c"># 不同上</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>  <span class="c"># 不同上</span>
 
 <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">li</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>
 
 <span class="n">li</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="k">print</span> <span class="nb">id</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="c"># 同上</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>  <span class="c"># 同上</span>
 </pre></div>
 
 
-<p>li改变了内容，地址却没有改变。，[2]这个内存是需要重新开辟的</p>
+<p>li改变了内容，地址却没有改变。[2]这个内存是需要重新开辟的, 加到了[1]的后面</p>
 <hr />
 <ul>
-<li>函数调用后改变了list,而没有改变int</li>
+<li><strong>可变类型</strong>传递的类似【引用】，<strong>不可变类型</strong>传递的类似【内容】。</li>
 </ul>
+<p>函数调用后改变了list, 而没有改变int</p>
 <div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
 
-<span class="k">def</span> <span class="nf">change</span><span class="p">(</span><span class="n">a_int</span><span class="p">,</span> <span class="n">b_list</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">change</span><span class="p">(</span><span class="n">a_int</span><span class="p">,</span> <span class="n">b_str</span><span class="p">,</span> <span class="n">c_list</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;func start&quot;</span><span class="p">)</span>
     <span class="n">a_int</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">b_list</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b_str</span> <span class="o">+=</span> <span class="s">&quot;c&quot;</span>
+    <span class="n">c_list</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c"># a b 地址改变，c地址不变</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">a_int</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">b_str</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">c_list</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;func end&quot;</span><span class="p">)</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="s">&quot;ab&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
-<span class="k">print</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="c"># 2 [2]</span>
-<span class="n">change</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="c"># 2, [2, 1]</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>  <span class="c"># (2, &#39;ab&#39;, [2])</span>
+
+    <span class="n">change</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>  <span class="c"># (2, &#39;ab&#39;, [2, 1])</span>
 </pre></div>
 
 
 <hr />
-<p>如下图，<strong>在函数中改变引用是无效的</strong>；python函数参数传递：不是所谓传指，也不是所谓的传引用</p>
+<p>如下图，<strong>在函数中改变[可变对象的引用]是无效的</strong>， <strong>改变[可变对象的内容]是OK的</strong></p>
 <div align="center">
 <img  style="border:1px solid #000;"  src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_01.png" 
 height="400" width="340" >
@@ -95,7 +111,7 @@ height="400" width="340" >
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-09-07 10:21:18</p>
+        <p>Site Generated 2018-09-07 10:54:35</p>
       </span>
     </div>
 
