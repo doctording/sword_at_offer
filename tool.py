@@ -9,6 +9,7 @@ def git_operation(commit_description):
     ----------
     需要安装git命令行工具，并且添加到环境变量中
     '''
+    os.system("simiki g")
     os.system('ghp-import -p -m "Update output documentation" -r origin -b gh-pages output')
     os.system('git add --all')
     os.system('git commit -m "%s"' % commit_description)
