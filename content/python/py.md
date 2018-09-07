@@ -136,6 +136,60 @@ if __name__ == '__main__':
 
 	用```{}```表示, ```key:value```, 通过key来读取,而非偏移
 
+#### dict遍历
+
+```python
+# -*- coding:utf-8 -*-
+
+if __name__ == '__main__':
+
+    di = {
+        "a": 1,
+        "b": "time",
+        "c": [1, 2, 3],
+    }
+
+    for k, v in di.items():
+        print(k, v)
+
+    for k in di.keys():
+        print(k, di[k])
+
+    for v in di.values():
+        print(v)
+```
+
+#### dict取值注意点
+
+```python
+# -*- coding:utf-8 -*-
+
+if __name__ == '__main__':
+
+    di = {
+        "a": 1,
+        "b": "time",
+        "c": [1, 2, 3],
+    }
+
+    # print(di["d"]) # 报错
+
+    # 先判断 再取
+    print("a" in di)  # True
+    print("d" in di)  # False
+    print(1 in di.values())  # True
+
+    if "a" in di.keys():
+        print(di["a"])
+
+    # depressed
+    if di.has_key("a"):
+        print(di["a"])
+
+    # get方法，取不到，取默认值
+    print(di.get("d", "empty"))
+```
+
 ### 其它类型
 
     True，False，None
@@ -272,25 +326,26 @@ class Employee:
       print "Name : ", self.name,  ", Salary: ", self.salary
 ```
 
-* 实例化对象
+### 实例化对象
 
-```
-"创建 Employee 类的第一个对象"
+```python
+# 创建 Employee 类的第一个对象
 emp1 = Employee("Zara", 2000)
-"创建 Employee 类的第二个对象"
+# 创建 Employee 类的第二个对象
 emp2 = Employee("Manni", 5000)
 ```
 
-* 访问属性
+### 访问属性
 
 使用点号 . 来访问对象的属性。使用如下类的名称访问类变量:
+
 ```python
 emp1.displayEmployee()
 emp2.displayEmployee()
 print "Total Employee %d" % Employee.empCount
 ```
 
-* python对象销毁(垃圾回收)
+### python对象销毁(垃圾回收)
 
 Python 使用了引用计数这一简单技术来跟踪和回收垃圾
 
@@ -304,8 +359,10 @@ b = 100     # 减少引用 <40> 的计数
 c[0] = -1   # 减少引用 <40> 的计数
 ```
 
-* self代表类的实例，而非类
+### self代表类的实例，而非类
 
 类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称, 按照惯例它的名称是 self。
+
+### 
 
 ## #
