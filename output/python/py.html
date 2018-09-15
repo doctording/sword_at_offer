@@ -59,7 +59,16 @@
 <li><a href="#_10">访问属性</a></li>
 <li><a href="#python-">python对象销毁(垃圾回收-引用计数)</a></li>
 <li><a href="#self">self代表类的实例，而非类</a></li>
-<li><a href="#_11"></a></li>
+<li><a href="#propertyclassmethodstaticmethod">类@property,@classmethod,staticmethod</a><ul>
+<li><a href="#property">@property</a></li>
+<li><a href="#classmethod-staticmethod">@classmethod &amp; @staticmethod</a><ul>
+<li><a href="#python_1">python单例模式</a></li>
+<li><a href="#classmethod">classmethod 使用场景之一</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_11">类的一些基础属性</a></li>
 </ul>
 </li>
 <li><a href="#_12"></a></li>
@@ -447,14 +456,185 @@
 
 <h3 id="self">self代表类的实例，而非类</h3>
 <p>类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称, 按照惯例它的名称是 self。</p>
-<h3 id="_11"></h3>
+<h3 id="propertyclassmethodstaticmethod">类@property,@classmethod,staticmethod</h3>
+<h4 id="property">@property</h4>
+<p>装饰器（decorator）可以给函数动态加上功能,对于类的方法，装饰器一样起作用。Python内置的@property装饰器就是负责把一个方法变成属性调用的</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__score</span> <span class="o">=</span> <span class="n">score</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__score</span>
+
+    <span class="nd">@score.setter</span>
+    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">score</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid score&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__score</span> <span class="o">=</span> <span class="n">score</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">stu1</span> <span class="o">=</span> <span class="n">Student</span><span class="p">(</span><span class="s">&quot;sun&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">stu1</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">101</span>
+</pre></div>
+
+
+<h4 id="classmethod-staticmethod">@classmethod &amp; @staticmethod</h4>
+<p><a href="https://blog.csdn.net/yxwb1253587469/article/details/52250719">详细参考</a></p>
+<ol>
+<li>classmethod：类方法</li>
+<li>staticmethod：静态方法</li>
+</ol>
+<p>在python中，静态方法和类方法都是可以通过类对象和类对象实例访问。但是区别是：</p>
+<ul>
+<li>
+<p>@classmethod 是一个函数修饰符，它表示接下来的是一个类方法，而对于平常我们见到的则叫做实例方法。 类方法的第一个参数cls，而实例方法的第一个参数是self，表示该类的一个实例。</p>
+</li>
+<li>
+<p>普通对象方法至少需要一个self参数，代表类对象实例</p>
+</li>
+<li>
+<p>类方法有类变量cls传入，从而可以用cls做一些相关的处理。并且有子类继承时，调用该类方法时，传入的类变量cls是子类，而非父类。 对于类方法，可以通过类来调用，就像C.f()，有点类似C＋＋中的静态方法, 也可以通过类的一个实例来调用，就像C().f()，这里C()，写成这样之后它就是类的一个实例了。</p>
+</li>
+<li>
+<p>类方法有类变量cls传入，从而可以用cls做一些相关的处理。并且有子类继承时，调用该类方法时，传入的类变量cls是子类，而非父类。 对于类方法，可以通过类来调用，就像C.f()，有点类似C＋＋中的静态方法, 也可以通过类的一个实例来调用，就像C().f()，这里C()，写成这样之后它就是类的一个实例了。</p>
+</li>
+</ul>
+<h5 id="python_1">python单例模式</h5>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+
+
+<span class="k">class</span> <span class="nc">SingleInstance</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Single Instance</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__instance</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__instance</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">s_func</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;static method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">s_func</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">SingleInstance</span><span class="p">()</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">SingleInstance</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
+</pre></div>
+
+
+<h5 id="classmethod">classmethod 使用场景之一</h5>
+<p><a href="https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner">参考Stackoverflow讲解</a></p>
+<p>重构类的时候不必要修改构造函数，只需要额外添加你要处理的函数，然后使用装饰符 @classmethod 就可以了</p>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+
+
+<span class="k">class</span> <span class="nc">DateTest</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;时间类</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">month</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">day</span> <span class="o">=</span> <span class="n">day</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">=</span> <span class="n">month</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">year</span>
+
+    <span class="k">def</span> <span class="nf">out_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;year :&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;month :&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;day :&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_date</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string_date</span><span class="p">):</span>
+        <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">string_date</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">))</span>
+        <span class="c"># 返回新的类实例</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="n">DateTest</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">d1</span><span class="o">.</span><span class="n">out_date</span><span class="p">()</span>
+
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">DateTest</span><span class="o">.</span><span class="n">get_date</span><span class="p">(</span><span class="s">&quot;2018-9-1&quot;</span><span class="p">)</span>
+    <span class="n">d2</span><span class="o">.</span><span class="n">out_date</span><span class="p">()</span>
+</pre></div>
+
+
+<p>@staticmethod 其实它跟@classmethod非常相似，只是它没有任何必需的参数。</p>
+<p>假设我们要去检验一个日期的字符串是否有效。这个任务与Date类相关，但是又不需要Date实例对象，在这样的情况下@staticmethod就可以派上用场了。如下：</p>
+<div class="hlcode"><pre><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">is_date_valid</span><span class="p">(</span><span class="n">date_as_string</span><span class="p">):</span>
+    <span class="n">day</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">date_as_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">31</span> <span class="ow">and</span> <span class="n">month</span> <span class="o">&lt;=</span> <span class="mi">12</span> <span class="ow">and</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="mi">3999</span>
+
+<span class="c"># usage:</span>
+<span class="n">is_date</span> <span class="o">=</span> <span class="n">Date</span><span class="o">.</span><span class="n">is_date_valid</span><span class="p">(</span><span class="s">&#39;11-09-2012&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="_11">类的一些基础属性</h3>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Summary of class here.</span>
+
+<span class="sd">    Longer class information....</span>
+<span class="sd">    Longer class information....</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        likes_spam: A boolean indicating if we like SPAM or not.</span>
+<span class="sd">        eggs: An integer count of the eggs we have laid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">12345</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;test func</span>
+
+<span class="sd">        :return: </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&#39;hello world&#39;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">MyClass</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>      <span class="c"># 类的说明文档</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">MyClass</span><span class="o">.</span><span class="n">__module__</span><span class="p">)</span>   <span class="c"># 类来自的模块，看在那里使用</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">MyClass</span><span class="o">.</span><span class="n">__dict__</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">54321</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">__dict__</span><span class="p">)</span>           <span class="c"># 将对象内的属性和值用字典的方式显示出来</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span>          <span class="c"># 对象来源于哪个类</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+
 <h2 id="_12"></h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-09-07 10:55:20</p>
+        <p>Site Generated 2018-09-15 13:11:10</p>
       </span>
     </div>
 

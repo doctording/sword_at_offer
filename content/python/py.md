@@ -363,6 +363,186 @@ c[0] = -1   # 减少引用 <40> 的计数
 
 类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称, 按照惯例它的名称是 self。
 
-### #
+### 类@property,@classmethod,staticmethod
+
+#### @property
+
+装饰器（decorator）可以给函数动态加上功能,对于类的方法，装饰器一样起作用。Python内置的@property装饰器就是负责把一个方法变成属性调用的
+
+```python
+class Student(object):
+    def __init__(self, name, score):
+        self.name = name
+        self.__score = score
+
+    @property
+    def score(self):
+        return self.__score
+
+    @score.setter
+    def score(self, score):
+        if score < 0 or score > 100:
+            raise ValueError('invalid score')
+        self.__score = score
+
+if __name__ == '__main__':
+    stu1 = Student("sun", 60)
+    stu1.score = 101
+```
+
+#### @classmethod & @staticmethod
+
+[详细参考](https://blog.csdn.net/yxwb1253587469/article/details/52250719)
+
+1. classmethod：类方法
+2. staticmethod：静态方法
+
+在python中，静态方法和类方法都是可以通过类对象和类对象实例访问。但是区别是：
+
+* @classmethod 是一个函数修饰符，它表示接下来的是一个类方法，而对于平常我们见到的则叫做实例方法。 类方法的第一个参数cls，而实例方法的第一个参数是self，表示该类的一个实例。
+
+* 普通对象方法至少需要一个self参数，代表类对象实例
+
+* 类方法有类变量cls传入，从而可以用cls做一些相关的处理。并且有子类继承时，调用该类方法时，传入的类变量cls是子类，而非父类。 对于类方法，可以通过类来调用，就像C.f()，有点类似C＋＋中的静态方法, 也可以通过类的一个实例来调用，就像C().f()，这里C()，写成这样之后它就是类的一个实例了。
+
+* 类方法有类变量cls传入，从而可以用cls做一些相关的处理。并且有子类继承时，调用该类方法时，传入的类变量cls是子类，而非父类。 对于类方法，可以通过类来调用，就像C.f()，有点类似C＋＋中的静态方法, 也可以通过类的一个实例来调用，就像C().f()，这里C()，写成这样之后它就是类的一个实例了。
+
+##### python单例模式
+
+```python
+# -*- coding:utf-8 -*-
+
+
+class SingleInstance(object):
+    """Single Instance
+
+    """
+
+    __instance = None
+
+    def __init__(self):
+        pass
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = object.__new__(cls, *args, **kwargs)
+        return cls.__instance
+
+    @staticmethod
+    def s_func():
+        print("static method")
+
+    @classmethod
+    def func(cls):
+        cls.s_func()
+        print("hello", cls)
+
+if __name__ == '__main__':
+    a = SingleInstance()
+    b = SingleInstance()
+    print(a)
+    print(b)
+
+    a.func()
+    b.func()
+
+```
+
+##### classmethod 使用场景之一
+
+[参考Stackoverflow讲解](https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner)
+
+重构类的时候不必要修改构造函数，只需要额外添加你要处理的函数，然后使用装饰符 @classmethod 就可以了
+
+```python
+# -*- coding:utf-8 -*-
+
+
+class DateTest(object):
+    """时间类
+
+    """
+    day = 0
+    month = 0
+    year = 0
+
+    def __init__(self, year=0, month=0, day=0):
+        self.day = day
+        self.month = month
+        self.year = year
+
+    def out_date(self):
+        print("year :", self.year)
+        print("month :", self.month)
+        print("day :", self.day)
+
+    @classmethod
+    def get_date(cls, string_date):
+        year, month, day = map(int, string_date.split('-'))
+        # 返回新的类实例
+        return cls(year, month, day)
+
+if __name__ == '__main__':
+    d1 = DateTest(2018, 9, 1)
+    d1.out_date()
+
+    d2 = DateTest.get_date("2018-9-1")
+    d2.out_date()
+
+```
+
+@staticmethod 其实它跟@classmethod非常相似，只是它没有任何必需的参数。
+
+假设我们要去检验一个日期的字符串是否有效。这个任务与Date类相关，但是又不需要Date实例对象，在这样的情况下@staticmethod就可以派上用场了。如下：
+
+```python
+@staticmethod
+def is_date_valid(date_as_string):
+    day, month, year = map(int, date_as_string.split('-'))
+    return day <= 31 and month <= 12 and year <= 3999
+
+# usage:
+is_date = Date.is_date_valid('11-09-2012')
+```
+
+### 类的一些基础属性
+
+```python
+# -*- coding:utf-8 -*-
+
+
+class MyClass:
+    """Summary of class here.
+
+    Longer class information....
+    Longer class information....
+
+    Attributes:
+        likes_spam: A boolean indicating if we like SPAM or not.
+        eggs: An integer count of the eggs we have laid.
+    """
+    i = 12345
+
+    def f(self):
+        """test func
+
+        :return: 
+        """
+        return 'hello world'
+
+if __name__ == '__main__':
+    print(MyClass.__doc__)      # 类的说明文档
+    print(MyClass.__module__)   # 类来自的模块，看在那里使用
+
+    print(MyClass.__dict__)
+    m = MyClass()
+    m.i = 54321
+    print(m.__dict__)           # 将对象内的属性和值用字典的方式显示出来
+
+    print(m.__class__)          # 对象来源于哪个类
+    print(m.f)
+
+
+```
 
 ## #
