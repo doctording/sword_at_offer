@@ -526,7 +526,7 @@ class MyClass:
     def f(self):
         """test func
 
-        :return: 
+        :return:
         """
         return 'hello world'
 
@@ -544,5 +544,102 @@ if __name__ == '__main__':
 
 
 ```
+
+## 类继承
+
+[参考](https://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386820044406b227b3e751cc4d5190420d17a2dc6353000)
+
+```python
+# -*- coding:utf-8 -*-
+
+
+class Animal(object):
+
+    def run(self):
+        print('Animal is running...')
+
+
+class Dog(Animal):
+    pass
+
+
+class Cat(Animal):
+    pass
+
+
+if __name__ == '__main__':
+    d = Dog()
+    c = Cat()
+
+    d.run()
+    c.run()
+```
+
+继承有什么好处？最大的好处是子类获得了父类的全部功能。由于Animial实现了run()方法，因此，Dog和Cat作为它的子类，什么事也没干，就自动拥有了run()方法：
+
+继承的第二个好处需要我们对代码做一点改进。可以重写父类的方法
+
+```python
+class Dog(Animal):
+
+    def run(self):
+        print('Dog is running...')
+
+
+class Cat(Animal):
+
+    def run(self):
+        print('Cat is running...')
+```
+
+当子类和父类都存在相同的run()方法时，我们说，子类的run()覆盖了父类的run()，在代码运行的时候，总是会调用子类的run()。这样，我们就获得了继承的另一个好处：多态。
+
+```python
+# -*- coding:utf-8 -*-
+
+
+class Animal(object):
+
+    def run(self):
+        print('Animal is running...')
+
+
+class Dog(Animal):
+
+    def run(self):
+        print('Dog is running...')
+
+
+class Cat(Animal):
+
+    def run(self):
+        print('Cat is running...')
+
+
+def run_twice(animal):
+    """
+    新增一个Animal的子类，不必对run_twice()做任何修改，
+    实际上，任何依赖Animal作为参数的函数或者方法都可以不加修改地正常运行，原因就在于多态。
+    :param animal: 
+    :return: 
+    """
+    animal.run()
+    animal.run()
+
+if __name__ == '__main__':
+
+    a = Animal()
+    d = Dog()
+
+    run_twice(a)
+    run_twice(d)
+```
+
+对于一个变量，我们只需要知道它是Animal类型，无需确切地知道它的子类型，就可以放心地调用run()方法，而具体调用的run()方法是作用在Animal、Dog、Cat还是Tortoise对象上，由运行时该对象的确切类型决定，这就是多态真正的威力：调用方只管调用，不管细节，而当我们新增一种Animal的子类时，只要确保run()方法编写正确，不用管原来的代码是如何调用的。这就是著名的“开闭”原则：
+
+* 对扩展开放：允许新增Animal子类；
+
+* 对修改封闭：不需要修改依赖Animal类型的run_twice()等函数。
+
 
 ## #
