@@ -68,11 +68,14 @@
 </li>
 </ul>
 </li>
-<li><a href="#_11">类的一些基础属性</a></li>
+<li><a href="#__metaclass_">类的__metaclass_</a><ul>
+<li><a href="#new-__init__">new 与 __init__的区别</a></li>
 </ul>
 </li>
-<li><a href="#_12">类继承</a></li>
-<li><a href="#_13"></a></li>
+</ul>
+</li>
+<li><a href="#_11">类继承</a></li>
+<li><a href="#_12"></a></li>
 </ul>
 </li>
 </ul>
@@ -375,6 +378,7 @@
 </pre></div>
 
 
+<p>假设变量 a 为 10, b为 20:</p>
 <table>
 <thead>
 <tr>
@@ -592,7 +596,7 @@
 </pre></div>
 
 
-<h3 id="_11">类的一些基础属性</h3>
+<h3 id="__metaclass_">类的__metaclass_</h3>
 <div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
 
 
@@ -629,7 +633,59 @@
 </pre></div>
 
 
-<h2 id="_12">类继承</h2>
+<h4 id="new-__init__"><strong>new</strong> 与 __init__的区别</h4>
+<p>_init__是在类实例创建之后调用，而 __new__方法正是<strong>创建这个类实例的方法</strong>。</p>
+<ol>
+<li>
+<p><strong>init</strong> 通常用于初始化一个新实例，控制这个初始化的过程，比如添加一些属性，做一些额外的操作，发生在类实例被创建完以后。它是实例级别的方法。</p>
+</li>
+<li>
+<p><strong>new</strong> 通常用于控制生成一个新实例的过程。它是类级别的方法。</p>
+</li>
+</ol>
+<p>__new__方法主要是当你继承一些不可变的class时(比如int, str, tuple)， 提供给你一个自定义这些类的实例化过程的途径。还有就是实现自定义的metaclass。</p>
+<p>如下，int是不可变对象，通过继承int并重载__new__方法，实现一个永远都是正数的整数类型</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">PositiveInteger</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PositiveInteger</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">PositiveIntegerAbs</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">PositiveIntegerAbs</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">PositiveInteger</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="n">PositiveIntegerAbs</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>单例</li>
+</ul>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Singleton</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="c"># 关键在于这，每一次实例化的时候，我们都只会返回这同一个instance对象</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">):</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Singleton</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">instance</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">obj1</span> <span class="o">=</span> <span class="n">Singleton</span><span class="p">()</span>
+    <span class="n">obj2</span> <span class="o">=</span> <span class="n">Singleton</span><span class="p">()</span>
+
+    <span class="n">obj1</span><span class="o">.</span><span class="n">attr1</span> <span class="o">=</span> <span class="s">&#39;value1&#39;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj1</span><span class="o">.</span><span class="n">attr1</span><span class="p">,</span> <span class="n">obj2</span><span class="o">.</span><span class="n">attr1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj1</span> <span class="ow">is</span> <span class="n">obj2</span><span class="p">)</span>     <span class="c"># True</span>
+</pre></div>
+
+
+<h2 id="_11">类继承</h2>
 <p><a href="https://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386820044406b227b3e751cc4d5190420d17a2dc6353000">参考</a></p>
 <div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
 
@@ -723,13 +779,13 @@
 <p>对修改封闭：不需要修改依赖Animal类型的run_twice()等函数。</p>
 </li>
 </ul>
-<h2 id="_13"></h2>
+<h2 id="_12"></h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-09-15 13:38:52</p>
+        <p>Site Generated 2018-09-16 10:03:20</p>
       </span>
     </div>
 
