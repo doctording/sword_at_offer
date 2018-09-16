@@ -296,6 +296,8 @@ or
 not
 ```
 
+假设变量 a 为 10, b为 20:
+
 运算符	| 逻辑表达式	| 描述	| 实例
 -|-|-|-
 and	| x and y|	布尔"与" - 如果 x 为 False，x and y 返回 False，否则它返回 y 的计算值。	| (a and b) 返回 20。
@@ -505,7 +507,7 @@ def is_date_valid(date_as_string):
 is_date = Date.is_date_valid('11-09-2012')
 ```
 
-### 类的一些基础属性
+### 类的__metaclass_
 
 ```python
 # -*- coding:utf-8 -*-
@@ -542,6 +544,58 @@ if __name__ == '__main__':
     print(m.__class__)          # 对象来源于哪个类
     print(m.f)
 
+
+```
+
+#### __new__ 与 __init__的区别
+
+_init__是在类实例创建之后调用，而 __new__方法正是**创建这个类实例的方法**。
+
+1. __init__ 通常用于初始化一个新实例，控制这个初始化的过程，比如添加一些属性，做一些额外的操作，发生在类实例被创建完以后。它是实例级别的方法。
+
+2. __new__ 通常用于控制生成一个新实例的过程。它是类级别的方法。
+
+__new__方法主要是当你继承一些不可变的class时(比如int, str, tuple)， 提供给你一个自定义这些类的实例化过程的途径。还有就是实现自定义的metaclass。
+
+如下，int是不可变对象，通过继承int并重载__new__方法，实现一个永远都是正数的整数类型
+
+```python
+class PositiveInteger(int):
+    def __init__(self, value):
+        super(PositiveInteger, self).__init__(self, abs(value))
+
+
+class PositiveIntegerAbs(int):
+    def __new__(cls, value):
+        return super(PositiveIntegerAbs, cls).__new__(cls, abs(value))
+
+
+if __name__ == '__main__':
+    i = PositiveInteger(-3)
+    print(i)
+
+    i = PositiveIntegerAbs(-3)
+    print(i)
+```
+
+* 单例
+
+```python
+class Singleton(object):
+    def __new__(cls):
+        # 关键在于这，每一次实例化的时候，我们都只会返回这同一个instance对象
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Singleton, cls).__new__(cls)
+        return cls.instance
+
+
+if __name__ == '__main__':
+    obj1 = Singleton()
+    obj2 = Singleton()
+
+    obj1.attr1 = 'value1'
+    print(obj1.attr1, obj2.attr1)
+    print(obj1 is obj2)     # True
 
 ```
 
