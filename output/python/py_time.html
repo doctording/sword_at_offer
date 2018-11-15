@@ -31,6 +31,7 @@
 <li><a href="#datetime-time">datetime &amp; time</a></li>
 <li><a href="#calendar">calendar</a></li>
 <li><a href="#_2">统计函数执行时间(装饰器)</a></li>
+<li><a href="#2">统计函数执行时间(装饰器)2</a></li>
 </ul>
 </li>
 </ul>
@@ -135,12 +136,56 @@
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">fun_sleep</span><span class="p">()</span>
 </pre></div>
+
+
+<h2 id="2">统计函数执行时间(装饰器)2</h2>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="k">class</span> <span class="nc">Log</span><span class="p">:</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">debug_time</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+
+        <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">print</span> <span class="s">&quot;[DEBUG_TIME]: enter {}()&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+            <span class="c"># 毫秒级的时间戳</span>
+            <span class="n">start_millis_unixtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="c"># 原函数调用</span>
+            <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">end_millis_unixtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="n">end_millis_unixtime</span> <span class="o">-</span> <span class="n">start_millis_unixtime</span>
+            <span class="k">print</span> <span class="s">&quot;[DEBUG_TIME]: {} cost {}ms&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+
+        <span class="c"># 返回一个包装函数</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="nd">@Log.debug_time</span>
+<span class="k">def</span> <span class="nf">fun_sleep</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;func start&quot;</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;func end&quot;</span>
+
+
+<span class="nd">@Log.debug_time</span>
+<span class="k">def</span> <span class="nf">fun_sleep_sh</span><span class="p">(</span><span class="n">something</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;func start {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">something</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;func end {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">something</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">fun_sleep</span><span class="p">()</span>
+    <span class="n">fun_sleep_sh</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-11-15 00:06:25</p>
+        <p>Site Generated 2018-11-15 10:28:59</p>
       </span>
     </div>
 

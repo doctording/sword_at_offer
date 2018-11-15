@@ -118,3 +118,49 @@ if __name__ == '__main__':
     fun_sleep()
 
 ```
+
+## 统计函数执行时间(装饰器)2
+
+```python
+# -*- coding:utf-8 -*-
+import time
+import functools
+
+class Log:
+
+    @classmethod
+    def debug_time(cls, func):
+
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            print "[DEBUG_TIME]: enter {}()".format(func.__name__)
+            # 毫秒级的时间戳
+            start_millis_unixtime = int(round(time.time() * 1000))
+            # 原函数调用
+            func(*args, **kwargs)
+            end_millis_unixtime = int(round(time.time() * 1000))
+            span = end_millis_unixtime - start_millis_unixtime
+            print "[DEBUG_TIME]: {} cost {}ms".format(func.__name__, span)
+
+        # 返回一个包装函数
+        return wrapper
+
+
+@Log.debug_time
+def fun_sleep(*args, **kwargs):
+    print "func start"
+    time.sleep(3)
+    print "func end"
+
+
+@Log.debug_time
+def fun_sleep_sh(something):
+    print "func start {}".format(something)
+    time.sleep(2)
+    print "func end {}".format(something)
+
+if __name__ == '__main__':
+    fun_sleep()
+    fun_sleep_sh("hello")
+
+```
