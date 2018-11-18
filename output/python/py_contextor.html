@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>python上下文管理器 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#python">python</a>&nbsp;&#187;&nbsp;python上下文管理器
+    <span class="updated">Page Updated&nbsp;
+      2018-11-14 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">python上下文管理器</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#contextor">Contextor</a></li>
+</ul>
+</div>
+<h1 id="contextor">Contextor</h1>
+<p>上下文管理器的常用于一些资源的操作，需要在资源的获取与释放相关的操作。</p>
+<p>使用<code>with</code>语句当对象<code>__init__</code>后</p>
+<ul>
+<li><strong>enter</strong>  进入对象范围时（一般代码块开始）被调用；</li>
+<li><strong>exit</strong>  离开对象范围时（代码块结束）被调用；</li>
+</ul>
+<div class="hlcode"><pre><span class="c"># -*- coding:utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">pymysql</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="k">class</span> <span class="nc">Database</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;__init__&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbhost</span> <span class="o">=</span> <span class="s">&#39;127.0.0.1&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="mi">3306</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbuser</span> <span class="o">=</span> <span class="s">&#39;root&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbpass</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbname</span> <span class="o">=</span> <span class="s">&#39;test&#39;</span>
+        <span class="c"># DB_URI = &#39;mysql://&#39; + dbuser + &#39;:&#39; + dbpass + &#39;@&#39; + dbhost + &#39;/&#39; + dbname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;connect&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbhost</span><span class="p">,</span>
+                                <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+                                <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbuser</span><span class="p">,</span>
+                                <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbpass</span><span class="p">,</span>
+                                <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbname</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;close&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;conn close exception&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;__enter__&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;__exit__&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">Database</span><span class="p">()</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">conn</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s">&quot;select id, sno, name from t_user&quot;</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">print</span> <span class="n">rows</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+
+<p>结果如下,且观察MySQL的<code>Aborted_clients</code>没有增1</p>
+<div class="hlcode"><pre>__init__
+__enter__
+connect
+<span class="o">((</span>1, <span class="s1">&#39;21651019&#39;</span>, <span class="s1">&#39;mubi&#39;</span><span class="o">)</span>,<span class="o">)</span>
+__exit__
+close
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2018 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2018-11-18 15:38:14</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
