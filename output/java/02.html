@@ -35,6 +35,27 @@
 </ul>
 </div>
 <h1 id="systemarraycopy">System.arraycopy</h1>
+<p>使用说明：</p>
+<div class="hlcode"><pre><span class="cm">/*</span>
+<span class="cm">* @param      src      the source array.</span>
+<span class="cm">* @param      srcPos   starting position in the source array.</span>
+<span class="cm">* @param      dest     the destination array.</span>
+<span class="cm">* @param      destPos  starting position in the destination data.</span>
+<span class="cm">* @param      length   the number of array elements to be copied.</span>
+<span class="cm">* @exception  IndexOutOfBoundsException  if copying would cause</span>
+<span class="cm">*               access of data outside array bounds.</span>
+<span class="cm">* @exception  ArrayStoreException  if an element in the &lt;code&gt;src&lt;/code&gt;</span>
+<span class="cm">*               array could not be stored into the &lt;code&gt;dest&lt;/code&gt; array</span>
+<span class="cm">*               because of a type mismatch.</span>
+<span class="cm">* @exception  NullPointerException if either &lt;code&gt;src&lt;/code&gt; or</span>
+<span class="cm">*               &lt;code&gt;dest&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;.</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">arraycopy</span><span class="o">(</span><span class="n">Object</span> <span class="n">src</span><span class="o">,</span>  <span class="kt">int</span>  <span class="n">srcPos</span><span class="o">,</span>
+                                <span class="n">Object</span> <span class="n">dest</span><span class="o">,</span> <span class="kt">int</span> <span class="n">destPos</span><span class="o">,</span>
+                                <span class="kt">int</span> <span class="n">length</span><span class="o">);</span>
+</pre></div>
+
+
 <h2 id="_1">浅拷贝</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testArraycopy</span><span class="o">(){</span>
     <span class="kd">class</span> <span class="nc">Obj</span><span class="o">{</span>
@@ -187,7 +208,7 @@
       <span>
         <p>Copyright © 2018 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2018-11-24 20:44:14</p>
+        <p>Site Generated 2018-12-10 10:46:41</p>
       </span>
     </div>
 
