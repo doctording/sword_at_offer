@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>python协程gevent - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#python">python</a>&nbsp;&#187;&nbsp;python协程gevent
+    <span class="updated">Page Updated&nbsp;
+      2019-01-19 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">python协程gevent</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#gevent">gevent协程使用和效率对比</a><ul>
+<li><a href="#io">网络IO密集型</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="gevent">gevent协程使用和效率对比</h1>
+<h2 id="io">网络IO密集型</h2>
+<div class="hlcode"><pre><span class="c">#coding=utf-8</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Pool</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">gevent</span>
+<span class="kn">import</span> <span class="nn">gevent.monkey</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">threadpool</span>
+<span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">Queue</span>
+
+<span class="n">HTTP_SUCCESS_CODE</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">gevent</span><span class="o">.</span><span class="n">monkey</span><span class="o">.</span><span class="n">patch_all</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Log</span><span class="p">:</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">debug_time</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+
+        <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">print</span> <span class="s">&quot;[DEBUG_TIME]: enter {}()&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+            <span class="c"># 毫秒级的时间戳</span>
+            <span class="n">start_millis_unixtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="c"># 原函数调用</span>
+            <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">end_millis_unixtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="n">end_millis_unixtime</span> <span class="o">-</span> <span class="n">start_millis_unixtime</span>
+            <span class="k">print</span> <span class="s">&quot;[DEBUG_TIME]: {} cost {}ms&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+
+        <span class="c"># 返回一个包装函数</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+<span class="k">def</span> <span class="nf">http_request</span><span class="p">():</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;http://www.baidu.com&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rsp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rsp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">HTTP_SUCCESS_CODE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+<span class="nd">@Log.debug_time</span>
+<span class="k">def</span> <span class="nf">line_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">success_cnt</span>  <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">success_cnt</span> <span class="o">=</span> <span class="n">success_cnt</span> <span class="o">+</span> <span class="n">http_request</span><span class="p">()</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;url successful cnt: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">success_cnt</span><span class="p">))</span>
+
+<span class="nd">@Log.debug_time</span>
+<span class="k">def</span> <span class="nf">coroutine_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">http_request</span><span class="p">()</span>
+
+    <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gevent</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+    <span class="n">gevent</span><span class="o">.</span><span class="n">joinall</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span>
+    <span class="n">success_cnt</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">job</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">])</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;url successful cnt: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">success_cnt</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">MyThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+<span class="nd">@Log.debug_time</span>
+<span class="k">def</span> <span class="nf">thread_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">http_request</span><span class="p">()</span>
+
+    <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">MyThread</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="n">success_cnt</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">get_result</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">l</span><span class="p">])</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;url successful cnt: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">success_cnt</span><span class="p">))</span>
+
+<span class="nd">@Log.debug_time</span>
+<span class="k">def</span> <span class="nf">thread_pool_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">http_request</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">print_result</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">result</span>
+
+    <span class="n">pool_cnt</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">task_pool</span> <span class="o">=</span> <span class="n">threadpool</span><span class="o">.</span><span class="n">ThreadPool</span><span class="p">(</span><span class="n">pool_cnt</span><span class="p">)</span>
+    <span class="n">requests</span> <span class="o">=</span> <span class="n">threadpool</span><span class="o">.</span><span class="n">makeRequests</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">print_result</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">requests</span><span class="p">:</span>
+        <span class="n">task_pool</span><span class="o">.</span><span class="n">putRequest</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+    <span class="n">task_pool</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">line_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">coroutine_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">thread_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">thread_pool_net_io</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+
+
+<p>对网络密集型：协程、多线程，都远优于线性执行</p>
+<ol>
+<li>
+<p>等待IO而阻塞</p>
+</li>
+<li>
+<p>多线程进程可以利用IO阻塞等待时的空闲时间执行其它线程，提升效率</p>
+</li>
+<li>
+<p>每个协程遇到IO阻塞的时候就把控制权交给最顶层的协程，它会看哪个个协程的IO event已经完成，就将控制权给它；所有的IO都阻塞，才阻塞</p>
+</li>
+</ol>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-01-20 23:50:14</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

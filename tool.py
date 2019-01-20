@@ -14,7 +14,7 @@ def git_operation(commit_description):
     os.system('git add --all')
     os.system('git commit -m "%s"' % commit_description)
     os.system('git push origin master')
-    
+
 if __name__ == '__main__':
     # 第一个命令行参数当错commits的内容
     commit_description = "updated"  
