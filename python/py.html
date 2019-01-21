@@ -409,6 +409,27 @@
 </tr>
 </tbody>
 </table>
+<p>有个dict获取<code>or</code>的问题</p>
+<div class="hlcode"><pre><span class="n">dic</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;names&quot;</span><span class="p">:</span> <span class="bp">None</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="s">&quot;zhang&quot;</span> <span class="ow">in</span> <span class="n">dic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;names&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;yes&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="hlcode"><pre>Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">&quot;/Users/mubi/PycharmProjects/py_algorithm/test2.py&quot;</span>, line 12, in &lt;module&gt;
+    <span class="k">if</span> <span class="s2">&quot;zhang&quot;</span> in dic.get<span class="o">(</span><span class="s1">&#39;names&#39;</span>, <span class="o">[])</span>:
+TypeError: argument of <span class="nb">type</span> <span class="s1">&#39;NoneType&#39;</span> is not iterable
+
+Process finished with <span class="nb">exit </span>code 1
+</pre></div>
+
+
+<p>即<code>xxx in None</code>会抛异常， <code>dic.get('names', [])</code> 会返回<code>None</code>, 而<code>dic.get('names2', []):</code>会返回<code>[]</code>, 因为<code>names2</code>没有，而非<code>None</code></p>
 <h2 id="class">类 Class</h2>
 <p>使用 class 语句来创建一个新类，class 之后为类的名称并以冒号结尾，简单的类例子如下：</p>
 <div class="hlcode"><pre><span class="c">#!/usr/bin/python</span>
@@ -785,7 +806,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-01-20 23:50:14</p>
+        <p>Site Generated 2019-01-21 23:38:08</p>
       </span>
     </div>
 
