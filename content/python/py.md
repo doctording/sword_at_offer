@@ -304,6 +304,29 @@ and	| x and y|	布尔"与" - 如果 x 为 False，x and y 返回 False，否则�
 or	| x or y	|布尔"或"	- 如果 x 是非 0，它返回 x 的值，否则它返回 y 的计算值。	| (a or b) 返回 10。
 not	| not x|	布尔"非" - 如果 x 为 True，返回 False 。如果 x 为 False，它返回 True。	|not(a and b) 返回 False
 
+有个dict获取`or`的问题
+
+```python
+dic = {
+    "id": 1,
+    "names": None
+}
+
+if "zhang" in dic.get('names', []):
+    print("yes")
+```
+
+```bash
+Traceback (most recent call last):
+  File "/Users/mubi/PycharmProjects/py_algorithm/test2.py", line 12, in <module>
+    if "zhang" in dic.get('names', []):
+TypeError: argument of type 'NoneType' is not iterable
+
+Process finished with exit code 1
+```
+
+即`xxx in None`会抛异常， `dic.get('names', [])` 会返回`None`, 而`dic.get('names2', []):`会返回`[]`, 因为`names2`没有，而非`None`
+
 ## 类 Class
 
 使用 class 语句来创建一个新类，class 之后为类的名称并以冒号结尾，简单的类例子如下：
