@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>《Java编程思想》第6章：访问权限控制 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java">java</a>&nbsp;&#187;&nbsp;《Java编程思想》第6章：访问权限控制
+    <span class="updated">Page Updated&nbsp;
+      2018-12-12 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">《Java编程思想》第6章：访问权限控制</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">访问权限控制</a><ul>
+<li><a href="#_2">访问权限修饰词</a></li>
+<li><a href="#_3">接口和实现</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="_1">访问权限控制</h1>
+<h2 id="_2">访问权限修饰词</h2>
+<p>Java访问控制符的含义和使用情况(默认是default)</p>
+<table>
+<thead>
+<tr>
+<th>-</th>
+<th>类内部</th>
+<th>本包</th>
+<th>子类</th>
+<th>外部包</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>public</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>protect</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>x</td>
+</tr>
+<tr>
+<td>default</td>
+<td>✓</td>
+<td>✓</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr>
+<td>private</td>
+<td>✓</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>package</p>
+</li>
+<li>
+<p>public: 接口访问权限</p>
+</li>
+<li>
+<p>private: 你无法访问</p>
+</li>
+<li>
+<p>protect: 继承访问权限</p>
+</li>
+</ul>
+<h2 id="_3">接口和实现</h2>
+<p>访问权限的控制常被称为是具体实现的隐藏。把数据和方法包装进类中，以及具体实现的隐藏，常共同被称作是<strong>封装</strong>。其结果是一个同时带有特征和行为的数据类型。</p>
+<ol>
+<li>设定客户端程序员可以使用和不可以使用的界限</li>
+<li>接口和具体实现进行分离</li>
+</ol>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-02-11 23:49:22</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
