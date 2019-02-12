@@ -233,13 +233,78 @@
 <h3 id="final_2">final 类</h3>
 <p>不允许继承，不能有子类</p>
 <h2 id="_2">初始化及类的加载</h2>
-<p>// TODO</p>
+<ul>
+<li>
+<p>加载类的动作仅发生一次</p>
+</li>
+<li>
+<p>类的第一个实例的创建或者对static成员的访问都有可能引起加载</p>
+</li>
+<li>
+<p>定义为static的东西，只会被初始化一次</p>
+</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">LoadTest</span> <span class="o">{</span>
+    <span class="c1">// The static clause is executed</span>
+    <span class="c1">// upon class loading:</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Loading LoadTest&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">staticMember</span><span class="o">()</span> <span class="o">{}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Calling static member&quot;</span><span class="o">);</span>
+        <span class="n">LoadTest</span><span class="o">.</span><span class="na">staticMember</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Creating an object&quot;</span><span class="o">);</span>
+        <span class="k">new</span> <span class="nf">LoadTest</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*output</span>
+
+<span class="cm">Calling static member</span>
+<span class="cm">Loading LoadTest</span>
+<span class="cm">Creating an object</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<p>巩固学习：<a href="./05.md">第5章，总结一个对象的创建过程</a></p>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">LoadTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">LoadTest</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;LoadTest constructor&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Loading LoadTest&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">staticMember</span><span class="o">()</span> <span class="o">{}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Calling static member&quot;</span><span class="o">);</span>
+        <span class="n">LoadTest</span><span class="o">.</span><span class="na">staticMember</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Creating an object&quot;</span><span class="o">);</span>
+        <span class="k">new</span> <span class="nf">LoadTest</span><span class="o">();</span>
+        <span class="k">new</span> <span class="nf">LoadTest</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*output</span>
+
+<span class="cm">Calling static member</span>
+<span class="cm">Loading LoadTest</span>
+<span class="cm">Creating an object</span>
+<span class="cm">LoadTest constructor</span>
+<span class="cm">LoadTest constructor</span>
+<span class="cm"> */</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-02-11 23:49:22</p>
+        <p>Site Generated 2019-02-12 23:47:49</p>
       </span>
     </div>
 

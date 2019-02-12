@@ -38,7 +38,8 @@
 <li><a href="#_6">静态数据与初始化</a></li>
 <li><a href="#_7">初始化顺序</a></li>
 <li><a href="#_8">实例代码说明类初始化顺序</a></li>
-<li><a href="#_9">数组的初始化</a></li>
+<li><a href="#_9">总结一个对象的创建过程</a></li>
+<li><a href="#_10">数组的初始化</a></li>
 </ul>
 </li>
 </ul>
@@ -166,16 +167,21 @@
 </pre></div>
 
 
-<p>总结一个对象的创建过程，假设有一个名为Dog的类</p>
+<h3 id="_9">总结一个对象的创建过程</h3>
+<p>假设有一个名为Dog的类</p>
 <ol>
 <li>即使没有显示地使用static关键字，构造器其实也可以看成静态方法。首次创建Dog类的对象时，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位Dog.class文件</li>
-<li>然后载入Dog.class(这将创建一个Dog对象)，有关静态初始化的所有动作都会执行。因此，静态初始化只在Class对象首次加载的时候执行一次</li>
-<li>当用new Dog()创建对象的时候，首先将在堆上为Dog对象分配足够的存储空间</li>
-<li>这块存储空间会被清零，这就自动地将Dog对象中的所有基本类型都设置成了默认值（0，flase,null等默认值）</li>
+<li>
+<p>然后载入Dog.class(这将创建一个Dog对象)，有关静态初始化的所有动作都会执行。因此，静态初始化只在Class对象首次加载的时候执行一次</p>
+</li>
+<li>
+<p>当用new Dog()创建对象的时候，首先将在<code>堆</code>上为Dog对象分配足够的存储空间</p>
+</li>
+<li>这块存储空间会被清零，这就自动地将Dog对象中的所有基本类型都设置成了默认值（0，flase，null等默认值）</li>
 <li>执行所有出现于字段定义外的初始化动作</li>
 <li>执行构造器</li>
 </ol>
-<h3 id="_9">数组的初始化</h3>
+<h3 id="_10">数组的初始化</h3>
 <div class="hlcode"><pre><span class="kt">int</span><span class="o">[]</span> <span class="n">a1</span><span class="o">;</span> <span class="c1">// int a1[];</span>
 </pre></div>
 
@@ -197,7 +203,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-02-11 23:49:22</p>
+        <p>Site Generated 2019-02-12 23:47:49</p>
       </span>
     </div>
 
