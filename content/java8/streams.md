@@ -95,7 +95,7 @@ List<String> lowCaloricDishesName =
 
 2. 可以支持顺序和并行的对原Stream进行汇聚的操作
 
-![](./imgs/streams.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/streams.png)
 
 ### 流与集合
 
