@@ -120,4 +120,4 @@ List<String> lowCaloricDishesName =
 2. 一个中间操作链，形成一条流的流水线
 3. 一个终端操作，执行流水线，并能生成结果
 
-![](./imgs/stream_operate.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_operate.png)
