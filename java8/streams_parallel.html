@@ -77,7 +77,7 @@
 </pre></div>
 
 
-<p><img alt="" src="./imgs/parallel.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/parallel.png" /></p>
 <ul>
 <li>并行流用的线程是从哪来的?有多少个?怎么 自定义这个过程呢?</li>
 </ul>
@@ -287,7 +287,7 @@
 <p>流背后使用的基础架构是java7中引入的分支/合并框架。并行汇总的实例证明了要想正确使用并行流，了解它的内部原理至关重要。</p>
 <h2 id="_8">分支/合并框架</h2>
 <p>分支/合并框架的目的是以递归方式将可以并行的任务拆分成更小的任务，然后将每个子任务的结果合并起来生成整体结果。它是<code>ExecutorService</code>接口的一个实现，它把子任务分配给线程池(称为<code>ForkJoinPool</code>)中的工作线程。</p>
-<p><img alt="" src="./imgs/fork_join.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/fork_join.png" /></p>
 <p>伪代码如下</p>
 <div class="hlcode"><pre><span class="k">if</span> <span class="o">(</span><span class="err">任务足够小或不可分</span><span class="o">)</span> <span class="o">{</span>
     <span class="err">顺序计算该任务</span>
@@ -371,10 +371,10 @@
 
 
 <p>这个性能看起来比用并行流的版本要差，但这只是因为必须先要把整个数字流都放进一个<code>long[]</code>，之后才能在<code>ForkJoinSumRecursiveTask</code>任务中使用它</p>
-<p><img alt="" src="./imgs/fork_join_2.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/fork_join_2.png" /></p>
 <h4 id="work-stealing">工作窃取算法（work stealing）</h4>
 <p>工作窃取算法（work stealing）用于在池中的工作线程之间重新分配和平衡任务. 在实际应用中，这意味着这些任务差不多被平均分配到ForkJoinPool中的所有线程上。</p>
-<p><img alt="" src="./imgs/fork_join_3.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/fork_join_3.png" /></p>
 <h4 id="spliterator">Spliterator</h4>
 <p><code>Spliterator</code>是Java8中加入的另一个新接口;这个名字代表“可分迭代器”(splitable iterator)。和Iterator一样，Spliterator也用于遍历数据源中的元素，但它是为了并行执行而设计的。</p>
 <h2 id="todo">//TODO</h2>
@@ -383,7 +383,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-02-16 21:40:07</p>
+        <p>Site Generated 2019-02-16 21:42:22</p>
       </span>
     </div>
 
