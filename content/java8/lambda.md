@@ -1,5 +1,5 @@
 ---
-title: "Java8 lamda表达式"
+title: "Java8 lambda表达式"
 layout: page
 date: 2019-02-15 00:00
 ---
