@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java线程基础 - 剑指Offer</title>
+    <title>Java8 CompletableFuture - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,20 +16,21 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrency">java_thread_concurrency</a>&nbsp;&#187;&nbsp;Java线程基础
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Java8 CompletableFuture
     <span class="updated">Page Updated&nbsp;
-      2019-02-15 00:00
+      2019-02-18 13:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java线程基础</div>
+<div class="page_title">Java8 CompletableFuture</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#thread">Thread</a></li>
+<li><a href="#future">Future 接口</a></li>
 </ul>
 </div>
-<h1 id="thread">Thread</h1>
+<h1 id="future">Future 接口</h1>
+<p>Future接口在Java 5中被引入，设计初衷是对将来某个时刻会发生的结果进行建模。它建模了一种异步计算，返回一个执行运算结果的引用，当运算结束后，这个引用被返回给调用方。在Future中触发那些潜在耗时的操作把调用线程解放出来，让它能继续执行其他有价值的工作， 不再需要呆呆等待耗时的操作完成。打个比方，你可以把它想象成这样的场景:你拿了一袋子衣服到你中意的干洗店去洗。干洗店的员工会给你张发票，告诉你什么时候你的衣服会洗好(这就是一个Future事件)。衣服干洗的同时，你可以去做其他的事情。</p>
     </div>
     <div id="footer">
       <span>
