@@ -40,12 +40,23 @@
 <li><a href="#-completablefutures">并行 -- 使用流还是CompletableFutures ?</a></li>
 </ul>
 </li>
-<li><a href="#_7">对多个异步任务进行流水线操作</a></li>
+<li><a href="#_7">对多个异步任务进行流水线操作</a><ul>
+<li><a href="#discount">Discount</a></li>
+<li><a href="#quote">Quote</a></li>
+<li><a href="#shop">Shop</a></li>
+<li><a href="#maintest">MainTest</a></li>
+</ul>
+</li>
+<li><a href="#_8">构造同步和异步操作</a><ul>
+<li><a href="#completablefuture_1">合并两个独立的CompletableFuture对象</a></li>
+<li><a href="#completablefuturecompletion">响应CompletableFuture的completion事件</a></li>
+</ul>
+</li>
+<li><a href="#_9">总结</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#todo">TODO</a></li>
 </ul>
 </div>
 <h1 id="future">Future 接口</h1>
@@ -551,13 +562,282 @@
 <p>对于计算密集型操作，并且没有I/O，那么推荐使用Stream接口，因为实现简单，同时效率也是最高的(如果所有的线程都是计算密集型的)，那就没有必要创建比处理器和数更多的线程。</p>
 <p>如果并行的工作单元还涉及等待I/O的操作(包括网络连接等待)，那么使用<code>CompletableFuture</code>的灵活性更好。不使用并行流另一个原因是：处理流的流水线中如果发生I/O等待，流的延迟特效会让我们很难判断到底什么时候触发了等待。</p>
 <h3 id="_7">对多个异步任务进行流水线操作</h3>
-<h1 id="todo">TODO</h1>
+<h4 id="discount">Discount</h4>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> * 折扣服务api</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Discount</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Code</span> <span class="o">{</span>
+        <span class="n">NONE</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">SILVER</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">GOLD</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span> <span class="n">PLATINUM</span><span class="o">(</span><span class="mi">15</span><span class="o">),</span> <span class="n">DIAMOND</span><span class="o">(</span><span class="mi">20</span><span class="o">);</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">percentage</span><span class="o">;</span>
+
+        <span class="n">Code</span><span class="o">(</span><span class="kt">int</span> <span class="n">percentage</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">percentage</span> <span class="o">=</span> <span class="n">percentage</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">applyDiscount</span><span class="o">(</span><span class="n">Quote</span> <span class="n">quote</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">quote</span><span class="o">.</span><span class="na">getShopName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; price is &quot;</span> <span class="o">+</span> <span class="n">Discount</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">quote</span><span class="o">.</span><span class="na">getPrice</span><span class="o">(),</span> <span class="n">quote</span><span class="o">.</span><span class="na">getDiscountCode</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="nf">apply</span><span class="o">(</span><span class="kt">double</span> <span class="n">price</span><span class="o">,</span> <span class="n">Code</span> <span class="n">code</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">delay</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="o">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">code</span><span class="o">.</span><span class="na">percentage</span><span class="o">)</span> <span class="o">/</span> <span class="mi">100</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 模拟计算,查询数据库等耗时</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">delay</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h4 id="quote">Quote</h4>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> * 商店返回消息实体,不可变对象模式 线程安全</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Quote</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">shopName</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">price</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Discount</span><span class="o">.</span><span class="na">Code</span> <span class="n">discountCode</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Quote</span><span class="o">(</span><span class="n">String</span> <span class="n">shopName</span><span class="o">,</span> <span class="kt">double</span> <span class="n">price</span><span class="o">,</span> <span class="n">Discount</span><span class="o">.</span><span class="na">Code</span> <span class="n">discountCode</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">shopName</span> <span class="o">=</span> <span class="n">shopName</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">discountCode</span> <span class="o">=</span> <span class="n">discountCode</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Quote</span> <span class="nf">parse</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">split</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;:&quot;</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">shopName</span> <span class="o">=</span> <span class="n">split</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="kt">double</span> <span class="n">price</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">split</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="n">Discount</span><span class="o">.</span><span class="na">Code</span> <span class="n">discountCode</span> <span class="o">=</span> <span class="n">Discount</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">split</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Quote</span><span class="o">(</span><span class="n">shopName</span><span class="o">,</span> <span class="n">price</span><span class="o">,</span> <span class="n">discountCode</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getShopName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">shopName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getPrice</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">price</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Discount</span><span class="o">.</span><span class="na">Code</span> <span class="nf">getDiscountCode</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">discountCode</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h4 id="shop">Shop</h4>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Shop</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Shop</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 模拟1秒中延迟的方法</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">delay</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000L</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">double</span> <span class="nf">calculatePrice</span><span class="o">(</span><span class="n">String</span> <span class="n">product</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">delay</span><span class="o">();</span>
+        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">()</span> <span class="o">*</span> <span class="n">product</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="n">product</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getPrice</span><span class="o">(</span><span class="n">String</span> <span class="n">product</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+        <span class="kt">double</span> <span class="n">price</span> <span class="o">=</span> <span class="n">calculatePrice</span><span class="o">(</span><span class="n">product</span><span class="o">);</span>
+        <span class="n">Discount</span><span class="o">.</span><span class="na">Code</span> <span class="n">code</span> <span class="o">=</span> <span class="n">Discount</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">values</span><span class="o">()[</span>
+                <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">Discount</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">values</span><span class="o">().</span><span class="na">length</span><span class="o">)];</span>
+        <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s:%.2f:%s&quot;</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">price</span><span class="o">,</span> <span class="n">code</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<h4 id="maintest">MainTest</h4>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Shop</span><span class="o">&gt;</span> <span class="n">shops</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="k">new</span> <span class="n">Shop</span><span class="o">(</span><span class="s">&quot;BestPrice&quot;</span><span class="o">),</span>
+            <span class="k">new</span> <span class="nf">Shop</span><span class="o">(</span><span class="s">&quot;LetsSaveBig&quot;</span><span class="o">),</span>
+            <span class="k">new</span> <span class="nf">Shop</span><span class="o">(</span><span class="s">&quot;MyFavoriteShop&quot;</span><span class="o">),</span>
+            <span class="k">new</span> <span class="nf">Shop</span><span class="o">(</span><span class="s">&quot;BuyItAll&quot;</span><span class="o">),</span>
+            <span class="k">new</span> <span class="nf">Shop</span><span class="o">(</span><span class="s">&quot;five&quot;</span><span class="o">)</span>
+<span class="c1">//            new Shop(&quot;six&quot;),</span>
+<span class="c1">//            new Shop(&quot;seven&quot;),</span>
+<span class="c1">//            new Shop(&quot;eight&quot;),</span>
+<span class="c1">//            new Shop(&quot;nine&quot;)</span>
+    <span class="o">);</span>
+
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">findprices</span><span class="o">(</span><span class="n">String</span> <span class="n">product</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 1. 取出商品的原始价格 -- 耗时1秒多</span>
+        <span class="c1">// 2. 在Quote对象中对shop返回对字符串进行转换</span>
+        <span class="c1">// 3. 联系Discount服务，为每个Quote申请折扣 -- 耗时1秒多</span>
+        <span class="k">return</span> <span class="n">shops</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">shop</span> <span class="o">-&gt;</span>  <span class="n">shop</span><span class="o">.</span><span class="na">getPrice</span><span class="o">(</span><span class="n">product</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">Quote:</span><span class="o">:</span><span class="n">parse</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">Discount:</span><span class="o">:</span><span class="n">applyDiscount</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testCompletableFuture</span><span class="o">(){</span>
+        <span class="n">MainTest</span> <span class="n">mainTest</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MainTest</span><span class="o">();</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">shopPriceList</span> <span class="o">=</span> <span class="n">mainTest</span><span class="o">.</span><span class="na">findprices</span><span class="o">(</span><span class="s">&quot;apple&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">shopPriceList</span><span class="o">);</span>
+<span class="c1">//        shopPriceList.forEach( shopPrice -&gt; System.out.println(shopPrice) );</span>
+        <span class="kt">long</span> <span class="n">duration</span> <span class="o">=</span> <span class="o">((</span><span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">()</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">1</span><span class="n">_000_000</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Done in &quot;</span> <span class="o">+</span> <span class="n">duration</span> <span class="o">+</span> <span class="s">&quot; msecs&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 5个商店，耗时大概10秒多</span>
+        <span class="n">testCompletableFuture</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_8">构造同步和异步操作</h3>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> *  创建了一个由`守护线程`构成的线程池</span>
+<span class="cm"> */</span>
+<span class="kd">private</span> <span class="kd">final</span> <span class="n">Executor</span> <span class="n">executor</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">shops</span><span class="o">.</span><span class="na">size</span><span class="o">(),</span> <span class="mi">100</span><span class="o">)</span>
+        <span class="o">,</span> <span class="k">new</span> <span class="n">ThreadFactory</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="n">Thread</span> <span class="nf">newThread</span><span class="o">(</span><span class="n">Runnable</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">r</span><span class="o">);</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">setDaemon</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+                <span class="k">return</span> <span class="n">t</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+
+<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">findPricesCompletableFuture</span><span class="o">(</span><span class="n">String</span> <span class="n">product</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// supplyAsync工方法 指定线程池</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">priceFutureList</span> <span class="o">=</span>
+            <span class="n">shops</span>
+            <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+            <span class="c1">// 异步方式取得每个shop中指定产品的原始价格</span>
+            <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">shop</span> <span class="o">-&gt;</span> <span class="n">CompletableFuture</span><span class="o">.</span><span class="na">supplyAsync</span><span class="o">(</span>
+                    <span class="o">()</span> <span class="o">-&gt;</span> <span class="n">shop</span><span class="o">.</span><span class="na">getPrice</span><span class="o">(</span><span class="n">product</span><span class="o">),</span> <span class="n">executor</span><span class="o">))</span>
+            <span class="c1">//  在Quote对象中对shop返回对字符串进行转换</span>
+            <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">future</span> <span class="o">-&gt;</span> <span class="n">future</span><span class="o">.</span><span class="na">thenApply</span><span class="o">(</span><span class="nl">Quote:</span><span class="o">:</span><span class="n">parse</span><span class="o">))</span>
+            <span class="c1">// 另一个异步任务构建期望的Future,申请折扣 thenCompose 将多个future组合 一个一个执行</span>
+            <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">future</span> <span class="o">-&gt;</span> <span class="n">future</span><span class="o">.</span><span class="na">thenCompose</span><span class="o">(</span><span class="n">quote</span> <span class="o">-&gt;</span>
+                    <span class="n">CompletableFuture</span><span class="o">.</span><span class="na">supplyAsync</span><span class="o">(</span>
+                        <span class="o">()</span> <span class="o">-&gt;</span> <span class="n">Discount</span><span class="o">.</span><span class="na">applyDiscount</span><span class="o">(</span><span class="n">quote</span><span class="o">),</span> <span class="n">executor</span><span class="o">)))</span>
+            <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+
+    <span class="k">return</span> <span class="n">priceFutureList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+            <span class="c1">// 等待流中所有的future执行完毕,并提取各自的返回值</span>
+            <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">CompletableFuture:</span><span class="o">:</span><span class="n">join</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+<span class="o">}</span>
+
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testCompletableFuture</span><span class="o">(){</span>
+    <span class="n">MainTest</span> <span class="n">mainTest</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MainTest</span><span class="o">();</span>
+    <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">shopPriceList</span> <span class="o">=</span> <span class="n">mainTest</span><span class="o">.</span><span class="na">findPricesCompletableFuture</span><span class="o">(</span><span class="s">&quot;apple&quot;</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">shopPriceList</span><span class="o">);</span>
+<span class="c1">//        shopPriceList.forEach( shopPrice -&gt; System.out.println(shopPrice) );</span>
+    <span class="kt">long</span> <span class="n">duration</span> <span class="o">=</span> <span class="o">((</span><span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">()</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">1</span><span class="n">_000_000</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Done in &quot;</span> <span class="o">+</span> <span class="n">duration</span> <span class="o">+</span> <span class="s">&quot; msecs&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 异步方式只用了 2117 msecs</span>
+    <span class="n">testCompletableFuture</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>执行流程图</li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_future.png" /></p>
+<h4 id="completablefuture_1">合并两个独立的CompletableFuture对象</h4>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/combine_future.png" /></p>
+<h4 id="completablefuturecompletion">响应CompletableFuture的completion事件</h4>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="n">Stream</span><span class="o">&lt;</span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="nf">findPricesStream</span><span class="o">(</span><span class="n">String</span> <span class="n">product</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">shops</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+                <span class="c1">// 异步方式取得每个shop中指定产品的原始价格</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">shop</span> <span class="o">-&gt;</span> <span class="n">CompletableFuture</span><span class="o">.</span><span class="na">supplyAsync</span><span class="o">(</span>
+                        <span class="o">()</span> <span class="o">-&gt;</span> <span class="n">shop</span><span class="o">.</span><span class="na">getPrice</span><span class="o">(</span><span class="n">product</span><span class="o">),</span> <span class="n">executor</span><span class="o">))</span>
+                <span class="c1">//  在Quote对象中对shop返回对字符串进行转换</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">future</span> <span class="o">-&gt;</span> <span class="n">future</span><span class="o">.</span><span class="na">thenApply</span><span class="o">(</span><span class="nl">Quote:</span><span class="o">:</span><span class="n">parse</span><span class="o">))</span>
+                <span class="c1">// 另一个异步任务构建期望的Future,申请折扣 thenCompose 将多个future组合 一个一个执行</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">future</span> <span class="o">-&gt;</span> <span class="n">future</span><span class="o">.</span><span class="na">thenCompose</span><span class="o">(</span><span class="n">quote</span> <span class="o">-&gt;</span>
+                        <span class="n">CompletableFuture</span><span class="o">.</span><span class="na">supplyAsync</span><span class="o">(</span>
+                                <span class="o">()</span> <span class="o">-&gt;</span> <span class="n">Discount</span><span class="o">.</span><span class="na">applyDiscount</span><span class="o">(</span><span class="n">quote</span><span class="o">),</span> <span class="n">executor</span><span class="o">)));</span>
+
+<span class="o">}</span>
+
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testCompletableFuture</span><span class="o">(){</span>
+    <span class="n">MainTest</span> <span class="n">mainTest</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MainTest</span><span class="o">();</span>
+    <span class="cm">/**</span>
+<span class="cm">     * thenAccept方法也提供 了一个异步版本，名为thenAcceptAsync。</span>
+<span class="cm">     * 异步版本的方法会对处理结果的消费者进行调度，从线程池中选择一个新的线程继续执行，</span>
+<span class="cm">     * 不再由同一个线程完成CompletableFuture的所有任务。</span>
+<span class="cm">     * 因为你想要避免不必要的上下文切换，更重要的是你希望避免在等待线程上浪费时间，</span>
+<span class="cm">     * 尽快响应CompletableFuture的completion事件，所以这里没有采用异步版本。</span>
+<span class="cm">     */</span>
+    <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+    <span class="n">CompletableFuture</span><span class="o">[]</span> <span class="n">futures</span> <span class="o">=</span> <span class="n">mainTest</span><span class="o">.</span><span class="na">findPricesStream</span><span class="o">(</span><span class="s">&quot;myPhone27S&quot;</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">f</span> <span class="o">-&gt;</span> <span class="n">f</span><span class="o">.</span><span class="na">thenAccept</span><span class="o">(</span>
+                    <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s</span> <span class="o">+</span> <span class="s">&quot; (done in &quot;</span> <span class="o">+</span>
+                            <span class="o">((</span><span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">()</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">1</span><span class="n">_000_000</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; msecs)&quot;</span><span class="o">)))</span>
+            <span class="o">.</span><span class="na">toArray</span><span class="o">(</span><span class="n">size</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">CompletableFuture</span><span class="o">[</span><span class="n">size</span><span class="o">]);</span>
+    <span class="n">CompletableFuture</span><span class="o">.</span><span class="na">allOf</span><span class="o">(</span><span class="n">futures</span><span class="o">).</span><span class="na">join</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;All shops have now responded in &quot;</span>
+            <span class="o">+</span> <span class="o">((</span><span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">()</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">1</span><span class="n">_000_000</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; msecs&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_9">总结</h3>
+<p>执行比较耗时的操作时，尤其是那些依赖一个或多个远程服务的操作，使用异步任务可以改善程序的性能，加快程序的响应速度。</p>
+<ul>
+<li>你应该<code>尽可能地为客户提供异步API</code>。使用CompletableFuture类提供的特性，你能够轻松地实现这一目标。</li>
+<li>CompletableFuture类还提供了异常管理的机制，让你有机会抛出/管理异步任务执行<br />
+中发生的异常。</li>
+<li>将同步API的调用封装到一个CompletableFuture中，你能够以异步的方式使用其结果。</li>
+<li>如果异步任务之间相互独立，或者它们之间某一些的结果是另一些的输入，你可以<code>将这些异步任务构造或者合并成一个</code>。</li>
+<li>你<code>可以为CompletableFuture注册一个回调函数</code>，在Future执行完毕或者它们计算的结果可用时，针对性地执行一些程序。</li>
+<li>你可以决定在什么时候结束程序的运行，是等待由CompletableFuture对象构成的列表中所有的对象都执行完毕，还是只要其中任何一个首先完成就中止程序的运行。</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-02-18 23:31:51</p>
+        <p>Site Generated 2019-02-19 22:51:10</p>
       </span>
     </div>
 
