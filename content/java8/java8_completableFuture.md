@@ -542,4 +542,281 @@ public static void testCompletableFuture(){
 
 ### 对多个异步任务进行流水线操作
 
-# TODO
+#### Discount
+
+```java
+/**
+ * 折扣服务api
+ */
+public class Discount {
+    public enum Code {
+        NONE(0), SILVER(0), GOLD(10), PLATINUM(15), DIAMOND(20);
+        private final int percentage;
+
+        Code(int percentage) {
+            this.percentage = percentage;
+        }
+    }
+
+    public static String applyDiscount(Quote quote) {
+        return quote.getShopName() + " price is " + Discount.apply(quote.getPrice(), quote.getDiscountCode());
+    }
+
+    private static double apply(double price, Code code) {
+        delay();
+        return price * (100 - code.percentage) / 100;
+    }
+
+    /**
+     * 模拟计算,查询数据库等耗时
+     */
+    public static void delay() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+#### Quote
+
+```java
+/**
+ * 商店返回消息实体,不可变对象模式 线程安全
+ */
+public final class Quote {
+    private final String shopName;
+    private final double price;
+    private final Discount.Code discountCode;
+
+    public Quote(String shopName, double price, Discount.Code discountCode) {
+        this.shopName = shopName;
+        this.price = price;
+        this.discountCode = discountCode;
+    }
+
+    public static Quote parse(String s) {
+        String[] split = s.split(":");
+        String shopName = split[0];
+        double price = Double.parseDouble(split[1]);
+        Discount.Code discountCode = Discount.Code.valueOf(split[2]);
+        return new Quote(shopName, price, discountCode);
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public Discount.Code getDiscountCode() {
+        return discountCode;
+    }
+}
+```
+
+#### Shop
+
+```java
+public class Shop {
+
+    private String name;
+
+    public Shop(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 模拟1秒中延迟的方法
+     */
+    public static void delay() {
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private double calculatePrice(String product) {
+        delay();
+        Random random = new Random();
+        return random.nextDouble() * product.charAt(0) + product.charAt(1);
+    }
+
+    public String getPrice(String product) {
+        Random random = new Random();
+        double price = calculatePrice(product);
+        Discount.Code code = Discount.Code.values()[
+                random.nextInt(Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", name, price, code);
+    }
+
+}
+```
+
+#### MainTest
+
+```java
+public class MainTest {
+
+    List<Shop> shops = Arrays.asList(new Shop("BestPrice"),
+            new Shop("LetsSaveBig"),
+            new Shop("MyFavoriteShop"),
+            new Shop("BuyItAll"),
+            new Shop("five")
+//            new Shop("six"),
+//            new Shop("seven"),
+//            new Shop("eight"),
+//            new Shop("nine")
+    );
+
+    public List<String> findprices(String product) {
+        // 1. 取出商品的原始价格 -- 耗时1秒多
+        // 2. 在Quote对象中对shop返回对字符串进行转换
+        // 3. 联系Discount服务，为每个Quote申请折扣 -- 耗时1秒多
+        return shops.stream()
+                .map(shop ->  shop.getPrice(product))
+                .map(Quote::parse)
+                .map(Discount::applyDiscount)
+                .collect(Collectors.toList());
+    }
+
+    public static void testCompletableFuture(){
+        MainTest mainTest = new MainTest();
+        long start = System.nanoTime();
+        List<String> shopPriceList = mainTest.findprices("apple");
+        System.out.println(shopPriceList);
+//        shopPriceList.forEach( shopPrice -> System.out.println(shopPrice) );
+        long duration = ((System.nanoTime() - start) / 1_000_000);
+        System.out.println("Done in " + duration + " msecs");
+    }
+
+    public static void main(String[] args) {
+        // 5个商店，耗时大概10秒多
+        testCompletableFuture();
+    }
+}
+```
+
+### 构造同步和异步操作
+
+```java
+/**
+ *  创建了一个由`守护线程`构成的线程池
+ */
+private final Executor executor = Executors.newFixedThreadPool(Math.min(shops.size(), 100)
+        , new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
+
+
+public List<String> findPricesCompletableFuture(String product) {
+    // supplyAsync工方法 指定线程池
+    List<CompletableFuture<String>> priceFutureList =
+            shops
+            .stream()
+            // 异步方式取得每个shop中指定产品的原始价格
+            .map(shop -> CompletableFuture.supplyAsync(
+                    () -> shop.getPrice(product), executor))
+            //  在Quote对象中对shop返回对字符串进行转换
+            .map(future -> future.thenApply(Quote::parse))
+            // 另一个异步任务构建期望的Future,申请折扣 thenCompose 将多个future组合 一个一个执行
+            .map(future -> future.thenCompose(quote ->
+                    CompletableFuture.supplyAsync(
+                        () -> Discount.applyDiscount(quote), executor)))
+            .collect(Collectors.toList());
+
+    return priceFutureList.stream()
+            // 等待流中所有的future执行完毕,并提取各自的返回值
+            .map(CompletableFuture::join)
+            .collect(Collectors.toList());
+}
+
+
+public static void testCompletableFuture(){
+    MainTest mainTest = new MainTest();
+    long start = System.nanoTime();
+    List<String> shopPriceList = mainTest.findPricesCompletableFuture("apple");
+    System.out.println(shopPriceList);
+//        shopPriceList.forEach( shopPrice -> System.out.println(shopPrice) );
+    long duration = ((System.nanoTime() - start) / 1_000_000);
+    System.out.println("Done in " + duration + " msecs");
+}
+
+public static void main(String[] args) {
+    // 异步方式只用了 2117 msecs
+    testCompletableFuture();
+}
+```
+
+* 执行流程图
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_future.png)
+
+#### 合并两个独立的CompletableFuture对象
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/combine_future.png)
+
+#### 响应CompletableFuture的completion事件
+
+```java
+public Stream<CompletableFuture<String>> findPricesStream(String product) {
+    return shops.stream()
+                // 异步方式取得每个shop中指定产品的原始价格
+                .map(shop -> CompletableFuture.supplyAsync(
+                        () -> shop.getPrice(product), executor))
+                //  在Quote对象中对shop返回对字符串进行转换
+                .map(future -> future.thenApply(Quote::parse))
+                // 另一个异步任务构建期望的Future,申请折扣 thenCompose 将多个future组合 一个一个执行
+                .map(future -> future.thenCompose(quote ->
+                        CompletableFuture.supplyAsync(
+                                () -> Discount.applyDiscount(quote), executor)));
+
+}
+
+
+public static void testCompletableFuture(){
+    MainTest mainTest = new MainTest();
+    /**
+     * thenAccept方法也提供 了一个异步版本，名为thenAcceptAsync。
+     * 异步版本的方法会对处理结果的消费者进行调度，从线程池中选择一个新的线程继续执行，
+     * 不再由同一个线程完成CompletableFuture的所有任务。
+     * 因为你想要避免不必要的上下文切换，更重要的是你希望避免在等待线程上浪费时间，
+     * 尽快响应CompletableFuture的completion事件，所以这里没有采用异步版本。
+     */
+    long start = System.nanoTime();
+    CompletableFuture[] futures = mainTest.findPricesStream("myPhone27S")
+            .map(f -> f.thenAccept(
+                    s -> System.out.println(s + " (done in " +
+                            ((System.nanoTime() - start) / 1_000_000) + " msecs)")))
+            .toArray(size -> new CompletableFuture[size]);
+    CompletableFuture.allOf(futures).join();
+    System.out.println("All shops have now responded in "
+            + ((System.nanoTime() - start) / 1_000_000) + " msecs");
+}
+```
+
+### 总结
+
+执行比较耗时的操作时，尤其是那些依赖一个或多个远程服务的操作，使用异步任务可以改善程序的性能，加快程序的响应速度。
+
+* 你应该`尽可能地为客户提供异步API`。使用CompletableFuture类提供的特性，你能够轻松地实现这一目标。
+* CompletableFuture类还提供了异常管理的机制，让你有机会抛出/管理异步任务执行
+中发生的异常。
+* 将同步API的调用封装到一个CompletableFuture中，你能够以异步的方式使用其结果。
+* 如果异步任务之间相互独立，或者它们之间某一些的结果是另一些的输入，你可以`将这些异步任务构造或者合并成一个`。
+* 你`可以为CompletableFuture注册一个回调函数`，在Future执行完毕或者它们计算的结果可用时，针对性地执行一些程序。
+* 你可以决定在什么时候结束程序的运行，是等待由CompletableFuture对象构成的列表中所有的对象都执行完毕，还是只要其中任何一个首先完成就中止程序的运行。
