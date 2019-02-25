@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java 堆内存结构 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆内存结构
+    <span class="updated">Page Updated&nbsp;
+      2019-02-15 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java 堆内存结构</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#java7">Java7堆内存划分：</a><ul>
+<li><a href="#java">《深入理解java虚拟机》堆的描述</a></li>
+<li><a href="#_1">堆区域</a></li>
+</ul>
+</li>
+<li><a href="#_2">常见的垃圾回收算法</a></li>
+<li><a href="#_3">垃圾收集器</a><ul>
+<li><a href="#_4">三个问题 ？</a></li>
+<li><a href="#_5">可达性分析 判定对象是否存活</a><ul>
+<li><a href="#javagc-roots">Java中可作为GC Roots的对象包括：</a></li>
+</ul>
+</li>
+<li><a href="#reference">引用Reference</a></li>
+<li><a href="#_6">对象是生存还是死亡的？(两次标记)</a></li>
+<li><a href="#_7">回收方法区</a></li>
+<li><a href="#hotspot">HotSpot 算法实现</a></li>
+</ul>
+</li>
+<li><a href="#_8">收集器</a></li>
+</ul>
+</div>
+<h1 id="java7">Java7堆内存划分：</h1>
+<h2 id="java">《深入理解java虚拟机》堆的描述</h2>
+<ol>
+<li>Java堆（Java Heap）是java虚拟机所管理的内存中最大的一块</li>
+<li>Java堆被所有线程共享的一块内存区域</li>
+<li>虚拟机启动时创建java堆</li>
+<li>Java堆的唯一目的就是存放对象实例。</li>
+<li>Java堆是垃圾收集器管理的主要区域。</li>
+<li>从内存回收的角度来看， 由于现在收集器基本都采用分代收集算法， 所以Java堆可以细分为：新生代（Young）和老年代（Old）。 新生代又被划分为三个区域Eden、From Survivor， To Survivor等。无论怎么划分，最终存储的都是实例对象， 进一步划分的目的是为了更好的回收内存， 或者更快的分配内存。</li>
+<li>Java堆的大小是可扩展的， 通过-Xmx和-Xms控制。</li>
+<li>如果堆内存不够分配实例对象， 并且对也无法在扩展时， 将会抛出outOfMemoryError异常。</li>
+</ol>
+<h2 id="_1">堆区域</h2>
+<ul>
+<li>堆大小 = 新生代 + 老年代。堆大小设置参数：<code>–Xms</code>（堆的初始容量）、<code>-Xmx</code>（堆的最大容量）</li>
+<li>其中，新生代 (<code>Young</code>) 被细分为<code>Eden</code>和两个<code>Survivor</code>区域，这两个<code>Survivor</code>区域分别被命名为<code>from</code>和<code>to</code>，以示区分。默认的，<code>Edem : from : to = 8 : 1 : 1</code>。(可以通过参数 –XX:SurvivorRatio 来设定 。即： Eden = 8/10 的新生代空间大小，from = to = 1/10 的新生代空间大小。</li>
+<li>JVM 每次只会使用<code>Eden</code>和其中的一块<code>Survivor</code>区域来为对象服务，所以无论什么时候，总是有一块<code>Survivor</code>区域是空闲着的。</li>
+<li>新生代实际可用的内存空间为 9/10 ( 即90% )的新生代空间。</li>
+</ul>
+<p><code>jstat</code>查看gc相关的堆信息</p>
+<div class="hlcode"><pre><span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">pwd</span>
+<span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">Java</span><span class="o">/</span><span class="n">JavaVirtualMachines</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">7.0</span><span class="n">_80</span><span class="o">.</span><span class="na">jdk</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">Home</span>
+<span class="n">mubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">bin</span><span class="o">/</span><span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">capacity</span> <span class="n">substituted</span> <span class="n">NaN</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">used</span> <span class="n">substituted</span> <span class="n">NaN</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">capacity</span> <span class="n">substituted</span> <span class="n">NaN</span>
+  <span class="n">S0</span>     <span class="n">S1</span>     <span class="n">E</span>      <span class="n">O</span>      <span class="n">P</span>     <span class="n">YGC</span>     <span class="n">YGCT</span>    <span class="n">FGC</span>    <span class="n">FGCT</span>     <span class="n">GCT</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">76.97</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.08</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.22</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>   <span class="mf">85.81</span>  <span class="mf">77.33</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+</pre></div>
+
+
+<ul>
+<li>E    — Heap上的 Eden space 区已使用空间的百分比(<code>Edem</code>)</li>
+<li>S0   — Heap上的 Survivor space 0 区已使用空间的百分比(<code>From</code>)</li>
+<li>S1   — Heap上的 Survivor space 1 区已使用空间的百分比(<code>To</code>)</li>
+<li>O    — Heap上的 Old space 区已使用空间的百分比(<code>Old</code>)</li>
+<li>P    — Perm space 区已使用空间的百分比（<code>Java7中的Perm Generation</code>）</li>
+<li>YGC  — 从应用程序启动到采样时发生 Young GC 的次数</li>
+<li>YGCT – 从应用程序启动到采样时 Young GC 所用的时间(单位秒)</li>
+<li>FGC  — 从应用程序启动到采样时发生 Full GC 的次数</li>
+<li>FGCT – 从应用程序启动到采样时 Full GC 所用的时间(单位秒)</li>
+<li>GCT  — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)</li>
+</ul>
+<h1 id="_2">常见的垃圾回收算法</h1>
+<p>参考学习：</p>
+<p>https://blog.csdn.net/qq_26437925/article/details/53728388</p>
+<h1 id="_3">垃圾收集器</h1>
+<h2 id="_4">三个问题 ？</h2>
+<ol>
+<li>
+<p>哪些内存需要回收</p>
+</li>
+<li>
+<p>什么时候回收</p>
+</li>
+<li>
+<p>如何回收</p>
+</li>
+</ol>
+<h2 id="_5"><code>可达性分析</code> 判定对象是否存活</h2>
+<p>算法的基本思路就是通过一系列的称为<code>GC Roots</code>的对象作为起始点，从这些节点向下搜索，搜索所走过的路径称为<code>引用链(Reference Chain)</code>,当一个对象到<code>GC Roots</code>没有任何引用链相连(用图论的话来说，就是<code>GC Roots</code>到这个对象不可达)时，则证明此对象是不可用的。</p>
+<h3 id="javagc-roots">Java中可作为<code>GC Roots</code>的对象包括：</h3>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI(即一般说的Native方法)引用的对象</li>
+</ul>
+<h2 id="reference">引用<code>Reference</code></h2>
+<p>强引用(Strong)，软引用(Soft)，弱引用(Weak)，虚引用(Phantom)；引用强度依次减弱</p>
+<ul>
+<li>强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。如</li>
+</ul>
+<div class="hlcode"><pre><span class="n">Object</span> <span class="n">o</span><span class="o">=</span><span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+</pre></div>
+
+
+<ul>
+<li>软引用是用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会吧这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。<code>SoftReference</code></li>
+</ul>
+<div class="hlcode"><pre><span class="n">String</span> <span class="n">str</span><span class="o">=</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>                                     <span class="c1">// 强引用</span>
+<span class="n">SoftReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">softRef</span><span class="o">=</span><span class="k">new</span> <span class="n">SoftReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="n">str</span><span class="o">);</span>     <span class="c1">// 软引用</span>
+</pre></div>
+
+
+<ul>
+<li>弱引用也是用来描述非必需对象的。但是它的强度比弱引用更弱一些，被弱引用关联的对象只能生成到下一次垃圾收集之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。<code>WeakReference</code></li>
+</ul>
+<div class="hlcode"><pre><span class="n">String</span> <span class="n">str</span><span class="o">=</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>
+<span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">abcWeakRef</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="n">str</span><span class="o">);</span>
+<span class="n">str</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+</pre></div>
+
+
+<ul>
+<li>虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。<code>PhantomReference</code></li>
+</ul>
+<p>参考：https://www.cnblogs.com/fengbs/p/7019687.html</p>
+<h2 id="_6">对象是生存还是死亡的？(两次标记)</h2>
+<p>对对象进行可达性分析 ？<br />
+=》没有GC Roots的引用链 =》 判断对象是否有必要执行<code>finalize()</code>方法</p>
+<ol>
+<li>对象没有覆盖<code>finalize()</code>方法，或者<code>finalize()</code>方法已经被虚拟机调用过,虚拟机将这两种情况都视为"没有必要执行"</li>
+<li>如果这个对象被判定为有必要执行<code>finalize()</code>方法,则这个对象会放置在一个叫做<code>F-Queue</code>的队列之中，并在稍后由一个虚拟机自动建立的，低优先级的<code>Finalizer线程</code>去执行它。</li>
+</ol>
+<p>如果对象对象要在<code>finalize()</code>中成功拯救自己--只需要重新与引用链上的任何一个对象建立关联即可，GC对<code>F-Queue</code>中对对象进行第二次标记时，会将它移出"即将回收"的集合，否则会被回收</p>
+<ul>
+<li>自救代码</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">java7</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 此代码说明如下两点：</span>
+<span class="cm"> * 1. 对象可以在GC时自我拯救</span>
+<span class="cm"> * 2. 这种自救的机会只有一次，因为一个对象的`finalize()`方法最多只会被系统自动调用一次</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FinalizeEscapeGC</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">FinalizeEscapeGC</span> <span class="n">SAVE_HOOK</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">FinalizeEscapeGC</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">isAlive</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes, i am still alive&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">finalize</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">finalize</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;finalize method executed!&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">);</span>
+        <span class="n">FinalizeEscapeGC</span><span class="o">.</span><span class="na">SAVE_HOOK</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="n">SAVE_HOOK</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FinalizeEscapeGC</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>
+        <span class="c1">// 对象第一次成功拯救自己</span>
+        <span class="n">SAVE_HOOK</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+        <span class="c1">// finalize方法的优先级很低，暂停0.5秒等待它</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">SAVE_HOOK</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">SAVE_HOOK</span><span class="o">.</span><span class="na">isAlive</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no, i am dead&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 下面这段代码与上面完全相同，但是这次自救却失败了</span>
+        <span class="n">SAVE_HOOK</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">SAVE_HOOK</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">SAVE_HOOK</span><span class="o">.</span><span class="na">isAlive</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no, i am dead&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre>finalize method executed!
+abc
+yes, i am still alive
+no, i am dead
+</pre></div>
+
+
+<ul>
+<li>最后，不推荐<code>finalize()</code></li>
+</ul>
+<h2 id="_7">回收方法区</h2>
+<p>堆中，新生代进行一次垃圾收集一般可以回收70%-95%的空间，而永久代的垃圾收集效率远低于此。</p>
+<p>永久代主要回收两部分内容： 废弃常量和无用的类， 判断"无用的类"：</p>
+<ol>
+<li>该类所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例</li>
+<li>加载该类的ClassLoader已经被回收</li>
+<li>该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法</li>
+</ol>
+<p>是否对类进行回收，HotSpot虚拟机提供了<code>-Xnoclassgc</code>参数进行控制，还可以使用<code>-verbose:class</code>以及<code>-XX:+TraceClassLoading</code>,<code>-XX:+TraceClassUnLoading</code>查看类加载和卸载信息，其中<code>-verbose:class</code>和<code>-XX:+TraceClassLoading</code>可以在Product版的虚拟机中使用，<code>-XX:+TraceClassUnLoading</code>参数需要FastDebug版的虚拟机支持</p>
+<p>在大量使用反射，动态代理，CGLib等ByteCode框架，动态生成JSP以及OSGi这类频繁自定义ClassLoader的场景都需要虚拟机具备类卸载的功能，以保证永久代不会溢出</p>
+<h2 id="hotspot">HotSpot 算法实现</h2>
+<p>可达性分析的"一致性"分析，GC进行时必须停顿所有Java执行线程(Sun将这件事情称为<code>Stop The World</code>)</p>
+<p>虚拟机有办法直接得知哪些地方存放着对象的引用，HotSpot中使用一组称为<code>OopMap</code>的数据结构来达到这个目的：在类加载完成的时候，HotPot就把对象内什么偏移量是什么类型的数据计算出来，在JIT编译过程中，也会在特定的位置记录下栈和寄存器中哪些位置是引用。这样，GC在扫描时就可以直接得知这些信息了。</p>
+<p>借助OopMap，HotSpot可以快速且准确地完成GC Roots枚举，问题：</p>
+<ul>
+<li>可能导致引用关系变化，或者说OopMap内容变化的指令特别多，如果为每一条指令都生成对应的OopMap，那将会需要大量的额外空间，这样GC的空间成本将会变得很高</li>
+</ul>
+<p>实际上，HotSpot没有为每条指令都生成<code>oopMap</code>, 安全点(<code>Sagepoint</code>) GC， 选举以"是否具有让程序长时间执行的特征"为标准进行选定，如方法调用，循环跳转，异常跳转等，这些功能的指令会产生安全点</p>
+<h1 id="_8">收集器</h1>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-02-25 23:40:54</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

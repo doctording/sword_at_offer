@@ -174,7 +174,7 @@ public class JavaMethodAreaOOM {
         String str2 = new StringBuilder("ja").append("va").toString();
         System.out.println(str2.intern() == str2); // false
 	}
-	
+
 	static String  base = "string";
     public static void main(String[] args) {
         List<String> list = new ArrayList<String>();
@@ -227,13 +227,13 @@ import java.nio.ByteBuffer;
 public class DirectMemoryOOM {
 	 public static final int _1MB = 1024 * 1024;
 
-	    public static void main(String[] args) throws Exception{
-	    	 ByteBuffer.allocateDirect(11 * _1MB);
-	    }
+	public static void main(String[] args) throws Exception{
+		ByteBuffer.allocateDirect(11 * _1MB);
+	}
 }
 ```
 
-output
+* output
 
 ```java
 Exception in thread "main" java.lang.OutOfMemoryError: Direct buffer memory
@@ -242,4 +242,3 @@ Exception in thread "main" java.lang.OutOfMemoryError: Direct buffer memory
 	at java.nio.ByteBuffer.allocateDirect(ByteBuffer.java:306)
 	at java7.DirectMemoryOOM.main(DirectMemoryOOM.java:14)
 ```
-
