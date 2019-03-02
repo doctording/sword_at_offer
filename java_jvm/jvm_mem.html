@@ -476,13 +476,13 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 <p>老年代最大可用的连续空间 &gt; 新生代所有对象总空间, 这样能确保<code>Minor GC</code>是安全的。</p>
 <p>如果不成立，虚拟机会查看<code>HandlerPromotionFailure</code>设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</p>
 <p>如果大于，将尝试着进行一次<code>Minor GC</code>,尽管这次的<code>Minor GC</code>是有风险的</p>
-<p>如果小雨，或者<code>HandlerPromotionFailure</code>设置值不允许担保失败，这时改为进行一次<code>Full GC</code></p>
+<p>如果小于，或者<code>HandlerPromotionFailure</code>设置值不允许担保失败，这时改为进行一次<code>Full GC</code></p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-01 22:38:17</p>
+        <p>Site Generated 2019-03-02 15:11:07</p>
       </span>
     </div>
 
