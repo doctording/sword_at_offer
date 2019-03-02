@@ -385,5 +385,4 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html
 
 如果大于，将尝试着进行一次`Minor GC`,尽管这次的`Minor GC`是有风险的
 
-如果小雨，或者`HandlerPromotionFailure`设置值不允许担保失败，这时改为进行一次`Full GC`
-
+如果小于，或者`HandlerPromotionFailure`设置值不允许担保失败，这时改为进行一次`Full GC`
