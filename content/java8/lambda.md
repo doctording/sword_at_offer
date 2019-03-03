@@ -82,7 +82,7 @@ public static List<Apple> findApple(List<Apple> apples, AppleFilter appleFilter)
 List<Apple> lambdaResult = findApple(list, apple -> apple.getColor().equals("green"));
 ```
 
-### java8 与 java7 内存空间的区别 // TODO
+### java8 与 java7 内存空间的区别
 
 ```java
 ^Cmubi@mubideMacBook-Pro Home $ pwd
