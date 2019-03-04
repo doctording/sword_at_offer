@@ -31,7 +31,12 @@
 <li><a href="#_2">流 特点</a><ul>
 <li><a href="#_3">流操作</a></li>
 <li><a href="#_4">流与集合</a></li>
-<li><a href="#_5">流操作</a></li>
+<li><a href="#_5">流操作</a><ul>
+<li><a href="#reduce">规约(reduce)</a></li>
+<li><a href="#max-min">max, min</a></li>
+<li><a href="#_6">流操作: 无状态和有状态 ?</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -137,7 +142,7 @@
 <ul>
 <li>外部迭代与内部迭代</li>
 </ul>
-<p>使用Collection接口需要用􏰆去做迭代(比如用for-each)，这称为外部迭代。相反，Streams库使用内部迭代——它帮你把迭代做了</p>
+<p>使用Collection接口需要用户去做迭代(比如用for-each)，这称为外部迭代。相反，Streams库使用内部迭代——它帮你把迭代做了</p>
 <h3 id="_5">流操作</h3>
 <ul>
 <li>filter、map和limit可以连成一条流水线;</li>
@@ -151,12 +156,62 @@
 <li>一个终端操作，执行流水线，并能生成结果</li>
 </ol>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_operate.png" /></p>
+<h4 id="reduce">规约(reduce)</h4>
+<div class="hlcode"><pre><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numberList</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">7</span><span class="o">);</span>
+
+<span class="kt">int</span> <span class="n">numberSum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="nl">num:</span> <span class="n">numberList</span><span class="o">){</span>
+    <span class="n">numberSum</span> <span class="o">+=</span> <span class="n">num</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;sum:&quot;</span><span class="o">+</span> <span class="n">numberSum</span><span class="o">);</span>
+
+<span class="kt">int</span> <span class="n">numberSum2</span> <span class="o">=</span> <span class="n">numberList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;sum2:&quot;</span><span class="o">+</span> <span class="n">numberSum2</span><span class="o">);</span>
+</pre></div>
+
+
+<p>reduce接受两个参数</p>
+<ul>
+<li>
+<p>总和变量初始值，设为了0</p>
+</li>
+<li>
+<p>将列表中所有原始结合在一起的操作，设为了<code>+</code> （<code>BinaryOperator&lt;T&gt;</code>操作用lambda表达式表示）</p>
+</li>
+</ul>
+<p>如下返回<code>Optional</code>对象，因为Stream中可能一个元素都没有</p>
+<div class="hlcode"><pre><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numberSum3</span> <span class="o">=</span> <span class="n">numberList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">reduce</span><span class="o">(</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;sum3:&quot;</span><span class="o">+</span> <span class="n">numberSum3</span><span class="o">);</span>
+</pre></div>
+
+
+<h4 id="max-min">max, min</h4>
+<div class="hlcode"><pre><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numberList</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">10</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">7</span><span class="o">);</span>
+
+<span class="kt">int</span> <span class="n">numberMax</span> <span class="o">=</span> <span class="n">numberList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">?</span> <span class="n">a</span> <span class="o">:</span> <span class="n">b</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;max:&quot;</span><span class="o">+</span> <span class="n">numberMax</span><span class="o">);</span>
+
+<span class="n">Optional</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numberMax2</span> <span class="o">=</span> <span class="n">numberList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="nl">Integer:</span><span class="o">:</span><span class="n">max</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;max2:&quot;</span><span class="o">+</span> <span class="n">numberMax2</span><span class="o">);</span>
+</pre></div>
+
+
+<h4 id="_6">流操作: 无状态和有状态 ?</h4>
+<p>诸如<code>map</code>或<code>filter</code>等操作会从输入流中获取每一个元素，并在输出流中输出0个或1个结果，这些操作是<code>无状态</code>的:它们没有内部状态（假设用户提高的lambda或方法引用没有内部可变状态）</p>
+<p>诸如<code>reduce</code>,<code>sum</code>，<code>max</code>等操作需要<code>内部状态</code>来累计结果，要求流是<code>有界</code>的</p>
+<p>诸如<code>sort</code>或<code>distince</code>等操作，开始与<code>map</code>,<code>filter</code>相同，但是需要有个缓冲区存放所有元素，这个存储要求是<code>无界</code>的</p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_operate2.png" /></p>
+<p>注：如果能避开有状态，选用无状态操作，就能获得更好的<code>并行</code>性能。</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-03 23:34:31</p>
+        <p>Site Generated 2019-03-04 23:14:19</p>
       </span>
     </div>
 

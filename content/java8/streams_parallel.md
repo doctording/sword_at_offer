@@ -331,4 +331,6 @@ System.out.println("Sequential sum done in:" +
 
 `Spliterator`是Java8中加入的另一个新接口;这个名字代表“可分迭代器”(splitable iterator)。和Iterator一样，Spliterator也用于遍历数据源中的元素，但它是为了并行执行而设计的。
 
-## //TODO
+## ParallelStream 使用问题
+
+// TODO
