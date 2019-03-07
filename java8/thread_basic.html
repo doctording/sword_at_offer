@@ -1,0 +1,516 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java8 Thread - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Java8 Thread
+    <span class="updated">Page Updated&nbsp;
+      2019-02-15 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java8 Thread</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#thread-runnable">Thread 类 &amp; Runnable 接口</a><ul>
+<li><a href="#interface-runnale">interface Runnale 源码</a></li>
+<li><a href="#class-thread">class Thread 源码</a><ul>
+<li><a href="#init">init</a></li>
+<li><a href="#thread-start-run">Thread 的 start() &amp; run()</a></li>
+</ul>
+</li>
+<li><a href="#stacksize">stackSize</a></li>
+</ul>
+</li>
+<li><a href="#threadgroup">ThreadGroup线程组</a><ul>
+<li><a href="#_1">线程组认识</a></li>
+<li><a href="#_2">线程组源码</a></li>
+<li><a href="#daemon">守护(Daemon)线程</a></li>
+</ul>
+</li>
+<li><a href="#thread-api">Thread API</a><ul>
+<li><a href="#sleep">sleep</a></li>
+<li><a href="#yield">yield</a><ul>
+<li><a href="#sleep-yield">sleep 与 yield的区别</a></li>
+</ul>
+</li>
+<li><a href="#_3">线程的优先级</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="thread-runnable">Thread 类 &amp; Runnable 接口</h1>
+<h2 id="interface-runnale"><code>interface Runnale</code> 源码</h2>
+<p>一个<code>FunctionalInterface</code></p>
+<div class="hlcode"><pre><span class="nd">@FunctionalInterface</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Runnable</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * When an object implementing interface &lt;code&gt;Runnable&lt;/code&gt; is used</span>
+<span class="cm">     * to create a thread, starting the thread causes the object&#39;s</span>
+<span class="cm">     * &lt;code&gt;run&lt;/code&gt; method to be called in that separately executing</span>
+<span class="cm">     * thread.</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">     * The general contract of the method &lt;code&gt;run&lt;/code&gt; is that it may</span>
+<span class="cm">     * take any action whatsoever.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @see     java.lang.Thread#run()</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ol>
+<li>显然可以利用<code>Java8 lambda</code></li>
+<li>其次一个类实现了<code>Runnable</code>接口，而不是继承<code>Thread</code>, 那么其只是有<code>run()</code>方法，没有所谓的<code>start()</code>方法</li>
+</ol>
+<p>线程真正的执行逻辑是在<code>run()</code>, 通常称为线程的执行单元</p>
+<h2 id="class-thread"><code>class Thread</code> 源码</h2>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Thread</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+
+<span class="c1">// 成员变量</span>
+<span class="cm">/* Java thread status for tools,</span>
+<span class="cm">* initialized to indicate thread &#39;not yet started&#39;</span>
+<span class="cm">*/</span>
+<span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">int</span> <span class="n">threadStatus</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+<span class="cm">/* The group of this thread */</span>
+<span class="kd">private</span> <span class="n">ThreadGroup</span> <span class="n">group</span><span class="o">;</span>
+
+<span class="cm">/* For autonumbering anonymous threads. */</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">threadInitNumber</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">synchronized</span> <span class="kt">int</span> <span class="nf">nextThreadNum</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">threadInitNumber</span><span class="o">++;</span>
+<span class="o">}</span>
+
+<span class="c1">// 常见构造方法</span>
+<span class="kd">public</span> <span class="nf">Thread</span><span class="o">(</span><span class="n">Runnable</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">init</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">target</span><span class="o">,</span> <span class="s">&quot;Thread-&quot;</span> <span class="o">+</span> <span class="n">nextThreadNum</span><span class="o">(),</span> <span class="mi">0</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="nf">Thread</span><span class="o">(</span><span class="n">ThreadGroup</span> <span class="n">group</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">init</span><span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="init">init</h3>
+<ol>
+<li>一个线程的创建肯定是由另一个线程完成的</li>
+<li>被创建线程的父线程是创建它的线程</li>
+</ol>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">    * Initializes a Thread.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @param g the Thread group</span>
+<span class="cm">    * @param target the object whose run() method gets called</span>
+<span class="cm">    * @param name the name of the new Thread</span>
+<span class="cm">    * @param stackSize the desired stack size for the new thread, or</span>
+<span class="cm">    *        zero to indicate that this parameter is to be ignored.</span>
+<span class="cm">    * @param acc the AccessControlContext to inherit, or</span>
+<span class="cm">    *            AccessController.getContext() if null</span>
+<span class="cm">    * @param inheritThreadLocals if {@code true}, inherit initial values for</span>
+<span class="cm">    *            inheritable thread-locals from the constructing thread</span>
+<span class="cm">    */</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">ThreadGroup</span> <span class="n">g</span><span class="o">,</span> <span class="n">Runnable</span> <span class="n">target</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span>
+                    <span class="kt">long</span> <span class="n">stackSize</span><span class="o">,</span> <span class="n">AccessControlContext</span> <span class="n">acc</span><span class="o">,</span>
+                    <span class="kt">boolean</span> <span class="n">inheritThreadLocals</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">(</span><span class="s">&quot;name cannot be null&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="n">Thread</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">currentThread</span><span class="o">();</span>
+    <span class="n">SecurityManager</span> <span class="n">security</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">g</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/* Determine if it&#39;s an applet or not */</span>
+
+        <span class="cm">/* If there is a security manager, ask the security manager</span>
+<span class="cm">            what to do. */</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">security</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">security</span><span class="o">.</span><span class="na">getThreadGroup</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="cm">/* If the security doesn&#39;t have a strong opinion of the matter</span>
+<span class="cm">            use the parent thread group. */</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">g</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">getThreadGroup</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/* checkAccess regardless of whether or not threadgroup is</span>
+<span class="cm">        explicitly passed in. */</span>
+    <span class="n">g</span><span class="o">.</span><span class="na">checkAccess</span><span class="o">();</span>
+
+    <span class="cm">/*</span>
+<span class="cm">        * Do we have the required permissions?</span>
+<span class="cm">        */</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">security</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isCCLOverridden</span><span class="o">(</span><span class="n">getClass</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">security</span><span class="o">.</span><span class="na">checkPermission</span><span class="o">(</span><span class="n">SUBCLASS_IMPLEMENTATION_PERMISSION</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="n">g</span><span class="o">.</span><span class="na">addUnstarted</span><span class="o">();</span>
+
+    <span class="k">this</span><span class="o">.</span><span class="na">group</span> <span class="o">=</span> <span class="n">g</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">daemon</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">isDaemon</span><span class="o">();</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">priority</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">getPriority</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">security</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">isCCLOverridden</span><span class="o">(</span><span class="n">parent</span><span class="o">.</span><span class="na">getClass</span><span class="o">()))</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">contextClassLoader</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">getContextClassLoader</span><span class="o">();</span>
+    <span class="k">else</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">contextClassLoader</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">contextClassLoader</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">inheritedAccessControlContext</span> <span class="o">=</span>
+            <span class="n">acc</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">acc</span> <span class="o">:</span> <span class="n">AccessController</span><span class="o">.</span><span class="na">getContext</span><span class="o">();</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">;</span>
+    <span class="n">setPriority</span><span class="o">(</span><span class="n">priority</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">inheritThreadLocals</span> <span class="o">&amp;&amp;</span> <span class="n">parent</span><span class="o">.</span><span class="na">inheritableThreadLocals</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">inheritableThreadLocals</span> <span class="o">=</span>
+            <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">createInheritedMap</span><span class="o">(</span><span class="n">parent</span><span class="o">.</span><span class="na">inheritableThreadLocals</span><span class="o">);</span>
+    <span class="cm">/* Stash the specified stack size in case the VM cares */</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">stackSize</span> <span class="o">=</span> <span class="n">stackSize</span><span class="o">;</span>
+
+    <span class="cm">/* Set thread ID */</span>
+    <span class="n">tid</span> <span class="o">=</span> <span class="n">nextThreadID</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="thread-start-run">Thread 的 start() &amp; run()</h3>
+<ul>
+<li>run()</li>
+</ul>
+<div class="hlcode"><pre><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">target</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>start()</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">        * This method is not invoked for the main method thread or &quot;system&quot;</span>
+<span class="cm">        * group threads created/set up by the VM. Any new functionality added</span>
+<span class="cm">        * to this method in the future may have to also be added to the VM.</span>
+<span class="cm">        *</span>
+<span class="cm">        * A zero status value corresponds to state &quot;NEW&quot;.</span>
+<span class="cm">        */</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">threadStatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalThreadStateException</span><span class="o">();</span>
+
+    <span class="c1">// 加入到线程组中</span>
+    <span class="cm">/* Notify the group that this thread is about to be started</span>
+<span class="cm">        * so that it can be added to the group&#39;s list of threads</span>
+<span class="cm">        * and the group&#39;s unstarted count can be decremented. */</span>
+    <span class="n">group</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+
+    <span class="kt">boolean</span> <span class="n">started</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">start0</span><span class="o">();</span>
+        <span class="n">started</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">started</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">group</span><span class="o">.</span><span class="na">threadStartFailed</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">ignore</span><span class="o">)</span> <span class="o">{</span>
+            <span class="cm">/* do nothing. If start0 threw a Throwable then</span>
+<span class="cm">                it will be passed up the call stack */</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// start0()会新运行一个线程，新线程会调用run()方法</span>
+<span class="kd">private</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">start0</span><span class="o">();</span>
+</pre></div>
+
+
+<h2 id="stacksize">stackSize</h2>
+<div class="hlcode"><pre><span class="cm">/*</span>
+<span class="cm">* The requested stack size for this thread, or 0 if the creator did</span>
+<span class="cm">* not specify a stack size.  It is up to the VM to do whatever it</span>
+<span class="cm">* likes with this number; some VMs will ignore it.</span>
+<span class="cm">*/</span>
+<span class="kd">private</span> <span class="kt">long</span> <span class="n">stackSize</span><span class="o">;</span>
+</pre></div>
+
+
+<p>操作系统对一个进程的最大内存是有限制的</p>
+<p>虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存</p>
+<p>JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系</p>
+<h1 id="threadgroup"><code>ThreadGroup</code>线程组</h1>
+<h2 id="_1">线程组认识</h2>
+<div class="hlcode"><pre><span class="n">ThreadGroup</span> <span class="n">tg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadGroup</span><span class="o">(</span><span class="s">&quot;tg&quot;</span><span class="o">);</span>
+<span class="n">Thread</span> <span class="n">tr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">tg</span><span class="o">,</span><span class="s">&quot;tr&quot;</span><span class="o">);</span>
+
+<span class="c1">// 不断获取上一级的 线程组</span>
+<span class="n">ThreadGroup</span> <span class="n">tg_parent</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="na">getThreadGroup</span><span class="o">();</span>
+<span class="k">while</span><span class="o">(</span><span class="n">tg_parent</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">tg_parent</span><span class="o">);</span>
+    <span class="n">tg_parent</span> <span class="o">=</span> <span class="n">tg_parent</span><span class="o">.</span><span class="na">getParent</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ThreadGroup</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="n">tg</span><span class="o">,</span><span class="n">maxpri</span><span class="o">=</span><span class="mi">10</span><span class="o">]</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ThreadGroup</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="n">main</span><span class="o">,</span><span class="n">maxpri</span><span class="o">=</span><span class="mi">10</span><span class="o">]</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ThreadGroup</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="n">system</span><span class="o">,</span><span class="n">maxpri</span><span class="o">=</span><span class="mi">10</span><span class="o">]</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="n">ThreadGroup</span> <span class="n">tg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadGroup</span><span class="o">(</span><span class="s">&quot;tg&quot;</span><span class="o">);</span>
+<span class="n">Thread</span> <span class="n">tr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">tg</span><span class="o">,</span><span class="s">&quot;tr&quot;</span><span class="o">);</span>
+
+<span class="c1">// 不断获取上一级的 线程组</span>
+<span class="n">ThreadGroup</span> <span class="n">tg_parent</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="na">getThreadGroup</span><span class="o">();</span>
+<span class="k">while</span><span class="o">(</span><span class="n">tg_parent</span><span class="o">.</span><span class="na">getParent</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+    <span class="n">tg_parent</span> <span class="o">=</span> <span class="n">tg_parent</span><span class="o">.</span><span class="na">getParent</span><span class="o">();</span>
+<span class="o">}</span>
+<span class="c1">// 打印 线程组 的树</span>
+<span class="n">tg_parent</span><span class="o">.</span><span class="na">list</span><span class="o">();</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ThreadGroup</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="n">system</span><span class="o">,</span><span class="n">maxpri</span><span class="o">=</span><span class="mi">10</span><span class="o">]</span>
+    <span class="n">Thread</span><span class="o">[</span><span class="n">Reference</span> <span class="n">Handler</span><span class="o">,</span><span class="mi">10</span><span class="o">,</span><span class="n">system</span><span class="o">]</span>
+    <span class="n">Thread</span><span class="o">[</span><span class="n">Finalizer</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="n">system</span><span class="o">]</span>
+    <span class="n">Thread</span><span class="o">[</span><span class="n">Signal</span> <span class="n">Dispatcher</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="n">system</span><span class="o">]</span>
+    <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ThreadGroup</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="n">main</span><span class="o">,</span><span class="n">maxpri</span><span class="o">=</span><span class="mi">10</span><span class="o">]</span>
+        <span class="n">Thread</span><span class="o">[</span><span class="n">main</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="n">main</span><span class="o">]</span>
+        <span class="n">Thread</span><span class="o">[</span><span class="n">Monitor</span> <span class="n">Ctrl</span><span class="o">-</span><span class="n">Break</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="n">main</span><span class="o">]</span>
+        <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ThreadGroup</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="n">tg</span><span class="o">,</span><span class="n">maxpri</span><span class="o">=</span><span class="mi">10</span><span class="o">]</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="n">Thread</span> <span class="n">tr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="s">&quot;tr&quot;</span><span class="o">);</span>
+<span class="n">ThreadGroup</span> <span class="n">tg_parent</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="na">getThreadGroup</span><span class="o">();</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">tg_parent</span><span class="o">);</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ThreadGroup</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="n">main</span><span class="o">,</span><span class="n">maxpri</span><span class="o">=</span><span class="mi">10</span><span class="o">]</span>
+</pre></div>
+
+
+<h2 id="_2">线程组源码</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> * A thread group represents a set of threads. In addition, a thread</span>
+<span class="cm"> * group can also include other thread groups. The thread groups form</span>
+<span class="cm"> * a tree in which every thread group except the initial thread group</span>
+<span class="cm"> * has a parent.</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * A thread is allowed to access information about its own thread</span>
+<span class="cm"> * group, but not to access information about its thread group&#39;s</span>
+<span class="cm"> * parent thread group or any other thread groups.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @author  unascribed</span>
+<span class="cm"> * @since   JDK1.0</span>
+<span class="cm"> */</span>
+<span class="cm">/* The locking strategy for this code is to try to lock only one level of the</span>
+<span class="cm"> * tree wherever possible, but otherwise to lock from the bottom up.</span>
+<span class="cm"> * That is, from child thread groups to parents.</span>
+<span class="cm"> * This has the advantage of limiting the number of locks that need to be held</span>
+<span class="cm"> * and in particular avoids having to grab the lock for the root thread group,</span>
+<span class="cm"> * (or a global lock) which would be a source of contention on a</span>
+<span class="cm"> * multi-processor system with many thread groups.</span>
+<span class="cm"> * This policy often leads to taking a snapshot of the state of a thread group</span>
+<span class="cm"> * and working off of that snapshot, rather than holding the thread group locked</span>
+<span class="cm"> * while we work on the children.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span>
+<span class="kd">class</span> <span class="nc">ThreadGroup</span> <span class="kd">implements</span> <span class="n">Thread</span><span class="o">.</span><span class="na">UncaughtExceptionHandler</span> <span class="o">{</span>
+</pre></div>
+
+
+<p>线程组表示一个线程的集合。线程组也可以包含其它线程组。</p>
+<h2 id="daemon">守护(Daemon)线程</h2>
+<ul>
+<li>The Java Virtual Machine exits when the only threads running are all daemon threads</li>
+</ul>
+<p>如果一个JVM进程中一个非守护线程都没有，那么JVM会退出，即守护线程具备自动结束生命周期的特性。</p>
+<p>守护线程的优先级比较低，用于为系统中的其它对象和线程提供服务；线程对象创建之前，用线程对象的<code>setDaemon(true)</code>方法。</p>
+<p>典型的守护线程如：Java垃圾回收线程</p>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">DaemonThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="n">_000L</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">DaemonThread</span> <span class="n">daemonThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DaemonThread</span><span class="o">();</span>
+        <span class="n">daemonThread</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;DaemonThread&quot;</span><span class="o">);</span>
+        <span class="n">daemonThread</span><span class="o">.</span><span class="na">setDaemon</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+        <span class="n">daemonThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">daemonThread</span><span class="o">.</span><span class="na">isDaemon</span><span class="o">());</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="n">_000L</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Main thread finished&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">com</span><span class="o">.</span><span class="na">parallel</span><span class="o">.</span><span class="na">DaemonThread</span>
+<span class="kc">true</span>
+<span class="n">com</span><span class="o">.</span><span class="na">parallel</span><span class="o">.</span><span class="na">DaemonThread</span>
+<span class="n">Main</span> <span class="n">thread</span> <span class="n">finished</span>
+</pre></div>
+
+
+<p>Java的两类<code>Thread</code></p>
+<ol>
+<li>
+<p>用户线程：Java虚拟机在它所有非守护线程已经离开后自动离开</p>
+</li>
+<li>
+<p>守护线程：守护线程则是用来服务用户线程的，如果没有其他用户线程在运行，那么就没有可服务对象，也就没有理由继续下去</p>
+</li>
+</ol>
+<h1 id="thread-api">Thread API</h1>
+<h2 id="sleep">sleep</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">sleep</span><span class="o">(</span><span class="kt">long</span> <span class="n">millis</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sleep</span><span class="o">(</span><span class="kt">long</span> <span class="n">millis</span><span class="o">,</span> <span class="kt">int</span> <span class="n">nanos</span><span class="o">)</span> <span class="n">hrows</span> <span class="n">InterruptedException</span>
+
+
+<span class="c1">// 人性化设置休眠时间的sleep</span>
+<span class="kn">package</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span>
+
+<span class="n">TimeUnit</span>
+</pre></div>
+
+
+<p>sleep休眠<strong>不会放弃monitor锁的所有权</strong>，各个线程的休眠不会相互影响，sleep只会导致当前线程休眠</p>
+<h2 id="yield">yield</h2>
+<div class="hlcode"><pre><span class="nx">vt</span><span class="p">.</span><span class="err">屈服，投降</span><span class="p">;</span> <span class="err">生产</span><span class="p">;</span> <span class="err">获利</span><span class="p">;</span> <span class="err">不再反对</span><span class="p">;</span>
+<span class="nx">vi</span><span class="p">.</span><span class="err">放弃，屈服</span><span class="p">;</span> <span class="err">生利</span><span class="p">;</span> <span class="err">退让，退位</span><span class="p">;</span>
+<span class="nx">n</span><span class="p">.</span><span class="err">产量，产额</span><span class="p">;</span> <span class="err">投资的收益</span><span class="p">;</span> <span class="err">屈服，击穿</span><span class="p">;</span> <span class="err">产品</span><span class="p">;</span>
+</pre></div>
+
+
+<p>启发式的方式：提醒调度器愿意放弃当前CPU资源，如果CPU资源不紧张，则会忽略这种提醒</p>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">* A hint to the scheduler that the current thread is willing to yield</span>
+<span class="cm">* its current use of a processor. The scheduler is free to ignore this</span>
+<span class="cm">* hint.</span>
+<span class="cm">*</span>
+<span class="cm">* &lt;p&gt; Yield is a heuristic attempt to improve relative progression</span>
+<span class="cm">* between threads that would otherwise over-utilise a CPU. Its use</span>
+<span class="cm">* should be combined with detailed profiling and benchmarking to</span>
+<span class="cm">* ensure that it actually has the desired effect.</span>
+<span class="cm">*</span>
+<span class="cm">* &lt;p&gt; It is rarely appropriate to use this method. It may be useful</span>
+<span class="cm">* for debugging or testing purposes, where it may help to reproduce</span>
+<span class="cm">* bugs due to race conditions. It may also be useful when designing</span>
+<span class="cm">* concurrency control constructs such as the ones in the</span>
+<span class="cm">* {@link java.util.concurrent.locks} package.</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">yield</span><span class="o">();</span>
+</pre></div>
+
+
+<ul>
+<li>测试程序</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">MyThread</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">MyThread</span><span class="o">(</span><span class="kt">int</span> <span class="n">_id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">id</span> <span class="o">=</span> <span class="n">_id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;id:&quot;</span> <span class="o">+</span> <span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(){</span>
+        <span class="n">MyThread</span><span class="o">[]</span> <span class="n">ts</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ts</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">ts</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ts</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">ts</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">test</span><span class="o">();</span>
+       <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Main thread finished&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="sleep-yield">sleep 与 yield的区别</h3>
+<ul>
+<li><code>yield</code>会使<code>RUNNING</code>状态的 Thread 进入<code>Runnable</code>状态（如果CPU调度器没有忽略这个提示的话）</li>
+<li><code>sleep</code>回使得线程短暂的block, 会在给定的时间内释放CPU资源</li>
+<li>一个线程<code>sleep</code>,另一个线程调用<code>interrupt</code>会捕获到中断信号，而<code>yield</code>则不会</li>
+</ul>
+<h2 id="_3">线程的优先级</h2>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-03-07 23:06:31</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

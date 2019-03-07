@@ -141,8 +141,8 @@
 
 <p>求和方法的<code>并行</code>版本比<code>顺序</code>版本要慢很多, 如何解释？</p>
 <ul>
-<li>iterate生成的是装箱的对象，必须拆箱成数字才能求和;</li>
-<li>我们很难把iterate分成多个独立块来并行执行。</li>
+<li><code>iterate</code>生成的是<code>装箱</code>的对象，必须<code>拆箱</code>成数字才能求和;</li>
+<li>我们很难把<code>iterate</code>分成多个独立块来并行执行。</li>
 </ul>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">Stream</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">iterate</span><span class="o">(</span><span class="kd">final</span> <span class="n">T</span> <span class="n">seed</span><span class="o">,</span> <span class="kd">final</span> <span class="n">UnaryOperator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">f</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">f</span><span class="o">);</span>
@@ -219,7 +219,7 @@
 
 
 <p>本质上就是顺序的。每次访问total都会出现数据竞争。如果尝试用同步来修复，那就完全失去并行的意义了</p>
-<div class="hlcode"><pre> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sequential sum done in:&quot;</span> <span class="o">+</span>
+<div class="hlcode"><pre><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sequential sum done in:&quot;</span> <span class="o">+</span>
                 <span class="n">measureSumPerf</span><span class="o">(</span><span class="nl">ParallelStreams:</span><span class="o">:</span><span class="n">sideEffectParallelSum</span><span class="o">,</span> <span class="mi">10</span><span class="n">_000_000</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; msecs&quot;</span><span class="o">);</span>
 </pre></div>
 
@@ -339,7 +339,7 @@
         <span class="c1">// 异步执行新的子任务</span>
         <span class="n">leftTask</span><span class="o">.</span><span class="na">fork</span><span class="o">();</span>
         <span class="n">ForkJoinSumRecursiveTask</span> <span class="n">rightTask</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ForkJoinSumRecursiveTask</span><span class="o">(</span><span class="n">mid</span><span class="o">,</span> <span class="n">end</span><span class="o">,</span> <span class="n">numbers</span><span class="o">);</span>
-        <span class="c1">// 同步执行第二个子任务 􏲵􏽸，有可能􏾂􏾃进 一步递􏺁􏰸分</span>
+        <span class="c1">// 同步执行第二个子任务, 依此类推</span>
         <span class="n">Long</span> <span class="n">rightResult</span> <span class="o">=</span> <span class="n">rightTask</span><span class="o">.</span><span class="na">compute</span><span class="o">();</span>
         <span class="n">Long</span> <span class="n">leftResult</span> <span class="o">=</span> <span class="n">leftTask</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
 
@@ -384,7 +384,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-04 23:14:19</p>
+        <p>Site Generated 2019-03-07 23:06:31</p>
       </span>
     </div>
 
