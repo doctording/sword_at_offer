@@ -104,8 +104,8 @@ public class MainTest {
 
 求和方法的`并行`版本比`顺序`版本要慢很多, 如何解释？
 
-* iterate生成的是装箱的对象，必须拆箱成数字才能求和;
-* 我们很难把iterate分成多个独立块来并行执行。
+* `iterate`生成的是`装箱`的对象，必须`拆箱`成数字才能求和;
+* 我们很难把`iterate`分成多个独立块来并行执行。
 
 ```java
 public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f) {
@@ -187,7 +187,7 @@ public static long sideEffectSum(long n) {
 本质上就是顺序的。每次访问total都会出现数据竞争。如果尝试用同步来修复，那就完全失去并行的意义了
 
 ```java
- System.out.println("Sequential sum done in:" +
+System.out.println("Sequential sum done in:" +
                 measureSumPerf(ParallelStreams::sideEffectParallelSum, 10_000_000) + " msecs");
 ```
 
@@ -286,7 +286,7 @@ public class ForkJoinSumRecursiveTask extends java.util.concurrent.RecursiveTask
         // 异步执行新的子任务
         leftTask.fork();
         ForkJoinSumRecursiveTask rightTask = new ForkJoinSumRecursiveTask(mid, end, numbers);
-        // 同步执行第二个子任务 􏲵􏽸，有可能􏾂􏾃进 一步递􏺁􏰸分
+        // 同步执行第二个子任务, 依此类推
         Long rightResult = rightTask.compute();
         Long leftResult = leftTask.join();
 
