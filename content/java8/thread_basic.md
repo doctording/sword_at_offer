@@ -8,6 +8,22 @@ date: 2019-02-15 00:00
 
 # Thread 类 & Runnable 接口
 
+* 线程的各种状态
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/thread_status.png)
+
+<small>转自： https://www.cnblogs.com/happy-coder/p/6587092.html，当然说的也不完全准确，知晓这些状态是必须的。</small>
+
+* 阻塞状态(Blocked)
+
+线程运行过程中，可能由于各种原因进入阻塞状态:
+    1. 线程通过调用sleep方法进入睡眠状态；
+    2. 线程调用一个在I/O上被阻塞的操作，即该操作在输入输出操作完成之前不会返回到它的调用者；
+    3. 线程试图得到一个锁，而该锁正被其他线程持有；
+    4. 线程在等待某个触发条件；
+    5. ...
+所谓阻塞状态是正在运行的线程没有运行结束，暂时让出CPU，这时其他处于就绪状态的线程就可以获得CPU时间，进入运行状态。
+
 ## `interface Runnale` 源码
 
 一个`FunctionalInterface`
@@ -465,3 +481,175 @@ public class Main {
 * 一个线程`sleep`,另一个线程调用`interrupt`会捕获到中断信号，而`yield`则不会
 
 ## 线程的优先级
+
+理论上，线程优先级高的会获取优先被CPU调度的机会，但实际上这也是个`hint`操作
+
+* 如果CPU比较忙，设置优先级可能会获得更多的CPU时间片；但是CPU闲时, 优先级的高低几乎不会有任何作用
+
+* 对于root用户，它会`hint`操作系统你想要设置的优先级别，否则它会被忽略
+
+```java
+ /**
+     * Changes the priority of this thread.
+     * <p>
+     * First the <code>checkAccess</code> method of this thread is called
+     * with no arguments. This may result in throwing a
+     * <code>SecurityException</code>.
+     * <p>
+     * Otherwise, the priority of this thread is set to the smaller of
+     * the specified <code>newPriority</code> and the maximum permitted
+     * priority of the thread's thread group.
+     *
+     * @param newPriority priority to set this thread to
+     * @exception  IllegalArgumentException  If the priority is not in the
+     *               range <code>MIN_PRIORITY</code> to
+     *               <code>MAX_PRIORITY</code>.
+     * @exception  SecurityException  if the current thread cannot modify
+     *               this thread.
+     * @see        #getPriority
+     * @see        #checkAccess()
+     * @see        #getThreadGroup()
+     * @see        #MAX_PRIORITY
+     * @see        #MIN_PRIORITY
+     * @see        ThreadGroup#getMaxPriority()
+     */
+    public final void setPriority(int newPriority) {
+        ThreadGroup g;
+        checkAccess();
+        if (newPriority > MAX_PRIORITY || newPriority < MIN_PRIORITY) {
+            throw new IllegalArgumentException();
+        }
+        if((g = getThreadGroup()) != null) {
+            if (newPriority > g.getMaxPriority()) {
+                newPriority = g.getMaxPriority();
+            }
+            setPriority0(priority = newPriority);
+        }
+    }
+```
+
+## 线程ID
+
+线程的ID在整个JVM进程中都会是唯一的，并且是从0开始逐次增加
+
+```java
+/**
+     * Returns the identifier of this Thread.  The thread ID is a positive
+     * <tt>long</tt> number generated when this thread was created.
+     * The thread ID is unique and remains unchanged during its lifetime.
+     * When a thread is terminated, this thread ID may be reused.
+     *
+     * @return this thread's ID.
+     * @since 1.5
+     */
+    public long getId() {
+        return tid;
+    }
+```
+
+### 获取当前线程
+
+```java
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        Thread thread1 = Thread.currentThread();
+        // true
+        System.out.println( this == thread1);
+    }
+}
+```
+
+### 设置线程上下文类加载器 //TODO
+
+```java
+public void setContextClassLoader(ClassLoader cl)
+
+public ClassLoader getContextClassLoader()
+```
+
+## 线程`interrupt` 和 `可中断方法`
+
+如下方法的调用会使得当前线程进入阻塞状态，而另外的一个线程调用被阻塞线程的`interrupt`方法，可以打断这种阻塞。这些方法有时会被称为`可中断方法`
+
+```java
+wait
+sleep
+join
+InterruptibleChannel的io操作
+Selector的wakeup方法
+```
+
+打断一个线程并不等于该线程的生命周期结束，仅仅是打断当前线程的阻塞状态
+
+```java
+public class Main {
+
+    public static void main(String[] args) throws Exception{
+        Thread thread = new Thread(()-> {
+                try {
+                    System.out.println("thread start sleep");
+                    // sleep（可中断方法）使得线程进入阻塞状态
+                    TimeUnit.MINUTES.sleep(2);
+                    System.out.println("thread sleep over");
+                }catch (InterruptedException e){
+                    System.out.println("Interrupted");
+                }
+        });
+
+        Thread thread2 = new Thread(()-> {
+            System.out.println("thread2 start");
+            // 打断thread的阻塞
+            // 一个线程在阻塞的情况下会抛出一个`InterruptedException`,类似一个信号`signal`
+            thread.interrupt();
+            System.out.println("thread2 end");
+        });
+
+        thread.start();
+        TimeUnit.SECONDS.sleep(2);
+        thread2.start();
+    }
+}
+```
+
+* output
+
+```js
+thread start sleep
+thread2 start
+thread2 end
+Interrupted
+```
+
+### thread.interrupt()
+
+```java
+public class Main {
+
+    public static void main(String[] args) throws Exception{
+        Thread thread = new Thread(()-> {
+            while (true){
+                // 非 可中断的
+            }
+        });
+
+        Thread thread2 = new Thread(()-> {
+            System.out.println(thread.isInterrupted()); // false
+            System.out.println("thread2 start");
+            // 可中断方法 捕获到 中断 信号之后，为了不影响线程中其它方法的执行
+            // 将线程的 interrupt 标识复位
+            thread.interrupt();
+            System.out.println("thread2 end");
+            System.out.println(thread.isInterrupted()); // true
+        });
+
+        thread.start();
+        TimeUnit.SECONDS.sleep(2);
+        thread2.start();
+    }
+}
+```
+
+## Join
+
+与`sleep`一样也是一个可中断的方法
