@@ -6,15 +6,15 @@ date: 2019-03-09 00:00
 
 [TOC]
 
-# Synchronized
+# Synchronized & monitor
 
-## 性质
+## synchronized的几个性质
 
 * `synchronized` 提供了一种锁对机制，能确保共享变量的互斥访问，从而防止数据不一致问题的出现
 
 * `synchronized` 包括了`monitor enter`和`monitor exit`两个JVM指令，他能确保在任何时候，任何线程执行到`monitor enter`成功之前都必须从主内存中获取数据，而不是从缓存中，在`monitor exit`运行成功之后，共享变量被更新后的值必须刷入主内存内
 
-* `synchronized` 严格准守java happends-before规则，一个`monitor exit`指令之前必定要有一个`monitor enter`
+* `synchronized` 严格准守`Java happends-before`规则，一个`monitor exit`指令之前必定要有一个`monitor enter`
 
 ## 用法
 
