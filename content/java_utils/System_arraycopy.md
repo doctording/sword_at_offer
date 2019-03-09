@@ -1,5 +1,5 @@
 ---
-title: "System.arraycopy"
+title: "System.arraycopy, Array.copyOf"
 layout: page
 date: 2018-11-24 00:00
 ---
@@ -181,3 +181,7 @@ public class ArrayCopyThreadSafe {
     }
 }
 ```
+
+# Array.copyOf
+
+// TODO

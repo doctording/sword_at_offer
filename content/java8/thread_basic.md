@@ -653,3 +653,95 @@ public class Main {
 ## Join
 
 与`sleep`一样也是一个可中断的方法
+
+join某个线程A，会使得当前线程B进入等待，直到线程A结束生命周期，或者到达给定的时间，那么在此期间B线程是处于Blocked的。
+
+* 其中一次 output，但是"thread2 end"一定在thread结束后打印
+
+```java
+main end
+thread2 start
+thread start
+thread end
+thread2 end
+```
+
+### join源码分析
+
+判断线程是否alive,否则一直`wait()`
+
+```java
+public final void join() throws InterruptedException {
+        join(0);
+    }
+
+public final synchronized void join(long millis)
+    throws InterruptedException {
+        long base = System.currentTimeMillis();
+        long now = 0;
+
+        if (millis < 0) {
+            throw new IllegalArgumentException("timeout value is negative");
+        }
+
+        if (millis == 0) {
+            while (isAlive()) {
+                wait(0);
+            }
+        } else {
+            while (isAlive()) {
+                long delay = millis - now;
+                if (delay <= 0) {
+                    break;
+                }
+                wait(delay);
+                now = System.currentTimeMillis() - base;
+            }
+        }
+    }
+```
+
+## 关闭一个线程
+
+### 正常结束
+
+### 捕获中断信号关闭线程
+
+### 使用volatile开关控制
+
+```java
+public class Main {
+
+    static class Mythread extends Thread{
+        private volatile boolean close = false;
+
+        @Override
+        public void run() {
+            System.out.println("start");
+            while(!close && ! isInterrupted()){
+                System.out.println("running...");
+            }
+            System.out.println("end");
+        }
+
+        public void close(){
+            this.close = true;
+            this.interrupt();
+
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+
+        Mythread mythread = new Mythread();
+        mythread.start();
+        TimeUnit.SECONDS.sleep(1);
+        mythread.close();
+        System.out.println("main end");
+    }
+}
+```
+
+### 异常退出
+
+### 进程假死
