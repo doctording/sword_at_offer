@@ -26,19 +26,19 @@
 <div class="page_title">Thread Synchronized & Monitor</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#synchronized">Synchronized</a><ul>
-<li><a href="#_1">性质</a></li>
-<li><a href="#_2">用法</a></li>
-<li><a href="#_3">实际例子</a></li>
-<li><a href="#_4">多个锁的交叉导致的死锁</a></li>
+<li><a href="#synchronized-monitor">Synchronized &amp; monitor</a><ul>
+<li><a href="#synchronized">synchronized的几个性质</a></li>
+<li><a href="#_1">用法</a></li>
+<li><a href="#_2">实际例子</a></li>
+<li><a href="#_3">多个锁的交叉导致的死锁</a></li>
 <li><a href="#this-monotor">this monotor</a></li>
 <li><a href="#class-monitor">class monitor</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="synchronized">Synchronized</h1>
-<h2 id="_1">性质</h2>
+<h1 id="synchronized-monitor">Synchronized &amp; monitor</h1>
+<h2 id="synchronized">synchronized的几个性质</h2>
 <ul>
 <li>
 <p><code>synchronized</code> 提供了一种锁对机制，能确保共享变量的互斥访问，从而防止数据不一致问题的出现</p>
@@ -47,10 +47,10 @@
 <p><code>synchronized</code> 包括了<code>monitor enter</code>和<code>monitor exit</code>两个JVM指令，他能确保在任何时候，任何线程执行到<code>monitor enter</code>成功之前都必须从主内存中获取数据，而不是从缓存中，在<code>monitor exit</code>运行成功之后，共享变量被更新后的值必须刷入主内存内</p>
 </li>
 <li>
-<p><code>synchronized</code> 严格准守java happends-before规则，一个<code>monitor exit</code>指令之前必定要有一个<code>monitor enter</code></p>
+<p><code>synchronized</code> 严格准守<code>Java happends-before</code>规则，一个<code>monitor exit</code>指令之前必定要有一个<code>monitor enter</code></p>
 </li>
 </ul>
-<h2 id="_2">用法</h2>
+<h2 id="_1">用法</h2>
 <p><code>synchronized</code> 可用于代码块或方法进行修饰，而不能对class以及变量进行修饰, eg:</p>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">sync</span><span class="o">(){}</span>
 
@@ -69,7 +69,7 @@
 </pre></div>
 
 
-<h2 id="_3">实际例子</h2>
+<h2 id="_2">实际例子</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
@@ -132,7 +132,7 @@
 </pre></div>
 
 
-<h2 id="_4">多个锁的交叉导致的死锁</h2>
+<h2 id="_3">多个锁的交叉导致的死锁</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
@@ -313,7 +313,7 @@ monitor_jstack.png)</p>
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-09 20:15:41</p>
+        <p>Site Generated 2019-03-09 20:27:05</p>
       </span>
     </div>
 
