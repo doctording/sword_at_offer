@@ -58,7 +58,18 @@
 <li><a href="#threadinterrupt">thread.interrupt()</a></li>
 </ul>
 </li>
-<li><a href="#join">Join</a></li>
+<li><a href="#join">Join</a><ul>
+<li><a href="#join_1">join源码分析</a></li>
+</ul>
+</li>
+<li><a href="#_5">关闭一个线程</a><ul>
+<li><a href="#_6">正常结束</a></li>
+<li><a href="#_7">捕获中断信号关闭线程</a></li>
+<li><a href="#volatile">使用volatile开关控制</a></li>
+<li><a href="#_8">异常退出</a></li>
+<li><a href="#_9">进程假死</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -692,12 +703,96 @@
 
 <h2 id="join">Join</h2>
 <p>与<code>sleep</code>一样也是一个可中断的方法</p>
+<p>join某个线程A，会使得当前线程B进入等待，直到线程A结束生命周期，或者到达给定的时间，那么在此期间B线程是处于Blocked的。</p>
+<ul>
+<li>其中一次 output，但是"thread2 end"一定在thread结束后打印</li>
+</ul>
+<div class="hlcode"><pre><span class="n">main</span> <span class="n">end</span>
+<span class="n">thread2</span> <span class="n">start</span>
+<span class="n">thread</span> <span class="n">start</span>
+<span class="n">thread</span> <span class="n">end</span>
+<span class="n">thread2</span> <span class="n">end</span>
+</pre></div>
+
+
+<h3 id="join_1">join源码分析</h3>
+<p>判断线程是否alive,否则一直<code>wait()</code></p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">join</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">join</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">join</span><span class="o">(</span><span class="kt">long</span> <span class="n">millis</span><span class="o">)</span>
+    <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">base</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="kt">long</span> <span class="n">now</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">millis</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span><span class="s">&quot;timeout value is negative&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">millis</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">isAlive</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">wait</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">isAlive</span><span class="o">())</span> <span class="o">{</span>
+                <span class="kt">long</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">millis</span> <span class="o">-</span> <span class="n">now</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">delay</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">wait</span><span class="o">(</span><span class="n">delay</span><span class="o">);</span>
+                <span class="n">now</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">-</span> <span class="n">base</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h2 id="_5">关闭一个线程</h2>
+<h3 id="_6">正常结束</h3>
+<h3 id="_7">捕获中断信号关闭线程</h3>
+<h3 id="volatile">使用volatile开关控制</h3>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Mythread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">boolean</span> <span class="n">close</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;start&quot;</span><span class="o">);</span>
+            <span class="k">while</span><span class="o">(!</span><span class="n">close</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="n">isInterrupted</span><span class="o">()){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;running...&quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;end&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">(){</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">close</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+
+        <span class="n">Mythread</span> <span class="n">mythread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mythread</span><span class="o">();</span>
+        <span class="n">mythread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">mythread</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_8">异常退出</h3>
+<h3 id="_9">进程假死</h3>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-08 22:19:11</p>
+        <p>Site Generated 2019-03-09 13:08:56</p>
       </span>
     </div>
 
