@@ -1,5 +1,5 @@
 ---
-title: "Java8 Thread"
+title: "Thread"
 layout: page
 date: 2019-02-15 00:00
 ---
