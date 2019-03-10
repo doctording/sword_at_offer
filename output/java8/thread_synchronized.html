@@ -33,6 +33,7 @@
 <li><a href="#_3">多个锁的交叉导致的死锁</a></li>
 <li><a href="#this-monotor">this monotor</a></li>
 <li><a href="#class-monitor">class monitor</a></li>
+<li><a href="#synchronized_1">synchronized 的缺陷</a></li>
 </ul>
 </li>
 </ul>
@@ -308,12 +309,90 @@ monitor_jstack.png)</p>
 </ul>
 <div class="hlcode"><pre><span class="nx">T1</span> <span class="nx">enter</span> <span class="nx">to</span> <span class="nx">method</span> <span class="mi">1</span>  
 </pre></div>
+
+
+<h2 id="synchronized_1">synchronized 的缺陷</h2>
+<ul>
+<li>无法控制阻塞时长</li>
+<li>阻塞不可被中断</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">syncMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">HOURS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span> <span class="nf">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">Main</span> <span class="n">defect</span><span class="o">=</span><span class="k">new</span> <span class="n">Main</span><span class="o">();</span>
+
+        <span class="n">Thread</span> <span class="n">thread1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="nl">defect:</span><span class="o">:</span> <span class="n">syncMethod</span><span class="o">,</span><span class="s">&quot;T1&quot;</span><span class="o">);</span>
+        <span class="c1">// thread1 将先于 thread2 执行</span>
+        <span class="n">thread1</span><span class="o">.</span> <span class="nf">start</span><span class="o">();</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+
+        <span class="n">Thread</span> <span class="n">thread2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="nl">defect:</span><span class="o">:</span><span class="n">syncMethod</span><span class="o">,</span><span class="s">&quot;T2&quot;</span><span class="o">);</span>
+        <span class="n">thread2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ol>
+<li>thread1 先执行进入同步方法，然后sleep</li>
+<li>接着 thread2 进入同步方法，会阻塞，其获得执行权取决于 thread1 何时释放 monitor (如果thread2计划最多1分钟获得执行权，否则就放弃，使用 synchronized 无法做到)</li>
+<li>thread2 竞争 monitor 而陷入阻塞状态，那么 thread2 会无法中断（因为 synchronized 无法被打断）</li>
+</ol>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">syncMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">HOURS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span> <span class="nf">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">Main</span> <span class="n">defect</span><span class="o">=</span><span class="k">new</span> <span class="n">Main</span><span class="o">();</span>
+
+        <span class="n">Thread</span> <span class="n">thread1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="nl">defect:</span><span class="o">:</span> <span class="n">syncMethod</span><span class="o">,</span><span class="s">&quot;T1&quot;</span><span class="o">);</span>
+        <span class="c1">// thread1 将先于 thread2 执行</span>
+        <span class="n">thread1</span><span class="o">.</span> <span class="nf">start</span><span class="o">();</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+
+        <span class="n">Thread</span> <span class="n">thread2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="nl">defect:</span><span class="o">:</span><span class="n">syncMethod</span><span class="o">,</span><span class="s">&quot;T2&quot;</span><span class="o">);</span>
+        <span class="n">thread2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">thread2</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+        <span class="c1">// true</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">thread2</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">());</span>
+        <span class="c1">// BLOCKED</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">thread2</span><span class="o">.</span><span class="na">getState</span><span class="o">());</span>
+        <span class="c1">// TIMED_WAITING</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">thread1</span><span class="o">.</span><span class="na">getState</span><span class="o">());</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>synchronized是基于JVM层面实现的，如果一个代码块被synchronized修饰了，当一个线程获取了对应的锁，并执行该代码块时，其他线程便只能一直等待，等待获取锁的线程释放锁，而这里获取锁的线程释放锁会有三种情况：</p>
+<ol>
+<li>获取锁的线程执行完了该代码块，然后线程释放对锁的占有；</li>
+<li>线程执行发生异常，此时JVM会让线程自动释放锁。</li>
+<li>wait()方法释放锁，方便其它的线程使用锁。而且被唤醒时，就在此处唤醒</li>
+</ol>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-09 20:27:05</p>
+        <p>Site Generated 2019-03-10 22:37:34</p>
       </span>
     </div>
 

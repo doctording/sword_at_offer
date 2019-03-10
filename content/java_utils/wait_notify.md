@@ -163,7 +163,7 @@ main end
 
 `synchronized(threadA)`锁定threadA（获得threadA的monitor）
 
-`wait`操作会释放对象的monitor， 如果原先没有锁定，则会抛出`java.lang.IllegalMonitorStateException`
+`wait`操作会释放对象的monitor，如果原先没有锁定，则会抛出`java.lang.IllegalMonitorStateException`
 
 ```java
 Thread threadB = new Thread(()-> {
@@ -194,3 +194,15 @@ java.lang.IllegalMonitorStateException
 A notify
 main end
 ```
+
+## `wait` 和 `sleep` 的区别
+
+1. wait()方法属于Object类,sleep()属于Thread类；
+
+2. wait()方法释放cpu给其它线程，自己让出资源进入等待池等待；sleep占用cpu，不让出资源；
+
+3. sleep()必须指定时间，wait()可以指定时间也可以不指定；sleep()时间到，线程处于临时阻塞或运行状态；
+
+4. wait()方法会释放持有的锁，不然其他线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁，所以释放锁，可以执行其他线程，也可以唤醒自己，只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；
+
+5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用notify()来唤醒；而sleep()能在任何地方调用；

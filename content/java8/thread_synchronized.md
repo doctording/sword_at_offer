@@ -291,3 +291,78 @@ public class Main {
 T1 enter to method 1  
 
 ```
+
+## synchronized 的缺陷
+
+* 无法控制阻塞时长
+* 阻塞不可被中断
+
+```java
+public class Main {
+
+    public synchronized void syncMethod() {
+        try {
+            TimeUnit.HOURS.sleep(1);
+        } catch (InterruptedException e) {
+            e. printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        Main defect=new Main();
+
+        Thread thread1 = new Thread(defect:: syncMethod,"T1");
+        // thread1 将先于 thread2 执行
+        thread1. start();
+        TimeUnit.MILLISECONDS.sleep(2);
+
+        Thread thread2 = new Thread(defect::syncMethod,"T2");
+        thread2.start();
+    }
+}
+```
+
+1. thread1 先执行进入同步方法，然后sleep
+2. 接着 thread2 进入同步方法，会阻塞，其获得执行权取决于 thread1 何时释放 monitor (如果thread2计划最多1分钟获得执行权，否则就放弃，使用 synchronized 无法做到)
+3. thread2 竞争 monitor 而陷入阻塞状态，那么 thread2 会无法中断（因为 synchronized 无法被打断）
+
+```java
+public class Main {
+
+    public synchronized void syncMethod() {
+        try {
+            TimeUnit.HOURS.sleep(1);
+        } catch (InterruptedException e) {
+            e. printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        Main defect=new Main();
+
+        Thread thread1 = new Thread(defect:: syncMethod,"T1");
+        // thread1 将先于 thread2 执行
+        thread1. start();
+        TimeUnit.MILLISECONDS.sleep(2);
+
+        Thread thread2 = new Thread(defect::syncMethod,"T2");
+        thread2.start();
+
+        TimeUnit.MILLISECONDS.sleep(2);
+        thread2.interrupt();
+        // true
+        System.out.println(thread2.isInterrupted());
+        // BLOCKED
+        System.out.println(thread2.getState());
+        // TIMED_WAITING
+        System.out.println(thread1.getState());
+
+    }
+}
+```
+
+synchronized是基于JVM层面实现的，如果一个代码块被synchronized修饰了，当一个线程获取了对应的锁，并执行该代码块时，其他线程便只能一直等待，等待获取锁的线程释放锁，而这里获取锁的线程释放锁会有三种情况：
+
+1. 获取锁的线程执行完了该代码块，然后线程释放对锁的占有；
+2. 线程执行发生异常，此时JVM会让线程自动释放锁。
+3. wait()方法释放锁，方便其它的线程使用锁。而且被唤醒时，就在此处唤醒
