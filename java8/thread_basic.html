@@ -533,11 +533,11 @@
 <h3 id="sleep-yield">sleep 与 yield的区别</h3>
 <ul>
 <li><code>yield</code>会使<code>RUNNING</code>状态的 Thread 进入<code>Runnable</code>状态（如果CPU调度器没有忽略这个提示的话）</li>
-<li><code>sleep</code>回使得线程短暂的block, 会在给定的时间内释放CPU资源</li>
+<li><code>sleep</code>回使得线程短暂的<code>Blocked</code>, 会在给定的时间内释放CPU资源</li>
 <li>一个线程<code>sleep</code>,另一个线程调用<code>interrupt</code>会捕获到中断信号，而<code>yield</code>则不会</li>
 </ul>
 <h2 id="_3">线程的优先级</h2>
-<p>理论上，线程优先级高的会获取优先被CPU调度的机会，但实际上这也是个<code>hint</code>操作</p>
+<p>理论上，线程优先级高的会获得优先被CPU调度的机会，但实际上这也是个<code>hint</code>操作</p>
 <ul>
 <li>
 <p>如果CPU比较忙，设置优先级可能会获得更多的CPU时间片；但是CPU闲时, 优先级的高低几乎不会有任何作用</p>
@@ -703,7 +703,7 @@
 
 <h2 id="join">Join</h2>
 <p>与<code>sleep</code>一样也是一个可中断的方法</p>
-<p>join某个线程A，会使得当前线程B进入等待，直到线程A结束生命周期，或者到达给定的时间，那么在此期间B线程是处于Blocked的。</p>
+<p>join某个线程A，会使得当前线程B进入等待，直到线程A结束生命周期，或者到达给定的时间，那么在此期间B线程是处于<code>Blocked</code>的。</p>
 <ul>
 <li>其中一次 output，但是"thread2 end"一定在thread结束后打印</li>
 </ul>
@@ -792,7 +792,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-10 22:37:34</p>
+        <p>Site Generated 2019-03-11 23:33:43</p>
       </span>
     </div>
 
