@@ -477,12 +477,12 @@ public class Main {
 ### sleep 与 yield的区别
 
 * `yield`会使`RUNNING`状态的 Thread 进入`Runnable`状态（如果CPU调度器没有忽略这个提示的话）
-* `sleep`回使得线程短暂的block, 会在给定的时间内释放CPU资源
+* `sleep`回使得线程短暂的`Blocked`, 会在给定的时间内释放CPU资源
 * 一个线程`sleep`,另一个线程调用`interrupt`会捕获到中断信号，而`yield`则不会
 
 ## 线程的优先级
 
-理论上，线程优先级高的会获取优先被CPU调度的机会，但实际上这也是个`hint`操作
+理论上，线程优先级高的会获得优先被CPU调度的机会，但实际上这也是个`hint`操作
 
 * 如果CPU比较忙，设置优先级可能会获得更多的CPU时间片；但是CPU闲时, 优先级的高低几乎不会有任何作用
 
@@ -654,7 +654,7 @@ public class Main {
 
 与`sleep`一样也是一个可中断的方法
 
-join某个线程A，会使得当前线程B进入等待，直到线程A结束生命周期，或者到达给定的时间，那么在此期间B线程是处于Blocked的。
+join某个线程A，会使得当前线程B进入等待，直到线程A结束生命周期，或者到达给定的时间，那么在此期间B线程是处于`Blocked`的。
 
 * 其中一次 output，但是"thread2 end"一定在thread结束后打印
 
