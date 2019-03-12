@@ -28,7 +28,7 @@
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#lock">lock</a><ul>
 <li><a href="#lock_1">lock基本用法例子</a></li>
-<li><a href="#_1">等待通知机制</a></li>
+<li><a href="#lock-condition">等待通知机制(Lock &amp; Condition)</a></li>
 <li><a href="#reentrantlock">ReentrantLock (可重入锁)</a></li>
 </ul>
 </li>
@@ -187,16 +187,109 @@
 </pre></div>
 
 
-<h2 id="_1">等待通知机制</h2>
-<p>在java中，对于任意一个java对象，它都拥有一组定义在java.lang.Object上监视器方法，包括wait()，wait(long timeout)，notify()，notifyAll()，这些方法配合synchronized关键字一起使用可以实现等待/通知模式。</p>
-<p>同样，Condition接口也提供了类似Object监视器的方法，通过与Lock配合来实现等待/通知模式。</p>
+<h2 id="lock-condition">等待通知机制(Lock &amp; Condition)</h2>
+<p>在java中，对于任意一个java对象，它都拥有一组定义在<code>java.lang.Object</code>上监视器方法，包括<code>wait()</code>，<code>wait(long timeout)</code>，<code>notify()</code>，<code>notifyAll()</code>，这些方法配合<code>synchronized</code>关键字一起使用可以实现等待/通知模式。</p>
+<p>同样，<code>Condition</code>接口也提供了类似<code>Object</code>监视器的方法，通过与<code>Lock</code>配合来实现等待/通知模式。</p>
+<ul>
+<li>lock</li>
+<li>condition.signal()</li>
+<li>condition.await()</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/3/12 10:34 AM</span>
+<span class="cm"> * lock &amp; condition 对比 synchronized wait notify</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">ReentrantLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+        <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+
+        <span class="n">Thread</span> <span class="n">threadA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;A start&quot;</span><span class="o">);</span>
+                    <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;A notify&quot;</span><span class="o">);</span>
+                    <span class="n">condition</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;A end&quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+        <span class="n">Thread</span> <span class="n">threadB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;B start&quot;</span><span class="o">);</span>
+                <span class="c1">// 使得当前执行的线程B等待</span>
+                <span class="c1">// 即：当前线程B 进入到 threadA对象的等待集合中 并等待唤醒。</span>
+                <span class="c1">// B 释放其cpu给其它线程，自己让出资源进入等待池(A的等待集合中)等待</span>
+                <span class="n">condition</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;B wait end, restart running&quot;</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;B Exception&quot;</span><span class="o">);</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+                <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;B end&quot;</span><span class="o">);</span>
+        <span class="o">});</span>
+
+        <span class="n">threadB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="c1">// 确保B 先于A 运行</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">threadA</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="n">threadA</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">threadB</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">B</span> <span class="n">start</span>
+<span class="n">A</span> <span class="n">start</span>
+<span class="n">A</span> <span class="n">notify</span>
+<span class="n">A</span> <span class="n">end</span>
+<span class="n">B</span> <span class="n">wait</span> <span class="n">end</span><span class="o">,</span> <span class="n">restart</span> <span class="n">running</span>
+<span class="n">B</span> <span class="n">end</span>
+<span class="n">main</span> <span class="n">end</span>
+</pre></div>
+
+
 <h2 id="reentrantlock">ReentrantLock (可重入锁)</h2>
+<ul>
+<li>公平锁</li>
+</ul>
+<p>表示线程获取锁的顺序是按照线程加锁的顺序来分配的，即先来先得的FIFO先进先出顺序。</p>
+<ul>
+<li>非公平锁</li>
+</ul>
+<p>就是一种获取锁的抢占机制，是随机获得锁的，和公平锁不一样的就是先来的不一定先得到锁，这个方式可能造成某些线程一直拿不到锁，结果也就是不公平。</p>
+<p>// TODO</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-11 23:33:43</p>
+        <p>Site Generated 2019-03-12 22:52:52</p>
       </span>
     </div>
 

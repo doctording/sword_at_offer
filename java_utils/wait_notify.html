@@ -157,6 +157,8 @@
             <span class="kd">synchronized</span><span class="o">(</span><span class="n">threadA</span><span class="o">)</span> <span class="o">{</span>
                 <span class="k">try</span> <span class="o">{</span>
                     <span class="c1">// 使得当前执行的线程B等待</span>
+                    <span class="c1">// 即：当前线程B 进入到 threadA对象的等待集合中 并等待唤醒。</span>
+                    <span class="c1">// B 释放其cpu给其它线程，自己让出资源进入等待池(A的等待集合中)等待</span>
                     <span class="n">threadA</span><span class="o">.</span><span class="na">wait</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span>
                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;B running&quot;</span><span class="o">);</span>
                 <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -242,7 +244,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-11 23:33:43</p>
+        <p>Site Generated 2019-03-12 22:52:52</p>
       </span>
     </div>
 

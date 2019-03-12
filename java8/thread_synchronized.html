@@ -389,7 +389,7 @@ monitor_jstack.png)</p>
 <li>wait()方法释放锁，方便其它的线程使用锁。而且被唤醒时，就在此处唤醒</li>
 </ol>
 <h2 id="synchronized_2">synchronized 缺陷例子</h2>
-<p>当有多个线程读写文件时，读操作和写操作会发生冲突现象，写操作和写操作会发生冲突现象，但是<code>读操作和读操作</code>不会发生冲突现象。如果采用<code>synchronized</code>关键字来实现同步的话，就会导致一个问题：</p>
+<p>当有多个线程读写文件时，<code>读操作和写操作</code>，<code>写操作和写操作</code>会发生冲突现象，但是<code>读操作和读操作</code>不会发生冲突现象。如果采用<code>synchronized</code>关键字来实现同步的话，就会导致一个问题：</p>
 <ul>
 <li>当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用<code>synchronized</code>，一个线程占用了monitor,其它线程只能等)</li>
 </ul>
@@ -400,7 +400,7 @@ https://www.cnblogs.com/dolphin0520/p/3923167.html</p>
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-11 23:33:43</p>
+        <p>Site Generated 2019-03-12 22:52:52</p>
       </span>
     </div>
 
