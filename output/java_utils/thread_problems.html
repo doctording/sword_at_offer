@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>常见的线程题目 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_utils">java_utils</a>&nbsp;&#187;&nbsp;常见的线程题目
+    <span class="updated">Page Updated&nbsp;
+      2019-03-12 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">常见的线程题目</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#abc">三个线程：怎么能实现依次打印ABC的功能</a><ul>
+<li><a href="#1-reentrantlock-condition">方法1: ReentrantLock &amp; Condition</a></li>
+<li><a href="#2-synchronized-wait-notify-notifyall">方法2: synchronized &amp; wait() notify() notifyAll()</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="abc">三个线程：怎么能实现依次打印ABC的功能</h1>
+<h2 id="1-reentrantlock-condition">方法1: ReentrantLock &amp; Condition</h2>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/3/12 10:34 AM</span>
+<span class="cm"> * lock &amp; condition 对比 synchronized wait notify</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">final</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+
+        <span class="n">ReentrantLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+        <span class="n">Condition</span> <span class="n">conditionA</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+        <span class="n">Condition</span> <span class="n">conditionB</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+        <span class="n">Condition</span> <span class="n">conditionC</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+
+        <span class="n">Thread</span> <span class="n">threadA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">while</span><span class="o">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+                        <span class="c1">// 标志为1，A才能执行，否则阻塞自己</span>
+                        <span class="k">while</span> <span class="o">(</span><span class="n">flag</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">){</span>
+                            <span class="n">conditionA</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+                        <span class="o">}</span>
+                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;A&quot;</span><span class="o">);</span>
+                        <span class="c1">//因为A打印完应该打印B， 这里线程b唤醒，同时设置标记</span>
+                        <span class="n">flag</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+                        <span class="n">conditionB</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                        <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+        <span class="n">Thread</span> <span class="n">threadB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="o">{</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+                    <span class="k">while</span> <span class="o">(</span><span class="n">flag</span> <span class="o">!=</span> <span class="mi">2</span><span class="o">){</span>
+                        <span class="n">conditionB</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+                    <span class="o">}</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;B&quot;</span><span class="o">);</span>
+                    <span class="n">flag</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+                    <span class="n">conditionC</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+        <span class="n">Thread</span> <span class="n">threadC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+                    <span class="k">while</span> <span class="o">(</span><span class="n">flag</span> <span class="o">!=</span> <span class="mi">3</span><span class="o">){</span>
+                        <span class="n">conditionC</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+                    <span class="o">}</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;C&quot;</span> <span class="o">+</span> <span class="n">count</span><span class="o">);</span>
+                    <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                    <span class="n">count</span><span class="o">++;</span>
+                    <span class="n">conditionA</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+        <span class="n">threadA</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">threadB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">threadC</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="n">threadA</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">threadB</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">threadC</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="2-synchronized-wait-notify-notifyall">方法2: synchronized &amp; wait() notify() notifyAll()</h2>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/3/12 10:34 AM</span>
+<span class="cm"> * lock &amp; condition 对比 synchronized wait notify</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">final</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+    <span class="kt">void</span> <span class="nf">methodA</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="k">while</span> <span class="o">(</span><span class="n">flag</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">this</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                    <span class="o">}</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;A&quot;</span><span class="o">);</span>
+                    <span class="n">flag</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">methodB</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="k">while</span> <span class="o">(</span><span class="n">flag</span> <span class="o">!=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">this</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                    <span class="o">}</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;B&quot;</span><span class="o">);</span>
+                    <span class="n">flag</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">notifyAll</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">methodC</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="k">while</span> <span class="o">(</span><span class="n">flag</span> <span class="o">!=</span> <span class="mi">3</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">this</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                    <span class="o">}</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;C&quot;</span> <span class="o">+</span> <span class="n">count</span><span class="o">);</span>
+                    <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                    <span class="n">count</span> <span class="o">++;</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">notifyAll</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">Main</span> <span class="n">main</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Main</span><span class="o">();</span>
+        <span class="n">Thread</span> <span class="n">threadA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="nl">main:</span><span class="o">:</span><span class="n">methodA</span><span class="o">);</span>
+        <span class="n">Thread</span> <span class="n">threadB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="nl">main:</span><span class="o">:</span><span class="n">methodB</span><span class="o">);</span>
+        <span class="n">Thread</span> <span class="n">threadC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="nl">main:</span><span class="o">:</span><span class="n">methodC</span><span class="o">);</span>
+
+        <span class="n">threadA</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">threadB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">threadC</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="n">threadA</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">threadB</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">threadC</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-03-12 22:52:52</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

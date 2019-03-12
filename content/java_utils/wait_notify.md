@@ -133,6 +133,8 @@ public class Main {
             synchronized(threadA) {
                 try {
                     // 使得当前执行的线程B等待
+                    // 即：当前线程B 进入到 threadA对象的等待集合中 并等待唤醒。
+                    // B 释放其cpu给其它线程，自己让出资源进入等待池(A的等待集合中)等待
                     threadA.wait(3000);
                     System.out.println("B running");
                 } catch (Exception e) {
