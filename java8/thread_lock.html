@@ -29,7 +29,11 @@
 <li><a href="#lock">lock</a><ul>
 <li><a href="#lock_1">lock基本用法例子</a></li>
 <li><a href="#lock-condition">等待通知机制(Lock &amp; Condition)</a></li>
-<li><a href="#reentrantlock">ReentrantLock (可重入锁)</a></li>
+<li><a href="#reentrantlock">ReentrantLock (可重入锁)</a><ul>
+<li><a href="#synchronized-reentrantlock">对比synchronized, ReentrantLock的一些高级功能</a></li>
+<li><a href="#_1"></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -283,13 +287,31 @@
 <li>非公平锁</li>
 </ul>
 <p>就是一种获取锁的抢占机制，是随机获得锁的，和公平锁不一样的就是先来的不一定先得到锁，这个方式可能造成某些线程一直拿不到锁，结果也就是不公平。</p>
-<p>// TODO</p>
+<ul>
+<li>什么是可重入？</li>
+</ul>
+<p>同一个线程可以反复获取锁多次，然后需要释放多次</p>
+<h3 id="synchronized-reentrantlock">对比<code>synchronized</code>, ReentrantLock的一些高级功能</h3>
+<ul>
+<li>等待可中断</li>
+</ul>
+<p>持有锁的线程长期不释放的时候，正在等待的线程可以选择放弃等待，这相当于Synchronized来说可以避免出现死锁的情况。</p>
+<ul>
+<li>公平锁</li>
+</ul>
+<p>ReentrantLock默认的构造函数是创建的<code>非公平锁</code>，可以通过参数<code>true</code>设为<code>公平锁</code>，但公平锁表现的性能不是很好。</p>
+<p>synchronized是非公平锁（因为synchronized是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了synchronized吞吐率），可以重入</p>
+<ul>
+<li>锁绑定多个条件</li>
+</ul>
+<p>一个ReentrantLock对象可以同时绑定对个对象。</p>
+<h3 id="_1"></h3>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-12 22:52:52</p>
+        <p>Site Generated 2019-03-14 21:35:03</p>
       </span>
     </div>
 
