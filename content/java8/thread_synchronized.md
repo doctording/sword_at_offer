@@ -1,5 +1,5 @@
 ---
-title: "Thread Synchronized & Monitor"
+title: "Thread synchronized 关键字"
 layout: page
 date: 2019-03-09 00:00
 ---
@@ -8,15 +8,48 @@ date: 2019-03-09 00:00
 
 # Synchronized & monitor
 
+## 回顾并发的三大性质
+
+### 原子性
+
+一个操作或者多个操作，要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。即使是在多个线程一起执行的时候，一个操作一旦开始，就不会被其它线程干扰.
+
+`volatile` 不能保证原子性，
+`synchronized` 在作用对象的作用范围内，依赖JVM实现操作的原子性。
+`Lock` 依赖特殊的CPU指令，代码实现，如`ReentrantLock`
+
+### 可见性
+
+当多个线程访问同一个变量的时候，一旦线程修改了这个变量的值，其他线程能够立即看到修改的值。
+
+导致共享变量在线程间不可见的原因：
+
+1. 线程交叉执行
+2. 代码重排序结合线程交叉执行
+3. 共享变量更新后的值没有在工作内存与主内存之间及时更新
+
+`volatile` 通过加入内存屏障和禁止重排序优化来实现可见性
+`synchronized` monitor enter exit 确保可见性
+
+### 有序性
+
+程序执行的顺序按照代码的先后顺序执行
+
+* Java内存模型中，允许编译器和处理器对指令进行重排序，但重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性
+
+`volatile`、`syncronized`、`Lock`都可保证有序性。
+
+参考：https://blog.csdn.net/qq_30948019/article/details/80193392
+
 ## synchronized的几个性质
 
 * `synchronized` 提供了一种锁对机制，能确保共享变量的互斥访问，从而防止数据不一致问题的出现
 
-* `synchronized` 包括了`monitor enter`和`monitor exit`两个JVM指令，他能确保在任何时候，任何线程执行到`monitor enter`成功之前都必须从主内存中获取数据，而不是从缓存中，在`monitor exit`运行成功之后，共享变量被更新后的值必须刷入主内存内
+* `synchronized` 包括了`monitor enter`和`monitor exit`两个JVM指令，他能确保在任何时候，任何线程执行到`monitor enter`成功之前都必须从`主内存`中获取数据，而不是从`缓存`中，在`monitor exit`运行成功之后，共享变量被更新后的值必须刷入`主内存`内
 
 * `synchronized` 严格准守`Java happends-before`规则，一个`monitor exit`指令之前必定要有一个`monitor enter`
 
-## 用法
+## 基本用法
 
 `synchronized` 可用于代码块或方法进行修饰，而不能对class以及变量进行修饰, eg:
 
@@ -36,6 +69,98 @@ public void sync(){
     }
 }
 ```
+
+## synchronized(this/Object)
+
+```java
+package com.thread;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class Main {
+    private final static Object Mutex = new Object();
+    public int num;
+    static int n = 5;
+
+    void add() {
+        synchronized (this) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.num++;
+            System.out.println(Thread.currentThread().getName()+ ":" + num +
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+            );
+        }
+    }
+
+    void sub(){
+        synchronized (Mutex) {
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.num--;
+            System.out.println(Thread.currentThread().getName()+ ":" + num +
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+            );
+        }
+    }
+
+    void add2(){
+        synchronized (Main.class) {
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.num += 2;
+            System.out.println(Thread.currentThread().getName()+ ":" + num +
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+            );
+        }
+    }
+
+    void printNum(){
+        System.out.println("num:" + this.num);
+    }
+
+    public static void main(String[] args) throws Exception{
+        Main main = new Main();
+        main.num = 1;
+        List<Thread> threadList = new ArrayList<>(n);
+        for(int i=0;i<n;i++){
+            Thread t = new Thread( ()-> main.add(), "add" + i);
+            Thread t2 = new Thread(()-> main.sub(), "sub" + i);
+            threadList.add(t);
+            threadList.add(t2);
+        }
+        threadList.forEach(t->t.start());
+        threadList.forEach(t->{
+            try{
+                t.join();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+        System.out.println("main===");
+        main.printNum();
+    }
+}
+
+```
+
+* this指代当前类的实例
+* synchronized 锁住的不同，决定两个方法(代码块)是否能同时运行，即是同步而不是相互阻塞的
+
+`synchronized(this)` 对 `synchronized`方法 和 `synchronized(this)`都是同步对
 
 ## 实际例子
 
@@ -373,5 +498,21 @@ public class Main {
 
 * 当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用`synchronized`，一个线程占用了monitor,其它线程只能等)
 
-参考：
-https://www.cnblogs.com/dolphin0520/p/3923167.html
+参考：https://www.cnblogs.com/dolphin0520/p/3923167.html
+
+## `synchronized`使用原则
+
+1. sychronized的对象最好选择引用不会变化的对象（例如被标记为final,或初始化后永远不会变），原因显而易见的，虽然synchronized是在对象上加锁，但是它首先要通过引用来定位对象，如果引用会变化，可能带来意想不到的后果，对于需要synchronized不同对象的情况，建议的做法是为每个对象构建一个Object锁来synchronized（不建议对同一个引用反复赋值）。当然将synchronized作为修饰符修饰方法就不会有引用变化的问题，但是这种做法在方法体较大时容易违反第二个原则。
+
+2. 尽可能把synchronized范围缩小，线程互斥是以牺牲并发度为代价的
+
+3. 尽量不要在可变引用上`wait()`和`notify()`，例如:
+
+```java
+synchronized (a) {
+    a.wait() // (1)
+}
+
+若其他线程在线程1进入(1)时更改了a值，那么线程1会直接抛出一个IllegalMonitorException，表示在a.wait()前没有获得a的对象锁。推荐的做法还是声明一个专门用于线程同步的Object，这个Object永远不变。
+
+参考：https://blog.csdn.net/xad707348125/article/details/46956911
