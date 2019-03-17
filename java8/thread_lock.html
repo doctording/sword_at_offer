@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Thread lock - 剑指Offer</title>
+    <title>Thread Lock - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,30 +16,38 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Thread lock
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Thread Lock
     <span class="updated">Page Updated&nbsp;
-      2019-03-09 00:00
+      2019-03-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Thread lock</div>
+<div class="page_title">Thread Lock</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#lock">lock</a><ul>
-<li><a href="#lock_1">lock基本用法例子</a></li>
+<li><a href="#lock">Lock</a><ul>
+<li><a href="#lock_1">Lock基本用法例子</a></li>
 <li><a href="#lock-condition">等待通知机制(Lock &amp; Condition)</a></li>
 <li><a href="#reentrantlock">ReentrantLock (可重入锁)</a><ul>
 <li><a href="#synchronized-reentrantlock">对比synchronized, ReentrantLock的一些高级功能</a></li>
-<li><a href="#_1"></a></li>
+<li><a href="#_1">锁申请等待限时实际例子</a></li>
+<li><a href="#_2">公平锁</a></li>
+<li><a href="#_3">公平锁</a></li>
 </ul>
 </li>
+<li><a href="#_4">读写锁</a><ul>
+<li><a href="#_5">伪代码</a></li>
+<li><a href="#_6">实际例子</a></li>
+</ul>
+</li>
+<li><a href="#todo">TODO</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="lock">lock</h1>
-<h2 id="lock_1">lock基本用法例子</h2>
+<h1 id="lock">Lock</h1>
+<h2 id="lock_1">Lock基本用法例子</h2>
 <ul>
 <li>lock, unlock</li>
 </ul>
@@ -291,7 +299,7 @@
 <li>什么是可重入？</li>
 </ul>
 <p>同一个线程可以反复获取锁多次，然后需要释放多次</p>
-<h3 id="synchronized-reentrantlock">对比<code>synchronized</code>, ReentrantLock的一些高级功能</h3>
+<h3 id="synchronized-reentrantlock">对比<code>synchronized</code>, <code>ReentrantLock</code>的一些高级功能</h3>
 <ul>
 <li>等待可中断</li>
 </ul>
@@ -299,19 +307,259 @@
 <ul>
 <li>公平锁</li>
 </ul>
-<p>ReentrantLock默认的构造函数是创建的<code>非公平锁</code>，可以通过参数<code>true</code>设为<code>公平锁</code>，但公平锁表现的性能不是很好。</p>
-<p>synchronized是非公平锁（因为synchronized是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了synchronized吞吐率），可以重入</p>
+<p><code>ReentrantLock</code>默认的构造函数是创建的<code>非公平锁</code>，可以通过参数<code>true</code>设为<code>公平锁</code>，但公平锁表现的性能不是很好。</p>
+<p><code>synchronized</code>是非公平锁（因为<code>synchronized</code>是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了<code>synchronized</code>吞吐率），可以重入</p>
 <ul>
 <li>锁绑定多个条件</li>
 </ul>
-<p>一个ReentrantLock对象可以同时绑定对个对象。</p>
-<h3 id="_1"></h3>
+<p>一个<code>ReentrantLock</code>对象可以同时绑定对个对象。</p>
+<h3 id="_1">锁申请等待限时实际例子</h3>
+<p>申请锁，一定时间内获取不到，选择放弃</p>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Lock</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/3/15 7:24 AM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+        <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+
+        <span class="n">Thread</span> <span class="n">threadA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;A start&quot;</span><span class="o">);</span>
+                    <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+        <span class="n">Thread</span> <span class="n">threadB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">lock</span><span class="o">.</span><span class="na">tryLock</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;B get lock start&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; tryLock error&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;B Exception&quot;</span><span class="o">);</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span> <span class="o">((</span><span class="n">ReentrantLock</span><span class="o">)</span> <span class="n">lock</span><span class="o">).</span><span class="na">isHeldByCurrentThread</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+        <span class="n">threadA</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="c1">// 让A 先于B 运行</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">threadB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="n">threadA</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">threadB</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_2">公平锁</h3>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">    * Sync object for fair locks</span>
+<span class="cm">    */</span>
+<span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">FairSync</span> <span class="kd">extends</span> <span class="n">Sync</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3000897897090466540L</span><span class="o">;</span>
+
+    <span class="kd">final</span> <span class="kt">void</span> <span class="nf">lock</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">acquire</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">        * Fair version of tryAcquire.  Don&#39;t grant access unless</span>
+<span class="cm">        * recursive call or no waiters or is first.</span>
+<span class="cm">        */</span>
+    <span class="kd">protected</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">tryAcquire</span><span class="o">(</span><span class="kt">int</span> <span class="n">acquires</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">Thread</span> <span class="n">current</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getState</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">hasQueuedPredecessors</span><span class="o">()</span> <span class="o">&amp;&amp;</span>
+                <span class="n">compareAndSetState</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">acquires</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">setExclusiveOwnerThread</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">current</span> <span class="o">==</span> <span class="n">getExclusiveOwnerThread</span><span class="o">())</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">nextc</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="n">acquires</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">nextc</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">Error</span><span class="o">(</span><span class="s">&quot;Maximum lock count exceeded&quot;</span><span class="o">);</span>
+            <span class="n">setState</span><span class="o">(</span><span class="n">nextc</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_3">公平锁</h3>
+<ul>
+<li>
+<p>公平锁每次获取到锁为同步队列中的第一个节点，保证请求资源时间上的绝对顺序，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其他线程永远无法获取到锁，造成<code>饥饿</code>现象。</p>
+</li>
+<li>
+<p>公平锁为了保证时间上的绝对顺序，需要频繁的上下文切换，而非公平锁会降低了一定的上下文切换，降低性能开销。</p>
+</li>
+</ul>
+<h2 id="_4">读写锁</h2>
+<p>读写锁实际是一种特殊的自旋锁，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。</p>
+<p>一次只有一个线程可以占有<code>写模式</code>的读写锁, 但是可以有多个线程同时占有<code>读模式</code>的读写锁.</p>
+<h3 id="_5">伪代码</h3>
+<div class="hlcode"><pre><span class="n">count_mutex</span> <span class="o">=</span> <span class="n">mutex_init</span><span class="p">();</span>
+<span class="n">write_mutex</span> <span class="o">=</span> <span class="n">mutex_init</span><span class="p">();</span>
+<span class="n">read_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">read_lock</span><span class="p">{</span>
+    <span class="n">lock</span><span class="p">(</span><span class="n">count_mutex</span><span class="p">);</span>
+    <span class="n">read_count</span><span class="o">++</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">read_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 第一个读者开始读时获得写锁</span>
+        <span class="n">lock</span><span class="p">(</span><span class="n">write_mutex</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">unlock</span><span class="p">(</span><span class="n">count_mutex</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">read_unlock</span><span class="p">{</span>
+    <span class="n">lock</span><span class="p">(</span><span class="n">count_mutex</span><span class="p">);</span>
+    <span class="n">read_count</span><span class="o">--</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">read_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//  最后一个读者离开时释放写锁</span>
+        <span class="n">unlock</span><span class="p">(</span><span class="n">write_mutex</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">unlock</span><span class="p">(</span><span class="n">count_mutex</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">write_lock</span><span class="p">{</span>
+    <span class="n">lock</span><span class="p">(</span><span class="n">write_mutex</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">write_unlock</span><span class="p">{</span>
+    <span class="n">unlock</span><span class="p">(</span><span class="n">write_mutex</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>参考：https://www.cnblogs.com/xiehongfeng100/p/4782135.html</p>
+<h3 id="_6">实际例子</h3>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.ArrayBlockingQueue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.ThreadPoolExecutor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Lock</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/3/17 7:56 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">ReentrantReadWriteLock</span> <span class="n">rwLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
+    <span class="n">Lock</span> <span class="n">readLock</span> <span class="o">=</span> <span class="n">rwLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">();</span>
+    <span class="n">Lock</span> <span class="n">writeLock</span> <span class="o">=</span> <span class="n">rwLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="kt">double</span> <span class="n">data</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(){</span>
+        <span class="n">readLock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;读数据：&quot;</span> <span class="o">+</span> <span class="n">data</span>
+                    <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span>  <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd HH:mm:ss&quot;</span><span class="o">).</span><span class="na">format</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">()));</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="n">readLock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(){</span>
+        <span class="n">writeLock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">((</span><span class="kt">long</span><span class="o">)</span> <span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">*</span> <span class="mi">10</span><span class="o">));</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">().</span><span class="na">nextDouble</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; ........写入数据: &quot;</span> <span class="o">+</span> <span class="n">data</span>
+                    <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span>  <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd HH:mm:ss&quot;</span><span class="o">).</span><span class="na">format</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">()));</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">writeLock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">Main</span> <span class="n">main</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Main</span><span class="o">();</span>
+        <span class="n">ThreadPoolExecutor</span> <span class="n">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
+                <span class="mi">10</span><span class="o">,</span>
+                <span class="mi">200</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">,</span>
+                <span class="k">new</span> <span class="n">ArrayBlockingQueue</span><span class="o">&lt;</span><span class="n">Runnable</span><span class="o">&gt;(</span><span class="mi">5</span><span class="o">),</span>
+                <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="na">DiscardOldestPolicy</span><span class="o">());</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">pool</span><span class="o">.</span><span class="na">submit</span><span class="o">(()-&gt;</span> <span class="n">main</span><span class="o">.</span><span class="na">read</span><span class="o">());</span>
+            <span class="n">pool</span><span class="o">.</span><span class="na">submit</span><span class="o">(()-&gt;</span> <span class="n">main</span><span class="o">.</span><span class="na">write</span><span class="o">());</span>
+        <span class="o">}</span>
+
+        <span class="n">pool</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<p><strong>某个时刻可以有多个读，但只能有一个写，写的时候不能读，读的时候不能写</strong></p>
+<div class="hlcode"><pre><span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">1</span><span class="err">读数据：</span><span class="mf">0.0</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">53</span><span class="o">:</span><span class="mi">43</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">3</span><span class="err">读数据：</span><span class="mf">0.0</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">53</span><span class="o">:</span><span class="mi">43</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">1</span> <span class="o">........</span><span class="err">写入数据</span><span class="o">:</span> <span class="mf">0.14383955312719565</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">53</span><span class="o">:</span><span class="mi">48</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">2</span> <span class="o">........</span><span class="err">写入数据</span><span class="o">:</span> <span class="mf">0.36604507657651075</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">53</span><span class="o">:</span><span class="mi">57</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">4</span> <span class="o">........</span><span class="err">写入数据</span><span class="o">:</span> <span class="mf">0.24110141917904238</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">03</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">4</span> <span class="o">........</span><span class="err">写入数据</span><span class="o">:</span> <span class="mf">0.6412197875946629</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">08</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">6</span><span class="err">读数据：</span><span class="mf">0.6412197875946629</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">09</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">5</span><span class="err">读数据：</span><span class="mf">0.6412197875946629</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">09</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">7</span> <span class="o">........</span><span class="err">写入数据</span><span class="o">:</span> <span class="mf">0.3115143131633106</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">12</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">8</span><span class="err">读数据：</span><span class="mf">0.3115143131633106</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">13</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">9</span> <span class="o">........</span><span class="err">写入数据</span><span class="o">:</span> <span class="mf">0.08244939010952534</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">21</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">3</span><span class="err">读数据：</span><span class="mf">0.08244939010952534</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">22</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">10</span><span class="err">读数据：</span><span class="mf">0.08244939010952534</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">22</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">1</span> <span class="o">........</span><span class="err">写入数据</span><span class="o">:</span> <span class="mf">0.7060105583988802</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">31</span>
+<span class="n">pool</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="mi">2</span><span class="err">读数据：</span><span class="mf">0.7060105583988802</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">17</span> <span class="mi">19</span><span class="o">:</span><span class="mi">54</span><span class="o">:</span><span class="mi">32</span>
+</pre></div>
+
+
+<h2 id="todo">TODO</h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-14 21:35:03</p>
+        <p>Site Generated 2019-03-17 22:01:03</p>
       </span>
     </div>
 

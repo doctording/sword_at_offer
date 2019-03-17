@@ -34,14 +34,18 @@
 </ul>
 </li>
 <li><a href="#synchronized">synchronized的几个性质</a></li>
-<li><a href="#_5">基本用法</a></li>
+<li><a href="#_5">基本用法</a><ul>
 <li><a href="#synchronizedthisobject">synchronized(this/Object)</a></li>
+</ul>
+</li>
 <li><a href="#_6">实际例子</a></li>
 <li><a href="#_7">多个锁的交叉导致的死锁</a></li>
 <li><a href="#this-monotor">this monotor</a></li>
 <li><a href="#class-monitor">class monitor</a></li>
-<li><a href="#synchronized_1">synchronized 的缺陷</a></li>
+<li><a href="#synchronized_1">synchronized 的缺陷</a><ul>
 <li><a href="#synchronized_2">synchronized 缺陷例子</a></li>
+</ul>
+</li>
 <li><a href="#synchronized_3">synchronized使用原则</a></li>
 </ul>
 </li>
@@ -102,7 +106,7 @@
 </pre></div>
 
 
-<h2 id="synchronizedthisobject">synchronized(this/Object)</h2>
+<h3 id="synchronizedthisobject">synchronized(this/Object)</h3>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
@@ -509,7 +513,7 @@ monitor_jstack.png)</p>
 <li>线程执行发生异常，此时JVM会让线程自动释放锁。</li>
 <li>wait()方法释放锁，方便其它的线程使用锁。而且被唤醒时，就在此处唤醒</li>
 </ol>
-<h2 id="synchronized_2">synchronized 缺陷例子</h2>
+<h3 id="synchronized_2">synchronized 缺陷例子</h3>
 <p>当有多个线程读写文件时，<code>读操作和写操作</code>，<code>写操作和写操作</code>会发生冲突现象，但是<code>读操作和读操作</code>不会发生冲突现象。如果采用<code>synchronized</code>关键字来实现同步的话，就会导致一个问题：</p>
 <ul>
 <li>当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用<code>synchronized</code>，一个线程占用了monitor,其它线程只能等)</li>
@@ -538,7 +542,7 @@ synchronized (a) {<br />
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-14 21:35:03</p>
+        <p>Site Generated 2019-03-17 22:01:03</p>
       </span>
     </div>
 
