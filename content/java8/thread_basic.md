@@ -1,5 +1,5 @@
 ---
-title: "Thread"
+title: "Thread & Runnable"
 layout: page
 date: 2019-02-15 00:00
 ---
