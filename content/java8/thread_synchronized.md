@@ -70,7 +70,7 @@ public void sync(){
 }
 ```
 
-## synchronized(this/Object)
+### synchronized(this/Object)
 
 ```java
 package com.thread;
@@ -492,7 +492,7 @@ public class Main {
 2. 线程执行发生异常，此时JVM会让线程自动释放锁。
 3. wait()方法释放锁，方便其它的线程使用锁。而且被唤醒时，就在此处唤醒
 
-## synchronized 缺陷例子
+### synchronized 缺陷例子
 
 当有多个线程读写文件时，`读操作和写操作`，`写操作和写操作`会发生冲突现象，但是`读操作和读操作`不会发生冲突现象。如果采用`synchronized`关键字来实现同步的话，就会导致一个问题：
 
