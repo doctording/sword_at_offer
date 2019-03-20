@@ -8,7 +8,7 @@ date: 2019-02-15 00:00
 
 # Class 文件
 
-Class文件是一组以8位字节为基础单位的二进制流，任何一个Class文件都对应者唯一一个类或接口的定义信息
+Class文件是一组以8位字节为基础单位的`二进制流`，任何一个Class文件都对应唯一一个类或接口的定义信息
 
 ## 魔数与Class文件的版本
 
@@ -135,34 +135,34 @@ public static final int value = 123;
 
 负责加载用户类路径(ClassPath)上所指定的类库,开发者可直接使用。
 
-#### 双亲委派模型
+#### * 双亲委派模型 *
 
 工作过程为：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载
 
 ```java
-protected synchronized Class loadClass(String name, boolean resolve)  
-        throws ClassNotFoundException {  
-    // 首先检查该name指定的class是否有被加载  
-    Class c = findLoadedClass(name);  
-    if (c == null) {  
-        try {  
-            if (parent != null) {  
-                // 如果parent不为null，则调用parent的loadClass进行加载  
-                c = parent.loadClass(name, false);  
-            } else {  
-                // parent为null，则调用BootstrapClassLoader进行加载  
-                c = findBootstrapClass0(name);  
-            }  
-        } catch (ClassNotFoundException e) {  
-            // 如果仍然无法加载成功，则调用自身的findClass进行加载  
-            c = findClass(name);  
-        }  
-    }  
-    if (resolve) {  
-        resolveClass(c);  
-    }  
-    return c;  
-}  
+protected synchronized Class loadClass(String name, boolean resolve)
+        throws ClassNotFoundException {
+    // 首先检查该name指定的class是否有被加载
+    Class c = findLoadedClass(name);
+    if (c == null) {
+        try {
+            if (parent != null) {
+                // 如果parent不为null，则调用parent的loadClass进行加载
+                c = parent.loadClass(name, false);
+            } else {
+                // parent为null，则调用BootstrapClassLoader进行加载
+                c = findBootstrapClass0(name);
+            }
+        } catch (ClassNotFoundException e) {
+            // 如果仍然无法加载成功，则调用自身的findClass进行加载
+            c = findClass(name);
+        }
+    }
+    if (resolve) {
+        resolveClass(c);
+    }
+    return c;
+}
 ```
 
 #### 类加载题目例子（Java7环境）
@@ -201,7 +201,7 @@ class Singleton2{
     static {
         System.out.println("static block");
     }
-    private static Singleton2 singleton2 =new Singleton2();
+    private static Singleton2 singleton2 = new Singleton2();
 
     private Singleton2(){
         System.out.println(String.format("before Singleton2 constructor: v1:%d, v2:%d, v3:%d",
@@ -266,7 +266,7 @@ Singleton2 v3:11
 对象创建的过程：
 
 1. 首次创建对象时，类中的静态方法/静态字段首次被访问时，java解释器必须先查找类路径，以定位.class文件
-2. 然后载入`.class`(这将创建一个class对象)，有关静态初始化的所有动作都会执行。因此，**静态初始化只在Class对象首次加载的时候进行一次**
+2. 然后载入`.class`(这将创建一个class对象)，有关静态初始化的所有动作都会执行，按顺序执行。因此，**静态初始化只在Class对象首次加载的时候进行一次**
 3. 当用`new XX()`创建对象时，首先在堆上为对象分配足够的存储空间
 4. 这块存储空间会被清0，这就自动地将对象中的所有基本类型数据都设置成了缺省值（对数字来说就是0，对布尔型和字符型也相同），而引用则被设置成了null。
 5. 执行所有出现于字段定义处的初始化动作（**非静态对象的初始化**）
@@ -328,7 +328,7 @@ public static int v3 = 10;
 static {
     System.out.println("static block");
 }
-private static Singleton2 singleton2 =new Singleton2();
+private static Singleton2 singleton2 = new Singleton2();
 ```
 
 * output，注意到构造函数执行之前是：v1:0, v2:0, v3:10
@@ -403,3 +403,192 @@ Singleton1 value1:2
 Singleton1 value2:1
 Singleton1 value3:11
 ```
+
+# 自定义类加载器
+
+自定义类加载器的一般步骤
+
+1. 继承`ClassLoader`
+
+2. 重写`loadClass()`方法
+
+3. 重写`findClass()`方法
+    * class文件路径判断和获取
+    * 将class文件载入内存
+    * 对载入内存的字节码数据，调用`defineClass()`方法将字节码转化为类
+
+## MyClassLoader 实践
+
+* `Hello.java`编译成`Hello.class`
+
+```java
+package com.other;
+
+public class Hello {
+
+    public void test() {
+        System.out.println("Loader Class is:" + getClass().getClassLoader().getClass());
+    }
+}
+```
+
+* MyComOtherClassLoader
+
+```java
+package com.mb;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+/**
+ * @Author mubi
+ * @Date 2019/3/20 10:54 PM
+ */
+public class MyComOtherClassLoader extends ClassLoader{
+    public String path;
+    public String packageName;
+    public String className;
+
+    public MyComOtherClassLoader() {
+        super(ClassLoader.getSystemClassLoader());
+    }
+
+    private String classNameToPath() {
+        // 得到类文件的URL
+        return path + "/" + packageName.replace('.', '/')
+                + "/"
+                + className + ".class";
+    }
+
+    @Override
+    public Class loadClass(String name) throws ClassNotFoundException {
+        // 非 com.test package下面的类，都用默认的加载， 否则用自定义的加载方法
+        if (!name.contains("com.other")) {
+            // 是否已经被加载
+            Class loadedClass = findLoadedClass(name);
+            if (loadedClass == null) {
+                // 用父类去加载该类
+                loadedClass = getParent().loadClass(name);
+                return loadedClass;
+            } else {
+                return loadedClass;
+            }
+        }
+
+
+        int i = name.lastIndexOf('.');
+        packageName = "";
+        if (i != -1) {
+            packageName = name.substring(0, i);
+//            System.out.println("package: " + packageName);
+            className = name.substring(i + 1);
+//            System.out.println("class name: " + name);
+            SecurityManager sm = System.getSecurityManager();
+            if (sm != null) {
+                sm.checkPackageAccess(packageName);
+            }
+        }
+        //依然调用父类的方法
+//        return super.loadClass(name);
+        return this.findClass(name);
+    }
+
+    @Override
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        int i = name.lastIndexOf('.');
+        packageName = "";
+        if (i != -1) {
+            packageName = name.substring(0, i);
+//            System.out.println("package: " + packageName);
+            className = name.substring(i + 1);
+//            System.out.println("class name: " + name);
+            SecurityManager sm = System.getSecurityManager();
+            if (sm != null) {
+                sm.checkPackageAccess(packageName);
+            }
+        }
+        Class<?> clazz = this.findLoadedClass(name); // 父类已加载
+        if(null != clazz){
+            return clazz;
+        }
+
+//        System.out.println("findClass param name: " + name);
+        byte [] b = this.getClassBytes();
+//        System.out.println("b len:" + b.length);
+        clazz=defineClass(null, b, 0, b.length);
+        return clazz;
+    }
+    public byte[] getClassBytes() {
+        String classPath = classNameToPath();
+//        System.out.println("classPath:" + classPath);
+        File file=new File(classPath);
+        try(FileInputStream fis = new FileInputStream(file);ByteArrayOutputStream bos=new ByteArrayOutputStream();) {
+            byte[] b=new byte[1024*2];
+            int n;
+            while((n=fis.read(b))!=-1){
+                bos.write(b, 0, n);
+            }
+            return bos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    static void testMyClassLoaderHello() throws Exception{
+        String path = "/Users/mubi/IdeaProjects/untitled/out/production/untitled";
+        MyComOtherClassLoader myClassLoader = new MyComOtherClassLoader();
+        myClassLoader.path = path;
+        Class clazz = myClassLoader.loadClass("com.other.Hello");
+        Object obj = clazz.newInstance();
+        System.out.println("===" + obj.getClass());
+        Method method = clazz.getDeclaredMethod("test", null);
+        Object c = method.invoke(obj, null);
+        if(c != null){
+            System.out.println("method return: " + c.getClass());
+        }else {
+            System.out.println("method return:" + c);
+        }
+    }
+
+    static void testMyClassLoaderString() throws Exception{
+        MyComOtherClassLoader myClassLoader = new MyComOtherClassLoader();
+        Class clazz = myClassLoader.loadClass("java.lang.String");
+        Object obj = clazz.newInstance();
+        System.out.println("===" + obj.getClass());
+        Method method = clazz.getDeclaredMethod("length", null);
+        Object c = method.invoke(obj, null);
+        if(c != null){
+            System.out.println("method return: " + c.getClass());
+        }else {
+            System.out.println("method return:" + c);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        testMyClassLoaderHello();
+        testMyClassLoaderString();
+    }
+
+}
+/*
+===class com.other.Hello
+Loader Class is:class com.thread.MyClassLoader2
+method return:null
+===class java.lang.String
+method return: class java.lang.Integer
+*/
+```
+
+## 自定义类加载器的优缺点 // TODO
+
+1. 部署在同一个服务器上的两个Web应用程序所使用的Java类库可以实现相互隔离。
+
+2. 部署在同一个服务器上的两个Web应用程序所使用的Java类库可以相互共享
+
+3. 支持热替换
