@@ -49,7 +49,7 @@
 <li><a href="#bootstrap-classloader">启动类加载器 Bootstrap ClassLoader</a></li>
 <li><a href="#extension-classloader">扩展类加载器 Extension ClassLoader</a></li>
 <li><a href="#application-classloader">应用程序类加载器 Application ClassLoader</a></li>
-<li><a href="#_14">双亲委派模型</a></li>
+<li><a href="#_14">* 双亲委派模型 *</a></li>
 <li><a href="#java7">类加载题目例子（Java7环境）</a><ul>
 <li><a href="#_15">结果分析</a><ul>
 <li><a href="#singleton">Singleton 结果分析</a></li>
@@ -65,10 +65,15 @@
 </li>
 </ul>
 </li>
+<li><a href="#_17">自定义类加载器</a><ul>
+<li><a href="#myclassloader">MyClassLoader 实践</a></li>
+<li><a href="#todo">自定义类加载器的优缺点 // TODO</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="class">Class 文件</h1>
-<p>Class文件是一组以8位字节为基础单位的二进制流，任何一个Class文件都对应者唯一一个类或接口的定义信息</p>
+<p>Class文件是一组以8位字节为基础单位的<code>二进制流</code>，任何一个Class文件都对应唯一一个类或接口的定义信息</p>
 <h2 id="class_1">魔数与Class文件的版本</h2>
 <h2 id="_1">常量池</h2>
 <p>主要存放两大类常量： 字面量（Literal 和 符号引用（Symbolic Reference）</p>
@@ -170,31 +175,31 @@
 <p>将<code>&lt;JAVA_HOME&gt;\lib\ext</code>目录下的，或者被java.ext.dirs系统变量所指定的路径中的所有类库加载。开发者可以直接使用扩展类加载器。</p>
 <h4 id="application-classloader">应用程序类加载器 Application ClassLoader</h4>
 <p>负责加载用户类路径(ClassPath)上所指定的类库,开发者可直接使用。</p>
-<h4 id="_14">双亲委派模型</h4>
+<h4 id="_14">* 双亲委派模型 *</h4>
 <p>工作过程为：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载</p>
-<div class="hlcode"><pre><span class="kd">protected</span> <span class="kd">synchronized</span> <span class="n">Class</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">resolve</span><span class="o">)</span>  
-        <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>  
-    <span class="c1">// 首先检查该name指定的class是否有被加载  </span>
-    <span class="n">Class</span> <span class="n">c</span> <span class="o">=</span> <span class="n">findLoadedClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>  
-        <span class="k">try</span> <span class="o">{</span>  
-            <span class="k">if</span> <span class="o">(</span><span class="n">parent</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>  
-                <span class="c1">// 如果parent不为null，则调用parent的loadClass进行加载  </span>
-                <span class="n">c</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>  
-            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>  
-                <span class="c1">// parent为null，则调用BootstrapClassLoader进行加载  </span>
-                <span class="n">c</span> <span class="o">=</span> <span class="n">findBootstrapClass0</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>  
-            <span class="o">}</span>  
-        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>  
-            <span class="c1">// 如果仍然无法加载成功，则调用自身的findClass进行加载  </span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">findClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>  
-        <span class="o">}</span>  
-    <span class="o">}</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">resolve</span><span class="o">)</span> <span class="o">{</span>  
-        <span class="n">resolveClass</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="n">c</span><span class="o">;</span>  
-<span class="o">}</span>  
+<div class="hlcode"><pre><span class="kd">protected</span> <span class="kd">synchronized</span> <span class="n">Class</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">resolve</span><span class="o">)</span>
+        <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+    <span class="c1">// 首先检查该name指定的class是否有被加载</span>
+    <span class="n">Class</span> <span class="n">c</span> <span class="o">=</span> <span class="n">findLoadedClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">parent</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 如果parent不为null，则调用parent的loadClass进行加载</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// parent为null，则调用BootstrapClassLoader进行加载</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">findBootstrapClass0</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 如果仍然无法加载成功，则调用自身的findClass进行加载</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">findClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">resolve</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">resolveClass</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">c</span><span class="o">;</span>
+<span class="o">}</span>
 </pre></div>
 
 
@@ -231,7 +236,7 @@
     <span class="kd">static</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;static block&quot;</span><span class="o">);</span>
     <span class="o">}</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span><span class="k">new</span> <span class="n">Singleton2</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton2</span><span class="o">();</span>
 
     <span class="kd">private</span> <span class="nf">Singleton2</span><span class="o">(){</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;before Singleton2 constructor: v1:%d, v2:%d, v3:%d&quot;</span><span class="o">,</span>
@@ -297,7 +302,7 @@
 <p>对象创建的过程：</p>
 <ol>
 <li>首次创建对象时，类中的静态方法/静态字段首次被访问时，java解释器必须先查找类路径，以定位.class文件</li>
-<li>然后载入<code>.class</code>(这将创建一个class对象)，有关静态初始化的所有动作都会执行。因此，<strong>静态初始化只在Class对象首次加载的时候进行一次</strong></li>
+<li>然后载入<code>.class</code>(这将创建一个class对象)，有关静态初始化的所有动作都会执行，按顺序执行。因此，<strong>静态初始化只在Class对象首次加载的时候进行一次</strong></li>
 <li>当用<code>new XX()</code>创建对象时，首先在堆上为对象分配足够的存储空间</li>
 <li>这块存储空间会被清0，这就自动地将对象中的所有基本类型数据都设置成了缺省值（对数字来说就是0，对布尔型和字符型也相同），而引用则被设置成了null。</li>
 <li>执行所有出现于字段定义处的初始化动作（<strong>非静态对象的初始化</strong>）</li>
@@ -357,7 +362,7 @@
 <span class="kd">static</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;static block&quot;</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span><span class="k">new</span> <span class="n">Singleton2</span><span class="o">();</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton2</span><span class="o">();</span>
 </pre></div>
 
 
@@ -435,12 +440,213 @@
 <span class="n">Singleton1</span> <span class="nl">value2:</span><span class="mi">1</span>
 <span class="n">Singleton1</span> <span class="nl">value3:</span><span class="mi">11</span>
 </pre></div>
+
+
+<h1 id="_17">自定义类加载器</h1>
+<p>自定义类加载器的一般步骤</p>
+<ol>
+<li>
+<p>继承<code>ClassLoader</code></p>
+</li>
+<li>
+<p>重写<code>loadClass()</code>方法</p>
+</li>
+<li>
+<p>重写<code>findClass()</code>方法</p>
+<ul>
+<li>class文件路径判断和获取</li>
+<li>将class文件载入内存</li>
+<li>对载入内存的字节码数据，调用<code>defineClass()</code>方法将字节码转化为类</li>
+</ul>
+</li>
+</ol>
+<h2 id="myclassloader">MyClassLoader 实践</h2>
+<ul>
+<li><code>Hello.java</code>编译成<code>Hello.class</code></li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">other</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Loader Class is:&quot;</span> <span class="o">+</span> <span class="n">getClass</span><span class="o">().</span><span class="na">getClassLoader</span><span class="o">().</span><span class="na">getClass</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>MyComOtherClassLoader</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mb</span><span class="o">;</span>
+
+
+<span class="kn">import</span> <span class="nn">java.io.ByteArrayOutputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.FileInputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/3/20 10:54 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyComOtherClassLoader</span> <span class="kd">extends</span> <span class="n">ClassLoader</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">path</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">packageName</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">className</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">MyComOtherClassLoader</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemClassLoader</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="nf">classNameToPath</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 得到类文件的URL</span>
+        <span class="k">return</span> <span class="n">path</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">packageName</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">,</span> <span class="sc">&#39;/&#39;</span><span class="o">)</span>
+                <span class="o">+</span> <span class="s">&quot;/&quot;</span>
+                <span class="o">+</span> <span class="n">className</span> <span class="o">+</span> <span class="s">&quot;.class&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Class</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+        <span class="c1">// 非 com.test package下面的类，都用默认的加载， 否则用自定义的加载方法</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">name</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot;com.other&quot;</span><span class="o">))</span> <span class="o">{</span>
+            <span class="c1">// 是否已经被加载</span>
+            <span class="n">Class</span> <span class="n">loadedClass</span> <span class="o">=</span> <span class="n">findLoadedClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">loadedClass</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 用父类去加载该类</span>
+                <span class="n">loadedClass</span> <span class="o">=</span> <span class="n">getParent</span><span class="o">().</span><span class="na">loadClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+                <span class="k">return</span> <span class="n">loadedClass</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">loadedClass</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">);</span>
+        <span class="n">packageName</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">packageName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;package: &quot; + packageName);</span>
+            <span class="n">className</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;class name: &quot; + name);</span>
+            <span class="n">SecurityManager</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">sm</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">sm</span><span class="o">.</span><span class="na">checkPackageAccess</span><span class="o">(</span><span class="n">packageName</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">//依然调用父类的方法</span>
+<span class="c1">//        return super.loadClass(name);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">findClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">findClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">);</span>
+        <span class="n">packageName</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">packageName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;package: &quot; + packageName);</span>
+            <span class="n">className</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;class name: &quot; + name);</span>
+            <span class="n">SecurityManager</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">sm</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">sm</span><span class="o">.</span><span class="na">checkPackageAccess</span><span class="o">(</span><span class="n">packageName</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">findLoadedClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span> <span class="c1">// 父类已加载</span>
+        <span class="k">if</span><span class="o">(</span><span class="kc">null</span> <span class="o">!=</span> <span class="n">clazz</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">clazz</span><span class="o">;</span>
+        <span class="o">}</span>
+
+<span class="c1">//        System.out.println(&quot;findClass param name: &quot; + name);</span>
+        <span class="kt">byte</span> <span class="o">[]</span> <span class="n">b</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getClassBytes</span><span class="o">();</span>
+<span class="c1">//        System.out.println(&quot;b len:&quot; + b.length);</span>
+        <span class="n">clazz</span><span class="o">=</span><span class="n">defineClass</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">clazz</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getClassBytes</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">classPath</span> <span class="o">=</span> <span class="n">classNameToPath</span><span class="o">();</span>
+<span class="c1">//        System.out.println(&quot;classPath:&quot; + classPath);</span>
+        <span class="n">File</span> <span class="n">file</span><span class="o">=</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">classPath</span><span class="o">);</span>
+        <span class="k">try</span><span class="o">(</span><span class="n">FileInputStream</span> <span class="n">fis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">file</span><span class="o">);</span><span class="n">ByteArrayOutputStream</span> <span class="n">bos</span><span class="o">=</span><span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();)</span> <span class="o">{</span>
+            <span class="kt">byte</span><span class="o">[]</span> <span class="n">b</span><span class="o">=</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">*</span><span class="mi">2</span><span class="o">];</span>
+            <span class="kt">int</span> <span class="n">n</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">((</span><span class="n">n</span><span class="o">=</span><span class="n">fis</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">b</span><span class="o">))!=-</span><span class="mi">1</span><span class="o">){</span>
+                <span class="n">bos</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="n">bos</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testMyClassLoaderHello</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/Users/mubi/IdeaProjects/untitled/out/production/untitled&quot;</span><span class="o">;</span>
+        <span class="n">MyComOtherClassLoader</span> <span class="n">myClassLoader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyComOtherClassLoader</span><span class="o">();</span>
+        <span class="n">myClassLoader</span><span class="o">.</span><span class="na">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">;</span>
+        <span class="n">Class</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">myClassLoader</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="s">&quot;com.other.Hello&quot;</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;===&quot;</span> <span class="o">+</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="n">Method</span> <span class="n">method</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getDeclaredMethod</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">c</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return: &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return:&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testMyClassLoaderString</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">MyComOtherClassLoader</span> <span class="n">myClassLoader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyComOtherClassLoader</span><span class="o">();</span>
+        <span class="n">Class</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">myClassLoader</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="s">&quot;java.lang.String&quot;</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;===&quot;</span> <span class="o">+</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="n">Method</span> <span class="n">method</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getDeclaredMethod</span><span class="o">(</span><span class="s">&quot;length&quot;</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">c</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return: &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return:&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">testMyClassLoaderHello</span><span class="o">();</span>
+        <span class="n">testMyClassLoaderString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">===class com.other.Hello</span>
+<span class="cm">Loader Class is:class com.thread.MyClassLoader2</span>
+<span class="cm">method return:null</span>
+<span class="cm">===class java.lang.String</span>
+<span class="cm">method return: class java.lang.Integer</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h2 id="todo">自定义类加载器的优缺点 // TODO</h2>
+<ol>
+<li>
+<p>部署在同一个服务器上的两个Web应用程序所使用的Java类库可以实现相互隔离。</p>
+</li>
+<li>
+<p>部署在同一个服务器上的两个Web应用程序所使用的Java类库可以相互共享</p>
+</li>
+<li>
+<p>支持热替换</p>
+</li>
+</ol>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-17 22:01:03</p>
+        <p>Site Generated 2019-03-20 23:09:41</p>
       </span>
     </div>
 
