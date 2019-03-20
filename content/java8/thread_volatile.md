@@ -39,13 +39,13 @@ date: 2019-03-09 00:00
 
 `volatile`、`syncronized`、`Lock`都可保证有序性。
 
-参考：https://blog.csdn.net/qq_30948019/article/details/80193392
+<a target='_blank' href='https://blog.csdn.net/qq_30948019/article/details/80193392'>参考</a>
 
 ## 回顾 Java 内存模型
 
 CPU -> 缓存 -> 主存 -> 线程工作内存
 
-![](../java_jvm/jvm_mem_model.md)
+<a target='_blank' href='https://doctording.github.io/sword_at_offer/java_jvm/jvm_mem_model.html'>参考</a>
 
 ## volatile 使用场景
 
