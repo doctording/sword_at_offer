@@ -46,7 +46,7 @@ public class Main {
                             conditionA.await();
                         }
                         System.out.print("A");
-                        //因为A打印完应该打印B， 这里线程b唤醒，同时设置标记
+                        // 因为A打印完应该打印B， 这里线程B唤醒，同时设置标记
                         flag = 2;
                         conditionB.signal();
                     } catch (Exception e) {
