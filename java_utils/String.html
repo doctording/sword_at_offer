@@ -28,7 +28,15 @@
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java">Java字符串相关</a><ul>
 <li><a href="#string">String</a></li>
-<li><a href="#stringbuffer">StringBuffer</a></li>
+<li><a href="#stringbuffer">StringBuffer</a><ul>
+<li><a href="#_1">线程安全</a></li>
+<li><a href="#stringbufferstring">对于大量的字符串操作，StringBuffer优于String</a></li>
+</ul>
+</li>
+<li><a href="#stringbuilder-stringbuffer-string">StringBuilder &gt; StringBuffer &gt; String</a><ul>
+<li><a href="#_2">非线程安全</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -199,6 +207,7 @@
 
 <h2 id="stringbuffer">StringBuffer</h2>
 <p>final类，继承了<code>AbstractStringBuilder</code></p>
+<h3 id="_1">线程安全</h3>
 <p>StringBuffer基本上所有的操作方法都加上了<code>synchronized</code>修饰，保证线程安全</p>
 <div class="hlcode"><pre> <span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">StringBuffer</span>
     <span class="kd">extends</span> <span class="n">AbstractStringBuilder</span>
@@ -301,9 +310,7 @@
 </pre></div>
 
 
-<ul>
-<li>对于大量的字符串操作，StringBuffer优于String</li>
-</ul>
+<h3 id="stringbufferstring">对于大量的字符串操作，StringBuffer优于String</h3>
 <div class="hlcode"><pre><span class="kd">final</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">time</span> <span class="o">=</span> <span class="mi">10000</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testString</span> <span class="o">()</span> <span class="o">{</span>
@@ -326,12 +333,17 @@
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;操作&quot;</span><span class="o">+</span><span class="n">sb</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span><span class="s">&quot;类型使用的时间为：&quot;</span><span class="o">+(</span><span class="n">over</span><span class="o">-</span><span class="n">begin</span><span class="o">)+</span><span class="s">&quot;毫秒&quot;</span><span class="o">);</span>
 <span class="o">}</span>
 </pre></div>
+
+
+<h2 id="stringbuilder-stringbuffer-string">StringBuilder &gt; StringBuffer &gt; String</h2>
+<h3 id="_2">非线程安全</h3>
+<p>适用于单线程下在字符缓冲区进行大量操作的情况</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-23 21:34:28</p>
+        <p>Site Generated 2019-03-23 21:44:42</p>
       </span>
     </div>
 
