@@ -86,4 +86,6 @@ while (isInit) {            //(3)
 }
 ```
 
-### Singleton 设计模式的 double-check 也是利用了属性性的特点
+### Singleton 设计模式的 double-check 也是利用了顺序性的特点
+
+<a target='_blank' href='https://doctording.github.io/sword_at_offer/java_utils/Singleton.html'>参考:单例模式</a>
