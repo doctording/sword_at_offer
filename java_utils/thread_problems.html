@@ -70,7 +70,7 @@
                             <span class="n">conditionA</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
                         <span class="o">}</span>
                         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;A&quot;</span><span class="o">);</span>
-                        <span class="c1">//因为A打印完应该打印B， 这里线程b唤醒，同时设置标记</span>
+                        <span class="c1">// 因为A打印完应该打印B， 这里线程B唤醒，同时设置标记</span>
                         <span class="n">flag</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
                         <span class="n">conditionB</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
                     <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -220,7 +220,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-23 15:31:14</p>
+        <p>Site Generated 2019-03-23 15:51:14</p>
       </span>
     </div>
 

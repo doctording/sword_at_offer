@@ -41,7 +41,11 @@
 <li><a href="#_6">实际例子</a></li>
 </ul>
 </li>
-<li><a href="#_7">分布式锁</a></li>
+<li><a href="#_7">分布式锁</a><ul>
+<li><a href="#_8">什么是分布式锁？</a></li>
+<li><a href="#_9">分布式锁的实现方式</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -554,12 +558,43 @@
 
 
 <h2 id="_7">分布式锁</h2>
+<p>很多时候我们需要保证一个方法在同一时间内只能被同一个线程执行。在单机环境中，通过 Java 提供的并发 API 我们可以解决，分布式环境下</p>
+<ol>
+<li>分布式与单机情况下最大的不同在于其不是多线程而是多进程</li>
+<li><code>多线程</code>由于可以<code>共享堆内存</code>，因此可以简单的采取内存作为标记存储位置。而进程之间甚至可能都不在同一台物理机上，因此需要将<code>标记</code>存储在一个<code>所有进程</code>都能看到的地方</li>
+</ol>
+<p><a target='_blank' href='https://www.cnblogs.com/seesun2012/p/9214653.html'>参考</a></p>
+<h3 id="_8">什么是分布式锁？</h3>
+<p>在分布式的部署环境下，通过锁机制来让多客户端互斥的对共享资源进行访问</p>
+<ul>
+<li>
+<p>排他性：在同一时间只会有一个客户端能获取到锁，其它客户端无法同时获取</p>
+</li>
+<li>
+<p>避免死锁：这把锁在一段有限的时间之后，一定会被释放（正常释放或异常释放）</p>
+</li>
+<li>
+<p>高可用：获取或释放锁的机制必须高可用且性能佳</p>
+</li>
+</ul>
+<h3 id="_9">分布式锁的实现方式</h3>
+<ol>
+<li>
+<p>基于数据库实现</p>
+</li>
+<li>
+<p>基于缓存</p>
+</li>
+<li>
+<p>基于ZooKeeper实现</p>
+</li>
+</ol>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-23 15:31:14</p>
+        <p>Site Generated 2019-03-23 15:51:14</p>
       </span>
     </div>
 
