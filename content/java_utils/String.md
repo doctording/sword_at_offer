@@ -173,6 +173,8 @@ public String concat(String str) {
 
 final类，继承了`AbstractStringBuilder`
 
+### 线程安全
+
 StringBuffer基本上所有的操作方法都加上了`synchronized`修饰，保证线程安全
 
 ```java
@@ -275,7 +277,7 @@ public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) {
 }
 ```
 
-* 对于大量的字符串操作，StringBuffer优于String
+### 对于大量的字符串操作，StringBuffer优于String
 
 ```java
 final static int time = 10000;
@@ -300,3 +302,9 @@ public static void testStringBuffer () {
     System.out.println("操作"+sb.getClass().getName()+"类型使用的时间为："+(over-begin)+"毫秒");
 }
 ```
+
+## StringBuilder > StringBuffer > String
+
+### 非线程安全
+
+适用于单线程下在字符缓冲区进行大量操作的情况
