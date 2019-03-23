@@ -38,8 +38,8 @@
 <li><a href="#_6">静态数据与初始化</a></li>
 <li><a href="#_7">初始化顺序</a></li>
 <li><a href="#_8">实例代码说明类初始化顺序</a></li>
-<li><a href="#_9">总结一个对象的创建过程</a></li>
-<li><a href="#_10">数组的初始化</a></li>
+<li><a href="#class-class">总结一个对象的创建过程(class &amp; class实例 =&gt; 对象)</a></li>
+<li><a href="#_9">数组的初始化</a></li>
 </ul>
 </li>
 </ul>
@@ -167,7 +167,7 @@
 </pre></div>
 
 
-<h3 id="_9">总结一个对象的创建过程</h3>
+<h3 id="class-class">总结一个对象的创建过程(class &amp; class实例 =&gt; 对象)</h3>
 <p>假设有一个名为Dog的类</p>
 <ol>
 <li>即使没有显示地使用static关键字，构造器其实也可以看成静态方法。首次创建Dog类的对象时，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位Dog.class文件</li>
@@ -181,7 +181,7 @@
 <li>执行所有出现于字段定义外的初始化动作</li>
 <li>执行构造器</li>
 </ol>
-<h3 id="_10">数组的初始化</h3>
+<h3 id="_9">数组的初始化</h3>
 <div class="hlcode"><pre><span class="kt">int</span><span class="o">[]</span> <span class="n">a1</span><span class="o">;</span> <span class="c1">// int a1[];</span>
 </pre></div>
 
@@ -203,7 +203,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-20 23:15:11</p>
+        <p>Site Generated 2019-03-23 15:25:24</p>
       </span>
     </div>
 
