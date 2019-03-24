@@ -30,6 +30,7 @@
 <li><a href="#java-8">源码分析（Java 8）</a></li>
 <li><a href="#valueofint-i">valueOf(int i) 源码</a></li>
 <li><a href="#equalsobject-obj">equals(Object obj)源码</a></li>
+<li><a href="#_1">自动装箱,拆箱</a></li>
 </ul>
 </li>
 </ul>
@@ -142,12 +143,23 @@
     <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
 <span class="o">}</span>
 </pre></div>
+
+
+<h2 id="_1">自动装箱,拆箱</h2>
+<ul>
+<li>
+<p><code>int</code>的自动装箱都是通过<code>Integer.valueOf()</code>方法来实现的</p>
+</li>
+<li>
+<p><code>Integer</code>的自动拆箱都是通过<code>Integer.intValue</code>来实现的</p>
+</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-24 10:30:54</p>
+        <p>Site Generated 2019-03-24 22:46:14</p>
       </span>
     </div>
 
