@@ -119,3 +119,9 @@ public boolean equals(Object obj) {
     return false;
 }
 ```
+
+## 自动装箱,拆箱
+
+* `int`的自动装箱都是通过`Integer.valueOf()`方法来实现的
+
+* `Integer`的自动拆箱都是通过`Integer.intValue`来实现的
