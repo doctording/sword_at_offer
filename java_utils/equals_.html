@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>==,equals - 剑指Offer</title>
+    <title>== & equals方法 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,23 +16,29 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_utils">java_utils</a>&nbsp;&#187;&nbsp;==,equals
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_utils">java_utils</a>&nbsp;&#187;&nbsp;== & equals方法
     <span class="updated">Page Updated&nbsp;
       2018-11-24 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">==,equals</div>
+<div class="page_title">== & equals方法</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#equals">操作符==,对象的equals方法</a></li>
+<li><a href="#_1">操作符==</a><ul>
+<li><a href="#_2">作用于基本数据类型的变量，则直接比较其存储的值是否相等</a></li>
+<li><a href="#_3">作用于引用类型的变量，则比较的是所指向的对象的地址</a></li>
+</ul>
+</li>
+<li><a href="#equals">equals方法</a><ul>
+<li><a href="#equalsobjectobject">equals方法是基类Object中的方法，因此对于所有的继承于Object的类都会有该方法。</a></li>
+</ul>
+</li>
 </ul>
 </div>
-<h1 id="equals">操作符<code>==</code>,对象的<code>equals</code>方法</h1>
-<ol>
-<li>作用于基本数据类型的变量，则直接比较其存储的<code>值</code>是否相等</li>
-</ol>
+<h1 id="_1">操作符<code>==</code></h1>
+<h2 id="_2">作用于基本数据类型的变量，则直接比较其存储的<code>值</code>是否相等</h2>
 <table>
 <thead>
 <tr>
@@ -75,9 +81,7 @@
 </tr>
 </tbody>
 </table>
-<ol>
-<li>作用于引用类型的变量，则比较的是所指向的对象的地址</li>
-</ol>
+<h2 id="_3">作用于引用类型的变量，则比较的是所指向的对象的地址</h2>
 <p>程序验证</p>
 <div class="hlcode"><pre><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
 <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
@@ -94,22 +98,37 @@
 <span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&quot;helloworld&quot;</span><span class="o">;</span>
 <span class="n">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span> <span class="o">+</span> <span class="s">&quot;world&quot;</span><span class="o">;</span>
 <span class="c1">// true s0跟s1是指向同一个对象,字符串常量</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s0</span><span class="o">==</span><span class="n">s1</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s0</span> <span class="o">==</span> <span class="n">s1</span><span class="o">);</span>
 <span class="c1">// true s2也指向同一字符串常量</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s0</span><span class="o">==</span><span class="n">s2</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s0</span> <span class="o">==</span> <span class="n">s2</span><span class="o">);</span>
 <span class="n">String</span> <span class="n">s3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">s0</span><span class="o">);</span>
 <span class="n">String</span> <span class="n">s4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">s0</span><span class="o">);</span>
 <span class="c1">// false s3, s4是不同的对象，地址不同, 只是内容相同</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s3</span><span class="o">==</span><span class="n">s4</span><span class="o">);</span>
-<span class="c1">// true</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s3</span> <span class="o">==</span> <span class="n">s4</span><span class="o">);</span>
+<span class="c1">// true，用String的`equals`方法是判断的字符串内容是否相等</span>
 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s3</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">s4</span><span class="o">));</span>
 </pre></div>
+
+
+<h1 id="equals"><code>equals</code>方法</h1>
+<h2 id="equalsobjectobject"><code>equals</code>方法是基类<code>Object</code>中的方法，因此对于所有的继承于<code>Object</code>的类都会有该方法。</h2>
+<ul>
+<li>
+<p>equals方法不能作用于基本数据类型的变量</p>
+</li>
+<li>
+<p>如果没有对equals方法进行重写，则比较的是<code>引用类型的变量所指向的对象的地址</code></p>
+</li>
+<li>
+<p>诸如<code>String</code>、<code>Date</code>等类对<code>equals</code>方法进行了<code>override</code>的话，比较的是所指向的对象的内容</p>
+</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-23 21:44:42</p>
+        <p>Site Generated 2019-03-24 10:30:54</p>
       </span>
     </div>
 
