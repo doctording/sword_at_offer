@@ -1,5 +1,5 @@
 ---
-title: "《Java编程思想》第9章：接口"
+title: "《Java编程思想》第9章：接口 补充：抽象类"
 layout: page
 date: 2019-02-12 00:00
 ---
@@ -22,9 +22,9 @@ abstract void f();
 
 抽象类和普通类的主要有三点区别：
 
-1. 抽象方法必须为public或者protected（因为如果为private，则不能被子类继承，子类便无法实现该方法），缺省情况下默认为public。
-2. 抽象类不能用来创建对像，即无法实例化
-3. 如果一个类继承于一个抽象类，则子类必须实现父类的抽象方法。如果子类没有实现父类的抽象方法，则必须将子类也定义为abstract类
+1. **抽象方法必须为public或者protected**（因为如果为private，则不能被子类继承，子类便无法实现该方法），缺省情况下默认为public。
+2. 抽象类不能用来创建对像，即**无法实例化**
+3. 如果一个类继承于一个抽象类，则**子类必须实现父类的抽象方法**。如果子类没有实现父类的抽象方法，则必须将子类也定义为abstract类
 
 ## 接口（interface）
 
@@ -37,9 +37,9 @@ class ClassName implements Interface1,Interface2,[....]{
 
 * 与`抽象类`语法层面上的区别
 
-1. 抽象类可以提供成员方法的实现细节，而接口中只能存在`public abstract`方法(默认就是，前面加上修饰词会提示多余)
+1. 抽象类可以提供成员方法的实现细节，而接口中只能存在`public abstract`方法(默认就是`public abstract`，前面加上修饰词会提示多余)
 
-2. 抽象类中的成员变量可以是各种类型的，而接口中的成员变量只能是`public static final`类型的(默认就是，前面加上修饰词会提示多余)；
+2. 抽象类中的成员变量可以是各种类型的，而**接口中的成员变量**只能是`public static final`类型的(默认就是`public static final`，前面加上修饰词会提示多余)
 
 3. 接口中不能含有静态代码块以及静态方法，而抽象类可以有静态代码块和静态方法；
 
@@ -120,3 +120,89 @@ http://www.runoob.com/design-pattern/factory-pattern.html
 1. 您需要一辆汽车，可以直接从工厂里面提货，而不用去管这辆汽车是怎么做出来的，以及这个汽车里面的具体实现
 
 2. Hibernate 换数据库只需换方言和驱动就可以
+
+## 抽象类`null`的问题
+
+```java
+abstract class A{
+    protected String description;
+
+    public abstract void setDescription();
+
+    public void show(){
+        System.out.println("show:" + description);
+    }
+}
+
+class B extends A{
+
+    @Override
+    public void setDescription() {
+        this.description = "B";
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        B b = new B();
+        System.out.println(b.description);
+        b.show();
+    }
+}
+/* output
+
+null
+show:null
+
+ */
+```
+
+只需要改成
+
+```java
+B b = new B();
+b.setDescription();
+System.out.println(b.description);
+b.show();
+```
+
+## 抽象类有构造函数，子类也必须有一个默认构造函数
+
+```java
+abstract class A{
+    private String name = "A";
+    protected String description;
+
+    public A(){}
+
+    public A(String description){
+        this.description = description;
+    }
+
+    abstract void setDescription();
+
+    public void show(){
+        System.out.println("show:" + name + " " + description);
+    }
+}
+
+class B extends A{
+
+    public B(){
+    }
+
+    public B(String description){
+        super(description);
+        this.description = description;
+    }
+
+    @Override
+    public void setDescription() {
+        description = "B";
+    }
+
+}
+```
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thinking_in_Java/imgs/abstract_class.png)
