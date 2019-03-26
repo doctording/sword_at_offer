@@ -26,8 +26,13 @@
 <div class="page_title">CAS(Conmpare And Swap) & AtomicInteger</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#cas">CAS</a></li>
-<li><a href="#atomicinteger">AtomicInteger</a><ul>
+<li><a href="#cas">CAS</a><ul>
+<li><a href="#cas_1">CAS 缺点</a></li>
+</ul>
+</li>
+<li><a href="#atomicinteger-cas">AtomicInteger 使用 CAS</a><ul>
+<li><a href="#volatile">volatile 非原子性</a></li>
+<li><a href="#atomicinteger">AtomicInteger</a></li>
 <li><a href="#incrementandget">incrementAndGet()</a></li>
 </ul>
 </li>
@@ -36,6 +41,10 @@
 <h1 id="cas">CAS</h1>
 <p>用于实现<code>多线程同步</code>的<code>原子指令</code>，非阻塞算法，是由CPU硬件实现</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/cas.png" /></p>
+<h2 id="cas_1">CAS 缺点</h2>
+<p>https://blog.csdn.net/hxpjava1/article/details/79408692</p>
+<h1 id="atomicinteger-cas">AtomicInteger 使用 CAS</h1>
+<h2 id="volatile">volatile 非原子性</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mb</span><span class="o">;</span>
 
 
@@ -82,7 +91,7 @@
 </pre></div>
 
 
-<h1 id="atomicinteger">AtomicInteger</h1>
+<h2 id="atomicinteger">AtomicInteger</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mb</span><span class="o">;</span>
 
 
@@ -164,7 +173,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-03-25 23:49:31</p>
+        <p>Site Generated 2019-03-26 23:16:06</p>
       </span>
     </div>
 
