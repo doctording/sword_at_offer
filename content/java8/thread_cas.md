@@ -12,6 +12,14 @@ date: 2019-03-24 00:00
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/cas.png)
 
+## CAS 缺点
+
+https://blog.csdn.net/hxpjava1/article/details/79408692
+
+# AtomicInteger 使用 CAS
+
+## volatile 非原子性
+
 ```java
 package com.mb;
 
@@ -58,7 +66,8 @@ public class Main {
 }
 ```
 
-# AtomicInteger
+## AtomicInteger
+
 
 ```java
 package com.mb;
