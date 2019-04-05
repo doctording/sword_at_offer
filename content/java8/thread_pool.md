@@ -177,3 +177,5 @@ public ThreadPoolExecutor(int corePoolSize,
 * threadFactory:线程工厂，用于创建线程，一般用默认即可；
 
 * handler:拒绝策略；当任务太多来不及处理时，如何拒绝任务；
+
+

@@ -549,3 +549,37 @@ pool-1-thread-2读数据：0.7060105583988802 2019-03-17 19:54:32
 2. 基于缓存
 
 3. 基于ZooKeeper实现
+
+## 共享锁(读锁) 和 排它锁(写锁)
+
+## Exclusive locks
+
+Exclusive locks protect updates to file resources, both recoverable and non-recoverable. They can be owned by only one transaction at a time. Any transaction that requires an exclusive lock must wait if another task currently owns an exclusive lock or a shared lock against the requested resource.
+
+独占锁保护文件资源(包括可恢复和不可恢复的文件资源)的更新。它们一次只能由一个事务拥有。如果另一个任务当前拥有对所请求资源的独占锁或共享锁，则任何需要对该资源申请独占锁的事务都必须等待。
+
+## Shared locks
+
+Shared locks support read integrity. They ensure that a record is not in the process of being updated during a read-only request. Shared locks can also be used to prevent updates of a record between the time that a record is read and the next syncpoint.
+
+共享锁支持读完整性。它们确保在只读请求期间不会更新记录。共享锁还可用于防止在读取记录和下一个同步点之间进行更新操作。
+
+A shared lock on a resource can be owned by several tasks at the same time. However, although several tasks can own shared locks, there are some circumstances in which tasks can be forced to wait for a lock:
+
+资源上的共享锁可以同时由多个任务拥有。 但是，尽管有几个任务可以拥有共享锁，但在某些情况下可以强制任务等待锁：
+
+* A request for a shared lock must wait if another task currently owns an exclusive lock on the resource.
+* A request for an exclusive lock must wait if other tasks currently own shared locks on this resource.
+* A new request for a shared lock must wait if another task is waiting for an exclusive lock on a resource that already has a shared lock.
+
+* 如果另一个任务当前拥有资源上的独占锁，则对共享锁的请求必须等待。
+* 如果其他任务当前拥有此资源上的共享锁，则必须等待对独占锁的请求。
+* 如果另一个任务正在等待已经具有共享锁的资源的独占锁，则对共享锁的新请求必须等待。
+
+## 数据库-乐观锁(Optimistic Lock) 悲观锁（Pessimistic Lock）
+
+### 乐观锁
+
+### 悲观锁
+
+``````
