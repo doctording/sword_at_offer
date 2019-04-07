@@ -18,7 +18,7 @@
 <div id="header">
   <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io">java_io</a>&nbsp;&#187;&nbsp;Java nio
     <span class="updated">Page Updated&nbsp;
-      2019-03-18 00:00
+      2019-04-07 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
@@ -35,9 +35,9 @@
 </ul>
 </li>
 <li><a href="#nioio">NIO与IO的区别</a></li>
+<li><a href="#scattergather">Scatter/Gather</a></li>
 </ul>
 </li>
-<li><a href="#todo">TODO</a></li>
 </ul>
 </div>
 <h1 id="nio">NIO</h1>
@@ -83,13 +83,22 @@
 来源：CSDN<br />
 原文：https://blog.csdn.net/qq_36520235/article/details/81318189 <br />
 版权声明：本文为博主原创文章，转载请附上博文链接！</p>
-<h1 id="todo">TODO</h1>
+<h2 id="scattergather">Scatter/Gather</h2>
+<p>scatter/gather指的在多个缓冲区上实现一个简单的I/O操作，比如从通道中读取数据到多个缓冲区，或从多个缓冲区中写入数据到通道；</p>
+<ul>
+<li>
+<p>scatter（分散）：指的是从通道中读取数据分散到多个缓冲区Buffer的过程，该过程会将每个缓存区填满，直至通道中无数据或缓冲区没有空间；</p>
+</li>
+<li>
+<p>gather（聚集）：指的是将多个缓冲区Buffer聚集起来写入到通道的过程，该过程类似于将多个缓冲区的内容连接起来写入通道；</p>
+</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-06 16:30:22</p>
+        <p>Site Generated 2019-04-07 22:02:01</p>
       </span>
     </div>
 

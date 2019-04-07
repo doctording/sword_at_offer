@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java nio 缓冲区 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io">java_io</a>&nbsp;&#187;&nbsp;Java nio 缓冲区
+    <span class="updated">Page Updated&nbsp;
+      2019-03-18 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java nio 缓冲区</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#buffer">Buffer</a><ul>
+<li><a href="#_1">属性信息</a></li>
+<li><a href="#_2">非线程安全</a></li>
+<li><a href="#_3">两个缓冲区被认为相等的充要条件</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="buffer">Buffer</h1>
+<h2 id="_1">属性信息</h2>
+<ul>
+<li>
+<p>容量(Capacity): 缓冲区能够容纳的数据元素的最大数量。这一容量在缓冲区创建时被设定，并且永远不能被改变。</p>
+</li>
+<li>
+<p>上界(Limit): 缓冲区的第一个不能被读或写的元素。或者说，缓冲区中现存元素的计数。</p>
+</li>
+<li>
+<p>位置(Position): 下一个要被读或写的元素的索引。位置会自动由相应的<code>get()</code>和<code>put()</code>函数更新。</p>
+</li>
+<li>
+<p>标记(Mark): 一个备忘位置。调用<code>mark()</code>来设定mark=postion。调用<code>reset()</code>设定position=mark。标记在设定前是未定义的(undefined)</p>
+</li>
+</ul>
+<p><code>0 &lt;= mark &lt;= position &lt;= limit &lt;= capacity</code></p>
+<h2 id="_2">非线程安全</h2>
+<p>缓冲区并不是线程安全的。如果您想以多线程同时存取特定的缓冲区，您需要在存取缓冲区之前进行同步(例如对缓冲区对象进行跟踪)</p>
+<h2 id="_3">两个缓冲区被认为相等的充要条件</h2>
+<ul>
+<li>
+<p>两个对象类型相同。包含不同数据类型的buffer永远不会相等，而且buffer 绝不会等于非 buffer 对象。</p>
+</li>
+<li>
+<p>两个对象都剩余同样数量的元素。Buffer 的容量不需要相同，而且缓冲区中剩 余数据的索引也不必相同。但每个缓冲区中剩余元素的数目(从位置到上界)必须相同。</p>
+</li>
+<li>
+<p>在每个缓冲区中应被Get()函数返回的剩余数据元素序列必须一致。</p>
+</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-07 22:02:01</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
