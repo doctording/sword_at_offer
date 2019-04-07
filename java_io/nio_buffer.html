@@ -26,15 +26,16 @@
 <div class="page_title">Java nio 缓冲区</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#buffer">Buffer</a><ul>
+<li><a href="#buffer">缓冲区Buffer</a><ul>
 <li><a href="#_1">属性信息</a></li>
 <li><a href="#_2">非线程安全</a></li>
 <li><a href="#_3">两个缓冲区被认为相等的充要条件</a></li>
+<li><a href="#_4">直接缓冲区 &amp; 非直接缓冲区</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="buffer">Buffer</h1>
+<h1 id="buffer">缓冲区Buffer</h1>
 <h2 id="_1">属性信息</h2>
 <ul>
 <li>
@@ -65,12 +66,22 @@
 <p>在每个缓冲区中应被Get()函数返回的剩余数据元素序列必须一致。</p>
 </li>
 </ul>
+<h2 id="_4">直接缓冲区 &amp; 非直接缓冲区</h2>
+<p>参考1: https://blog.csdn.net/zhangxiaoyang0/article/details/79208249/</p>
+<ul>
+<li>直接缓冲区：通过<code>allocateDirect()</code>方法分配直接缓冲区，将缓冲区建立在物理内存中(内存映射文件)</li>
+</ul>
+<p>直接字节缓冲区通过调用<code>allocateDirect()</code>工厂方法来创建,此方法返回的缓冲区进行分配和取消分配所需成本通常<strong>高于</strong>非直接缓冲区。直接缓冲区的内容可以驻留在常规的垃圾回收堆之外，因此，它们对应用程序的内存需求量造成的影响可能并不明显。所以，建议将直接缓冲区主要分配给那些易受基础系统的本机 I/O 操作影响的大型、持久的缓冲区。一般情况下，最好仅在直接缓冲区能在程序性能方面带来明显好处时分配它们。</p>
+<p>直接字节缓冲区还可以通过<code>FileChannel</code>的<code>map()</code>方法,将文件区域直接映射到内存中来创建。该方法返回<code>MappedByteBuffer</code>。Java 平台的实现有助于通过JNI从本机代码创建直接字节缓冲区。如果以上这些缓冲区中的某个缓冲区实例指的是不可访问的内存区域，则试图访问该区域不会更改该缓冲区的内容，并且将会在访问期间或稍后的某个时间导致抛出不确定的异常。</p>
+<ul>
+<li>非直接缓冲区： 通过<code>allocate()</code>方法分配缓冲区，将缓冲区建立在 JVM 的内存中</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-07 22:02:01</p>
+        <p>Site Generated 2019-04-07 22:56:36</p>
       </span>
     </div>
 
