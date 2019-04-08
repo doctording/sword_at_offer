@@ -172,10 +172,94 @@ public ThreadPoolExecutor(int corePoolSize,
 
 * unit:keepAliveTime的单位
 
-* workQueue:任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为直接提交队列、有界任务队列、无界任务队列、优先任务队列几种；
+* workQueue:阻塞任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为直接提交队列、有界任务队列、无界任务队列、优先任务队列几种；
 
 * threadFactory:线程工厂，用于创建线程，一般用默认即可；
 
 * handler:拒绝策略；当任务太多来不及处理时，如何拒绝任务；
 
+* workerCount 当前活跃的线程数(也即线程池中的线程数量)
 
+## ThreadPoolExecutor 的使用
+
+1. 当线程池**小于corePoolSize**时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程
+2. 当线程池**达到corePoolSize**时，新提交任务将被放入workQueue中，等待线程池中任务调度执行
+3. 当**workQueue已满**，且**maximumPoolSize>corePoolSize**时，新提交任务会创建新线程执行任务
+4. 当**workQueue已满**，且workerCount**超过maximumPoolSize**时，新提交任务由RejectedExecutionHandler处理
+5. 当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，关闭空闲线程
+6. 当设置allowCoreThreadTimeOut(true)时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+
+### ThreadPoolExecutor 实例1
+
+```java
+package com.threadpool;
+
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * @Author mubi
+ * @Date 2019/4/8 10:52 PM
+ */
+public class ThreadPoolUse {
+
+    static class MyThreadFactory implements ThreadFactory {
+
+        private AtomicInteger count = new AtomicInteger(0);
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            String threadName = "MyThread" + count.addAndGet(1);
+            System.out.println(threadName);
+            t.setName(threadName);
+            return t;
+        }
+    }
+
+    static class MyTask implements Runnable{
+        int id;
+        MyTask(int id){
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+           try{
+               System.out.println("myTask id:" + id);
+               TimeUnit.SECONDS.sleep(10);
+           }catch (Exception e){
+               e.printStackTrace();
+           }
+        }
+    }
+
+    public static void main(String[] args){
+
+        int corePoolSize = 2;
+        int maximumPoolSize = 4;
+        int keepAliveTime = 2;
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(1);
+        RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
+        ThreadFactory threadFactory = new MyThreadFactory();
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                corePoolSize,
+                maximumPoolSize,
+                keepAliveTime,
+                timeUnit,
+                workQueue,
+                threadFactory,
+                handler);
+
+        for(int i=0;i<6;i++) {
+            MyTask task = new MyTask(i);
+            executor.execute(task);
+        }
+        executor.shutdown();
+
+    }
+
+}
+```
