@@ -217,6 +217,17 @@ public synchronized void start() {
 private native void start0();
 ```
 
+#### 需要注意的点
+
+1. start方法用synchronized修饰，为同步方法；
+2. 虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被多次start会抛出异常；threadStatus的状态由JVM控制。
+3. 使用Runnable时，主线程无法捕获子线程中的异常状态。线程的异常，应在线程内部解决。
+
+作者：徐志毅
+链接：https://www.jianshu.com/p/8c16aeea7e1a
+来源：简书
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
+
 ## stackSize
 
 ```java
