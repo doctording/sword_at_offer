@@ -41,6 +41,12 @@
 </li>
 <li><a href="#threadpoolexecutor_1">ThreadPoolExecutor 的使用</a><ul>
 <li><a href="#threadpoolexecutor-1">ThreadPoolExecutor 实例1</a></li>
+<li><a href="#_3">线程池使用后关闭问题？</a><ul>
+<li><a href="#_4">固定线程池</a></li>
+<li><a href="#cachedthreadpool">CachedThreadPool</a></li>
+<li><a href="#shutdownshutdownnow">线程池shutdown，shutdownNow</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -233,7 +239,7 @@
 <ol>
 <li>当线程池<strong>小于corePoolSize</strong>时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程</li>
 <li>当线程池<strong>达到corePoolSize</strong>时，新提交任务将被放入workQueue中，等待线程池中任务调度执行</li>
-<li>当<strong>workQueue已满</strong>，且<strong>maximumPoolSize&gt;corePoolSize</strong>时，新提交任务会创建新线程执行任务</li>
+<li>当<strong>workQueue已满</strong>，如果workerCount &gt;= corePoolSize &amp;&amp; workerCount &lt; maximumPoolSize，则创建并启动一个线程来执行新提交的任务；</li>
 <li>当<strong>workQueue已满</strong>，且workerCount<strong>超过maximumPoolSize</strong>时，新提交任务由RejectedExecutionHandler处理</li>
 <li>当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，关闭空闲线程</li>
 <li>当设置allowCoreThreadTimeOut(true)时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭</li>
@@ -310,12 +316,186 @@
 
 <span class="o">}</span>
 </pre></div>
+
+
+<h3 id="_3">线程池使用后关闭问题？</h3>
+<p>是否需要关闭？如何关闭？</p>
+<p>A pool that is no longer referenced in a program and has no remaining threads will be shutdown automatically.</p>
+<p>如果程序中不再持有线程池的引用，并且线程池中没有线程时，线程池将会自动关闭。</p>
+<p>注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡。然而我们常用的FixedThreadPool的核心线程没有超时策略，所以并不会自动关闭。</small></p>
+<hr />
+<p>https://www.jianshu.com/p/bdf06e2c1541</p>
+<h4 id="_4">固定线程池</h4>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kt">void</span> <span class="nf">testFixPool</span><span class="o">(){</span>
+    <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ExecutorService</span> <span class="n">executorService</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">8</span><span class="o">);</span>
+        <span class="n">executorService</span><span class="o">.</span><span class="na">execute</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;running&quot;</span><span class="o">));</span>
+        <span class="n">executorService</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+    <span class="n">testFixPool</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>因为固定线程池不会自己销毁，最终会耗尽内存（需要在合适的时候<code>shutdown</code>）</li>
+</ul>
+<div class="hlcode"><pre><span class="n">running</span>
+<span class="n">running</span>
+<span class="n">running</span>
+<span class="n">running</span>
+<span class="n">running</span>
+<span class="n">Exception</span> <span class="n">in</span> <span class="n">thread</span> <span class="s">&quot;main&quot;</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">OutOfMemoryError</span><span class="o">:</span> <span class="n">unable</span> <span class="n">to</span> <span class="n">create</span> <span class="k">new</span> <span class="kd">native</span> <span class="n">thread</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">start0</span><span class="o">(</span><span class="n">Native</span> <span class="n">Method</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">717</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">ThreadPoolExecutor</span><span class="o">.</span><span class="na">addWorker</span><span class="o">(</span><span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">957</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">ThreadPoolExecutor</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">1367</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">threadpool</span><span class="o">.</span><span class="na">ThreadPoolUse</span><span class="o">.</span><span class="na">testFixPool</span><span class="o">(</span><span class="n">ThreadPoolUse</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">71</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">threadpool</span><span class="o">.</span><span class="na">ThreadPoolUse</span><span class="o">.</span><span class="na">main</span><span class="o">(</span><span class="n">ThreadPoolUse</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">77</span><span class="o">)</span>
+</pre></div>
+
+
+<h4 id="cachedthreadpool">CachedThreadPool</h4>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kt">void</span> <span class="nf">testCachedThreadPool</span><span class="o">(){</span>
+    <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 默认keepAliveTime为 60s</span>
+        <span class="n">ExecutorService</span> <span class="n">executorService</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newCachedThreadPool</span><span class="o">();</span>
+        <span class="n">ThreadPoolExecutor</span> <span class="n">threadPoolExecutor</span> <span class="o">=</span> <span class="o">(</span><span class="n">ThreadPoolExecutor</span><span class="o">)</span> <span class="n">executorService</span><span class="o">;</span>
+        <span class="c1">// 为了更好的模拟，动态修改为1纳秒</span>
+        <span class="n">threadPoolExecutor</span><span class="o">.</span><span class="na">setKeepAliveTime</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">NANOSECONDS</span><span class="o">);</span>
+        <span class="n">threadPoolExecutor</span><span class="o">.</span><span class="na">execute</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;running&quot;</span><span class="o">));</span>
+        <span class="n">executorService</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+    <span class="n">testCachedThreadPool</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>CachedThreadPool 的线程 keepAliveTime 默认为 60s ，核心线程数量为 0 ，所以不会有核心线程存活阻止线程池自动关闭。 详见 线程池之ThreadPoolExecutor构造 ，为了更快的模拟，构造后将 keepAliveTime 修改为1纳秒，相当于线程执行完马上会消亡，所以线程池可以被回收。实际开发中，如果CachedThreadPool 确实忘记关闭，在一定时间后是可以被回收的。但仍然建议显示关闭。</li>
+</ul>
+<h4 id="shutdownshutdownnow">线程池shutdown，shutdownNow</h4>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">threadpool</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.AtomicInteger</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/4/8 10:52 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadPoolUse</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyThreadFactory</span> <span class="kd">implements</span> <span class="n">ThreadFactory</span> <span class="o">{</span>
+
+        <span class="kd">private</span> <span class="n">AtomicInteger</span> <span class="n">count</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">Thread</span> <span class="nf">newThread</span><span class="o">(</span><span class="n">Runnable</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">r</span><span class="o">);</span>
+            <span class="n">String</span> <span class="n">threadName</span> <span class="o">=</span> <span class="s">&quot;MyThread&quot;</span> <span class="o">+</span> <span class="n">count</span><span class="o">.</span><span class="na">addAndGet</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">threadName</span><span class="o">);</span>
+            <span class="n">t</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">threadName</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">t</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyTask</span> <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
+        <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
+        <span class="n">MyTask</span><span class="o">(</span><span class="kt">int</span> <span class="n">id</span><span class="o">){</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+           <span class="k">try</span><span class="o">{</span>
+               <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;myTask id:&quot;</span> <span class="o">+</span> <span class="n">id</span><span class="o">);</span>
+               <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+           <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+               <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+           <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testFixPool</span><span class="o">(){</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">ExecutorService</span> <span class="n">executorService</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">8</span><span class="o">);</span>
+            <span class="n">executorService</span><span class="o">.</span><span class="na">execute</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;running&quot;</span><span class="o">));</span>
+            <span class="n">executorService</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testCachedThreadPool</span><span class="o">(){</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 默认keepAliveTime为 60s</span>
+            <span class="n">ExecutorService</span> <span class="n">executorService</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newCachedThreadPool</span><span class="o">();</span>
+            <span class="n">ThreadPoolExecutor</span> <span class="n">threadPoolExecutor</span> <span class="o">=</span> <span class="o">(</span><span class="n">ThreadPoolExecutor</span><span class="o">)</span> <span class="n">executorService</span><span class="o">;</span>
+            <span class="c1">// 为了更好的模拟，动态修改为1纳秒</span>
+            <span class="n">threadPoolExecutor</span><span class="o">.</span><span class="na">setKeepAliveTime</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">NANOSECONDS</span><span class="o">);</span>
+            <span class="n">threadPoolExecutor</span><span class="o">.</span><span class="na">execute</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;running&quot;</span><span class="o">));</span>
+            <span class="n">executorService</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyRejectPolicy</span> <span class="kd">implements</span> <span class="n">RejectedExecutionHandler</span><span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">rejectedExecution</span><span class="o">(</span><span class="n">Runnable</span> <span class="n">r</span><span class="o">,</span> <span class="n">ThreadPoolExecutor</span> <span class="n">executor</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="k">instanceof</span> <span class="n">MyTask</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">MyTask</span> <span class="n">r1</span> <span class="o">=</span> <span class="o">(</span><span class="n">MyTask</span><span class="o">)</span> <span class="n">r</span><span class="o">;</span>
+                <span class="c1">//直接打印</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Reject Thread:&quot;</span> <span class="o">+</span> <span class="n">r1</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(){</span>
+        <span class="kt">int</span> <span class="n">corePoolSize</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">maximumPoolSize</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">keepAliveTime</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">TimeUnit</span> <span class="n">timeUnit</span> <span class="o">=</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">;</span>
+        <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">Runnable</span><span class="o">&gt;</span> <span class="n">workQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayBlockingQueue</span><span class="o">&lt;&gt;(</span><span class="mi">2</span><span class="o">);</span>
+<span class="c1">//        RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();</span>
+        <span class="n">RejectedExecutionHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyRejectPolicy</span><span class="o">();</span>
+        <span class="n">ThreadFactory</span> <span class="n">threadFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThreadFactory</span><span class="o">();</span>
+
+        <span class="n">ThreadPoolExecutor</span> <span class="n">executor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="o">(</span>
+                <span class="n">corePoolSize</span><span class="o">,</span>
+                <span class="n">maximumPoolSize</span><span class="o">,</span>
+                <span class="n">keepAliveTime</span><span class="o">,</span>
+                <span class="n">timeUnit</span><span class="o">,</span>
+                <span class="n">workQueue</span><span class="o">,</span>
+                <span class="n">threadFactory</span><span class="o">,</span>
+                <span class="n">handler</span><span class="o">);</span>
+
+        <span class="n">MyTask</span> <span class="n">task</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyTask</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">task</span><span class="o">);</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+        <span class="c1">// 已经关闭的线程池，引用还在，再有新任务，会执行拒绝策略</span>
+        <span class="n">MyTask</span> <span class="n">task2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyTask</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">task2</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="n">test</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-08 23:47:57</p>
+        <p>Site Generated 2019-04-09 23:32:41</p>
       </span>
     </div>
 
