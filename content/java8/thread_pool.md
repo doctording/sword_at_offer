@@ -184,7 +184,7 @@ public ThreadPoolExecutor(int corePoolSize,
 
 1. 当线程池**小于corePoolSize**时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程
 2. 当线程池**达到corePoolSize**时，新提交任务将被放入workQueue中，等待线程池中任务调度执行
-3. 当**workQueue已满**，且**maximumPoolSize>corePoolSize**时，新提交任务会创建新线程执行任务
+3. 当**workQueue已满**，如果workerCount >= corePoolSize && workerCount < maximumPoolSize，则创建并启动一个线程来执行新提交的任务；
 4. 当**workQueue已满**，且workerCount**超过maximumPoolSize**时，新提交任务由RejectedExecutionHandler处理
 5. 当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，关闭空闲线程
 6. 当设置allowCoreThreadTimeOut(true)时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
@@ -259,6 +259,188 @@ public class ThreadPoolUse {
         }
         executor.shutdown();
 
+    }
+
+}
+```
+
+### 线程池使用后关闭问题？
+
+是否需要关闭？如何关闭？
+
+A pool that is no longer referenced in a program and has no remaining threads will be shutdown automatically.
+
+如果程序中不再持有线程池的引用，并且线程池中没有线程时，线程池将会自动关闭。
+
+注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡。然而我们常用的FixedThreadPool的核心线程没有超时策略，所以并不会自动关闭。</small>
+
+---
+
+https://www.jianshu.com/p/bdf06e2c1541
+
+#### 固定线程池
+
+```java
+static void testFixPool(){
+    while(true) {
+        ExecutorService executorService = Executors.newFixedThreadPool(8);
+        executorService.execute(() -> System.out.println("running"));
+        executorService = null;
+    }
+}
+
+public static void main(String[] args){
+    testFixPool();
+    System.out.println("main end");
+}
+```
+
+* 因为固定线程池不会自己销毁，最终会耗尽内存（需要在合适的时候`shutdown`）
+
+```java
+running
+running
+running
+running
+running
+Exception in thread "main" java.lang.OutOfMemoryError: unable to create new native thread
+	at java.lang.Thread.start0(Native Method)
+	at java.lang.Thread.start(Thread.java:717)
+	at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1367)
+	at com.threadpool.ThreadPoolUse.testFixPool(ThreadPoolUse.java:71)
+	at com.threadpool.ThreadPoolUse.main(ThreadPoolUse.java:77)
+```
+
+#### CachedThreadPool
+
+```java
+static void testCachedThreadPool(){
+    while(true) {
+        // 默认keepAliveTime为 60s
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executorService;
+        // 为了更好的模拟，动态修改为1纳秒
+        threadPoolExecutor.setKeepAliveTime(1, TimeUnit.NANOSECONDS);
+        threadPoolExecutor.execute(() -> System.out.println("running"));
+        executorService = null;
+    }
+}
+
+public static void main(String[] args){
+    testCachedThreadPool();
+    System.out.println("main end");
+}
+```
+
+* CachedThreadPool 的线程 keepAliveTime 默认为 60s ，核心线程数量为 0 ，所以不会有核心线程存活阻止线程池自动关闭。 详见 线程池之ThreadPoolExecutor构造 ，为了更快的模拟，构造后将 keepAliveTime 修改为1纳秒，相当于线程执行完马上会消亡，所以线程池可以被回收。实际开发中，如果CachedThreadPool 确实忘记关闭，在一定时间后是可以被回收的。但仍然建议显示关闭。
+
+#### 线程池shutdown，shutdownNow
+
+```java
+package com.threadpool;
+
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * @Author mubi
+ * @Date 2019/4/8 10:52 PM
+ */
+public class ThreadPoolUse {
+
+    static class MyThreadFactory implements ThreadFactory {
+
+        private AtomicInteger count = new AtomicInteger(0);
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            String threadName = "MyThread" + count.addAndGet(1);
+            System.out.println(threadName);
+            t.setName(threadName);
+            return t;
+        }
+    }
+
+    static class MyTask implements Runnable{
+        int id;
+        MyTask(int id){
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+           try{
+               System.out.println("myTask id:" + id);
+               TimeUnit.SECONDS.sleep(10);
+           }catch (Exception e){
+               e.printStackTrace();
+           }
+        }
+    }
+
+    static void testFixPool(){
+        while(true) {
+            ExecutorService executorService = Executors.newFixedThreadPool(8);
+            executorService.execute(() -> System.out.println("running"));
+            executorService = null;
+        }
+    }
+
+    static void testCachedThreadPool(){
+        while(true) {
+            // 默认keepAliveTime为 60s
+            ExecutorService executorService = Executors.newCachedThreadPool();
+            ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executorService;
+            // 为了更好的模拟，动态修改为1纳秒
+            threadPoolExecutor.setKeepAliveTime(1, TimeUnit.NANOSECONDS);
+            threadPoolExecutor.execute(() -> System.out.println("running"));
+            executorService = null;
+        }
+    }
+
+    static class MyRejectPolicy implements RejectedExecutionHandler{
+        @Override
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+            if (r instanceof MyTask) {
+                MyTask r1 = (MyTask) r;
+                //直接打印
+                System.out.println("Reject Thread:" + r1.id);
+            }
+        }
+    }
+
+    static void test(){
+        int corePoolSize = 2;
+        int maximumPoolSize = 5;
+        int keepAliveTime = 60 * 1;
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(2);
+//        RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
+        RejectedExecutionHandler handler = new MyRejectPolicy();
+        ThreadFactory threadFactory = new MyThreadFactory();
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                corePoolSize,
+                maximumPoolSize,
+                keepAliveTime,
+                timeUnit,
+                workQueue,
+                threadFactory,
+                handler);
+
+        MyTask task = new MyTask(1);
+        executor.execute(task);
+        executor.shutdown();
+        // 已经关闭的线程池，引用还在，再有新任务，会执行拒绝策略
+        MyTask task2 = new MyTask(2);
+        executor.execute(task2);
+    }
+
+    public static void main(String[] args){
+        test();
+        System.out.println("main end");
     }
 
 }
