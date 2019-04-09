@@ -30,15 +30,18 @@
 <li><a href="#interface-runnale">interface Runnale 源码</a></li>
 <li><a href="#class-thread">class Thread 源码</a><ul>
 <li><a href="#init">init</a></li>
-<li><a href="#thread-start-run">Thread 的 start() &amp; run()</a></li>
+<li><a href="#thread-start-run">Thread 的 start() &amp; run()</a><ul>
+<li><a href="#_1">需要注意的点</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#stacksize">stackSize</a></li>
 </ul>
 </li>
 <li><a href="#threadgroup">ThreadGroup线程组</a><ul>
-<li><a href="#_1">线程组认识</a></li>
-<li><a href="#_2">线程组源码</a></li>
+<li><a href="#_2">线程组认识</a></li>
+<li><a href="#_3">线程组源码</a></li>
 <li><a href="#daemon">守护(Daemon)线程</a></li>
 </ul>
 </li>
@@ -48,9 +51,9 @@
 <li><a href="#sleep-yield">sleep 与 yield的区别</a></li>
 </ul>
 </li>
-<li><a href="#_3">线程的优先级</a></li>
+<li><a href="#_4">线程的优先级</a></li>
 <li><a href="#id">线程ID</a><ul>
-<li><a href="#_4">获取当前线程</a></li>
+<li><a href="#_5">获取当前线程</a></li>
 <li><a href="#todo">设置线程上下文类加载器 //TODO</a></li>
 </ul>
 </li>
@@ -62,12 +65,12 @@
 <li><a href="#join_1">join源码分析</a></li>
 </ul>
 </li>
-<li><a href="#_5">关闭一个线程</a><ul>
-<li><a href="#_6">正常结束</a></li>
-<li><a href="#_7">捕获中断信号关闭线程</a></li>
+<li><a href="#_6">关闭一个线程</a><ul>
+<li><a href="#_7">正常结束</a></li>
+<li><a href="#_8">捕获中断信号关闭线程</a></li>
 <li><a href="#volatile">使用volatile开关控制</a></li>
-<li><a href="#_8">异常退出</a></li>
-<li><a href="#_9">进程假死</a></li>
+<li><a href="#_9">异常退出</a></li>
+<li><a href="#_10">进程假死</a></li>
 </ul>
 </li>
 </ul>
@@ -281,6 +284,16 @@
 </pre></div>
 
 
+<h4 id="_1">需要注意的点</h4>
+<ol>
+<li>start方法用synchronized修饰，为同步方法；</li>
+<li>虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被多次start会抛出异常；threadStatus的状态由JVM控制。</li>
+<li>使用Runnable时，主线程无法捕获子线程中的异常状态。线程的异常，应在线程内部解决。</li>
+</ol>
+<p>作者：徐志毅<br />
+链接：https://www.jianshu.com/p/8c16aeea7e1a<br />
+来源：简书<br />
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。</p>
 <h2 id="stacksize">stackSize</h2>
 <div class="hlcode"><pre><span class="cm">/*</span>
 <span class="cm">* The requested stack size for this thread, or 0 if the creator did</span>
@@ -295,7 +308,7 @@
 <p>虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存</p>
 <p>JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系</p>
 <h1 id="threadgroup"><code>ThreadGroup</code>线程组</h1>
-<h2 id="_1">线程组认识</h2>
+<h2 id="_2">线程组认识</h2>
 <div class="hlcode"><pre><span class="n">ThreadGroup</span> <span class="n">tg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadGroup</span><span class="o">(</span><span class="s">&quot;tg&quot;</span><span class="o">);</span>
 <span class="n">Thread</span> <span class="n">tr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">tg</span><span class="o">,</span><span class="s">&quot;tr&quot;</span><span class="o">);</span>
 
@@ -357,7 +370,7 @@
 </pre></div>
 
 
-<h2 id="_2">线程组源码</h2>
+<h2 id="_3">线程组源码</h2>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm"> * A thread group represents a set of threads. In addition, a thread</span>
 <span class="cm"> * group can also include other thread groups. The thread groups form</span>
@@ -536,7 +549,7 @@
 <li><code>sleep</code>回使得线程短暂的<code>Blocked</code>, 会在给定的时间内释放CPU资源</li>
 <li>一个线程<code>sleep</code>,另一个线程调用<code>interrupt</code>会捕获到中断信号，而<code>yield</code>则不会</li>
 </ul>
-<h2 id="_3">线程的优先级</h2>
+<h2 id="_4">线程的优先级</h2>
 <p>理论上，线程优先级高的会获得优先被CPU调度的机会，但实际上这也是个<code>hint</code>操作</p>
 <ul>
 <li>
@@ -603,7 +616,7 @@
 </pre></div>
 
 
-<h3 id="_4">获取当前线程</h3>
+<h3 id="_5">获取当前线程</h3>
 <div class="hlcode"><pre><span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="nd">@Override</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
@@ -748,9 +761,9 @@
 </pre></div>
 
 
-<h2 id="_5">关闭一个线程</h2>
-<h3 id="_6">正常结束</h3>
-<h3 id="_7">捕获中断信号关闭线程</h3>
+<h2 id="_6">关闭一个线程</h2>
+<h3 id="_7">正常结束</h3>
+<h3 id="_8">捕获中断信号关闭线程</h3>
 <h3 id="volatile">使用volatile开关控制</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
@@ -785,14 +798,14 @@
 </pre></div>
 
 
-<h3 id="_8">异常退出</h3>
-<h3 id="_9">进程假死</h3>
+<h3 id="_9">异常退出</h3>
+<h3 id="_10">进程假死</h3>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-09 23:32:41</p>
+        <p>Site Generated 2019-04-09 23:40:38</p>
       </span>
     </div>
 
