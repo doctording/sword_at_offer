@@ -43,6 +43,8 @@ $ simiki p # 本地运行：http://127.0.0.1:8000/sword_at_offer/
 $ ghp-import -p -m "Update output documentation" -r origin -b gh-pages output
 ```
 
+可参考： https://blog.csdn.net/u013041398/article/details/73958706
+
 # tool.py处理git提交
 
 ```bash
