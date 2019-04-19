@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java8 lambda表达式 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Java8 lambda表达式
+    <span class="updated">Page Updated&nbsp;
+      2019-02-15 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java8 lambda表达式</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#lambda">lambda</a><ul>
+<li><a href="#_1">需求不断变化的找苹果</a><ul>
+<li><a href="#java8-java7">java8 与 java7 内存空间的区别</a></li>
+<li><a href="#functionalinterface">@FunctionalInterface 接口使用条件</a></li>
+<li><a href="#lambda_1">lambda的使用</a><ul>
+<li><a href="#_2">基本语法</a></li>
+<li><a href="#java8lambda">java8源码使用lambda的场景</a></li>
+<li><a href="#lambda_2">复合式lambda表达式</a></li>
+<li><a href="#java8-in-action-lambda">《java8 in action》 lambda总结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="lambda">lambda</h1>
+<h2 id="_1">需求不断变化的找苹果</h2>
+<p>函数式编程，方法和Lambda作为一等公民</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Apple</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">color</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">weight</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Apple</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Apple</span><span class="o">(</span><span class="n">String</span> <span class="n">color</span><span class="o">,</span> <span class="kt">long</span> <span class="n">weight</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">weight</span> <span class="o">=</span> <span class="n">weight</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getColor</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">color</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setColor</span><span class="o">(</span><span class="n">String</span> <span class="n">color</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getWeight</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">weight</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setWeight</span><span class="o">(</span><span class="kt">long</span> <span class="n">weight</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">weight</span> <span class="o">=</span> <span class="n">weight</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&quot;Apple{&quot;</span> <span class="o">+</span>
+                <span class="s">&quot;color=&#39;&quot;</span> <span class="o">+</span> <span class="n">color</span> <span class="o">+</span> <span class="sc">&#39;\&#39;&#39;</span> <span class="o">+</span>
+                <span class="s">&quot;, weight=&quot;</span> <span class="o">+</span> <span class="n">weight</span> <span class="o">+</span>
+                <span class="sc">&#39;}&#39;</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="nd">@FunctionalInterface</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AppleFilter</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">        * 过滤器接口</span>
+<span class="cm">        * @param apple</span>
+<span class="cm">        * @return</span>
+<span class="cm">        */</span>
+    <span class="kt">boolean</span> <span class="nf">filter</span><span class="o">(</span><span class="n">Apple</span> <span class="n">apple</span><span class="o">);</span>
+
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Apple</span><span class="o">&gt;</span> <span class="nf">findApple</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Apple</span><span class="o">&gt;</span> <span class="n">apples</span><span class="o">,</span> <span class="n">AppleFilter</span> <span class="n">appleFilter</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Apple</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="n">Apple</span> <span class="n">apple</span> <span class="o">:</span> <span class="n">apples</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">appleFilter</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">apple</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">apple</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">list</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="c1">// lambda表达式，找到绿色的苹果</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Apple</span><span class="o">&gt;</span> <span class="n">lambdaResult</span> <span class="o">=</span> <span class="n">findApple</span><span class="o">(</span><span class="n">list</span><span class="o">,</span> <span class="n">apple</span> <span class="o">-&gt;</span> <span class="n">apple</span><span class="o">.</span><span class="na">getColor</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;green&quot;</span><span class="o">));</span>
+</pre></div>
+
+
+<h3 id="java8-java7">java8 与 java7 内存空间的区别</h3>
+<div class="hlcode"><pre><span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">pwd</span>
+<span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">Java</span><span class="o">/</span><span class="n">JavaVirtualMachines</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">7.0</span><span class="n">_80</span><span class="o">.</span><span class="na">jdk</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">Home</span>
+<span class="n">mubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">bin</span><span class="o">/</span><span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">capacity</span> <span class="n">substituted</span> <span class="n">NaN</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">used</span> <span class="n">substituted</span> <span class="n">NaN</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">capacity</span> <span class="n">substituted</span> <span class="n">NaN</span>
+  <span class="n">S0</span>     <span class="n">S1</span>     <span class="n">E</span>      <span class="n">O</span>      <span class="n">P</span>     <span class="n">YGC</span>     <span class="n">YGCT</span>    <span class="n">FGC</span>    <span class="n">FGCT</span>     <span class="n">GCT</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">76.97</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.08</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.22</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.33</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+<span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
+  <span class="n">S0</span>     <span class="n">S1</span>     <span class="n">E</span>      <span class="n">O</span>      <span class="n">M</span>     <span class="n">CCS</span>    <span class="n">YGC</span>     <span class="n">YGCT</span>    <span class="n">FGC</span>    <span class="n">FGCT</span>     <span class="n">GCT</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">78.86</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">78.93</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">79.04</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">79.17</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">79.29</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+<span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span>
+</pre></div>
+
+
+<p>java7:</p>
+<ul>
+<li>S0  — Heap上的 Survivor space 0 区已使用空间的百分比</li>
+<li>S1  — Heap上的 Survivor space 1 区已使用空间的百分比</li>
+<li>E   — Heap上的 Eden space 区已使用空间的百分比</li>
+<li>O   — Heap上的 Old space 区已使用空间的百分比</li>
+<li>P   — Perm space 区已使用空间的百分比</li>
+<li>YGC — 从应用程序启动到采样时发生 Young GC 的次数</li>
+<li>YGCT– 从应用程序启动到采样时 Young GC 所用的时间(单位秒)</li>
+<li>FGC — 从应用程序启动到采样时发生 Full GC 的次数</li>
+<li>FGCT– 从应用程序启动到采样时 Full GC 所用的时间(单位秒)</li>
+<li>GCT — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)</li>
+</ul>
+<p>java8:</p>
+<p>少了一个 Perm space</p>
+<p>新增了</p>
+<ul>
+<li>M   - 元空间（Metaspace）： Klass Metaspace, NoKlass Metaspace</li>
+<li>CCS - 表示的是NoKlass Metaspace的使用率</li>
+</ul>
+<h3 id="functionalinterface"><code>@FunctionalInterface</code> 接口使用条件</h3>
+<p>只能定义了唯一的抽象方法的接口</p>
+<p>如下的默认方法不是，不是抽象方法</p>
+<p><img alt="" src="./imgs/functionalinterface.png" /></p>
+<p>如下正确: 函数式接口里允许定义<code>默认方法</code>和<code>静态方法</code>,也可以包含<code>Object</code>里的<code>public</code>方法</p>
+<div class="hlcode"><pre><span class="nd">@FunctionalInterface</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AppleFilter2</span> <span class="o">{</span>
+    <span class="kt">boolean</span> <span class="nf">filter</span><span class="o">(</span><span class="n">Apple</span> <span class="n">apple</span><span class="o">);</span>
+
+    <span class="k">default</span> <span class="kt">boolean</span> <span class="nf">filter2</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">filter3</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">);</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">String</span> <span class="nf">toString</span><span class="o">();</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="lambda_1">lambda的使用</h3>
+<h4 id="_2">基本语法</h4>
+<div class="hlcode"><pre><span class="o">(</span><span class="n">parameters</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">expression</span>
+
+<span class="o">(</span><span class="n">parameters</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="n">statements</span><span class="o">;</span> <span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="o">(</span>1<span class="o">)</span> <span class="o">()</span> -&gt; <span class="o">{}</span>
+<span class="o">(</span>2<span class="o">)</span> <span class="o">()</span> -&gt; <span class="s2">&quot;Raoul&quot;</span>
+<span class="o">(</span>3<span class="o">)</span> <span class="o">()</span> -&gt; <span class="o">{</span><span class="k">return</span> <span class="s2">&quot;Mario&quot;</span>;<span class="o">}</span>
+<span class="o">(</span>4<span class="o">)</span> <span class="o">(</span>Integer i<span class="o">)</span> -&gt; <span class="k">return</span> <span class="s2">&quot;Alan&quot;</span> + i;
+<span class="o">(</span>5<span class="o">)</span> <span class="o">(</span>String s<span class="o">)</span> -&gt; <span class="o">{</span><span class="s2">&quot;IronMan&quot;</span>;<span class="o">}</span>
+
+<span class="o">(</span>4<span class="o">)</span>,<span class="o">(</span>5<span class="o">)</span> 无效
+<span class="o">(</span>4<span class="o">)</span> 需要加上<span class="sb">`</span><span class="o">{}</span><span class="sb">`</span>
+<span class="o">(</span>5<span class="o">)</span> 需要去掉<span class="sb">`</span><span class="o">{}</span><span class="sb">`</span>和<span class="sb">`</span>;<span class="sb">`</span>
+</pre></div>
+
+
+<h4 id="java8lambda">java8源码使用lambda的场景</h4>
+<div class="hlcode"><pre><span class="nd">@FunctionalInterface</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Comparator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+
+<span class="nd">@FunctionalInterface</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Runnable</span> <span class="o">{</span>
+
+<span class="nd">@FunctionalInterface</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Function</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">R</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h4 id="lambda_2">复合式lambda表达式</h4>
+<ul>
+<li>
+<p>比较器复合</p>
+</li>
+<li>
+<p>逆序</p>
+</li>
+<li>
+<p>比较器链</p>
+</li>
+<li>
+<p>谓词复合</p>
+</li>
+</ul>
+<p>negate,and,or</p>
+<ul>
+<li>函数复合</li>
+</ul>
+<p><code>Funtion</code>接口</p>
+<h4 id="java8-in-action-lambda">《java8 in action》 lambda总结</h4>
+<ul>
+<li><code>Lambda</code>表达式可以理解为一种匿名函数:它没有名称，但有参数列表、函数主体、返回类型，可能还有一个可以抛出的异常的列表。</li>
+<li><code>Lambda</code>表达式让你可以简洁地传递代码。</li>
+<li>函数式接口就是仅仅声明了一个抽象方法的接口。</li>
+<li>只有在接受函数式接口的地方才可以使用Lambda表达式。</li>
+<li><code>Lambda</code>表达式允许你直接内联，为函数式接口的抽象方法提供实现，并且<code>将整个表达式作为函数式接口的一个实例</code>。</li>
+<li>Java 8自带一些常用的函数式接口，放在<code>java.util.function</code>包里，包括<code>Predicate&lt;T&gt;</code>、<code>Function&lt;T,R&gt;</code>、<code>Supplier&lt;T&gt;</code>、<code>Consumer&lt;T&gt;</code>和<code>BinaryOperator&lt;T&gt;</code></li>
+<li>为了避免装箱操作，对<code>Predicate&lt;T&gt;</code>和<code>Function&lt;T, R&gt;</code>等通用函数式接口的原始类型<br />
+特化:<code>IntPredicate</code>、<code>IntToLongFunction</code>等。</li>
+<li>环绕执行模式(即在方法所必需的代码中间，你需要执行点儿什么操作，比如资源分配 和清理)可以配合Lambda提高灵活性和可重用性。</li>
+<li><code>Lambda</code>表达式所需要代表的类型称为目标类型。</li>
+<li>方法引用让你重复使用现有的方法实现并直接传递它们。</li>
+<li><code>Comparator</code>、<code>Predicate</code>和<code>Function</code>等函数式接口都有几个可以用来结合Lambda表达式的默认方法。</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-19 09:41:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

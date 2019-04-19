@@ -1,0 +1,663 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java 类加载 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 类加载
+    <span class="updated">Page Updated&nbsp;
+      2019-02-15 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java 类加载</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#class">Class 文件</a><ul>
+<li><a href="#class_1">魔数与Class文件的版本</a></li>
+<li><a href="#_1">常量池</a></li>
+<li><a href="#_2">访问标志</a></li>
+<li><a href="#_3">类索引，父类索引，接口索引</a></li>
+<li><a href="#field_info">字段表(field_info)</a></li>
+<li><a href="#_4">方法表</a></li>
+<li><a href="#_5">属性表</a></li>
+</ul>
+</li>
+<li><a href="#_6">程序编译和代码优化</a><ul>
+<li><a href="#_7">类加载</a><ul>
+<li><a href="#_8">验证</a></li>
+<li><a href="#_9">准备</a></li>
+<li><a href="#_10">解析</a></li>
+<li><a href="#_11">初始化</a><ul>
+<li><a href="#_12">什么时候需要对类进行初始化？</a></li>
+</ul>
+</li>
+<li><a href="#_13">类加载器</a><ul>
+<li><a href="#bootstrap-classloader">启动类加载器 Bootstrap ClassLoader</a></li>
+<li><a href="#extension-classloader">扩展类加载器 Extension ClassLoader</a></li>
+<li><a href="#application-classloader">应用程序类加载器 Application ClassLoader</a></li>
+<li><a href="#_14">* 双亲委派模型 *</a></li>
+<li><a href="#java7">类加载题目例子（Java7环境）</a><ul>
+<li><a href="#_15">结果分析</a><ul>
+<li><a href="#singleton">Singleton 结果分析</a></li>
+<li><a href="#singleton2">Singleton2 分析</a></li>
+<li><a href="#_16">静态初始化再次验证</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_17">自定义类加载器</a><ul>
+<li><a href="#myclassloader">MyClassLoader 实践</a></li>
+<li><a href="#todo">自定义类加载器的优缺点 // TODO</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="class">Class 文件</h1>
+<p>Class文件是一组以8位字节为基础单位的<code>二进制流</code>，任何一个Class文件都对应唯一一个类或接口的定义信息</p>
+<h2 id="class_1">魔数与Class文件的版本</h2>
+<h2 id="_1">常量池</h2>
+<p>主要存放两大类常量： 字面量（Literal 和 符号引用（Symbolic Reference）</p>
+<ol>
+<li>
+<p>字面量：如文本字符串，声明为final的常量值</p>
+</li>
+<li>
+<p>符号引用： 类和接口的全限定名，字段的名称和描述符，方法的名称和描述符</p>
+</li>
+</ol>
+<p>Class文件中不会保存各个方法，字段的最终内存布局信息，因此这些字段，方法的符号引用不经过运行期转换的话，无法得到真正的内存入口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析，翻译到具体的内存地址之中。</p>
+<h2 id="_2">访问标志</h2>
+<p>用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义为public类型；是否定义为abstrac类型；如果是类的话，是否被声明为final等。</p>
+<h2 id="_3">类索引，父类索引，接口索引</h2>
+<h2 id="field_info">字段表(field_info)</h2>
+<p>用来描述接口或者类中声明的变量， 可以包括的信息有：</p>
+<p>字段的作用域(public,private,protected修饰符)，是实例变量还是类变量（static修饰符），可变性（final）,并发可见性（volatile修饰符,是否强制从主内存读写），可否被序列化（transient修饰符），字段数据类型（基本类型，对象，数组），字段名称。</p>
+<h2 id="_4">方法表</h2>
+<p>方法签名：方法名称，参数顺序，参数类型</p>
+<h2 id="_5">属性表</h2>
+<p>上述Class文件，字段表，方法表都可以携带自己的属性表集合</p>
+<h1 id="_6">程序编译和代码优化</h1>
+<ul>
+<li>词法，语法分析</li>
+</ul>
+<p>词法分析将源代码的字符流转变为标记(Token)集合</p>
+<p>语法分析根据Token序列构造抽象语法树（Abstract Syntax Tree）</p>
+<ul>
+<li>
+<p>Annotation，编译期间读取，修改，添加抽象语法树中的任意符号</p>
+</li>
+<li>
+<p>语义分析与字节码生成</p>
+</li>
+</ul>
+<h2 id="_7">类加载</h2>
+<div class="hlcode"><pre><span class="err">连接</span><span class="p">(</span> <span class="err">验证</span> <span class="o">=</span><span class="err">》</span> <span class="err">准备</span> <span class="o">=</span><span class="err">》</span> <span class="err">解析</span><span class="p">)</span>
+    <span class="o">=&gt;</span> <span class="err">初始化</span>
+        <span class="o">=&gt;</span> <span class="err">使用</span>
+            <span class="o">=&gt;</span> <span class="err">卸载</span>
+</pre></div>
+
+
+<h3 id="_8">验证</h3>
+<p>验证是链接阶段的第一步，这一步主要的目的是确保class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身安全。 验证阶段主要包括四个检验过程：文件格式验证、元数据验证、字节码验证和符号引用验证。</p>
+<h3 id="_9">准备</h3>
+<p>准备阶段是正式为类变量分配内存并设置类变量的初始值阶段，即在方法区中分配这些变量所使用的内存空间。</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value</span>  <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
+</pre></div>
+
+
+<p>变量value在准备阶段过后的初始值为0而不是12，因为这时候尚未开始执行任何java方法，而把value赋值为123的putstatic指令是程序被编译后，存放于类构造器<code>&lt;clinit&gt;()</code>方法之中，所以把value赋值为12的动作将在初始化阶段才会被执行。</p>
+<p>相对于一些特殊的情况，如果类字段的字段属性表中存在ConstantValue属性，那在准备阶段变量value就会被初始化为ConstantValue属性所指定的值，建设上面类变量value定义为：</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">123</span><span class="o">;</span>
+</pre></div>
+
+
+<p>编译时javac将会为value生成ConstantValue属性，在准备阶段虚拟机就会根据ConstantValue的设置将value设置为123。</p>
+<h3 id="_10">解析</h3>
+<p>解析阶段是虚拟机常量池内的符号引用替换为直接引用的过程。</p>
+<p>直接引用可以是指向目标的指针，相对偏移量或是一个能间接定位到目标的句柄。如果有了直接引用，那引用的目标必定已经在内存中存在。</p>
+<h3 id="_11">初始化</h3>
+<p>初始化阶段是类加载最后一个阶段，前面的类加载阶段之后，除了在加载阶段可以自定义类加载器以外，其它操作都由JVM主导。到了初始阶段，才开始真正执行类中定义的Java程序代码。</p>
+<p>初始化阶段是执行类构造器<code>&lt;client&gt;</code>方法的过程。</p>
+<p><code>&lt;client&gt;</code>方法是由编译器自动收集类中的<strong>类变量的赋值操作和静态语句块</strong>中的语句合并而成的。虚拟机会保证<code>&lt;client&gt;</code>方法执行之前，父类的<code>&lt;client&gt;</code>方法已经执行完毕。</p>
+<h4 id="_12">什么时候需要对类进行初始化？</h4>
+<ol>
+<li>使用<code>new</code>该类实例化对象的时候</li>
+<li>读取或设置<code>类静态字段</code>的时候（但被final修饰的字段，在编译器时就被放入常量池(static final)的静态字段除外）</li>
+<li>调用<code>类静态方法</code>的时候</li>
+<li>使用反射<code>Class.forName("xxx")</code>对类进行反射调用的时候，该类需要初始化；</li>
+<li>初始化一个类的时候，有父类，<code>先初始化父类</code>（注：1. 接口除外，父接口在调用的时候才会被初始化；2.子类引用父类静态字段，只会引发父类初始化）；</li>
+<li>被标明为启动类的类（即包含<code>main()方法</code>的类）要初始化；</li>
+<li>当使用JDK1.7的动态语言支持时，如果一个<code>java.invoke.MethodHandle</code>实例最后的解析结果REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行过初始化，则需要先触发其初始化。</li>
+</ol>
+<p>以上情况称为对一个类进行主动引用，且有且只要以上几种情况需要对类进行初始化：</p>
+<ul>
+<li>
+<p>所有类变量初始化语句和静态代码块都会在编译时被前端编译器放在收集器里头，存放到一个特殊的方法中，这个方法就是<code>&lt;clinit&gt;</code>方法，即类/接口初始化方法，该方法只能在类加载的过程中由JVM调用；</p>
+</li>
+<li>
+<p>编译器收集的顺序是由语句在源文件中出现的顺序所决定的，静态语句块中只能访问到定义在静态语句块之前的变量；</p>
+</li>
+<li>
+<p>如果超类还没有被初始化，那么优先对超类初始化，但在<code>&lt;clinit&gt;</code>方法内部不会显示调用超类的<code>&lt;clinit&gt;</code>方法，由JVM负责保证一个类的<code>&lt;clinit&gt;</code>方法执行之前，它的超类<code>&lt;clinit&gt;</code>方法已经被执行。</p>
+</li>
+<li>
+<p>JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，仅仅只能允许其中一个线程对其执行初始化操作，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其他线程。(所以可以利用静态内部类实现线程安全的单例模式)</p>
+</li>
+<li>
+<p>如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类<code>&lt;clinit&gt;</code>方法；</p>
+</li>
+</ul>
+<h3 id="_13">类加载器</h3>
+<p>加载动作放到JVM外部实现，以便让应用程序决定如何获取所需的类, 类加载器大致可以分为以下3部分：</p>
+<h4 id="bootstrap-classloader">启动类加载器 Bootstrap ClassLoader</h4>
+<p>将存放于<code>&lt;JAVA_HOME&gt;\lib</code>目录中的，或者被<code>-Xbootclasspath</code>参数所指定的路径中的，并且是虚拟机识别的（仅按照文件名识别，如 rt.jar 名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用。</p>
+<h4 id="extension-classloader">扩展类加载器 Extension ClassLoader</h4>
+<p>将<code>&lt;JAVA_HOME&gt;\lib\ext</code>目录下的，或者被java.ext.dirs系统变量所指定的路径中的所有类库加载。开发者可以直接使用扩展类加载器。</p>
+<h4 id="application-classloader">应用程序类加载器 Application ClassLoader</h4>
+<p>负责加载用户类路径(ClassPath)上所指定的类库,开发者可直接使用。</p>
+<h4 id="_14">* 双亲委派模型 *</h4>
+<p>工作过程为：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载</p>
+<div class="hlcode"><pre><span class="kd">protected</span> <span class="kd">synchronized</span> <span class="n">Class</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">resolve</span><span class="o">)</span>
+        <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+    <span class="c1">// 首先检查该name指定的class是否有被加载</span>
+    <span class="n">Class</span> <span class="n">c</span> <span class="o">=</span> <span class="n">findLoadedClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">parent</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 如果parent不为null，则调用parent的loadClass进行加载</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// parent为null，则调用BootstrapClassLoader进行加载</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">findBootstrapClass0</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 如果仍然无法加载成功，则调用自身的findClass进行加载</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">findClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">resolve</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">resolveClass</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">c</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h4 id="java7">类加载题目例子（Java7环境）</h4>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;static block&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value1</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value3</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;before Singleton constructor: value1:%d, value2:%d, value3:%d&quot;</span><span class="o">,</span>
+                <span class="n">value1</span><span class="o">,</span><span class="n">value2</span><span class="o">,</span><span class="n">value3</span><span class="o">));</span>
+        <span class="n">value1</span><span class="o">++;</span>
+        <span class="n">value2</span><span class="o">++;</span>
+        <span class="n">value3</span><span class="o">++;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;after Singleton constructor: value1:%d, value2:%d, value3:%d&quot;</span><span class="o">,</span>
+                <span class="n">value1</span><span class="o">,</span><span class="n">value2</span><span class="o">,</span><span class="n">value3</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">getInstance</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Singleton2</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v1</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v3</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;static block&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton2</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="nf">Singleton2</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;before Singleton2 constructor: v1:%d, v2:%d, v3:%d&quot;</span><span class="o">,</span>
+                <span class="n">v1</span><span class="o">,</span><span class="n">v2</span><span class="o">,</span><span class="n">v3</span><span class="o">));</span>
+        <span class="n">v1</span><span class="o">++;</span>
+        <span class="n">v2</span><span class="o">++;</span>
+        <span class="n">v3</span><span class="o">++;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;before Singleton2 constructor: v1:%d, v2:%d, v3:%d&quot;</span><span class="o">,</span>
+                <span class="n">v1</span><span class="o">,</span><span class="n">v2</span><span class="o">,</span><span class="n">v3</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton2</span> <span class="nf">getInstance2</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">singleton2</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">_1MB</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="c1">// idea 提示 不应该通过类的实例访问静态成员，不过程序本身无任何问题，结果如下：</span>
+        <span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="n">Singleton</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+        <span class="c1">// 1</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value1:&quot;</span> <span class="o">+</span> <span class="n">singleton</span><span class="o">.</span><span class="na">value1</span><span class="o">);</span>
+        <span class="c1">// 0</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value2:&quot;</span> <span class="o">+</span> <span class="n">singleton</span><span class="o">.</span><span class="na">value2</span><span class="o">);</span>
+        <span class="c1">// 10</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value3:&quot;</span> <span class="o">+</span> <span class="n">singleton</span><span class="o">.</span><span class="na">value3</span><span class="o">);</span>
+
+        <span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span> <span class="n">Singleton2</span><span class="o">.</span><span class="na">getInstance2</span><span class="o">();</span>
+        <span class="c1">// 1</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v1:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">v1</span><span class="o">);</span>
+        <span class="c1">// 1</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v2:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">v2</span><span class="o">);</span>
+        <span class="c1">// 11</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v3:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">v3</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<h5 id="_15">结果分析</h5>
+<div class="hlcode"><pre><span class="nx">before</span> <span class="nx">Singleton</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">0</span>
+<span class="nx">after</span> <span class="nx">Singleton</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">1</span>
+<span class="kr">static</span> <span class="nx">block</span>
+<span class="nx">Singleton1</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">1</span>
+<span class="nx">Singleton1</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">0</span>
+<span class="nx">Singleton1</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">10</span>
+<span class="kr">static</span> <span class="nx">block</span>
+<span class="nx">before</span> <span class="nx">Singleton2</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">v1</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">v2</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">v3</span><span class="o">:</span><span class="mi">10</span>
+<span class="nx">before</span> <span class="nx">Singleton2</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">v1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">v2</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">v3</span><span class="o">:</span><span class="mi">11</span>
+<span class="nx">Singleton2</span> <span class="nx">v1</span><span class="o">:</span><span class="mi">1</span>
+<span class="nx">Singleton2</span> <span class="nx">v2</span><span class="o">:</span><span class="mi">1</span>
+<span class="nx">Singleton2</span> <span class="nx">v3</span><span class="o">:</span><span class="mi">11</span>
+</pre></div>
+
+
+<ul>
+<li>《Java编程思想》第5章：调用构造函数是编译器的责任，必须要让编译器知道调用的是哪个方法；分配内存空间后，就会调用构造函数，确保使用对象前，对象已经被初始化了。</li>
+</ul>
+<p>对象创建的过程：（<strong>类初始化 和 类实例化</strong>）</p>
+<ol>
+<li>首次创建对象时，类中的静态方法/静态字段首次被访问时，java解释器必须先查找类路径，以定位.class文件</li>
+<li>然后载入<code>.class</code>(这将创建一个class对象)，有关静态初始化的所有动作都会执行，按顺序执行。因此，<strong>静态初始化只在Class对象首次加载的时候进行一次</strong></li>
+<li>当用<code>new XX()</code>创建对象时，首先在<strong>堆上为对象分配足够的存储空间</strong></li>
+<li>这块存储空间会被清零，这就自动地将对象中的所有基本类型数据都设置成了缺省值（对数字来说就是0，对布尔型和字符型也相同），而引用则被设置成了null。</li>
+<li>执行所有出现于字段定义处的初始化动作（<strong>非静态对象的初始化</strong>）</li>
+<li>执行构造器。</li>
+</ol>
+<h6 id="singleton">Singleton 结果分析</h6>
+<ol>
+<li>
+<p>首先执行main中的<code>Singleton singleton = Singleton.getInstance()</code>,</p>
+</li>
+<li>
+<p>访问了静态方法<code>访问静态方法</code>, 开始加载类<code>Singleton</code></p>
+</li>
+<li>
+<p>随后，类的验证，准备</p>
+</li>
+</ol>
+<p>这里会将为singleton(引用类型)设置为null,value1,value2,value3（基本数据类型）设置默认值0 ）</p>
+<ol>
+<li>类的初始化（按照赋值语句进行修改）</li>
+</ol>
+<div class="hlcode"><pre><span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value1</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value3</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+</pre></div>
+
+
+<p><code>new Singleton()</code> 不在进行类加载过程(上面已经类加载过了)，直接对象初始化, 如下</p>
+<div class="hlcode"><pre><span class="nx">before</span> <span class="nx">Singleton</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">0</span>
+<span class="nx">after</span> <span class="nx">Singleton</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">1</span>
+</pre></div>
+
+
+<p>然后是如下的初始化语句，（注意如下的静态操作只会进行一次）</p>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;static block&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value1</span><span class="o">;</span> <span class="c1">// 没有赋值，取在对象实例的构造函数执行后的值</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// 类初次赋值</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value3</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>  <span class="c1">// 类初次赋值</span>
+</pre></div>
+
+
+<p>所以最后main函数中打印</p>
+<div class="hlcode"><pre><span class="nx">Singleton1</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">1</span>
+<span class="nx">Singleton1</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">0</span>
+<span class="nx">Singleton1</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">10</span>
+</pre></div>
+
+
+<h6 id="singleton2">Singleton2 分析</h6>
+<p>与<code>Singleton</code>的初始化语句顺序不一样,<code>new</code>对象，是在类初始变量之后</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v1</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v3</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+<span class="kd">static</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;static block&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton2</span><span class="o">();</span>
+</pre></div>
+
+
+<ul>
+<li>output，注意到构造函数执行之前是：v1:0, v2:0, v3:10</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="n">block</span>
+<span class="n">before</span> <span class="n">Singleton2</span> <span class="nl">constructor:</span> <span class="nl">v1:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">v2:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">v3:</span><span class="mi">10</span>
+<span class="n">before</span> <span class="n">Singleton2</span> <span class="nl">constructor:</span> <span class="nl">v1:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v2:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v3:</span><span class="mi">11</span>
+<span class="n">Singleton2</span> <span class="nl">v1:</span><span class="mi">1</span>
+<span class="n">Singleton2</span> <span class="nl">v2:</span><span class="mi">1</span>
+<span class="n">Singleton2</span> <span class="nl">v3:</span><span class="mi">11</span>
+</pre></div>
+
+
+<h6 id="_16">静态初始化再次验证</h6>
+<p>类中静态初始化语句，只会在类加载的时候执行一次</p>
+<ul>
+<li>code1</li>
+</ul>
+<div class="hlcode"><pre><span class="n">Singleton2</span> <span class="n">singleton2</span> <span class="o">=</span> <span class="n">Singleton2</span><span class="o">.</span><span class="na">getInstance2</span><span class="o">();</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v1:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">v1</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v2:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">v2</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v3:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">v3</span><span class="o">);</span>
+
+<span class="n">Singleton2</span> <span class="n">singleton22</span> <span class="o">=</span> <span class="n">Singleton2</span><span class="o">.</span><span class="na">getInstance2</span><span class="o">();</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v1:&quot;</span> <span class="o">+</span> <span class="n">singleton22</span><span class="o">.</span><span class="na">v1</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v2:&quot;</span> <span class="o">+</span> <span class="n">singleton22</span><span class="o">.</span><span class="na">v2</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton2 v3:&quot;</span> <span class="o">+</span> <span class="n">singleton22</span><span class="o">.</span><span class="na">v3</span><span class="o">);</span>
+</pre></div>
+
+
+<ul>
+<li>output1</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="n">block</span>
+<span class="n">before</span> <span class="n">Singleton2</span> <span class="nl">constructor:</span> <span class="nl">v1:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">v2:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">v3:</span><span class="mi">10</span>
+<span class="n">before</span> <span class="n">Singleton2</span> <span class="nl">constructor:</span> <span class="nl">v1:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v2:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v3:</span><span class="mi">11</span>
+<span class="n">Singleton2</span> <span class="nl">v1:</span><span class="mi">1</span>
+<span class="n">Singleton2</span> <span class="nl">v2:</span><span class="mi">1</span>
+<span class="n">Singleton2</span> <span class="nl">v3:</span><span class="mi">11</span>
+<span class="n">Singleton2</span> <span class="nl">v1:</span><span class="mi">1</span>
+<span class="n">Singleton2</span> <span class="nl">v2:</span><span class="mi">1</span>
+<span class="n">Singleton2</span> <span class="nl">v3:</span><span class="mi">11</span>
+</pre></div>
+
+
+<ul>
+<li>code2</li>
+</ul>
+<div class="hlcode"><pre><span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="n">Singleton</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value1:&quot;</span> <span class="o">+</span> <span class="n">singleton</span><span class="o">.</span><span class="na">value1</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value2:&quot;</span> <span class="o">+</span> <span class="n">singleton</span><span class="o">.</span><span class="na">value2</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value3:&quot;</span> <span class="o">+</span> <span class="n">singleton</span><span class="o">.</span><span class="na">value3</span><span class="o">);</span>
+
+<span class="n">Singleton</span> <span class="n">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value1:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">value1</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value2:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">value2</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Singleton1 value3:&quot;</span> <span class="o">+</span> <span class="n">singleton2</span><span class="o">.</span><span class="na">value3</span><span class="o">);</span>
+</pre></div>
+
+
+<ul>
+<li>output2</li>
+</ul>
+<div class="hlcode"><pre><span class="n">before</span> <span class="n">Singleton</span> <span class="nl">constructor:</span> <span class="nl">value1:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">value2:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">value3:</span><span class="mi">0</span>
+<span class="n">after</span> <span class="n">Singleton</span> <span class="nl">constructor:</span> <span class="nl">value1:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">value2:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">value3:</span><span class="mi">1</span>
+<span class="kd">static</span> <span class="n">block</span>
+<span class="n">Singleton1</span> <span class="nl">value1:</span><span class="mi">1</span>
+<span class="n">Singleton1</span> <span class="nl">value2:</span><span class="mi">0</span>
+<span class="n">Singleton1</span> <span class="nl">value3:</span><span class="mi">10</span>
+<span class="n">before</span> <span class="n">Singleton</span> <span class="nl">constructor:</span> <span class="nl">value1:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">value2:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">value3:</span><span class="mi">10</span>
+<span class="n">after</span> <span class="n">Singleton</span> <span class="nl">constructor:</span> <span class="nl">value1:</span><span class="mi">2</span><span class="o">,</span> <span class="nl">value2:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">value3:</span><span class="mi">11</span>
+<span class="n">Singleton1</span> <span class="nl">value1:</span><span class="mi">2</span>
+<span class="n">Singleton1</span> <span class="nl">value2:</span><span class="mi">1</span>
+<span class="n">Singleton1</span> <span class="nl">value3:</span><span class="mi">11</span>
+</pre></div>
+
+
+<h1 id="_17">自定义类加载器</h1>
+<p>自定义类加载器的一般步骤</p>
+<ol>
+<li>
+<p>继承<code>ClassLoader</code></p>
+</li>
+<li>
+<p>重写<code>loadClass()</code>方法</p>
+</li>
+<li>
+<p>重写<code>findClass()</code>方法</p>
+<ul>
+<li>class文件路径判断和获取</li>
+<li>将class文件载入内存</li>
+<li>对载入内存的字节码数据，调用<code>defineClass()</code>方法将字节码转化为类</li>
+</ul>
+</li>
+</ol>
+<h2 id="myclassloader">MyClassLoader 实践</h2>
+<ul>
+<li><code>Hello.java</code>编译成<code>Hello.class</code></li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">other</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Loader Class is:&quot;</span> <span class="o">+</span> <span class="n">getClass</span><span class="o">().</span><span class="na">getClassLoader</span><span class="o">().</span><span class="na">getClass</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>MyComOtherClassLoader</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mb</span><span class="o">;</span>
+
+
+<span class="kn">import</span> <span class="nn">java.io.ByteArrayOutputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.FileInputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/3/20 10:54 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyComOtherClassLoader</span> <span class="kd">extends</span> <span class="n">ClassLoader</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">path</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">packageName</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">className</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">MyComOtherClassLoader</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemClassLoader</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="nf">classNameToPath</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 得到类文件的URL</span>
+        <span class="k">return</span> <span class="n">path</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">packageName</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">,</span> <span class="sc">&#39;/&#39;</span><span class="o">)</span>
+                <span class="o">+</span> <span class="s">&quot;/&quot;</span>
+                <span class="o">+</span> <span class="n">className</span> <span class="o">+</span> <span class="s">&quot;.class&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Class</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+        <span class="c1">// 非 com.test package下面的类，都用默认的加载， 否则用自定义的加载方法</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">name</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot;com.other&quot;</span><span class="o">))</span> <span class="o">{</span>
+            <span class="c1">// 是否已经被加载</span>
+            <span class="n">Class</span> <span class="n">loadedClass</span> <span class="o">=</span> <span class="n">findLoadedClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">loadedClass</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 用父类去加载该类</span>
+                <span class="n">loadedClass</span> <span class="o">=</span> <span class="n">getParent</span><span class="o">().</span><span class="na">loadClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+                <span class="k">return</span> <span class="n">loadedClass</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">loadedClass</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">);</span>
+        <span class="n">packageName</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">packageName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;package: &quot; + packageName);</span>
+            <span class="n">className</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;class name: &quot; + name);</span>
+            <span class="n">SecurityManager</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">sm</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">sm</span><span class="o">.</span><span class="na">checkPackageAccess</span><span class="o">(</span><span class="n">packageName</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">//依然调用父类的方法</span>
+<span class="c1">//        return super.loadClass(name);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">findClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">findClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">);</span>
+        <span class="n">packageName</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">packageName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;package: &quot; + packageName);</span>
+            <span class="n">className</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+<span class="c1">//            System.out.println(&quot;class name: &quot; + name);</span>
+            <span class="n">SecurityManager</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">sm</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">sm</span><span class="o">.</span><span class="na">checkPackageAccess</span><span class="o">(</span><span class="n">packageName</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">findLoadedClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span> <span class="c1">// 父类已加载</span>
+        <span class="k">if</span><span class="o">(</span><span class="kc">null</span> <span class="o">!=</span> <span class="n">clazz</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">clazz</span><span class="o">;</span>
+        <span class="o">}</span>
+
+<span class="c1">//        System.out.println(&quot;findClass param name: &quot; + name);</span>
+        <span class="kt">byte</span> <span class="o">[]</span> <span class="n">b</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getClassBytes</span><span class="o">();</span>
+<span class="c1">//        System.out.println(&quot;b len:&quot; + b.length);</span>
+        <span class="n">clazz</span><span class="o">=</span><span class="n">defineClass</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">clazz</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getClassBytes</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">classPath</span> <span class="o">=</span> <span class="n">classNameToPath</span><span class="o">();</span>
+<span class="c1">//        System.out.println(&quot;classPath:&quot; + classPath);</span>
+        <span class="n">File</span> <span class="n">file</span><span class="o">=</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">classPath</span><span class="o">);</span>
+        <span class="k">try</span><span class="o">(</span><span class="n">FileInputStream</span> <span class="n">fis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">file</span><span class="o">);</span><span class="n">ByteArrayOutputStream</span> <span class="n">bos</span><span class="o">=</span><span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();)</span> <span class="o">{</span>
+            <span class="kt">byte</span><span class="o">[]</span> <span class="n">b</span><span class="o">=</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">*</span><span class="mi">2</span><span class="o">];</span>
+            <span class="kt">int</span> <span class="n">n</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">((</span><span class="n">n</span><span class="o">=</span><span class="n">fis</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">b</span><span class="o">))!=-</span><span class="mi">1</span><span class="o">){</span>
+                <span class="n">bos</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="n">bos</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testMyClassLoaderHello</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/Users/mubi/IdeaProjects/untitled/out/production/untitled&quot;</span><span class="o">;</span>
+        <span class="n">MyComOtherClassLoader</span> <span class="n">myClassLoader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyComOtherClassLoader</span><span class="o">();</span>
+        <span class="n">myClassLoader</span><span class="o">.</span><span class="na">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">;</span>
+        <span class="n">Class</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">myClassLoader</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="s">&quot;com.other.Hello&quot;</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;===&quot;</span> <span class="o">+</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="n">Method</span> <span class="n">method</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getDeclaredMethod</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">c</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return: &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return:&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testMyClassLoaderString</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">MyComOtherClassLoader</span> <span class="n">myClassLoader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyComOtherClassLoader</span><span class="o">();</span>
+        <span class="n">Class</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">myClassLoader</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="s">&quot;java.lang.String&quot;</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;===&quot;</span> <span class="o">+</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="n">Method</span> <span class="n">method</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getDeclaredMethod</span><span class="o">(</span><span class="s">&quot;length&quot;</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">c</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return: &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method return:&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">testMyClassLoaderHello</span><span class="o">();</span>
+        <span class="n">testMyClassLoaderString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">===class com.other.Hello</span>
+<span class="cm">Loader Class is:class com.thread.MyClassLoader2</span>
+<span class="cm">method return:null</span>
+<span class="cm">===class java.lang.String</span>
+<span class="cm">method return: class java.lang.Integer</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h2 id="todo">自定义类加载器的优缺点 // TODO</h2>
+<ul>
+<li>
+<p>加密</p>
+</li>
+<li>
+<p>从非标准的来源加载代码</p>
+</li>
+<li>
+<p>部署在同一个服务器上的两个Web应用程序所使用的Java类库可以实现相互隔离。</p>
+</li>
+<li>
+<p>部署在同一个服务器上的两个Web应用程序所使用的Java类库可以相互共享</p>
+</li>
+<li>
+<p>支持热替换</p>
+</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-19 09:41:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>System.arraycopy, Array.copyOf - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_utils">java_utils</a>&nbsp;&#187;&nbsp;System.arraycopy, Array.copyOf
+    <span class="updated">Page Updated&nbsp;
+      2018-11-24 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">System.arraycopy, Array.copyOf</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#systemarraycopy">System.arraycopy</a><ul>
+<li><a href="#_1">浅拷贝</a></li>
+<li><a href="#for">对比for效率高</a></li>
+<li><a href="#_2">非线程安全</a></li>
+</ul>
+</li>
+<li><a href="#arraycopyof">Array.copyOf</a></li>
+</ul>
+</div>
+<h1 id="systemarraycopy">System.arraycopy</h1>
+<p>使用说明：</p>
+<div class="hlcode"><pre><span class="cm">/*</span>
+<span class="cm">* @param      src      the source array.</span>
+<span class="cm">* @param      srcPos   starting position in the source array.</span>
+<span class="cm">* @param      dest     the destination array.</span>
+<span class="cm">* @param      destPos  starting position in the destination data.</span>
+<span class="cm">* @param      length   the number of array elements to be copied.</span>
+<span class="cm">* @exception  IndexOutOfBoundsException  if copying would cause</span>
+<span class="cm">*               access of data outside array bounds.</span>
+<span class="cm">* @exception  ArrayStoreException  if an element in the &lt;code&gt;src&lt;/code&gt;</span>
+<span class="cm">*               array could not be stored into the &lt;code&gt;dest&lt;/code&gt; array</span>
+<span class="cm">*               because of a type mismatch.</span>
+<span class="cm">* @exception  NullPointerException if either &lt;code&gt;src&lt;/code&gt; or</span>
+<span class="cm">*               &lt;code&gt;dest&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;.</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">arraycopy</span><span class="o">(</span><span class="n">Object</span> <span class="n">src</span><span class="o">,</span>  <span class="kt">int</span>  <span class="n">srcPos</span><span class="o">,</span>
+                                <span class="n">Object</span> <span class="n">dest</span><span class="o">,</span> <span class="kt">int</span> <span class="n">destPos</span><span class="o">,</span>
+                                <span class="kt">int</span> <span class="n">length</span><span class="o">);</span>
+</pre></div>
+
+
+<h2 id="_1">浅拷贝</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testArraycopy</span><span class="o">(){</span>
+    <span class="kd">class</span> <span class="nc">Obj</span><span class="o">{</span>
+        <span class="kt">int</span> <span class="n">a</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">b</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="nf">Obj</span><span class="o">(){</span>
+            <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+            <span class="n">b</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="nf">Obj</span><span class="o">(</span><span class="kt">int</span> <span class="n">_a</span><span class="o">,</span> <span class="n">String</span> <span class="n">_b</span><span class="o">){</span>
+            <span class="n">a</span><span class="o">=</span> <span class="n">_a</span><span class="o">;</span>
+            <span class="n">b</span><span class="o">=</span><span class="n">_b</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+    <span class="n">Obj</span> <span class="n">obj1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+    <span class="n">Obj</span> <span class="n">obj2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">&quot;b&quot;</span><span class="o">);</span>
+    <span class="n">Obj</span> <span class="n">obj3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;c&quot;</span><span class="o">);</span>
+
+    <span class="n">Obj</span><span class="o">[]</span> <span class="n">st</span>  <span class="o">=</span> <span class="o">{</span><span class="n">obj1</span><span class="o">,</span> <span class="n">obj2</span><span class="o">,</span> <span class="n">obj3</span><span class="o">};</span>
+    <span class="n">Obj</span><span class="o">[]</span> <span class="n">dt</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">st</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">dt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">N</span><span class="o">);</span>
+
+    <span class="c1">// false</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;两个数组地址是否相同：&quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">st</span> <span class="o">==</span> <span class="n">dt</span><span class="o">));</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+        <span class="c1">// true</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;两个数组内容&quot;</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="s">&quot;是否相同：&quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">st</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="n">dt</span><span class="o">[</span><span class="mi">0</span><span class="o">]));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="for">对比for效率高</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testArrayCopyOfEfficient</span><span class="o">(){</span>
+    <span class="kd">final</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span><span class="o">;</span>
+    <span class="n">String</span><span class="o">[]</span> <span class="n">srcArray</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+    <span class="n">String</span><span class="o">[]</span> <span class="n">forArray</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">srcArray</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+    <span class="n">String</span><span class="o">[]</span> <span class="n">arrayCopyArray</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">srcArray</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+
+    <span class="c1">//初始化数组</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span>  <span class="o">=</span> <span class="mi">0</span> <span class="o">;</span> <span class="n">index</span>  <span class="o">&lt;</span> <span class="n">srcArray</span><span class="o">.</span><span class="na">length</span> <span class="o">;</span> <span class="n">index</span> <span class="o">++){</span>
+        <span class="n">srcArray</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kt">long</span> <span class="n">forStartTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span>  <span class="o">=</span> <span class="mi">0</span> <span class="o">;</span> <span class="n">index</span>  <span class="o">&lt;</span> <span class="n">srcArray</span><span class="o">.</span><span class="na">length</span> <span class="o">;</span> <span class="n">index</span> <span class="o">++){</span>
+        <span class="n">forArray</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">srcArray</span><span class="o">[</span><span class="n">index</span><span class="o">];</span>
+    <span class="o">}</span>
+    <span class="kt">long</span> <span class="n">forEndTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;for方式复制数组：&quot;</span>  <span class="o">+</span> <span class="o">(</span><span class="n">forEndTime</span> <span class="o">-</span> <span class="n">forStartTime</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot;纳秒&quot;</span><span class="o">);</span>
+
+    <span class="kt">long</span> <span class="n">arrayCopyStartTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">srcArray</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">arrayCopyArray</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">srcArray</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+    <span class="kt">long</span> <span class="n">arrayCopyEndTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;System.arraycopy复制数组：&quot;</span>  <span class="o">+</span> <span class="o">(</span><span class="n">arrayCopyEndTime</span> <span class="o">-</span> <span class="n">arrayCopyStartTime</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot;纳秒&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="_2">非线程安全</h2>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2018/11/24 6:00 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ArrayCopyThreadSafe</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arrayOriginal</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">10</span><span class="o">];</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arraySrc</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">10</span><span class="o">];</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arrayDist</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">10</span><span class="o">];</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">modify</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arraySrc</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">arraySrc</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">modify2</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arraySrc</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">arraySrc</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">copy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">arraySrc</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">arrayDist</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">arraySrc</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">copy2</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">arraySrc</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">arrayDist</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">arraySrc</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">copy3</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">arraySrc</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">arrayDist</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">arraySrc</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arraySrc</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">arrayOriginal</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="n">arraySrc</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="n">arrayDist</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">doThreadSafeCheck</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">ArrayCopyThreadSafe</span> <span class="n">arrayCopyThreadSafe</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayCopyThreadSafe</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;run count: &quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">));</span>
+            <span class="n">arrayCopyThreadSafe</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+
+            <span class="n">Thread</span> <span class="n">threadModify</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;modify&quot;</span><span class="o">);</span>
+                    <span class="n">arrayCopyThreadSafe</span><span class="o">.</span><span class="na">modify2</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+
+            <span class="n">Thread</span> <span class="n">threadCopy</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;copy&quot;</span><span class="o">);</span>
+                    <span class="n">arrayCopyThreadSafe</span><span class="o">.</span><span class="na">copy</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+
+
+            <span class="n">threadModify</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+            <span class="n">threadCopy</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+            <span class="n">threadModify</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+            <span class="n">threadCopy</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+
+            <span class="k">if</span> <span class="o">(!</span><span class="n">Arrays</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">arrayOriginal</span><span class="o">,</span> <span class="n">arrayDist</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="s">&quot;System.arraycopy is not thread safe&quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">doThreadSafeCheck</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h1 id="arraycopyof">Array.copyOf</h1>
+<p>// TODO</p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-19 09:41:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>《Java编程思想》第8章：多态 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thinking_in_Java">java_thinking_in_Java</a>&nbsp;&#187;&nbsp;《Java编程思想》第8章：多态
+    <span class="updated">Page Updated&nbsp;
+      2019-02-12 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">《Java编程思想》第8章：多态</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#3">面向对象的3个基本特征</a><ul>
+<li><a href="#_1">向上转型</a></li>
+<li><a href="#_2">方法调用绑定</a></li>
+<li><a href="#_3">缺陷: 域与静态方法</a></li>
+<li><a href="#_4">向下转型</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="3">面向对象的3个基本特征</h1>
+<p>多态，封装(抽象)，继承</p>
+<h2 id="_1">向上转型</h2>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Cycle</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">play</span><span class="o">(){</span>
+        <span class="n">Sxystem</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Cycle&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Unicycle</span> <span class="kd">extends</span> <span class="n">Cycle</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">play</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Unicycle&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Bicycle</span> <span class="kd">extends</span> <span class="n">Cycle</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">play</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Bicycle&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">ride</span><span class="o">(</span><span class="n">Cycle</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="n">c</span><span class="o">.</span><span class="na">play</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+        <span class="n">ride</span><span class="o">(</span><span class="k">new</span> <span class="n">Cycle</span><span class="o">());</span>    <span class="c1">// No upcasting</span>
+        <span class="n">ride</span><span class="o">(</span><span class="k">new</span> <span class="n">Unicycle</span><span class="o">());</span> <span class="c1">// Upcast</span>
+        <span class="n">ride</span><span class="o">(</span><span class="k">new</span> <span class="n">Bicycle</span><span class="o">());</span>  <span class="c1">// Upcast</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*output</span>
+
+<span class="cm">class com.test.Cycle</span>
+<span class="cm">Cycle</span>
+<span class="cm">class com.test.Unicycle</span>
+<span class="cm">Unicycle</span>
+<span class="cm">class com.test.Bicycle</span>
+<span class="cm">Bicycle</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<h2 id="_2">方法调用绑定</h2>
+<p>将一个方法调用同一个方法主体关联起来被称作<code>绑定</code>,当绑定发生在程序运行之前时（如果有的话，由编译器和连接器负责，<code>C</code>就是一种前绑定的语言）称为<code>前期绑定</code>（early binding ）。 在运行时，根据对象的类型来决定运行哪个方法称为<code>后期绑定</code>（late binding),后期绑定也被称为<code>动态绑定</code>（dynamic binding ）或运行时绑定(run-time binding).</p>
+<p>Java中除了static方法和final方法（<code>private</code>方法也属于<code>final</code>方法）之外，其它所有方法都是<code>后期绑定</code>。当方法声明为final类型时，因为方法不会被继承或改变，也就无谓多态啦，这时就是使用的前期绑定。</p>
+<h2 id="_3">缺陷: 域与静态方法</h2>
+<p>只有普通的方法调用可以是多态的；如果直接访问某个域，这个访问将在编译期进行解析，不是多态</p>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Super</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="n">field</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getField</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">field</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Sub</span> <span class="kd">extends</span> <span class="n">Super</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="n">field</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getField</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">field</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getSuperField</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 显示的说明为：super.field</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">field</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Super</span> <span class="n">sup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Sub</span><span class="o">();</span> <span class="c1">// Upcast</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;sup.field:&quot;</span> <span class="o">+</span> <span class="n">sup</span><span class="o">.</span><span class="na">field</span> <span class="o">+</span> <span class="s">&quot; sup.getField():&quot;</span> <span class="o">+</span> <span class="n">sup</span><span class="o">.</span><span class="na">getField</span><span class="o">());</span>
+        <span class="n">Sub</span> <span class="n">sub</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Sub</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;sub.field:&quot;</span> <span class="o">+</span> <span class="n">sub</span><span class="o">.</span><span class="na">field</span> <span class="o">+</span> <span class="s">&quot; sub.getField():&quot;</span> <span class="o">+</span> <span class="n">sub</span><span class="o">.</span><span class="na">getField</span><span class="o">()</span>
+            <span class="o">+</span> <span class="s">&quot; sub.getSuperField():&quot;</span> <span class="o">+</span> <span class="n">sub</span><span class="o">.</span><span class="na">getSuperField</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*output</span>
+
+<span class="cm">sup.field:0 sup.getField():1</span>
+<span class="cm">sub.field:1 sub.getField():1 sub.getSuperField():0</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Super</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">staticGet</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&quot;Super static get()&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">dynamicGet</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&quot;Super dynamic get()&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Sub</span> <span class="kd">extends</span> <span class="n">Super</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">staticGet</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&quot;Sub static get()&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">dynamicGet</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&quot;Sub dynamic get()&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Super</span> <span class="n">sup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Sub</span><span class="o">();</span> <span class="c1">// Upcast</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sup</span><span class="o">.</span><span class="na">staticGet</span><span class="o">());</span> <span class="c1">// 这里会警告：不应该通过类实例访问静态成员</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sup</span><span class="o">.</span><span class="na">dynamicGet</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*output</span>
+
+<span class="cm">Super static get()</span>
+<span class="cm">Sub dynamic get()</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<h2 id="_4">向下转型</h2>
+<p>向上转型可能会丢失信息，但向上转型是安全的，因为基类不会出现大于导出类的接口。</p>
+<p>向下转型可能是不安全的，java在运行期间会检查转型，必要时返回<code>ClassCastException</code>，这种运行期间对类型进行检查的行为称为"运行是类型识别（RTTI）"</p>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Useful</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">f</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">g</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">MoreUseful</span> <span class="kd">extends</span> <span class="n">Useful</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">f</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">f</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">g</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">g</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">u</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">v</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Useful</span><span class="o">[]</span> <span class="n">x</span> <span class="o">=</span> <span class="o">{</span><span class="k">new</span> <span class="n">Useful</span><span class="o">(),</span> <span class="k">new</span> <span class="n">MoreUseful</span><span class="o">()};</span>
+        <span class="n">x</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">f</span><span class="o">();</span>
+        <span class="n">x</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">g</span><span class="o">();</span>
+        <span class="o">((</span><span class="n">MoreUseful</span><span class="o">)</span><span class="n">x</span><span class="o">[</span><span class="mi">1</span><span class="o">]).</span><span class="na">u</span><span class="o">();</span> <span class="c1">// DownCast / RTTI</span>
+        <span class="o">((</span><span class="n">MoreUseful</span><span class="o">)</span><span class="n">x</span><span class="o">[</span><span class="mi">0</span><span class="o">]).</span><span class="na">u</span><span class="o">();</span> <span class="c1">// java.lang.ClassCastException throw</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-19 09:41:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

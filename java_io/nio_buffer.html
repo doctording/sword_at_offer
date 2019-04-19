@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java nio 缓冲区 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io">java_io</a>&nbsp;&#187;&nbsp;Java nio 缓冲区
+    <span class="updated">Page Updated&nbsp;
+      2019-03-18 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java nio 缓冲区</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#buffer">缓冲区Buffer</a><ul>
+<li><a href="#_1">属性信息</a></li>
+<li><a href="#_2">非线程安全</a></li>
+<li><a href="#_3">两个缓冲区被认为相等的充要条件</a></li>
+<li><a href="#_4">直接缓冲区 &amp; 非直接缓冲区</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="buffer">缓冲区Buffer</h1>
+<h2 id="_1">属性信息</h2>
+<ul>
+<li>
+<p>容量(Capacity): 缓冲区能够容纳的数据元素的最大数量。这一容量在缓冲区创建时被设定，并且永远不能被改变。</p>
+</li>
+<li>
+<p>上界(Limit): 缓冲区的第一个不能被读或写的元素。或者说，缓冲区中现存元素的计数。</p>
+</li>
+<li>
+<p>位置(Position): 下一个要被读或写的元素的索引。位置会自动由相应的<code>get()</code>和<code>put()</code>函数更新。</p>
+</li>
+<li>
+<p>标记(Mark): 一个备忘位置。调用<code>mark()</code>来设定mark=postion。调用<code>reset()</code>设定position=mark。标记在设定前是未定义的(undefined)</p>
+</li>
+</ul>
+<p><code>0 &lt;= mark &lt;= position &lt;= limit &lt;= capacity</code></p>
+<h2 id="_2">非线程安全</h2>
+<p>缓冲区并不是线程安全的。如果您想以多线程同时存取特定的缓冲区，您需要在存取缓冲区之前进行同步(例如对缓冲区对象进行跟踪)</p>
+<h2 id="_3">两个缓冲区被认为相等的充要条件</h2>
+<ul>
+<li>
+<p>两个对象类型相同。包含不同数据类型的buffer永远不会相等，而且buffer 绝不会等于非 buffer 对象。</p>
+</li>
+<li>
+<p>两个对象都剩余同样数量的元素。Buffer 的容量不需要相同，而且缓冲区中剩 余数据的索引也不必相同。但每个缓冲区中剩余元素的数目(从位置到上界)必须相同。</p>
+</li>
+<li>
+<p>在每个缓冲区中应被Get()函数返回的剩余数据元素序列必须一致。</p>
+</li>
+</ul>
+<h2 id="_4">直接缓冲区 &amp; 非直接缓冲区</h2>
+<p>参考1: https://blog.csdn.net/zhangxiaoyang0/article/details/79208249/</p>
+<ul>
+<li>直接缓冲区：通过<code>allocateDirect()</code>方法分配直接缓冲区，将缓冲区建立在物理内存中(内存映射文件)</li>
+</ul>
+<p>直接字节缓冲区通过调用<code>allocateDirect()</code>工厂方法来创建,此方法返回的缓冲区进行分配和取消分配所需成本通常<strong>高于</strong>非直接缓冲区。直接缓冲区的内容可以驻留在常规的垃圾回收堆之外，因此，它们对应用程序的内存需求量造成的影响可能并不明显。所以，建议将直接缓冲区主要分配给那些易受基础系统的本机 I/O 操作影响的大型、持久的缓冲区。一般情况下，最好仅在直接缓冲区能在程序性能方面带来明显好处时分配它们。</p>
+<p>直接字节缓冲区还可以通过<code>FileChannel</code>的<code>map()</code>方法,将文件区域直接映射到内存中来创建。该方法返回<code>MappedByteBuffer</code>。Java 平台的实现有助于通过JNI从本机代码创建直接字节缓冲区。如果以上这些缓冲区中的某个缓冲区实例指的是不可访问的内存区域，则试图访问该区域不会更改该缓冲区的内容，并且将会在访问期间或稍后的某个时间导致抛出不确定的异常。</p>
+<ul>
+<li>非直接缓冲区： 通过<code>allocate()</code>方法分配缓冲区，将缓冲区建立在 JVM 的内存中</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-19 09:41:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

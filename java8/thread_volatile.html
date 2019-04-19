@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Thread volatile 关键字 & synchronized - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Thread volatile 关键字 & synchronized
+    <span class="updated">Page Updated&nbsp;
+      2019-03-09 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Thread volatile 关键字 & synchronized</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#volatile-synchrinized">volatile &amp; synchrinized</a><ul>
+<li><a href="#_1">回顾并发的三大性质</a><ul>
+<li><a href="#_2">原子性</a></li>
+<li><a href="#_3">可见性</a></li>
+<li><a href="#_4">有序性</a></li>
+</ul>
+</li>
+<li><a href="#java">回顾 Java 内存模型</a></li>
+<li><a href="#volatile">volatile 使用场景</a><ul>
+<li><a href="#_5">利用可见性 进行开关控制</a></li>
+<li><a href="#_6">利用顺序性</a></li>
+<li><a href="#singleton-double-check">Singleton 设计模式的 double-check 也是利用了顺序性的特点</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="volatile-synchrinized">volatile &amp; synchrinized</h1>
+<h2 id="_1">回顾并发的三大性质</h2>
+<h3 id="_2">原子性</h3>
+<p>一个操作或者多个操作，要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。即使是在多个线程一起执行的时候，一个操作一旦开始，就不会被其它线程干扰.</p>
+<p><code>volatile</code> 不能保证原子性，<br />
+<code>synchronized</code> 在作用对象的作用范围内，依赖JVM实现操作的原子性。<br />
+<code>Lock</code> 依赖特殊的CPU指令，代码实现，如<code>ReentrantLock</code></p>
+<h3 id="_3">可见性</h3>
+<p>当多个线程访问同一个变量的时候，一旦线程修改了这个变量的值，其他线程能够立即看到修改的值。</p>
+<p>导致共享变量在线程间不可见的原因：</p>
+<ol>
+<li>线程交叉执行</li>
+<li>代码重排序结合线程交叉执行</li>
+<li>共享变量更新后的值没有在工作内存与主内存之间及时更新</li>
+</ol>
+<p><code>volatile</code> 通过加入内存屏障和禁止重排序优化来实现可见性<br />
+<code>synchronized</code> monitor enter exit 确保可见性</p>
+<h3 id="_4">有序性</h3>
+<p>程序执行的顺序按照代码的先后顺序执行</p>
+<ul>
+<li>Java内存模型中，允许编译器和处理器对指令进行重排序，但重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性</li>
+</ul>
+<p><code>volatile</code>、<code>syncronized</code>、<code>Lock</code>都可保证有序性。</p>
+<p><a target='_blank' href='https://blog.csdn.net/qq_30948019/article/details/80193392'>参考</a></p>
+<h2 id="java">回顾 Java 内存模型</h2>
+<p>CPU -&gt; 缓存 -&gt; 主存 -&gt; 线程工作内存</p>
+<p><a target='_blank' href='https://doctording.github.io/sword_at_offer/java_jvm/jvm_mem_model.html'>参考</a></p>
+<h2 id="volatile">volatile 使用场景</h2>
+<p>volatile 无<code>原子性</code>，需要充分利用其的<code>顺序性</code>和<code>可见性</code></p>
+<h3 id="_5">利用可见性 进行开关控制</h3>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">boolean</span> <span class="n">started</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">started</span><span class="o">){</span>
+            <span class="c1">// Todo</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shutdown</span><span class="o">(){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">started</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_6">利用顺序性</h3>
+<div class="hlcode"><pre><span class="err">线程</span><span class="n">A</span><span class="err">：</span>
+<span class="n">content</span> <span class="o">=</span> <span class="n">initContent</span><span class="o">();</span>    <span class="c1">//(1)</span>
+<span class="n">isInit</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>              <span class="c1">//(2)</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="err">线程</span><span class="n">B</span>
+<span class="k">while</span> <span class="o">(</span><span class="n">isInit</span><span class="o">)</span> <span class="o">{</span>            <span class="c1">//(3)</span>
+    <span class="n">content</span><span class="o">.</span><span class="na">operation</span><span class="o">();</span>    <span class="c1">//(4)</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="singleton-double-check">Singleton 设计模式的 double-check 也是利用了顺序性的特点</h3>
+<p><a target='_blank' href='https://doctording.github.io/sword_at_offer/java_utils/Singleton.html'>参考:单例模式</a></p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-19 09:41:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

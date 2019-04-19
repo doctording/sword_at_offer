@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>44 翻转单词顺序列(String,StringBuffer) - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;44 翻转单词顺序列(String,StringBuffer)
+    <span class="updated">Page Updated&nbsp;
+      2018-06-13 10:39
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">44 翻转单词顺序列(String,StringBuffer)</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+<li><a href="#string-stringbuffer">String &amp; StringBuffer</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<p>Java String、StringBuffer</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">ReverseSentence</span><span class="o">(</span><span class="n">String</span> <span class="n">str</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">split_s</span><span class="o">[]</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span> <span class="c1">// 用空格分割</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">split_s</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="c1">// 数组逆序</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">str</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span> <span class="n">i</span> <span class="o">++){</span>
+            <span class="n">String</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">split_s</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="n">split_s</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">split_s</span><span class="o">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+            <span class="n">split_s</span><span class="o">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">,</span><span class="n">split_s</span><span class="o">);</span> <span class="c1">// 用空格连接数组</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h1 id="string-stringbuffer">String &amp; StringBuffer</h1>
+<p>String</p>
+<ol>
+<li>是一个对象而不是原始类型</li>
+<li>为不可变对象,一旦被创建,就不能修改它的值</li>
+<li>对于已经存在的String对象的修改都是重新创建一个新的对象,然后把新的值保存进去</li>
+<li>String 是final类,即不能被继承</li>
+</ol>
+<p>StringBuffer</p>
+<ol>
+<li>是一个可变对象,当对他进行修改的时候不会像String那样重新建立对象</li>
+<li>它只能通过构造函数来建立</li>
+<li>对象被建立以后,在内存中就会分配内存空间,并初始保存一个null.向StringBuffer中赋值的时候可以通过它的append方法</li>
+<li>字符串连接操作中StringBuffer的效率要比String高</li>
+</ol>
+<p>测试代码与结果</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+
+    <span class="n">String</span> <span class="n">tmp_str</span> <span class="o">=</span> <span class="s">&quot;12345&quot;</span><span class="o">;</span>
+
+    <span class="kd">final</span> <span class="kt">int</span> <span class="n">times</span> <span class="o">=</span> <span class="mi">100000</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="n">Long</span> <span class="nf">test_StringBuffer</span><span class="o">(){</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="n">StringBuffer</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">times</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">tmp_str</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="kt">long</span> <span class="n">end</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Long</span> <span class="nf">test_String</span><span class="o">(){</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">times</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">str</span> <span class="o">+=</span> <span class="n">tmp_str</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">long</span> <span class="n">end</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+
+        <span class="n">Solution</span> <span class="n">solution</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Solution</span><span class="o">();</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;String:&quot;</span> <span class="o">+</span> <span class="n">solution</span><span class="o">.</span><span class="na">test_String</span><span class="o">());</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;StringBuffer:&quot;</span> <span class="o">+</span> <span class="n">solution</span><span class="o">.</span><span class="na">test_StringBuffer</span><span class="o">());</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/java_string_stringbuffer.png"><br />
+</div></p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-19 09:41:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
