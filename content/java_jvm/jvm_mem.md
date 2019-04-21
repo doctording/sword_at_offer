@@ -1,12 +1,12 @@
 ---
-title: "Java 堆内存结构"
+title: "Java 堆内存结构 & GC"
 layout: page
 date: 2019-02-15 00:00
 ---
 
 [TOC]
 
-# Java7堆内存划分：
+# Java7堆内存划分
 
 ##《深入理解java虚拟机》堆的描述
 
@@ -386,3 +386,23 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html
 如果大于，将尝试着进行一次`Minor GC`,尽管这次的`Minor GC`是有风险的
 
 如果小于，或者`HandlerPromotionFailure`设置值不允许担保失败，这时改为进行一次`Full GC`
+
+### 触发gc的条件
+
+“什么时候”即就是GC触发的条件。GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。
+
+#### Minor GC触发条件
+
+* 当Eden区满时，触发Minor GC
+
+#### Full GC触发条件：
+
+* （1）调用System.gc时，系统建议执行Full GC，但是不必然执行
+
+* （2）老年代空间不足
+
+* （3）方法区空间不足
+
+* （4）通过Minor GC后进入老年代的平均大小大于老年代的可用内存
+
+* （5）由Eden区、From Space区向To Space区复制时，对象大小大于To Space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小
