@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java 堆内存结构 - 剑指Offer</title>
+    <title>Java 堆内存结构 & GC - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,17 +16,17 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆内存结构
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆内存结构 & GC
     <span class="updated">Page Updated&nbsp;
       2019-02-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java 堆内存结构</div>
+<div class="page_title">Java 堆内存结构 & GC</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#java7">Java7堆内存划分：</a><ul>
+<li><a href="#java7">Java7堆内存划分</a><ul>
 <li><a href="#java">《深入理解java虚拟机》堆的描述</a></li>
 <li><a href="#_1">堆区域</a></li>
 </ul>
@@ -60,13 +60,18 @@
 <li><a href="#_12">长期存活的对象将进入老年代</a></li>
 <li><a href="#_13">动态对象的年龄判定</a></li>
 <li><a href="#_14">空间分配担保</a></li>
+<li><a href="#gc_1">触发gc的条件</a><ul>
+<li><a href="#minor-gc_1">Minor GC触发条件</a></li>
+<li><a href="#full-gc">Full GC触发条件：</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="java7">Java7堆内存划分：</h1>
+<h1 id="java7">Java7堆内存划分</h1>
 <h2 id="java">《深入理解java虚拟机》堆的描述</h2>
 <ol>
 <li>Java堆（Java Heap）是java虚拟机所管理的内存中最大的一块</li>
@@ -477,12 +482,36 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 <p>如果不成立，虚拟机会查看<code>HandlerPromotionFailure</code>设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</p>
 <p>如果大于，将尝试着进行一次<code>Minor GC</code>,尽管这次的<code>Minor GC</code>是有风险的</p>
 <p>如果小于，或者<code>HandlerPromotionFailure</code>设置值不允许担保失败，这时改为进行一次<code>Full GC</code></p>
+<h3 id="gc_1">触发gc的条件</h3>
+<p>“什么时候”即就是GC触发的条件。GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。</p>
+<h4 id="minor-gc_1">Minor GC触发条件</h4>
+<ul>
+<li>当Eden区满时，触发Minor GC</li>
+</ul>
+<h4 id="full-gc">Full GC触发条件：</h4>
+<ul>
+<li>
+<p>（1）调用System.gc时，系统建议执行Full GC，但是不必然执行</p>
+</li>
+<li>
+<p>（2）老年代空间不足</p>
+</li>
+<li>
+<p>（3）方法区空间不足</p>
+</li>
+<li>
+<p>（4）通过Minor GC后进入老年代的平均大小大于老年代的可用内存</p>
+</li>
+<li>
+<p>（5）由Eden区、From Space区向To Space区复制时，对象大小大于To Space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小</p>
+</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-19 09:41:51</p>
+        <p>Site Generated 2019-04-22 23:29:58</p>
       </span>
     </div>
 

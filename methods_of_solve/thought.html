@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>剑指Offer解题思路 - 剑指Offer</title>
+    <title>剑指Offer解题思路(全) - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#methods_of_solve">methods_of_solve</a>&nbsp;&#187;&nbsp;剑指Offer解题思路
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#methods_of_solve">methods_of_solve</a>&nbsp;&#187;&nbsp;剑指Offer解题思路(全)
     <span class="updated">Page Updated&nbsp;
       2018-05-30 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">剑指Offer解题思路</div>
+<div class="page_title">剑指Offer解题思路(全)</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#1">1 二维数组中的查找</a></li>
@@ -32,13 +32,13 @@
 <li><a href="#4">4 重建二叉树</a></li>
 <li><a href="#5">5 用两个栈实现队列</a></li>
 <li><a href="#6">6 旋转数组的最小数字</a></li>
-<li><a href="#7">7 斐波那契数列</a></li>
+<li><a href="#7-import">7 斐波那契数列 (import)</a></li>
 <li><a href="#8">8 跳台阶</a></li>
 <li><a href="#9">9 变态跳台阶</a></li>
-<li><a href="#10">10 矩形覆盖</a></li>
+<li><a href="#10">10 矩形覆</a></li>
 <li><a href="#11-1">11 二进制中1的个数</a></li>
 <li><a href="#12">12 数值的整数次方</a></li>
-<li><a href="#13">13 调整数组顺序使奇数位于偶数前面 （？？）</a></li>
+<li><a href="#13-import">13 调整数组顺序使奇数位于偶数前面 （import）</a></li>
 <li><a href="#14-k">14 链表中倒数第k个结点</a></li>
 <li><a href="#15">15 反转链表</a></li>
 <li><a href="#16">16 合并两个排序的链表</a></li>
@@ -96,7 +96,8 @@
 </div>
 <h1 id="1">1 二维数组中的查找</h1>
 <ul>
-<li>有序查找 二分</li>
+<li>有序查找</li>
+<li>二分</li>
 </ul>
 <h1 id="2">2 替换空格</h1>
 <ul>
@@ -113,7 +114,7 @@
 </ul>
 <h1 id="4">4 重建二叉树</h1>
 <ul>
-<li>这类题目都采用递归，二叉树基本题</li>
+<li>这类题目都采用递归，属于二叉树基本题</li>
 </ul>
 <h1 id="5">5 用两个栈实现队列</h1>
 <ul>
@@ -128,7 +129,7 @@
 <p>二分查找的方法，不过有特殊情况，比如 [1 0 1 1 1] ，[1 1 1 0 1] 这种，需要单独顺序遍历</p>
 </li>
 </ul>
-<h1 id="7">7 斐波那契数列</h1>
+<h1 id="7-import">7 斐波那契数列 (<em>import</em>)</h1>
 <ul>
 <li>
 <p>最直接的递归/动归， O(2^n), n的指数次方增长</p>
@@ -145,14 +146,14 @@
 <li>同 斐波那契数列</li>
 </ul>
 <h1 id="9">9 变态跳台阶</h1>
-<p>数学公式推导</p>
-<h1 id="10">10 矩形覆盖</h1>
+<p>数学公式推导, 同斐波那契数列</p>
+<h1 id="10">10 矩形覆</h1>
 <ul>
 <li>同 斐波那契数列</li>
 </ul>
 <h1 id="11-1">11 二进制中1的个数</h1>
 <ul>
-<li>经典问题，采用位运算</li>
+<li>经典问题，采用位运算<code>n &amp; (n-1)</code>得到最右边的一个1</li>
 </ul>
 <h1 id="12">12 数值的整数次方</h1>
 <ul>
@@ -166,29 +167,29 @@
 <p>位运算比除法, 取模等效率高</p>
 </li>
 </ul>
-<h1 id="13">13 调整数组顺序使奇数位于偶数前面 （？？）</h1>
+<h1 id="13-import">13 调整数组顺序使奇数位于偶数前面 （<em>import</em>）</h1>
 <ul>
 <li>
-<p>注意无序和有序的区别</p>
+<p>注意题目要求无序和有序的区别</p>
 </li>
 <li>
 <p>无序</p>
 <ol>
-<li>快排思路，维持头，尾两个指针，不断的交换到相遇,时间O(n), 空间O(1)</li>
+<li>快排思路，维持头/尾两个指针，不断的交换到相遇,时间O(n), 空间O(1)</li>
 </ol>
 </li>
 <li>
-<p>要求保持数据相对位置不变</p>
+<p>要求保持数据相对位置不变(无序的最优解不再满足需求，注意快排是不稳定的)</p>
 <ol>
 <li>直接插入排序， 时间复杂度O(n^2), 空间复杂度O(1)</li>
-<li>归并排序， 时间复杂度O(nlogn), 空间复杂度O(1)，归并排序是稳定的排序</li>
+<li>归并排序， 时间复杂度O(nlogn), 空间复杂度O(n) ??；归并排序是稳定的排序，归并排序需要O(n)的辅助空间</li>
 <li>利用复杂空间，空间复杂度O(n), 时间复杂度O(n)（直接遍历一遍）</li>
 </ol>
 </li>
 </ul>
 <h1 id="14-k">14 链表中倒数第k个结点</h1>
 <ul>
-<li>两个指针，保持距离k,那么一个链表尾部，一个就是倒数k</li>
+<li>两个指针，保持距离k；那么一个链表尾部，一个就是倒数k</li>
 </ul>
 <h1 id="15">15 反转链表</h1>
 <ul>
@@ -358,7 +359,6 @@ http://blog.csdn.net/yi_afly/article/details/52012593</p>
 <h1 id="51">51 构建乘积数组</h1>
 <ul>
 <li>构建左部分乘积 和 右部分乘积序列</li>
-<li></li>
 </ul>
 <h1 id="52">52 正则表达式匹配 ？？</h1>
 <ul>
@@ -389,7 +389,12 @@ http://blog.csdn.net/yi_afly/article/details/52012593</p>
 </ul>
 <h1 id="59">59 按之字形顺序打印二叉树</h1>
 <ul>
-<li>按照层次遍历，加上标记</li>
+<li>
+<p>按照层次遍历，加上标记, 奇数层(偶数层)左reverse操作（reverse不可取，太low）</p>
+</li>
+<li>
+<p>偶数层栈，奇数层栈，利用栈和二叉树的性质处理（推荐）</p>
+</li>
 </ul>
 <h1 id="60">60 把二叉树打印成多行</h1>
 <h1 id="61">61 序列化二叉树</h1>
@@ -416,7 +421,7 @@ http://blog.csdn.net/yi_afly/article/details/52012593</p>
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-19 09:41:51</p>
+        <p>Site Generated 2019-04-22 23:29:58</p>
       </span>
     </div>
 
