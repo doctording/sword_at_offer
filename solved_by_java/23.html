@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>22 二叉搜索树的后序遍历序列 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;22 二叉搜索树的后序遍历序列
+    <span class="updated">Page Updated&nbsp;
+      2019-04-19 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">22 二叉搜索树的后序遍历序列</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#solution">Solution</a><ul>
+<li><a href="#_1">题目描述</a></li>
+<li><a href="#ac">递归判断ac代码</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="solution">Solution</h1>
+<p>BST的后序序列的合法序列是: 对于一个序列S，最后一个元素是x（也就是根），如果去掉最后一个元素的序列为T，那么T满足：T可以分成两段，前一段（左子树）小于x，后一段（右子树）大于x，且这两段（子树）都是合法的后序序列。完美的递归定义 : ) 。</p>
+<h2 id="_1">题目描述</h2>
+<p>输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。</p>
+<ul>
+<li>二叉搜索树： 中序遍历是有序的，后序：左（小）右（大）根的顺序打印</li>
+</ul>
+<h2 id="ac">递归判断ac代码</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSquenceOfBST</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">s</span><span class="o">,</span> <span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">rootVal</span> <span class="o">=</span> <span class="n">s</span><span class="o">[</span><span class="n">right</span><span class="o">];</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">[</span><span class="n">left</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">rootVal</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">left</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">right</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">s</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">rootVal</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="nf">isSquenceOfBST</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">[</span><span class="n">right</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">rootVal</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">left</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">right</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">rootVal</span><span class="o">){</span>
+                    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="nf">isSquenceOfBST</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">left</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">s</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">rootVal</span><span class="o">){</span>
+                <span class="n">pos</span><span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="c1">//</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">pos</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span> <span class="n">right</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">rootVal</span><span class="o">){</span>
+                    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="nf">isSquenceOfBST</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">pos</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">isSquenceOfBST</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">pos</span><span class="o">,</span> <span class="n">right</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">VerifySquenceOfBST</span><span class="o">(</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">sequence</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">isSquenceOfBST</span><span class="o">(</span><span class="n">sequence</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-04-25 23:12:40</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
