@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java 堆内存结构 & GC - 剑指Offer</title>
+    <title>Java 堆 & GC - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,19 +16,22 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆内存结构 & GC
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆 & GC
     <span class="updated">Page Updated&nbsp;
       2019-02-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java 堆内存结构 & GC</div>
+<div class="page_title">Java 堆 & GC</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java7">Java7堆内存划分</a><ul>
 <li><a href="#java">《深入理解java虚拟机》堆的描述</a></li>
-<li><a href="#_1">堆区域</a></li>
+<li><a href="#_1">堆区域</a><ul>
+<li><a href="#java7_1">Java7 堆的各区域</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_2">常见的垃圾回收算法</a></li>
@@ -79,18 +82,19 @@
 <li>虚拟机启动时创建java堆</li>
 <li>Java堆的唯一目的就是存放对象实例。</li>
 <li>Java堆是垃圾收集器管理的主要区域。</li>
-<li>从内存回收的角度来看， 由于现在收集器基本都采用分代收集算法， 所以Java堆可以细分为：新生代（Young）和老年代（Old）。 新生代又被划分为三个区域Eden、From Survivor， To Survivor等。无论怎么划分，最终存储的都是实例对象， 进一步划分的目的是为了更好的回收内存， 或者更快的分配内存。</li>
-<li>Java堆的大小是可扩展的， 通过-Xmx和-Xms控制。</li>
+<li>从内存回收的角度来看， 由于现在收集器基本都采用分代收集算法， 所以Java堆可以细分为：新生代（<code>Young</code>）和老年代（<code>Old</code>）。 新生代又被划分为三个区域<code>Eden</code>、<code>From Survivor</code>， <code>To Survivor</code>等。无论怎么划分，最终存储的都是实例对象， 进一步划分的目的是为了更好的回收内存， 或者更快的分配内存。</li>
+<li>Java堆的大小是可扩展的， 通过<code>-Xms</code>和<code>-Xmx</code>控制。</li>
 <li>如果堆内存不够分配实例对象， 并且对也无法在扩展时， 将会抛出outOfMemoryError异常。</li>
 </ol>
 <h2 id="_1">堆区域</h2>
 <ul>
 <li>堆大小 = 新生代 + 老年代。堆大小设置参数：<code>–Xms</code>（堆的初始容量）、<code>-Xmx</code>（堆的最大容量）</li>
-<li>其中，新生代 (<code>Young</code>) 被细分为<code>Eden</code>和两个<code>Survivor</code>区域，这两个<code>Survivor</code>区域分别被命名为<code>from</code>和<code>to</code>，以示区分。默认的，<code>Edem : from : to = 8 : 1 : 1</code>。(可以通过参数 –XX:SurvivorRatio 来设定 。即： Eden = 8/10 的新生代空间大小，from = to = 1/10 的新生代空间大小。</li>
+<li>其中，新生代 (<code>Young</code>) 被细分为<code>Eden</code>和两个<code>Survivor</code>区域，这两个<code>Survivor</code>区域分别被命名为<code>from</code>和<code>to</code>，以示区分。默认的，<code>Edem : from : to = 8 : 1 : 1</code>。(可以通过参数<code>–XX:SurvivorRatio</code>来设定 。即： Eden = 8/10 的新生代空间大小，from = to = 1/10 的新生代空间大小。</li>
 <li>JVM 每次只会使用<code>Eden</code>和其中的一块<code>Survivor</code>区域来为对象服务，所以无论什么时候，总是有一块<code>Survivor</code>区域是空闲着的。</li>
 <li>新生代实际可用的内存空间为 9/10 ( 即90% )的新生代空间。</li>
 </ul>
 <p><code>jstat</code>查看gc相关的堆信息</p>
+<h3 id="java7_1">Java7 堆的各区域</h3>
 <div class="hlcode"><pre><span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">pwd</span>
 <span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">Java</span><span class="o">/</span><span class="n">JavaVirtualMachines</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">7.0</span><span class="n">_80</span><span class="o">.</span><span class="na">jdk</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">Home</span>
 <span class="n">mubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">bin</span><span class="o">/</span><span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
@@ -260,7 +264,7 @@ no, i am dead
 <h2 id="hotspot">HotSpot 算法实现</h2>
 <p>可达性分析的"一致性"分析，GC进行时必须停顿所有Java执行线程(Sun将这件事情称为<code>Stop The World</code>)</p>
 <p>虚拟机有办法直接得知哪些地方存放着对象的引用，HotSpot中使用一组称为<code>OopMap</code>的数据结构来达到这个目的：在类加载完成的时候，HotPot就把对象内什么偏移量是什么类型的数据计算出来，在JIT编译过程中，也会在特定的位置记录下栈和寄存器中哪些位置是引用。这样，GC在扫描时就可以直接得知这些信息了。</p>
-<p>借助OopMap，HotSpot可以快速且准确地完成GC Roots枚举，问题：</p>
+<p>借助<code>OopMap</code>，HotSpot可以快速且准确地完成GC Roots枚举，问题：</p>
 <ul>
 <li>可能导致引用关系变化，或者说OopMap内容变化的指令特别多，如果为每一条指令都生成对应的OopMap，那将会需要大量的额外空间，这样GC的空间成本将会变得很高</li>
 </ul>
@@ -330,16 +334,16 @@ no, i am dead
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
 <h4 id="minor-gc">minor gc</h4>
-<p>新生代GC(Minor GC): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的特效，所以<code>Minor GC</code>非常频繁，一般回收速度也比较快</p>
-<p>新创建的对象都是用新生代分配内存，Eden空间不足时，触发Minor GC，这时会把存活的对象转移进Survivor区。</p>
-<p>新生代通常存活时间较短基于Copying算法进行回收，所谓Copying算法就是扫描出存活的对象，并复制到一块新的完全未使用的空间中，对应于新生代，就是在Eden和From Space或To Space之间copy。新生代采用空闲指针的方式来控制GC触发，指针保持最后一个分配的对象在新生代区间的位置，当有新的对象要分配内存时，用于检查空间是否足够，不够就触发GC。当连续分配对象时，对象会逐渐从Eden到Survivor，最后到老年代。</p>
+<p>新生代GC(<code>Minor GC</code>): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的特效，所以<code>Minor GC</code>非常频繁，一般回收速度也比较快</p>
+<p>新创建的对象都是用新生代分配内存，<code>Eden</code>空间不足时，触发<code>Minor GC</code>，这时会把存活的对象转移进Survivor区。</p>
+<p>新生代通常存活时间较短基于Copying算法进行回收，所谓Copying算法就是扫描出存活的对象，并复制到一块新的完全未使用的空间中，对应于新生代，就是在<code>Eden</code>和<code>From Space</code>或<code>To Space</code>之间copy。新生代采用空闲指针的方式来控制GC触发，指针保持最后一个分配的对象在新生代区间的位置，当有新的对象要分配内存时，用于检查空间是否足够，不够就触发GC。当连续分配对象时，对象会逐渐从Eden到Survivor，最后到老年代。</p>
 <h4 id="major-gc-full-gc">major gc/ full gc</h4>
 <p>老年代GC(Major GC/Full GC): 指发生在老年代的GC,出现了<code>Major GC</code>, 经常会伴随至少一次的<code>Minor GC</code>(但非绝对的，在Parallel Scavenge收集器的收集策略里就有直接进行<code>Major GC</code>的策略选择过程)。Major GC的速度一般会比Minor GC慢10倍以上</p>
 <p>老年代用于存放经过多次Minor GC之后依然存活的对象。</p>
 <p>老年代与新生代不同，老年代对象存活的时间比较长、比较稳定，因此采用标记(Mark)算法来进行回收，所谓标记就是扫描出存活的对象，然后再进行回收未被标记的对象，回收后对用空出的空间要么进行合并、要么标记出来便于下次进行分配，总之目的就是要减少内存碎片带来的效率损耗。</p>
 <ul>
 <li>-Xms 默认情况下堆内存的64分之一</li>
-<li>-Xmx 默认情况下对内存的4分之一</li>
+<li>-Xmx 默认情况下堆内存的4分之一</li>
 <li>-Xmn 默认情况下堆内存的64分之一， 新生代大小，该配置优先于-XX:NewRatio，即如果配置了-Xmn，-XX:NewRatio会失效。</li>
 <li>-XXNewRatio 默认为2</li>
 <li>-XX:SurvivorRatio 默认为8，表示Suvivor:eden=2:8,即一个Survivor占年轻代的1/10</li>
@@ -486,7 +490,7 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 <p>“什么时候”即就是GC触发的条件。GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。</p>
 <h4 id="minor-gc_1">Minor GC触发条件</h4>
 <ul>
-<li>当Eden区满时，触发Minor GC</li>
+<li>当<code>Eden</code>区满时，触发<code>Minor GC</code></li>
 </ul>
 <h4 id="full-gc">Full GC触发条件：</h4>
 <ul>
@@ -511,7 +515,7 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-27 23:23:41</p>
+        <p>Site Generated 2019-04-28 22:58:03</p>
       </span>
     </div>
 
