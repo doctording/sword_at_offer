@@ -78,6 +78,7 @@
 <p>少了一个 Perm space（永久代）</p>
 <p>Java7中方法区（Method Area）,与Javad堆一样，是各个线程共享的内存区域，主要用于存储已经被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。在HotSpot虚拟机上，通常把方法区称为"永久代"(Permanent Generation), 本质上两者并不等价，仅仅是因为HotSpot虚拟机的设计团队选择把GC分代收集扩展至方法区，或者说使用永久代来实现方法区而已。这样HotSpot的垃圾收集器可以像管理Java堆一样管理这部分内存，能够省去专门为方法区编写内存管理代码的工作。</p>
 <p>java7中，符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。</p>
+<p>Java7的<code>Perm space</code>在堆中，设置小了，容易<code>OutOfMemory</code>；设置大了比较浪费堆内存</p>
 <h2 id="java8-metaspace">Java8 新增了 Metaspace（元空间）</h2>
 <ul>
 <li>M   - 元空间（Metaspace）： Klass Metaspace, NoKlass Metaspace</li>
@@ -103,13 +104,20 @@
 </li>
 </ul>
 <h3 id="todo">替换理由 //TODO</h3>
+<ol>
+<li>
 <p><a href="http://openjdk.java.net/jeps/122">http://openjdk.java.net/jeps/122</a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/wodewutai17quiet/article/details/80746103">Java8中的metaspace</a></p>
+</li>
+</ol>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-04-29 22:50:34</p>
+        <p>Site Generated 2019-05-04 22:41:22</p>
       </span>
     </div>
 

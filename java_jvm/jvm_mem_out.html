@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java 堆外内存 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆外内存
+    <span class="updated">Page Updated&nbsp;
+      2019-05-05 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java 堆外内存</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">堆外内存</a><ul>
+<li><a href="#_2">问题</a></li>
+<li><a href="#_3">概念</a><ul>
+<li><a href="#_4">堆外内存溢出</a></li>
+<li><a href="#_5">堆外内存更适合：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="_1">堆外内存</h1>
+<h2 id="_2">问题</h2>
+<p><code>metaspace</code>没有限制，堆内存使用正常(没有<code>full gc</code>)，然后遇到<code>OOMKilled(程序因为内存使用超过限额被 kill -9 杀掉)</code></p>
+<h2 id="_3">概念</h2>
+<p>除了堆内存，Java 还可以使用堆外内存，也称直接内存（Direct Memory）。</p>
+<p>例如：在通信中，将存在于堆内存中的数据 flush 到远程时，需要首先将堆内存中的数据拷贝到堆外内存中，然后再写入 Socket 中；如果直接将数据存到堆外内存中就可以避免上述拷贝操作，提升性能。类似的例子还有读写文件。</p>
+<p>很多 NIO 框架 （如 netty，rpc） 会采用 Java 的 DirectByteBuffer 类来操作堆外内存，DirectByteBuffer 类对象本身位于 Java 内存模型的堆中，由 JVM 直接管控、操纵。DirectByteBuffer 中用于分配堆外内存的方法 unsafe.allocateMemory(size) 是个 native 方法，本质上是用 C 的 malloc 来进行分配的。</p>
+<p><strong>堆外内存并不直接控制于JVM，因此只能等到full GC的时候才能垃圾回收！</strong>（direct buffer归属的的JAVA对象是在堆上且能够被GC回收的，一旦它被回收，JVM将释放direct buffer的堆外空间。前提是没有关闭DisableExplicitGC）。堆外内存包含线程栈，应用程序代码，NIO缓存，JNI调用等.例如<code>ByteBuffer bb = ByteBuffer.allocateDirect(1024)</code>，这段代码的执行会在堆外占用<code>1k</code>的内存，Java堆内只会占用一个对象的指针引用的大小，堆外的这1k的空间只有当bb对象被回收时，才会被回收，这里会发现一个明显的不对称现象，就是堆外可能占用了很多，而堆内没占用多少，导致还没触发GC，那就很容易出现<strong>Direct Memory造成物理内存耗光</strong></p>
+<h3 id="_4">堆外内存溢出</h3>
+<ol>
+<li>最大的堆外内存设置的太小了</li>
+<li>没有full gc， 堆外内存没有及时被清理掉</li>
+</ol>
+<h3 id="_5">堆外内存更适合：</h3>
+<ul>
+<li>存储生命周期长的对象</li>
+<li>可以在进程间可以共享，减少 JVM 间的对象复制，使得 JVM 的分割部署更容易实现。</li>
+<li>本地缓存，减少磁盘缓存或者分布式缓存的响应时间。</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-05-04 22:41:22</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
