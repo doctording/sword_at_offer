@@ -51,6 +51,8 @@ Java7中方法区（Method Area）,与Javad堆一样，是各个线程共享的�
 
 java7中，符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。
 
+Java7的`Perm space`在堆中，设置小了，容易`OutOfMemory`；设置大了比较浪费堆内存
+
 ## Java8 新增了 Metaspace（元空间）
 
 * M   - 元空间（Metaspace）： Klass Metaspace, NoKlass Metaspace
@@ -76,4 +78,6 @@ java7中，符号引用(Symbols)转移到了native heap；字面量(interned str
 
 ### 替换理由 //TODO
 
-<a href="http://openjdk.java.net/jeps/122">http://openjdk.java.net/jeps/122</a>
+1. <a href="http://openjdk.java.net/jeps/122">http://openjdk.java.net/jeps/122</a>
+
+2. <a href="https://blog.csdn.net/wodewutai17quiet/article/details/80746103">Java8中的metaspace</a>
