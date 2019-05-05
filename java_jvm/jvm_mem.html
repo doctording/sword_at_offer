@@ -70,6 +70,7 @@
 </li>
 </ul>
 </li>
+<li><a href="#g1-cms">G1 和 CMS</a></li>
 </ul>
 </li>
 </ul>
@@ -307,6 +308,7 @@ no, i am dead
 </ul>
 <p>为了解决这个问题，CMS提供了一个开关参数（<code>-XX: UseCMSCompactAtFullCollection</code>），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(<code>-XX: CMSFullGCsBeforeCompaction</code>)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）</p>
 <h2 id="g1garbage-first">G1(Garbage First)</h2>
+<p>参考1： https://tech.meituan.com/2016/09/23/g1.html</p>
 <ul>
 <li>并行与并发</li>
 </ul>
@@ -330,6 +332,14 @@ no, i am dead
 <li>最终标记（Final Marking）</li>
 <li>筛选回收（Live Data Counting and Evacuation）</li>
 </ol>
+<p>参数 | 含义<br />
+-XX:G1HeapRegionSize=n | 设置Region大小，并非最终值<br />
+-XX:MaxGCPauseMillis | 设置G1收集过程目标时间，默认值200ms，不是硬性条件<br />
+-XX:G1NewSizePercent | 新生代最小值，默认值5%<br />
+-XX:G1MaxNewSizePercent | 新生代最大值，默认值60%<br />
+-XX:ParallelGCThreads | STW期间，并行GC线程数<br />
+-XX:ConcGCThreads=n | 并发标记阶段，并行执行的线程数<br />
+-XX:InitiatingHeapOccupancyPercent | 设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous</p>
 <h2 id="_9">内存分配与回收策略</h2>
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
@@ -510,12 +520,44 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 <p>（5）由Eden区、From Space区向To Space区复制时，对象大小大于To Space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小</p>
 </li>
 </ul>
+<h2 id="g1-cms">G1 和 CMS</h2>
+<p>参考1: http://www.woowen.com/java/2016/12/10/G1%20CMS%E5%8C%BA%E5%88%AB/</p>
+<p>参考2: https://www.jianshu.com/p/35cd012eeb8c</p>
+<ol>
+<li>
+<p>G1 和 CMS 堆空间分配不同</p>
+</li>
+<li>
+<p><code>CMS</code>将堆逻辑上分成<code>Eden</code>,<code>Survivor(S0,S1)</code>,<code>Old</code>；并且他们是固定大小JVM启动的时候就已经设定不能改变,并且是连续的内存块</p>
+</li>
+<li>
+<p><code>G1</code>将堆分成多个大小相同的<code>Region(区域)</code>,默认2048个,在1Mb到32Mb之间大小,逻辑上分成<code>Eden</code>,<code>Survivor</code>,<code>Old</code>,<code>Humongous</code>(巨型),<code>空闲</code>；他们不是固定大小,会根据每次GC的信息做出调整</p>
+</li>
+<li>
+<p>G1 和 CMS GC的区别</p>
+</li>
+</ol>
+<p>CMS的Young GC就是依赖并行GC(ParNew)去完成的.只有老年代中使用CMS GC(也就是Old GC)</p>
+<p>CMS 使用<strong>分代回收</strong>,堆被分成了年轻代和老年代,其中年轻代回收依赖ParNew去回收,需要STW(<code>Stop The World</code>)</p>
+<p>G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc，在不同的条件下被触发。</p>
+<ul>
+<li>young gc</li>
+</ul>
+<p>发生在年轻代的GC算法，一般对象（除了巨型对象）都是在eden region中分配内存，当所有eden region被耗尽无法申请内存时，就会触发一次young gc，这种触发机制和之前的young gc差不多，执行完一次young gc，活跃对象会被拷贝到survivor region或者晋升到old region中，空闲的region会被放入空闲列表中，等待下次被使用。</p>
+<ul>
+<li>mixed gc</li>
+</ul>
+<p>当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是一部分老年代，而不是全部老年代，可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制</p>
+<ul>
+<li>full gc</li>
+</ul>
+<p>如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的serial old gc，会导致异常长时间的暂停时间，需要进行不断的调优，尽可能的避免full gc</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-05-04 22:41:22</p>
+        <p>Site Generated 2019-05-05 23:24:01</p>
       </span>
     </div>
 
