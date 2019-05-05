@@ -332,14 +332,44 @@ no, i am dead
 <li>最终标记（Final Marking）</li>
 <li>筛选回收（Live Data Counting and Evacuation）</li>
 </ol>
-<p>参数 | 含义<br />
--XX:G1HeapRegionSize=n | 设置Region大小，并非最终值<br />
--XX:MaxGCPauseMillis | 设置G1收集过程目标时间，默认值200ms，不是硬性条件<br />
--XX:G1NewSizePercent | 新生代最小值，默认值5%<br />
--XX:G1MaxNewSizePercent | 新生代最大值，默认值60%<br />
--XX:ParallelGCThreads | STW期间，并行GC线程数<br />
--XX:ConcGCThreads=n | 并发标记阶段，并行执行的线程数<br />
--XX:InitiatingHeapOccupancyPercent | 设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-XX:G1HeapRegionSize=n</td>
+<td>设置Region大小，并非最终值</td>
+</tr>
+<tr>
+<td>-XX:MaxGCPauseMillis</td>
+<td>设置G1收集过程目标时间，默认值200ms，不是硬性条件</td>
+</tr>
+<tr>
+<td>-XX:G1NewSizePercent</td>
+<td>新生代最小值，默认值5%</td>
+</tr>
+<tr>
+<td>-XX:G1MaxNewSizePercent</td>
+<td>新生代最大值，默认值60%</td>
+</tr>
+<tr>
+<td>-XX:ParallelGCThreads</td>
+<td>STW期间，并行GC线程数</td>
+</tr>
+<tr>
+<td>-XX:ConcGCThreads=n</td>
+<td>并发标记阶段，并行执行的线程数</td>
+</tr>
+<tr>
+<td>-XX:InitiatingHeapOccupancyPercent</td>
+<td>设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous</td>
+</tr>
+</tbody>
+</table>
 <h2 id="_9">内存分配与回收策略</h2>
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
@@ -552,12 +582,41 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 <li>full gc</li>
 </ul>
 <p>如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的serial old gc，会导致异常长时间的暂停时间，需要进行不断的调优，尽可能的避免full gc</p>
+<p><strong>yong gc log</strong></p>
+<div class="hlcode"><pre><span class="o">[</span><span class="n">GC</span> <span class="n">pause</span> <span class="o">(</span><span class="n">G1</span> <span class="n">Evacuation</span> <span class="n">Pause</span><span class="o">)</span> <span class="o">(</span><span class="n">young</span><span class="o">),</span> <span class="mf">0.0707344</span> <span class="n">secs</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Parallel</span> <span class="nl">Time:</span> <span class="mf">68.6</span> <span class="n">ms</span><span class="o">,</span> <span class="n">GC</span> <span class="nl">Workers:</span> <span class="mi">2</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Start</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">4044130.9</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">4044130.9</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">4044131.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Ext</span> <span class="n">Root</span> <span class="n">Scanning</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">3.1</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">3.3</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">3.5</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.5</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">6.6</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Update</span> <span class="n">RS</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">4.4</span><span class="o">]</span>
+         <span class="o">[</span><span class="n">Processed</span> <span class="nl">Buffers:</span> <span class="nl">Min:</span> <span class="mi">77</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">111.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mi">146</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mi">69</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mi">223</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Scan</span> <span class="n">RS</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.7</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="n">Scanning</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">1.0</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Object</span> <span class="n">Copy</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">61.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">62.1</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">62.8</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">1.4</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">124.1</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Termination</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.0</span><span class="o">]</span>
+         <span class="o">[</span><span class="n">Termination</span> <span class="nl">Attempts:</span> <span class="nl">Min:</span> <span class="mi">1</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mi">1</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mi">0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mi">2</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Other</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.1</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Total</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">137.0</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">End</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="nl">Fixup:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="nl">Purge:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Clear</span> <span class="nl">CT:</span> <span class="mf">0.4</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="nl">Other:</span> <span class="mf">1.7</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Choose</span> <span class="nl">CSet:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Ref</span> <span class="nl">Proc:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Ref</span> <span class="nl">Enq:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Redirty</span> <span class="nl">Cards:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Humongous</span> <span class="nl">Register:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Humongous</span> <span class="nl">Reclaim:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Free</span> <span class="nl">CSet:</span> <span class="mf">0.7</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="nl">Eden:</span> <span class="mf">1160.0</span><span class="n">M</span><span class="o">(</span><span class="mf">1160.0</span><span class="n">M</span><span class="o">)-&gt;</span><span class="mf">0.0</span><span class="n">B</span><span class="o">(</span><span class="mf">1153.0</span><span class="n">M</span><span class="o">)</span> <span class="nl">Survivors:</span> <span class="mf">68.0</span><span class="n">M</span><span class="o">-&gt;</span><span class="mf">75.0</span><span class="n">M</span> <span class="nl">Heap:</span> <span class="mf">1551.2</span><span class="n">M</span><span class="o">(</span><span class="mf">2048.0</span><span class="n">M</span><span class="o">)-&gt;</span><span class="mf">398.7</span><span class="n">M</span><span class="o">(</span><span class="mf">2048.0</span><span class="n">M</span><span class="o">)]</span>
+ <span class="o">[</span><span class="nl">Times:</span> <span class="n">user</span><span class="o">=</span><span class="mf">0.14</span> <span class="n">sys</span><span class="o">=</span><span class="mf">0.00</span><span class="o">,</span> <span class="n">real</span><span class="o">=</span><span class="mf">0.07</span> <span class="n">secs</span><span class="o">]</span> 
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-05-05 23:24:01</p>
+        <p>Site Generated 2019-05-05 23:27:13</p>
       </span>
     </div>
 
