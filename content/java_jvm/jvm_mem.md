@@ -244,6 +244,8 @@ no, i am dead
 
 ## G1(Garbage First)
 
+参考1： https://tech.meituan.com/2016/09/23/g1.html
+
 * 并行与并发
 
 G1能充分利用多CPU,多核环境下的硬件优势，使用多个CPU来缩短`Stop-The-World`停顿的时间，部分其它收集器原本需要停顿Java线程执行GC动作，G1收集器仍然可以通过并发的方式让Java程序继续执行
@@ -266,6 +268,15 @@ G1能充分利用多CPU,多核环境下的硬件优势，使用多个CPU来缩�
 2. 并发标记（Concurrent Markding）
 3. 最终标记（Final Marking）
 4. 筛选回收（Live Data Counting and Evacuation）
+
+参数 | 含义
+-XX:G1HeapRegionSize=n | 设置Region大小，并非最终值
+-XX:MaxGCPauseMillis | 设置G1收集过程目标时间，默认值200ms，不是硬性条件
+-XX:G1NewSizePercent | 新生代最小值，默认值5%
+-XX:G1MaxNewSizePercent | 新生代最大值，默认值60%
+-XX:ParallelGCThreads | STW期间，并行GC线程数
+-XX:ConcGCThreads=n | 并发标记阶段，并行执行的线程数
+-XX:InitiatingHeapOccupancyPercent | 设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous
 
 ## 内存分配与回收策略
 
@@ -408,3 +419,35 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html
 * （4）通过Minor GC后进入老年代的平均大小大于老年代的可用内存
 
 * （5）由Eden区、From Space区向To Space区复制时，对象大小大于To Space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小
+
+## G1 和 CMS
+
+参考1: http://www.woowen.com/java/2016/12/10/G1%20CMS%E5%8C%BA%E5%88%AB/
+
+参考2: https://www.jianshu.com/p/35cd012eeb8c
+
+1. G1 和 CMS 堆空间分配不同
+
+* `CMS`将堆逻辑上分成`Eden`,`Survivor(S0,S1)`,`Old`；并且他们是固定大小JVM启动的时候就已经设定不能改变,并且是连续的内存块
+
+* `G1`将堆分成多个大小相同的`Region(区域)`,默认2048个,在1Mb到32Mb之间大小,逻辑上分成`Eden`,`Survivor`,`Old`,`Humongous`(巨型),`空闲`；他们不是固定大小,会根据每次GC的信息做出调整
+
+2. G1 和 CMS GC的区别
+
+CMS的Young GC就是依赖并行GC(ParNew)去完成的.只有老年代中使用CMS GC(也就是Old GC)
+
+CMS 使用**分代回收**,堆被分成了年轻代和老年代,其中年轻代回收依赖ParNew去回收,需要STW(`Stop The World`)
+
+G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc，在不同的条件下被触发。
+
+* young gc
+
+发生在年轻代的GC算法，一般对象（除了巨型对象）都是在eden region中分配内存，当所有eden region被耗尽无法申请内存时，就会触发一次young gc，这种触发机制和之前的young gc差不多，执行完一次young gc，活跃对象会被拷贝到survivor region或者晋升到old region中，空闲的region会被放入空闲列表中，等待下次被使用。
+
+* mixed gc
+
+当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是一部分老年代，而不是全部老年代，可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制
+
+* full gc
+
+如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的serial old gc，会导致异常长时间的暂停时间，需要进行不断的调优，尽可能的避免full gc
