@@ -25,8 +25,17 @@
 
 <div class="page_title">Java Runtime</div>
 
-  <div class="toc"><span class="toctitle">Table of Contents</span><ul></ul>
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#runtime">Runtime类</a><ul>
+<li><a href="#_1">内存相关的方法</a></li>
+<li><a href="#addshutdownhook-jvm-shutdown">addShutdownHook, jvm shutdown的钩子函数</a></li>
+<li><a href="#availableprocessorscpu">availableProcessors，可用的cpu核心数</a></li>
+</ul>
+</li>
+</ul>
 </div>
+<h1 id="runtime">Runtime类</h1>
+<h2 id="_1">内存相关的方法</h2>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm"> * Every Java application has a single instance of class</span>
 <span class="cm"> * &lt;code&gt;Runtime&lt;/code&gt; that allows the application to interface with</span>
@@ -99,12 +108,70 @@
 </ul>
 <div class="hlcode"><pre><span class="n">totalMemory</span> <span class="o">-</span> <span class="n">freeMemory</span><span class="o">;</span>
 </pre></div>
+
+
+<ul>
+<li>测试程序 和 jvm参数设置</li>
+</ul>
+<div class="hlcode"><pre><span class="c1">// -Xms20M -Xmx20M -Xss512K -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=2 -XX:ConcGCThreads=1 -XX:InitiatingHeapOccupancyPercent=70 -XX:-OmitStackTraceInFastThrow -XX:MaxMetaspaceSize=500m -XX:+PrintGCDetails</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">_1MB</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="n">Runtime</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;=======init&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;freeMemory:&quot;</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="na">freeMemory</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;maxMemory:&quot;</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="na">maxMemory</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;totalMemory:&quot;</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="na">totalMemory</span><span class="o">());</span>
+
+        <span class="kt">byte</span><span class="o">[]</span> <span class="n">alloc1</span><span class="o">,</span> <span class="n">alloc2</span><span class="o">,</span> <span class="n">alloc3</span><span class="o">,</span> <span class="n">alloc4</span><span class="o">;</span>
+        <span class="n">alloc1</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">_1MB</span><span class="o">];</span>
+        <span class="n">alloc2</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">_1MB</span><span class="o">];</span>
+        <span class="n">alloc3</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">_1MB</span><span class="o">];</span>
+<span class="c1">//        alloc4 = new byte[3 * _1MB];</span>
+<span class="c1">//        System.out.println(alloc4.length);</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;=======used 9M&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;freeMemory:&quot;</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="na">freeMemory</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;maxMemory:&quot;</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="na">maxMemory</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;totalMemory:&quot;</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="na">totalMemory</span><span class="o">());</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h2 id="addshutdownhook-jvm-shutdown">addShutdownHook, jvm shutdown的钩子函数</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kt">void</span> <span class="nf">addShutdownHook</span><span class="o">(</span><span class="n">Thread</span> <span class="n">hook</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">SecurityManager</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">sm</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">sm</span><span class="o">.</span><span class="na">checkPermission</span><span class="o">(</span><span class="k">new</span> <span class="n">RuntimePermission</span><span class="o">(</span><span class="s">&quot;shutdownHooks&quot;</span><span class="o">));</span>
+    <span class="o">}</span>
+    <span class="n">ApplicationShutdownHooks</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">hook</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="availableprocessorscpu">availableProcessors，可用的cpu核心数</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">* Returns the number of processors available to the Java virtual machine.</span>
+<span class="cm">*</span>
+<span class="cm">* &lt;p&gt; This value may change during a particular invocation of the virtual</span>
+<span class="cm">* machine.  Applications that are sensitive to the number of available</span>
+<span class="cm">* processors should therefore occasionally poll this property and adjust</span>
+<span class="cm">* their resource usage appropriately. &lt;/p&gt;</span>
+<span class="cm">*</span>
+<span class="cm">* @return  the maximum number of processors available to the virtual</span>
+<span class="cm">*          machine; never smaller than one</span>
+<span class="cm">* @since 1.4</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">native</span> <span class="kt">int</span> <span class="nf">availableProcessors</span><span class="o">();</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-05-05 23:27:13</p>
+        <p>Site Generated 2019-05-08 22:59:53</p>
       </span>
     </div>
 
