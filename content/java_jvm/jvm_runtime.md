@@ -6,6 +6,10 @@ date: 2019-02-25 00:00
 
 [TOC]
 
+# Runtime类
+
+## 内存相关的方法
+
 ```java
 /**
  * Every Java application has a single instance of class
@@ -74,4 +78,64 @@ public class Runtime {
 
 ```java
 totalMemory - freeMemory;
+```
+
+* 测试程序 和 jvm参数设置
+
+```java
+// -Xms20M -Xmx20M -Xss512K -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=2 -XX:ConcGCThreads=1 -XX:InitiatingHeapOccupancyPercent=70 -XX:-OmitStackTraceInFastThrow -XX:MaxMetaspaceSize=500m -XX:+PrintGCDetails
+    public static final int _1MB = 1024 * 1024;
+
+    public static void main(String[] args){
+        Runtime r = Runtime.getRuntime();
+        System.out.println("=======init");
+        System.out.println("freeMemory:" + r.freeMemory());
+        System.out.println("maxMemory:" + r.maxMemory());
+        System.out.println("totalMemory:" + r.totalMemory());
+
+        byte[] alloc1, alloc2, alloc3, alloc4;
+        alloc1 = new byte[3 * _1MB];
+        alloc2 = new byte[3 * _1MB];
+        alloc3 = new byte[3 * _1MB];
+//        alloc4 = new byte[3 * _1MB];
+//        System.out.println(alloc4.length);
+
+        System.out.println("=======used 9M");
+        System.out.println("freeMemory:" + r.freeMemory());
+        System.out.println("maxMemory:" + r.maxMemory());
+        System.out.println("totalMemory:" + r.totalMemory());
+
+        System.out.println("main end");
+    }
+
+```
+
+## addShutdownHook, jvm shutdown的钩子函数
+
+```java
+public void addShutdownHook(Thread hook) {
+    SecurityManager sm = System.getSecurityManager();
+    if (sm != null) {
+        sm.checkPermission(new RuntimePermission("shutdownHooks"));
+    }
+    ApplicationShutdownHooks.add(hook);
+}
+```
+
+## availableProcessors，可用的cpu核心数
+
+```java
+/**
+* Returns the number of processors available to the Java virtual machine.
+*
+* <p> This value may change during a particular invocation of the virtual
+* machine.  Applications that are sensitive to the number of available
+* processors should therefore occasionally poll this property and adjust
+* their resource usage appropriately. </p>
+*
+* @return  the maximum number of processors available to the virtual
+*          machine; never smaller than one
+* @since 1.4
+*/
+public native int availableProcessors();
 ```
