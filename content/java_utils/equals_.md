@@ -23,7 +23,7 @@ boolean  | Boolean
 
 ## 作用于引用类型的变量，则比较的是所指向的对象的地址
 
-程序验证
+Java8程序验证
 
 ```java
 int a = 1;
@@ -32,7 +32,8 @@ Integer ia = new Integer(a);
 Integer ib = new Integer(b);
 //  true
 System.out.println(a == b);
-// false
+// false, idea编译器插件提示包装类使用equals比较
+// Integer类的equals方法重写就是比较的 int value
 System.out.println(ia == ib);
 ```
 
@@ -58,6 +59,6 @@ System.out.println(s3.equals(s4));
 
 * equals方法不能作用于基本数据类型的变量
 
-* 如果没有对equals方法进行重写，则比较的是`引用类型的变量所指向的对象的地址`
+* 如果没有对`equals`方法进行重写，则比较的是`引用类型的变量所指向的对象的地址`
 
 * 诸如`String`、`Date`等类对`equals`方法进行了`override`的话，比较的是所指向的对象的内容
