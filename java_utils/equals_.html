@@ -82,14 +82,15 @@
 </tbody>
 </table>
 <h2 id="_3">作用于引用类型的变量，则比较的是所指向的对象的地址</h2>
-<p>程序验证</p>
+<p>Java8程序验证</p>
 <div class="hlcode"><pre><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
 <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
 <span class="n">Integer</span> <span class="n">ia</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
 <span class="n">Integer</span> <span class="n">ib</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
 <span class="c1">//  true</span>
 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="o">);</span>
-<span class="c1">// false</span>
+<span class="c1">// false, idea编译器插件提示包装类使用equals比较</span>
+<span class="c1">// Integer类的equals方法重写就是比较的 int value</span>
 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ia</span> <span class="o">==</span> <span class="n">ib</span><span class="o">);</span>
 </pre></div>
 
@@ -117,7 +118,7 @@
 <p>equals方法不能作用于基本数据类型的变量</p>
 </li>
 <li>
-<p>如果没有对equals方法进行重写，则比较的是<code>引用类型的变量所指向的对象的地址</code></p>
+<p>如果没有对<code>equals</code>方法进行重写，则比较的是<code>引用类型的变量所指向的对象的地址</code></p>
 </li>
 <li>
 <p>诸如<code>String</code>、<code>Date</code>等类对<code>equals</code>方法进行了<code>override</code>的话，比较的是所指向的对象的内容</p>
@@ -128,7 +129,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-05-08 22:59:53</p>
+        <p>Site Generated 2019-05-25 21:08:07</p>
       </span>
     </div>
 
