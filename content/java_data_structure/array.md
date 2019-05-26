@@ -6,7 +6,9 @@ date: 2019-05-25 00:00
 
 [TOC]
 
-# Map Map.Entry<K,V>(interface)
+# Java常用数据结构和原理
+
+## Map Map.Entry<K,V>(interface)
 
 ## AbstractMap(abstract class)
 
@@ -16,7 +18,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
 
 实现一些Map的基础方法
 
-## HashMap
+## HashMap(class)
 
 ```java
 public class HashMap<K,V> extends AbstractMap<K,V>
@@ -213,3 +215,360 @@ static final int hash(Object key) {
     return null;
 }
 ```
+
+### 非线程安全
+
+### 遍历的无序性
+
+```java
+Map<String,String> mp = new HashMap<>();
+        mp.put(null, null);
+        mp.put(null, "a");
+        mp.put("b", null);
+        mp.put("a", "a");
+        Set<Map.Entry<String, String>> entries = mp.entrySet();
+        Iterator<Map.Entry<String, String>> iteratorMap = entries.iterator();
+        while (iteratorMap.hasNext()){
+            Map.Entry<String, String> next = iteratorMap.next();
+            System.out.println(next);
+        }
+        mp.forEach((key, val)->{
+            System.out.println(String.format("%s=%s", key,val));
+        });
+/* output
+null=a
+a=a
+b=null
+*/
+```
+
+## Hashtable
+
+```java
+public class Hashtable<K,V>
+    extends Dictionary<K,V>
+    implements Map<K,V>, Cloneable, java.io.Serializable {
+```
+
+### 实现了Map，继承了Dictionary，底层数组(散列表)+链表(拉链法)
+
+```java
+/**
+    * The hash table data.
+    */
+private transient Entry<?,?>[] table;
+
+/**
+    * The total number of entries in the hash table.
+    */
+private transient int count;
+
+/**
+    * The table is rehashed when its size exceeds this threshold.  (The
+    * value of this field is (int)(capacity * loadFactor).)
+    *
+    * @serial
+    */
+private int threshold;
+
+/**
+    * The load factor for the hashtable.
+    *
+    * @serial
+    */
+private float loadFactor;
+
+/**
+    * The number of times this Hashtable has been structurally modified
+    * Structural modifications are those that change the number of entries in
+    * the Hashtable or otherwise modify its internal structure (e.g.,
+    * rehash).  This field is used to make iterators on Collection-views of
+    * the Hashtable fail-fast.  (See ConcurrentModificationException).
+    */
+private transient int modCount = 0;
+
+/** use serialVersionUID from JDK 1.0.2 for interoperability */
+private static final long serialVersionUID = 1421746759512286392L;
+```
+
+### null key, null value（不可以）
+
+* Java8程序
+
+```java
+Map<String,String> mp = new Hashtable<>();
+// key value 都不能为null，否则java.lang.NullPointerException
+//        mp.put(null, null);
+//        mp.put(null, "a");
+//        mp.put("a", null);
+mp.put("a", "a");
+mp.forEach((key,val)->{
+    System.out.println(String.format("<%s,%s>", key, val));
+});
+```
+
+### 线程安全，基本上操作方法都加上了`synchronized`关键字
+
+### put方法
+
+```java
+ /**
+     * Maps the specified <code>key</code> to the specified
+     * <code>value</code> in this hashtable. Neither the key nor the
+     * value can be <code>null</code>. <p>
+     *
+     * The value can be retrieved by calling the <code>get</code> method
+     * with a key that is equal to the original key.
+     *
+     * @param      key     the hashtable key
+     * @param      value   the value
+     * @return     the previous value of the specified key in this hashtable,
+     *             or <code>null</code> if it did not have one
+     * @exception  NullPointerException  if the key or value is
+     *               <code>null</code>
+     * @see     Object#equals(Object)
+     * @see     #get(Object)
+     */
+    public synchronized V put(K key, V value) {
+        // Make sure the value is not null
+        if (value == null) {
+            throw new NullPointerException();
+        }
+
+        // Makes sure the key is not already in the hashtable.
+        Entry<?,?> tab[] = table;
+        int hash = key.hashCode();
+        int index = (hash & 0x7FFFFFFF) % tab.length;
+        @SuppressWarnings("unchecked")
+        Entry<K,V> entry = (Entry<K,V>)tab[index];
+        for(; entry != null ; entry = entry.next) {
+            if ((entry.hash == hash) && entry.key.equals(key)) {
+                V old = entry.value;
+                entry.value = value;
+                return old;
+            }
+        }
+
+        addEntry(hash, key, value, index);
+        return null;
+    }
+```
+
+## LinkedHashMap
+
+```java
+public class LinkedHashMap<K,V>
+    extends HashMap<K,V>
+    implements Map<K,V>
+{
+```
+
+### 底层是HashMap,并维持一个双向链表
+
+```java
+ /**
+     * HashMap.Node subclass for normal LinkedHashMap entries.
+     */
+    static class Entry<K,V> extends HashMap.Node<K,V> {
+        Entry<K,V> before, after;
+        Entry(int hash, K key, V value, Node<K,V> next) {
+            super(hash, key, value, next);
+        }
+    }
+
+    private static final long serialVersionUID = 3801124242820219131L;
+
+    /**
+     * The head (eldest) of the doubly linked list.
+     */
+    transient LinkedHashMap.Entry<K,V> head;
+
+    /**
+     * The tail (youngest) of the doubly linked list.
+     */
+    transient LinkedHashMap.Entry<K,V> tail;
+
+    /**
+     * The iteration ordering method for this linked hash map: <tt>true</tt>
+     * for access-order, <tt>false</tt> for insertion-order.
+     *
+     * @serial
+     */
+    final boolean accessOrder;
+
+    // internal utilities
+
+    // link at the end of list
+    private void linkNodeLast(LinkedHashMap.Entry<K,V> p) {
+        LinkedHashMap.Entry<K,V> last = tail;
+        tail = p;
+        if (last == null)
+            head = p;
+        else {
+            p.before = last;
+            last.after = p;
+        }
+    }
+
+    // apply src's links to dst
+    private void transferLinks(LinkedHashMap.Entry<K,V> src,
+                               LinkedHashMap.Entry<K,V> dst) {
+        LinkedHashMap.Entry<K,V> b = dst.before = src.before;
+        LinkedHashMap.Entry<K,V> a = dst.after = src.after;
+        if (b == null)
+            head = dst;
+        else
+            b.after = dst;
+        if (a == null)
+            tail = dst;
+        else
+            a.before = dst;
+    }
+```
+
+### 遍历的有序性
+
+```java
+Map<String,String> mp = new LinkedHashMap<>();
+        mp.put(null, null);
+        mp.put(null, "a");
+        mp.put("b", null);
+        mp.put("a", "a");
+        Set<Map.Entry<String, String>> entries = mp.entrySet();
+        Iterator<Map.Entry<String, String>> iteratorMap = entries.iterator();
+        while (iteratorMap.hasNext()){
+            Map.Entry<String, String> next = iteratorMap.next();
+            System.out.println(next);
+        }
+        mp.forEach((key, val)->{
+            System.out.println(String.format("%s=%s", key,val));
+        });
+/* output
+null=a
+b=null
+a=a
+*/
+```
+
+### 非线程安全，可以null key,null value等
+
+## SortedMap（interface）
+
+```java
+public interface SortedMap<K,V> extends Map<K,V> {
+```
+
+## NavigableMap (interface)
+
+```java
+public interface NavigableMap<K,V> extends SortedMap<K,V> {
+```
+
+### 方法
+
+```java
+// 找到第一个比指定的key小的值
+Map.Entry<K,V> lowerEntry(K key);
+
+// 找到第一个比指定的key小的key
+K lowerKey(K key);
+
+// 找到第一个小于或等于指定key的值
+Map.Entry<K,V> floorEntry(K key);
+
+// 找到第一个小于或等于指定key的key
+K floorKey(K key);
+
+//  找到第一个大于或等于指定key的值
+Map.Entry<K,V> ceilingEntry(K key);
+
+K ceilingKey(K key);
+
+// 找到第一个大于指定key的值
+Map.Entry<K,V> higherEntry(K key);
+
+K higherKey(K key);
+
+// 获取最小值
+Map.Entry<K,V> firstEntry();
+
+// 获取最大值
+Map.Entry<K,V> lastEntry();
+
+// 删除最小的元素
+Map.Entry<K,V> pollFirstEntry();
+
+// 删除最大的元素
+Map.Entry<K,V> pollLastEntry();
+
+//返回一个倒序的Map
+NavigableMap<K,V> descendingMap();
+
+// 返回一个Navigable的key的集合，NavigableSet和NavigableMap类似
+NavigableSet<K> navigableKeySet();
+
+// 对上述集合倒序
+NavigableSet<K> descendingKeySet();
+```
+
+## TreeMap(类)
+
+```java
+public class TreeMap<K,V>
+    extends AbstractMap<K,V>
+    implements NavigableMap<K,V>, Cloneable, java.io.Serializable
+{
+```
+
+### 底层基于红黑树
+
+红黑树能保证增、删、查等基本操作的时间复杂度为O(lgN)
+
+```java
+ /**
+     * The comparator used to maintain order in this tree map, or
+     * null if it uses the natural ordering of its keys.
+     *
+     * @serial
+     */
+    private final Comparator<? super K> comparator;
+
+    private transient Entry<K,V> root;
+
+    /**
+     * The number of entries in the tree
+     */
+    private transient int size = 0;
+
+    /**
+     * The number of structural modifications to the tree.
+     */
+    private transient int modCount = 0;
+```
+
+### 不允许 null key， 可以 null value
+
+### key排序，可以指定comparator
+
+```java
+Comparator comparator =  (a, b) -> {
+    int vala = ((Integer)a);
+    int valb = ((Integer)b);
+    if(vala > valb){
+        return -1;
+    }
+    if(vala < valb){
+        return 1;
+    }
+    return 0;
+};
+Map<Integer,String> mp = new TreeMap(comparator);
+mp.put(1, null);
+mp.put(3, "a");
+mp.put(2, "a");
+mp.forEach((key, val)->{
+    System.out.println(String.format("%d=%s", key,val));
+});
+```
+
+## 
