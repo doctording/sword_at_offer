@@ -26,9 +26,10 @@
 <div class="page_title">Java 数据结构</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#map-mapentryinterface">Map Map.Entry<K,V>(interface)</a><ul>
+<li><a href="#java">Java常用数据结构和原理</a><ul>
+<li><a href="#map-mapentryinterface">Map Map.Entry<K,V>(interface)</a></li>
 <li><a href="#abstractmapabstract-class">AbstractMap(abstract class)</a></li>
-<li><a href="#hashmap">HashMap</a><ul>
+<li><a href="#hashmapclass">HashMap(class)</a><ul>
 <li><a href="#java88">底层实现是数组+链表（Java8中链表长度超过8个会转换为树结构）</a><ul>
 <li><a href="#_1">单链表结构</a></li>
 <li><a href="#_2">树结构</a></li>
@@ -37,20 +38,48 @@
 <li><a href="#null-key-null-val">null key(可以)， null val(可以) 与 实际例子</a></li>
 <li><a href="#keyhashnullhash0">key的hash方法(null的hash值设置成了0)</a></li>
 <li><a href="#put">put 方法</a></li>
+<li><a href="#_3">非线程安全</a></li>
+<li><a href="#_4">遍历的无序性</a></li>
 </ul>
 </li>
+<li><a href="#hashtable">Hashtable</a><ul>
+<li><a href="#mapdictionary">实现了Map，继承了Dictionary，底层数组(散列表)+链表(拉链法)</a></li>
+<li><a href="#null-key-null-value">null key, null value（不可以）</a></li>
+<li><a href="#synchronized">线程安全，基本上操作方法都加上了synchronized关键字</a></li>
+<li><a href="#put_1">put方法</a></li>
+</ul>
+</li>
+<li><a href="#linkedhashmap">LinkedHashMap</a><ul>
+<li><a href="#hashmap">底层是HashMap,并维持一个双向链表</a></li>
+<li><a href="#_5">遍历的有序性</a></li>
+<li><a href="#null-keynull-value">非线程安全，可以null key,null value等</a></li>
+</ul>
+</li>
+<li><a href="#sortedmapinterface">SortedMap（interface）</a></li>
+<li><a href="#navigablemap-interface">NavigableMap (interface)</a><ul>
+<li><a href="#_6">方法</a></li>
+</ul>
+</li>
+<li><a href="#treemap">TreeMap(类)</a><ul>
+<li><a href="#_7">底层基于红黑树</a></li>
+<li><a href="#null-key-null-value_1">不允许 null key， 可以 null value</a></li>
+<li><a href="#keycomparator">key排序，可以指定comparator</a></li>
+</ul>
+</li>
+<li><a href="#_8"></a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="map-mapentryinterface">Map Map.Entry<K,V>(interface)</h1>
+<h1 id="java">Java常用数据结构和原理</h1>
+<h2 id="map-mapentryinterface">Map Map.Entry<K,V>(interface)</h2>
 <h2 id="abstractmapabstract-class">AbstractMap(abstract class)</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
 </pre></div>
 
 
 <p>实现一些Map的基础方法</p>
-<h2 id="hashmap">HashMap</h2>
+<h2 id="hashmapclass">HashMap(class)</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">AbstractMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">Serializable</span> <span class="o">{</span>
 </pre></div>
@@ -240,12 +269,352 @@
     <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
 <span class="o">}</span>
 </pre></div>
+
+
+<h3 id="_3">非线程安全</h3>
+<h3 id="_4">遍历的无序性</h3>
+<div class="hlcode"><pre><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">entries</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">entrySet</span><span class="o">();</span>
+        <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">iteratorMap</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">iteratorMap</span><span class="o">.</span><span class="na">hasNext</span><span class="o">()){</span>
+            <span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">next</span> <span class="o">=</span> <span class="n">iteratorMap</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">next</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)-&gt;{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s=%s&quot;</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span><span class="n">val</span><span class="o">));</span>
+        <span class="o">});</span>
+<span class="cm">/* output</span>
+<span class="cm">null=a</span>
+<span class="cm">a=a</span>
+<span class="cm">b=null</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h2 id="hashtable">Hashtable</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hashtable</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">Dictionary</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="mapdictionary">实现了Map，继承了Dictionary，底层数组(散列表)+链表(拉链法)</h3>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * The hash table data.</span>
+<span class="cm">    */</span>
+<span class="kd">private</span> <span class="kd">transient</span> <span class="n">Entry</span><span class="o">&lt;?,?&gt;[]</span> <span class="n">table</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">    * The total number of entries in the hash table.</span>
+<span class="cm">    */</span>
+<span class="kd">private</span> <span class="kd">transient</span> <span class="kt">int</span> <span class="n">count</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">    * The table is rehashed when its size exceeds this threshold.  (The</span>
+<span class="cm">    * value of this field is (int)(capacity * loadFactor).)</span>
+<span class="cm">    *</span>
+<span class="cm">    * @serial</span>
+<span class="cm">    */</span>
+<span class="kd">private</span> <span class="kt">int</span> <span class="n">threshold</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">    * The load factor for the hashtable.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @serial</span>
+<span class="cm">    */</span>
+<span class="kd">private</span> <span class="kt">float</span> <span class="n">loadFactor</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">    * The number of times this Hashtable has been structurally modified</span>
+<span class="cm">    * Structural modifications are those that change the number of entries in</span>
+<span class="cm">    * the Hashtable or otherwise modify its internal structure (e.g.,</span>
+<span class="cm">    * rehash).  This field is used to make iterators on Collection-views of</span>
+<span class="cm">    * the Hashtable fail-fast.  (See ConcurrentModificationException).</span>
+<span class="cm">    */</span>
+<span class="kd">private</span> <span class="kd">transient</span> <span class="kt">int</span> <span class="n">modCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+<span class="cm">/** use serialVersionUID from JDK 1.0.2 for interoperability */</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1421746759512286392L</span><span class="o">;</span>
+</pre></div>
+
+
+<h3 id="null-key-null-value">null key, null value（不可以）</h3>
+<ul>
+<li>Java8程序</li>
+</ul>
+<div class="hlcode"><pre><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hashtable</span><span class="o">&lt;&gt;();</span>
+<span class="c1">// key value 都不能为null，否则java.lang.NullPointerException</span>
+<span class="c1">//        mp.put(null, null);</span>
+<span class="c1">//        mp.put(null, &quot;a&quot;);</span>
+<span class="c1">//        mp.put(&quot;a&quot;, null);</span>
+<span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+<span class="n">mp</span><span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">key</span><span class="o">,</span><span class="n">val</span><span class="o">)-&gt;{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;&lt;%s,%s&gt;&quot;</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">));</span>
+<span class="o">});</span>
+</pre></div>
+
+
+<h3 id="synchronized">线程安全，基本上操作方法都加上了<code>synchronized</code>关键字</h3>
+<h3 id="put_1">put方法</h3>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">     * Maps the specified &lt;code&gt;key&lt;/code&gt; to the specified</span>
+<span class="cm">     * &lt;code&gt;value&lt;/code&gt; in this hashtable. Neither the key nor the</span>
+<span class="cm">     * value can be &lt;code&gt;null&lt;/code&gt;. &lt;p&gt;</span>
+<span class="cm">     *</span>
+<span class="cm">     * The value can be retrieved by calling the &lt;code&gt;get&lt;/code&gt; method</span>
+<span class="cm">     * with a key that is equal to the original key.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param      key     the hashtable key</span>
+<span class="cm">     * @param      value   the value</span>
+<span class="cm">     * @return     the previous value of the specified key in this hashtable,</span>
+<span class="cm">     *             or &lt;code&gt;null&lt;/code&gt; if it did not have one</span>
+<span class="cm">     * @exception  NullPointerException  if the key or value is</span>
+<span class="cm">     *               &lt;code&gt;null&lt;/code&gt;</span>
+<span class="cm">     * @see     Object#equals(Object)</span>
+<span class="cm">     * @see     #get(Object)</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="n">V</span> <span class="nf">put</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Make sure the value is not null</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="c1">// Makes sure the key is not already in the hashtable.</span>
+        <span class="n">Entry</span><span class="o">&lt;?,?&gt;</span> <span class="n">tab</span><span class="o">[]</span> <span class="o">=</span> <span class="n">table</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">hash</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="na">hashCode</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="o">(</span><span class="n">hash</span> <span class="o">&amp;</span> <span class="mh">0x7FFFFFFF</span><span class="o">)</span> <span class="o">%</span> <span class="n">tab</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&quot;unchecked&quot;</span><span class="o">)</span>
+        <span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;)</span><span class="n">tab</span><span class="o">[</span><span class="n">index</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(;</span> <span class="n">entry</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">;</span> <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">next</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">((</span><span class="n">entry</span><span class="o">.</span><span class="na">hash</span> <span class="o">==</span> <span class="n">hash</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">entry</span><span class="o">.</span><span class="na">key</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">V</span> <span class="n">old</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">value</span><span class="o">;</span>
+                <span class="n">entry</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+                <span class="k">return</span> <span class="n">old</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="n">addEntry</span><span class="o">(</span><span class="n">hash</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">index</span><span class="o">);</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h2 id="linkedhashmap">LinkedHashMap</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LinkedHashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+<span class="o">{</span>
+</pre></div>
+
+
+<h3 id="hashmap">底层是HashMap,并维持一个双向链表</h3>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">     * HashMap.Node subclass for normal LinkedHashMap entries.</span>
+<span class="cm">     */</span>
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">HashMap</span><span class="o">.</span><span class="na">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
+        <span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">before</span><span class="o">,</span> <span class="n">after</span><span class="o">;</span>
+        <span class="n">Entry</span><span class="o">(</span><span class="kt">int</span> <span class="n">hash</span><span class="o">,</span> <span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">value</span><span class="o">,</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">next</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">hash</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">next</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">3801124242820219131L</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The head (eldest) of the doubly linked list.</span>
+<span class="cm">     */</span>
+    <span class="kd">transient</span> <span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">head</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The tail (youngest) of the doubly linked list.</span>
+<span class="cm">     */</span>
+    <span class="kd">transient</span> <span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">tail</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The iteration ordering method for this linked hash map: &lt;tt&gt;true&lt;/tt&gt;</span>
+<span class="cm">     * for access-order, &lt;tt&gt;false&lt;/tt&gt; for insertion-order.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @serial</span>
+<span class="cm">     */</span>
+    <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">accessOrder</span><span class="o">;</span>
+
+    <span class="c1">// internal utilities</span>
+
+    <span class="c1">// link at the end of list</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">linkNodeLast</span><span class="o">(</span><span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">last</span> <span class="o">=</span> <span class="n">tail</span><span class="o">;</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">p</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">last</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">p</span><span class="o">;</span>
+        <span class="k">else</span> <span class="o">{</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">before</span> <span class="o">=</span> <span class="n">last</span><span class="o">;</span>
+            <span class="n">last</span><span class="o">.</span><span class="na">after</span> <span class="o">=</span> <span class="n">p</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// apply src&#39;s links to dst</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">transferLinks</span><span class="o">(</span><span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">src</span><span class="o">,</span>
+                               <span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">dst</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">dst</span><span class="o">.</span><span class="na">before</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="na">before</span><span class="o">;</span>
+        <span class="n">LinkedHashMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">dst</span><span class="o">.</span><span class="na">after</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="na">after</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">b</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">dst</span><span class="o">;</span>
+        <span class="k">else</span>
+            <span class="n">b</span><span class="o">.</span><span class="na">after</span> <span class="o">=</span> <span class="n">dst</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="n">tail</span> <span class="o">=</span> <span class="n">dst</span><span class="o">;</span>
+        <span class="k">else</span>
+            <span class="n">a</span><span class="o">.</span><span class="na">before</span> <span class="o">=</span> <span class="n">dst</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_5">遍历的有序性</h3>
+<div class="hlcode"><pre><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedHashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">entries</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">entrySet</span><span class="o">();</span>
+        <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">iteratorMap</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">iteratorMap</span><span class="o">.</span><span class="na">hasNext</span><span class="o">()){</span>
+            <span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">next</span> <span class="o">=</span> <span class="n">iteratorMap</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">next</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)-&gt;{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s=%s&quot;</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span><span class="n">val</span><span class="o">));</span>
+        <span class="o">});</span>
+<span class="cm">/* output</span>
+<span class="cm">null=a</span>
+<span class="cm">b=null</span>
+<span class="cm">a=a</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h3 id="null-keynull-value">非线程安全，可以null key,null value等</h3>
+<h2 id="sortedmapinterface">SortedMap（interface）</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SortedMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h2 id="navigablemap-interface">NavigableMap (interface)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">NavigableMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="_6">方法</h3>
+<div class="hlcode"><pre><span class="c1">// 找到第一个比指定的key小的值</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">lowerEntry</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="c1">// 找到第一个比指定的key小的key</span>
+<span class="n">K</span> <span class="nf">lowerKey</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="c1">// 找到第一个小于或等于指定key的值</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">floorEntry</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="c1">// 找到第一个小于或等于指定key的key</span>
+<span class="n">K</span> <span class="nf">floorKey</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="c1">//  找到第一个大于或等于指定key的值</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">ceilingEntry</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="n">K</span> <span class="nf">ceilingKey</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="c1">// 找到第一个大于指定key的值</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">higherEntry</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="n">K</span> <span class="nf">higherKey</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
+
+<span class="c1">// 获取最小值</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">firstEntry</span><span class="o">();</span>
+
+<span class="c1">// 获取最大值</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">lastEntry</span><span class="o">();</span>
+
+<span class="c1">// 删除最小的元素</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">pollFirstEntry</span><span class="o">();</span>
+
+<span class="c1">// 删除最大的元素</span>
+<span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">pollLastEntry</span><span class="o">();</span>
+
+<span class="c1">//返回一个倒序的Map</span>
+<span class="n">NavigableMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">descendingMap</span><span class="o">();</span>
+
+<span class="c1">// 返回一个Navigable的key的集合，NavigableSet和NavigableMap类似</span>
+<span class="n">NavigableSet</span><span class="o">&lt;</span><span class="n">K</span><span class="o">&gt;</span> <span class="nf">navigableKeySet</span><span class="o">();</span>
+
+<span class="c1">// 对上述集合倒序</span>
+<span class="n">NavigableSet</span><span class="o">&lt;</span><span class="n">K</span><span class="o">&gt;</span> <span class="nf">descendingKeySet</span><span class="o">();</span>
+</pre></div>
+
+
+<h2 id="treemap">TreeMap(类)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">AbstractMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">NavigableMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
+<span class="o">{</span>
+</pre></div>
+
+
+<h3 id="_7">底层基于红黑树</h3>
+<p>红黑树能保证增、删、查等基本操作的时间复杂度为O(lgN)</p>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">     * The comparator used to maintain order in this tree map, or</span>
+<span class="cm">     * null if it uses the natural ordering of its keys.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @serial</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Comparator</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="n">K</span><span class="o">&gt;</span> <span class="n">comparator</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kd">transient</span> <span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">root</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The number of entries in the tree</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">transient</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The number of structural modifications to the tree.</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">transient</span> <span class="kt">int</span> <span class="n">modCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</pre></div>
+
+
+<h3 id="null-key-null-value_1">不允许 null key， 可以 null value</h3>
+<h3 id="keycomparator">key排序，可以指定comparator</h3>
+<div class="hlcode"><pre><span class="n">Comparator</span> <span class="n">comparator</span> <span class="o">=</span>  <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">vala</span> <span class="o">=</span> <span class="o">((</span><span class="n">Integer</span><span class="o">)</span><span class="n">a</span><span class="o">);</span>
+    <span class="kt">int</span> <span class="n">valb</span> <span class="o">=</span> <span class="o">((</span><span class="n">Integer</span><span class="o">)</span><span class="n">b</span><span class="o">);</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">vala</span> <span class="o">&gt;</span> <span class="n">valb</span><span class="o">){</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">vala</span> <span class="o">&lt;</span> <span class="n">valb</span><span class="o">){</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+<span class="o">};</span>
+<span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeMap</span><span class="o">(</span><span class="n">comparator</span><span class="o">);</span>
+<span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+<span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+<span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">&quot;a&quot;</span><span class="o">);</span>
+<span class="n">mp</span><span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)-&gt;{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%d=%s&quot;</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span><span class="n">val</span><span class="o">));</span>
+<span class="o">});</span>
+</pre></div>
+
+
+<h2 id="_8"></h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-05-25 22:14:38</p>
+        <p>Site Generated 2019-05-26 23:17:18</p>
       </span>
     </div>
 
