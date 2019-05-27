@@ -55,18 +55,63 @@
 <li><a href="#null-keynull-value">非线程安全，可以null key,null value等</a></li>
 </ul>
 </li>
-<li><a href="#sortedmapinterface">SortedMap（interface）</a></li>
+<li><a href="#sortedmapinterface">SortedMap（interface）</a><ul>
+<li><a href="#_6">元素遍历可以按键的排序顺序进行</a></li>
+</ul>
+</li>
 <li><a href="#navigablemap-interface">NavigableMap (interface)</a><ul>
-<li><a href="#_6">方法</a></li>
+<li><a href="#_7">方法</a></li>
 </ul>
 </li>
 <li><a href="#treemap">TreeMap(类)</a><ul>
-<li><a href="#_7">底层基于红黑树</a></li>
+<li><a href="#_8">底层基于红黑树</a></li>
 <li><a href="#null-key-null-value_1">不允许 null key， 可以 null value</a></li>
 <li><a href="#keycomparator">key排序，可以指定comparator</a></li>
 </ul>
 </li>
-<li><a href="#_8"></a></li>
+<li><a href="#listinterface">List(interface)</a><ul>
+<li><a href="#list-collection">List 继承自 Collection，其添加了以下操作方法</a></li>
+</ul>
+</li>
+<li><a href="#queueinterface">Queue(interface) 普通队列</a><ul>
+<li><a href="#queue">Queue接口的基础方法</a></li>
+</ul>
+</li>
+<li><a href="#dequeinterface-queue">Deque(interface) 双向队列，继承了Queue</a></li>
+<li><a href="#arraylistclass">ArrayList(class) 数组</a></li>
+<li><a href="#linkedlistclasslist-deque">LinkedList(class)链表(同时实现了List 和 Deque接口)</a><ul>
+<li><a href="#node">内部的Node结构(双向链表)</a></li>
+</ul>
+</li>
+<li><a href="#vectorclass">Vector(class)线程安全的数组</a><ul>
+<li><a href="#synchronized_1">线程安全,操作方法基本加上了synchronized关键字</a></li>
+</ul>
+</li>
+<li><a href="#priorityqueueclass">PriorityQueue(class) 优先队列</a><ul>
+<li><a href="#_9">实例</a></li>
+</ul>
+</li>
+<li><a href="#stackclass">Stack(class)</a><ul>
+<li><a href="#vector">继承了Vector, 基于数组，线程安全</a></li>
+</ul>
+</li>
+<li><a href="#setinterface">Set(interface)</a></li>
+<li><a href="#hashsetclass">HashSet(class)</a><ul>
+<li><a href="#hashmap-key">底层基于 HashMap, key不同</a></li>
+<li><a href="#null-hasmapnull-key">允许元素为null (因为HasMap允许null key)</a></li>
+</ul>
+</li>
+<li><a href="#linkedhashsetclass">LinkedHashSet(class)</a><ul>
+<li><a href="#set">具有set集合不重复的特点，同时具有可预测的迭代顺序</a></li>
+<li><a href="#_10">非线程安全</a></li>
+</ul>
+</li>
+<li><a href="#sortedsetinterface">SortedSet(interface)</a></li>
+<li><a href="#navigablesetinterface-sortedset">NavigableSet(interface) 继承 SortedSet</a></li>
+<li><a href="#treesetclass-sortedset">TreeSet(class) 唯一实现了SortedSet的</a><ul>
+<li><a href="#null">不允许 null 值</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -502,12 +547,13 @@
 </pre></div>
 
 
+<h3 id="_6">元素遍历可以按键的排序顺序进行</h3>
 <h2 id="navigablemap-interface">NavigableMap (interface)</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">NavigableMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
 </pre></div>
 
 
-<h3 id="_6">方法</h3>
+<h3 id="_7">方法</h3>
 <div class="hlcode"><pre><span class="c1">// 找到第一个比指定的key小的值</span>
 <span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">lowerEntry</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
 
@@ -561,7 +607,7 @@
 </pre></div>
 
 
-<h3 id="_7">底层基于红黑树</h3>
+<h3 id="_8">底层基于红黑树</h3>
 <p>红黑树能保证增、删、查等基本操作的时间复杂度为O(lgN)</p>
 <div class="hlcode"><pre> <span class="cm">/**</span>
 <span class="cm">     * The comparator used to maintain order in this tree map, or</span>
@@ -608,13 +654,350 @@
 </pre></div>
 
 
-<h2 id="_8"></h2>
+<h2 id="listinterface">List(interface)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">List</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="list-collection">List 继承自 Collection，其添加了以下操作方法</h3>
+<ul>
+<li>位置相关：List 的元素是有序的，因此有get(index)、set(index,object)、add(index,object)、remove(index) 方法。</li>
+<li>搜索：indexOf()，lastIndexOf();</li>
+<li>迭代：使用 Iterator 的功能板迭代器</li>
+<li>范围性操作：使用 subList 方法对 list 进行任意范围操作。</li>
+</ul>
+<h2 id="queueinterface">Queue(interface) 普通队列</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Queue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="queue">Queue接口的基础方法</h3>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">     * Inserts the specified element into this queue if it is possible to do so</span>
+<span class="cm">     * immediately without violating capacity restrictions, returning</span>
+<span class="cm">     * {@code true} upon success and throwing an {@code IllegalStateException}</span>
+<span class="cm">     * if no space is currently available.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param e the element to add</span>
+<span class="cm">     * @return {@code true} (as specified by {@link Collection#add})</span>
+<span class="cm">     * @throws IllegalStateException if the element cannot be added at this</span>
+<span class="cm">     *         time due to capacity restrictions</span>
+<span class="cm">     * @throws ClassCastException if the class of the specified element</span>
+<span class="cm">     *         prevents it from being added to this queue</span>
+<span class="cm">     * @throws NullPointerException if the specified element is null and</span>
+<span class="cm">     *         this queue does not permit null elements</span>
+<span class="cm">     * @throws IllegalArgumentException if some property of this element</span>
+<span class="cm">     *         prevents it from being added to this queue</span>
+<span class="cm">     */</span>
+    <span class="kt">boolean</span> <span class="nf">add</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Inserts the specified element into this queue if it is possible to do</span>
+<span class="cm">     * so immediately without violating capacity restrictions.</span>
+<span class="cm">     * When using a capacity-restricted queue, this method is generally</span>
+<span class="cm">     * preferable to {@link #add}, which can fail to insert an element only</span>
+<span class="cm">     * by throwing an exception.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param e the element to add</span>
+<span class="cm">     * @return {@code true} if the element was added to this queue, else</span>
+<span class="cm">     *         {@code false}</span>
+<span class="cm">     * @throws ClassCastException if the class of the specified element</span>
+<span class="cm">     *         prevents it from being added to this queue</span>
+<span class="cm">     * @throws NullPointerException if the specified element is null and</span>
+<span class="cm">     *         this queue does not permit null elements</span>
+<span class="cm">     * @throws IllegalArgumentException if some property of this element</span>
+<span class="cm">     *         prevents it from being added to this queue</span>
+<span class="cm">     */</span>
+    <span class="kt">boolean</span> <span class="nf">offer</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Retrieves and removes the head of this queue.  This method differs</span>
+<span class="cm">     * from {@link #poll poll} only in that it throws an exception if this</span>
+<span class="cm">     * queue is empty.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return the head of this queue</span>
+<span class="cm">     * @throws NoSuchElementException if this queue is empty</span>
+<span class="cm">     */</span>
+    <span class="n">E</span> <span class="nf">remove</span><span class="o">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Retrieves and removes the head of this queue,</span>
+<span class="cm">     * or returns {@code null} if this queue is empty.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return the head of this queue, or {@code null} if this queue is empty</span>
+<span class="cm">     */</span>
+    <span class="n">E</span> <span class="nf">poll</span><span class="o">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Retrieves, but does not remove, the head of this queue.  This method</span>
+<span class="cm">     * differs from {@link #peek peek} only in that it throws an exception</span>
+<span class="cm">     * if this queue is empty.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return the head of this queue</span>
+<span class="cm">     * @throws NoSuchElementException if this queue is empty</span>
+<span class="cm">     */</span>
+    <span class="n">E</span> <span class="nf">element</span><span class="o">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Retrieves, but does not remove, the head of this queue,</span>
+<span class="cm">     * or returns {@code null} if this queue is empty.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return the head of this queue, or {@code null} if this queue is empty</span>
+<span class="cm">     */</span>
+    <span class="n">E</span> <span class="nf">peek</span><span class="o">();</span>
+</pre></div>
+
+
+<h2 id="dequeinterface-queue">Deque(interface) 双向队列，继承了Queue</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Deque</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Queue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h2 id="arraylistclass">ArrayList(class) 数组</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">AbstractList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+        <span class="kd">implements</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">RandomAccess</span><span class="o">,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
+<span class="o">{</span>
+</pre></div>
+
+
+<h2 id="linkedlistclasslist-deque">LinkedList(class)链表(同时实现了List 和 Deque接口)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">AbstractSequentialList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">Deque</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
+<span class="o">{</span>
+</pre></div>
+
+
+<h3 id="node">内部的Node结构(双向链表)</h3>
+<div class="hlcode"><pre><span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="n">E</span> <span class="n">item</span><span class="o">;</span>
+    <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">next</span><span class="o">;</span>
+    <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">prev</span><span class="o">;</span>
+
+    <span class="n">Node</span><span class="o">(</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">prev</span><span class="o">,</span> <span class="n">E</span> <span class="n">element</span><span class="o">,</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">next</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">item</span> <span class="o">=</span> <span class="n">element</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">next</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">prev</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="vectorclass">Vector(class)线程安全的数组</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Vector</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">AbstractList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">RandomAccess</span><span class="o">,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
+<span class="o">{</span>
+</pre></div>
+
+
+<h3 id="synchronized_1">线程安全,操作方法基本加上了<code>synchronized</code>关键字</h3>
+<h2 id="priorityqueueclass">PriorityQueue(class) 优先队列</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PriorityQueue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">AbstractQueue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="_9">实例</h3>
+<div class="hlcode"><pre><span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">comparator</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)-&gt;{</span>
+    <span class="kt">int</span> <span class="n">va</span> <span class="o">=</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span><span class="n">a</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">vb</span> <span class="o">=</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span><span class="n">b</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">va</span> <span class="o">&gt;</span> <span class="n">vb</span><span class="o">){</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">va</span> <span class="o">&lt;</span> <span class="n">vb</span><span class="o">){</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+<span class="o">};</span>
+<span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PriorityQueue</span><span class="o">(</span><span class="n">comparator</span><span class="o">);</span>
+<span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+<span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+<span class="k">while</span> <span class="o">(!</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">());</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="stackclass">Stack(class)</h2>
+<div class="hlcode"><pre><span class="kd">public</span>
+<span class="kd">class</span> <span class="nc">Stack</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="vector">继承了Vector, 基于数组，线程安全</h3>
+<div class="hlcode"><pre><span class="kd">public</span>
+<span class="kd">class</span> <span class="nc">Stack</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Creates an empty Stack.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">Stack</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Pushes an item onto the top of this stack. This has exactly</span>
+<span class="cm">     * the same effect as:</span>
+<span class="cm">     * &lt;blockquote&gt;&lt;pre&gt;</span>
+<span class="cm">     * addElement(item)&lt;/pre&gt;&lt;/blockquote&gt;</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param   item   the item to be pushed onto this stack.</span>
+<span class="cm">     * @return  the &lt;code&gt;item&lt;/code&gt; argument.</span>
+<span class="cm">     * @see     java.util.Vector#addElement</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">E</span> <span class="nf">push</span><span class="o">(</span><span class="n">E</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">addElement</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="n">item</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Removes the object at the top of this stack and returns that</span>
+<span class="cm">     * object as the value of this function.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return  The object at the top of this stack (the last item</span>
+<span class="cm">     *          of the &lt;tt&gt;Vector&lt;/tt&gt; object).</span>
+<span class="cm">     * @throws  EmptyStackException  if this stack is empty.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="n">E</span> <span class="nf">pop</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">E</span>       <span class="n">obj</span><span class="o">;</span>
+        <span class="kt">int</span>     <span class="n">len</span> <span class="o">=</span> <span class="n">size</span><span class="o">();</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">peek</span><span class="o">();</span>
+        <span class="n">removeElementAt</span><span class="o">(</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="n">obj</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Looks at the object at the top of this stack without removing it</span>
+<span class="cm">     * from the stack.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return  the object at the top of this stack (the last item</span>
+<span class="cm">     *          of the &lt;tt&gt;Vector&lt;/tt&gt; object).</span>
+<span class="cm">     * @throws  EmptyStackException  if this stack is empty.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="n">E</span> <span class="nf">peek</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span>     <span class="n">len</span> <span class="o">=</span> <span class="n">size</span><span class="o">();</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">EmptyStackException</span><span class="o">();</span>
+        <span class="k">return</span> <span class="nf">elementAt</span><span class="o">(</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Tests if this stack is empty.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return  &lt;code&gt;true&lt;/code&gt; if and only if this stack contains</span>
+<span class="cm">     *          no items; &lt;code&gt;false&lt;/code&gt; otherwise.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">empty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Returns the 1-based position where an object is on this stack.</span>
+<span class="cm">     * If the object &lt;tt&gt;o&lt;/tt&gt; occurs as an item in this stack, this</span>
+<span class="cm">     * method returns the distance from the top of the stack of the</span>
+<span class="cm">     * occurrence nearest the top of the stack; the topmost item on the</span>
+<span class="cm">     * stack is considered to be at distance &lt;tt&gt;1&lt;/tt&gt;. The &lt;tt&gt;equals&lt;/tt&gt;</span>
+<span class="cm">     * method is used to compare &lt;tt&gt;o&lt;/tt&gt; to the</span>
+<span class="cm">     * items in this stack.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param   o   the desired object.</span>
+<span class="cm">     * @return  the 1-based position from the top of the stack where</span>
+<span class="cm">     *          the object is located; the return value &lt;code&gt;-1&lt;/code&gt;</span>
+<span class="cm">     *          indicates that the object is not on the stack.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">int</span> <span class="nf">search</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lastIndexOf</span><span class="o">(</span><span class="n">o</span><span class="o">);</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">size</span><span class="o">()</span> <span class="o">-</span> <span class="n">i</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** use serialVersionUID from JDK 1.0.2 for interoperability */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1224463164541339165L</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="setinterface">Set(interface)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h2 id="hashsetclass">HashSet(class)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">AbstractSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
+<span class="o">{</span>
+</pre></div>
+
+
+<h3 id="hashmap-key">底层基于 HashMap, key不同</h3>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5024744406713321676L</span><span class="o">;</span>
+
+<span class="kd">private</span> <span class="kd">transient</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">E</span><span class="o">,</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">;</span>
+
+<span class="c1">// Dummy value to associate with an Object in the backing Map</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Object</span> <span class="n">PRESENT</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+
+<span class="cm">/**</span>
+<span class="cm">    * Constructs a new, empty set; the backing &lt;tt&gt;HashMap&lt;/tt&gt; instance has</span>
+<span class="cm">    * default initial capacity (16) and load factor (0.75).</span>
+<span class="cm">    */</span>
+<span class="kd">public</span> <span class="nf">HashSet</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="null-hasmapnull-key">允许元素为null (因为HasMap允许null key)</h3>
+<div class="hlcode"><pre><span class="n">Set</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">se</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;();</span>
+<span class="n">se</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+<span class="n">se</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="n">se</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">val</span><span class="o">-&gt;{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+<span class="o">});</span>
+</pre></div>
+
+
+<h2 id="linkedhashsetclass">LinkedHashSet(class)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LinkedHashSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="set">具有set集合不重复的特点，同时具有可预测的迭代顺序</h3>
+<h3 id="_10">非线程安全</h3>
+<h2 id="sortedsetinterface">SortedSet(interface)</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SortedSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h2 id="navigablesetinterface-sortedset">NavigableSet(interface) 继承 SortedSet</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">NavigableSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">SortedSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h2 id="treesetclass-sortedset">TreeSet(class) 唯一实现了SortedSet的</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TreeSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">AbstractSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">NavigableSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
+<span class="o">{</span>
+</pre></div>
+
+
+<h3 id="null">不允许 null 值</h3>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-05-26 23:17:18</p>
+        <p>Site Generated 2019-05-27 23:49:44</p>
       </span>
     </div>
 
