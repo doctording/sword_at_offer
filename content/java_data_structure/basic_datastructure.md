@@ -458,6 +458,8 @@ a=a
 public interface SortedMap<K,V> extends Map<K,V> {
 ```
 
+### 元素遍历可以按键的排序顺序进行
+
 ## NavigableMap (interface)
 
 ```java
@@ -571,4 +573,364 @@ mp.forEach((key, val)->{
 });
 ```
 
-## 
+## List(interface)
+
+```java
+public interface List<E> extends Collection<E> {
+```
+
+### List 继承自 Collection，其添加了以下操作方法
+
+* 位置相关：List 的元素是有序的，因此有get(index)、set(index,object)、add(index,object)、remove(index) 方法。
+* 搜索：indexOf()，lastIndexOf();
+* 迭代：使用 Iterator 的功能板迭代器
+* 范围性操作：使用 subList 方法对 list 进行任意范围操作。
+
+## Queue(interface) 普通队列
+
+```java
+public interface Queue<E> extends Collection<E> {
+```
+
+### Queue接口的基础方法
+
+```java
+ /**
+     * Inserts the specified element into this queue if it is possible to do so
+     * immediately without violating capacity restrictions, returning
+     * {@code true} upon success and throwing an {@code IllegalStateException}
+     * if no space is currently available.
+     *
+     * @param e the element to add
+     * @return {@code true} (as specified by {@link Collection#add})
+     * @throws IllegalStateException if the element cannot be added at this
+     *         time due to capacity restrictions
+     * @throws ClassCastException if the class of the specified element
+     *         prevents it from being added to this queue
+     * @throws NullPointerException if the specified element is null and
+     *         this queue does not permit null elements
+     * @throws IllegalArgumentException if some property of this element
+     *         prevents it from being added to this queue
+     */
+    boolean add(E e);
+
+    /**
+     * Inserts the specified element into this queue if it is possible to do
+     * so immediately without violating capacity restrictions.
+     * When using a capacity-restricted queue, this method is generally
+     * preferable to {@link #add}, which can fail to insert an element only
+     * by throwing an exception.
+     *
+     * @param e the element to add
+     * @return {@code true} if the element was added to this queue, else
+     *         {@code false}
+     * @throws ClassCastException if the class of the specified element
+     *         prevents it from being added to this queue
+     * @throws NullPointerException if the specified element is null and
+     *         this queue does not permit null elements
+     * @throws IllegalArgumentException if some property of this element
+     *         prevents it from being added to this queue
+     */
+    boolean offer(E e);
+
+    /**
+     * Retrieves and removes the head of this queue.  This method differs
+     * from {@link #poll poll} only in that it throws an exception if this
+     * queue is empty.
+     *
+     * @return the head of this queue
+     * @throws NoSuchElementException if this queue is empty
+     */
+    E remove();
+
+    /**
+     * Retrieves and removes the head of this queue,
+     * or returns {@code null} if this queue is empty.
+     *
+     * @return the head of this queue, or {@code null} if this queue is empty
+     */
+    E poll();
+
+    /**
+     * Retrieves, but does not remove, the head of this queue.  This method
+     * differs from {@link #peek peek} only in that it throws an exception
+     * if this queue is empty.
+     *
+     * @return the head of this queue
+     * @throws NoSuchElementException if this queue is empty
+     */
+    E element();
+
+    /**
+     * Retrieves, but does not remove, the head of this queue,
+     * or returns {@code null} if this queue is empty.
+     *
+     * @return the head of this queue, or {@code null} if this queue is empty
+     */
+    E peek();
+```
+
+## Deque(interface) 双向队列，继承了Queue
+
+```java
+public interface Deque<E> extends Queue<E> {
+```
+
+## ArrayList(class) 数组
+
+```java
+public class ArrayList<E> extends AbstractList<E>
+        implements List<E>, RandomAccess, Cloneable, java.io.Serializable
+{
+```
+
+## LinkedList(class)链表(同时实现了List 和 Deque接口)
+
+```java
+public class LinkedList<E>
+    extends AbstractSequentialList<E>
+    implements List<E>, Deque<E>, Cloneable, java.io.Serializable
+{
+```
+
+### 内部的Node结构(双向链表)
+
+```java
+private static class Node<E> {
+    E item;
+    Node<E> next;
+    Node<E> prev;
+
+    Node(Node<E> prev, E element, Node<E> next) {
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    }
+}
+```
+
+## Vector(class)线程安全的数组
+
+```java
+public class Vector<E>
+    extends AbstractList<E>
+    implements List<E>, RandomAccess, Cloneable, java.io.Serializable
+{
+```
+
+### 线程安全,操作方法基本加上了`synchronized`关键字
+
+## PriorityQueue(class) 优先队列
+
+```java
+public class PriorityQueue<E> extends AbstractQueue<E>
+    implements java.io.Serializable {
+```
+
+### 实例
+
+```java
+Comparator<Integer> comparator = (a, b)->{
+    int va = (Integer)a;
+    int vb = (Integer)b;
+    if(va > vb){
+        return -1;
+    }
+    if(va < vb){
+        return 1;
+    }
+    return 0;
+};
+Queue<Integer> queue = new PriorityQueue(comparator);
+queue.offer(1);
+queue.offer(3);
+queue.offer(2);
+while (!queue.isEmpty()){
+    System.out.println(queue.poll());
+}
+```
+
+## Stack(class)
+
+```java
+public
+class Stack<E> extends Vector<E> {
+```
+
+### 继承了Vector, 基于数组，线程安全
+
+```java
+public
+class Stack<E> extends Vector<E> {
+    /**
+     * Creates an empty Stack.
+     */
+    public Stack() {
+    }
+
+    /**
+     * Pushes an item onto the top of this stack. This has exactly
+     * the same effect as:
+     * <blockquote><pre>
+     * addElement(item)</pre></blockquote>
+     *
+     * @param   item   the item to be pushed onto this stack.
+     * @return  the <code>item</code> argument.
+     * @see     java.util.Vector#addElement
+     */
+    public E push(E item) {
+        addElement(item);
+
+        return item;
+    }
+
+    /**
+     * Removes the object at the top of this stack and returns that
+     * object as the value of this function.
+     *
+     * @return  The object at the top of this stack (the last item
+     *          of the <tt>Vector</tt> object).
+     * @throws  EmptyStackException  if this stack is empty.
+     */
+    public synchronized E pop() {
+        E       obj;
+        int     len = size();
+
+        obj = peek();
+        removeElementAt(len - 1);
+
+        return obj;
+    }
+
+    /**
+     * Looks at the object at the top of this stack without removing it
+     * from the stack.
+     *
+     * @return  the object at the top of this stack (the last item
+     *          of the <tt>Vector</tt> object).
+     * @throws  EmptyStackException  if this stack is empty.
+     */
+    public synchronized E peek() {
+        int     len = size();
+
+        if (len == 0)
+            throw new EmptyStackException();
+        return elementAt(len - 1);
+    }
+
+    /**
+     * Tests if this stack is empty.
+     *
+     * @return  <code>true</code> if and only if this stack contains
+     *          no items; <code>false</code> otherwise.
+     */
+    public boolean empty() {
+        return size() == 0;
+    }
+
+    /**
+     * Returns the 1-based position where an object is on this stack.
+     * If the object <tt>o</tt> occurs as an item in this stack, this
+     * method returns the distance from the top of the stack of the
+     * occurrence nearest the top of the stack; the topmost item on the
+     * stack is considered to be at distance <tt>1</tt>. The <tt>equals</tt>
+     * method is used to compare <tt>o</tt> to the
+     * items in this stack.
+     *
+     * @param   o   the desired object.
+     * @return  the 1-based position from the top of the stack where
+     *          the object is located; the return value <code>-1</code>
+     *          indicates that the object is not on the stack.
+     */
+    public synchronized int search(Object o) {
+        int i = lastIndexOf(o);
+
+        if (i >= 0) {
+            return size() - i;
+        }
+        return -1;
+    }
+
+    /** use serialVersionUID from JDK 1.0.2 for interoperability */
+    private static final long serialVersionUID = 1224463164541339165L;
+}
+```
+
+## Set(interface)
+
+```java
+public interface Set<E> extends Collection<E> {
+```
+
+## HashSet(class)
+
+```java
+public class HashSet<E>
+    extends AbstractSet<E>
+    implements Set<E>, Cloneable, java.io.Serializable
+{
+```
+
+### 底层基于 HashMap, key不同
+
+```java
+static final long serialVersionUID = -5024744406713321676L;
+
+private transient HashMap<E,Object> map;
+
+// Dummy value to associate with an Object in the backing Map
+private static final Object PRESENT = new Object();
+
+/**
+    * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
+    * default initial capacity (16) and load factor (0.75).
+    */
+public HashSet() {
+    map = new HashMap<>();
+}
+```
+
+### 允许元素为null (因为HasMap允许null key)
+
+```java
+Set<Integer> se = new HashSet<>();
+se.add(null);
+se.add(1);
+se.forEach(val->{
+    System.out.println(val);
+});
+```
+
+## LinkedHashSet(class)
+
+```java
+public class LinkedHashSet<E>
+    extends HashSet<E>
+    implements Set<E>, Cloneable, java.io.Serializable {
+```
+
+### 具有set集合不重复的特点，同时具有可预测的迭代顺序
+
+### 非线程安全
+
+## SortedSet(interface)
+
+```java
+public interface SortedSet<E> extends Set<E> {
+```
+
+## NavigableSet(interface) 继承 SortedSet
+
+```java
+public interface NavigableSet<E> extends SortedSet<E> {
+```
+
+## TreeSet(class) 唯一实现了SortedSet的
+
+```java
+public class TreeSet<E> extends AbstractSet<E>
+    implements NavigableSet<E>, Cloneable, java.io.Serializable
+{
+```
+
+### 不允许 null 值
