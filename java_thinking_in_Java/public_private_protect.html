@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>《Java编程思想》第6章：访问权限控制 - 剑指Offer</title>
+    <title>《Java编程思想》第6章：访问权限控制（重要） - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,26 +16,27 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thinking_in_Java">java_thinking_in_Java</a>&nbsp;&#187;&nbsp;《Java编程思想》第6章：访问权限控制
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thinking_in_Java">java_thinking_in_Java</a>&nbsp;&#187;&nbsp;《Java编程思想》第6章：访问权限控制（重要）
     <span class="updated">Page Updated&nbsp;
       2018-12-12 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">《Java编程思想》第6章：访问权限控制</div>
+<div class="page_title">《Java编程思想》第6章：访问权限控制（重要）</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#_1">访问权限控制</a><ul>
 <li><a href="#_2">访问权限修饰词</a></li>
 <li><a href="#_3">接口和实现</a></li>
+<li><a href="#_4">例子</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <h1 id="_1">访问权限控制</h1>
 <h2 id="_2">访问权限修饰词</h2>
-<p>Java访问控制符的含义和使用情况(默认是default)</p>
+<p>Java访问控制符的含义和使用情况(不注明权限，默认是default)</p>
 <table>
 <thead>
 <tr>
@@ -55,7 +56,7 @@
 <td>✓</td>
 </tr>
 <tr>
-<td>protect</td>
+<td>protected</td>
 <td>✓</td>
 <td>✓</td>
 <td>✓</td>
@@ -88,7 +89,7 @@
 <p>private: 你无法访问</p>
 </li>
 <li>
-<p>protect: 继承访问权限</p>
+<p>protected: 继承访问权限</p>
 </li>
 </ul>
 <h2 id="_3">接口和实现</h2>
@@ -97,12 +98,123 @@
 <li>设定客户端程序员可以使用和不可以使用的界限</li>
 <li>接口和具体实现进行分离</li>
 </ol>
+<h2 id="_4">例子</h2>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">other</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/6/1 9:15 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Bowl</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">private_a</span><span class="o">;</span>
+    <span class="c1">// 默认权限，defalt</span>
+    <span class="kt">int</span> <span class="n">b</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="n">public_c</span><span class="o">;</span>
+    <span class="kd">protected</span> <span class="kt">int</span> <span class="n">protected_d</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Bowl</span><span class="o">(</span><span class="kt">int</span> <span class="n">marker</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Bowl(marker:%d)&quot;</span><span class="o">,</span> <span class="n">marker</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>外部包子类</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">other.Bowl</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BowlSonOther</span> <span class="kd">extends</span> <span class="n">Bowl</span><span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nf">BowlSonOther</span><span class="o">(</span><span class="kt">int</span> <span class="n">marker</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">marker</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;BowlSon(marker:%d)&quot;</span><span class="o">,</span> <span class="n">marker</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">funA</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">public_c</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">protected_d</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>同一个包的子类</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">other</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BowlSon</span> <span class="kd">extends</span> <span class="n">Bowl</span><span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nf">BowlSon</span><span class="o">(</span><span class="kt">int</span> <span class="n">marker</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">marker</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;BowlSon(marker:%d)&quot;</span><span class="o">,</span> <span class="n">marker</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">funA</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">b</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">public_c</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">protected_d</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>外部包Main</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">other.Bowl</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">Bowl</span> <span class="n">bowl</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bowl</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowl</span><span class="o">.</span><span class="na">public_c</span><span class="o">);</span>
+
+        <span class="n">BowlSonOther</span> <span class="n">bowlSonOther</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BowlSonOther</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">bowlSonOther</span><span class="o">.</span><span class="na">funA</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowlSonOther</span><span class="o">.</span><span class="na">public_c</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>同包的main</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">other</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main2</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">Bowl</span> <span class="n">bowl</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bowl</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowl</span><span class="o">.</span><span class="na">b</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowl</span><span class="o">.</span><span class="na">public_c</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowl</span><span class="o">.</span><span class="na">protected_d</span><span class="o">);</span>
+
+        <span class="n">BowlSon</span> <span class="n">bowlSon</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BowlSon</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">bowlSon</span><span class="o">.</span><span class="na">funA</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowlSon</span><span class="o">.</span><span class="na">b</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowlSon</span><span class="o">.</span><span class="na">public_c</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bowlSon</span><span class="o">.</span><span class="na">protected_d</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>不同包，子类方法能访问<code>protected</code>的成员，子类方法不能访问<code>default</code>的成员</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-01 20:41:07</p>
+        <p>Site Generated 2019-06-01 21:48:21</p>
       </span>
     </div>
 
