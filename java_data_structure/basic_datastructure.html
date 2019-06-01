@@ -42,14 +42,14 @@
 <li><a href="#_4">遍历的无序性</a></li>
 </ul>
 </li>
-<li><a href="#hashtable">Hashtable</a><ul>
+<li><a href="#hashtableclass">Hashtable(class)</a><ul>
 <li><a href="#mapdictionary">实现了Map，继承了Dictionary，底层数组(散列表)+链表(拉链法)</a></li>
 <li><a href="#null-key-null-value">null key, null value（不可以）</a></li>
 <li><a href="#synchronized">线程安全，基本上操作方法都加上了synchronized关键字</a></li>
 <li><a href="#put_1">put方法</a></li>
 </ul>
 </li>
-<li><a href="#linkedhashmap">LinkedHashMap</a><ul>
+<li><a href="#linkedhashmapclass">LinkedHashMap(class)</a><ul>
 <li><a href="#hashmap">底层是HashMap,并维持一个双向链表</a></li>
 <li><a href="#_5">遍历的有序性</a></li>
 <li><a href="#null-keynull-value">非线程安全，可以null key,null value等</a></li>
@@ -110,6 +110,7 @@
 <li><a href="#navigablesetinterface-sortedset">NavigableSet(interface) 继承 SortedSet</a></li>
 <li><a href="#treesetclass-sortedset">TreeSet(class) 唯一实现了SortedSet的</a><ul>
 <li><a href="#null">不允许 null 值</a></li>
+<li><a href="#_11">非线程安全，树结构</a></li>
 </ul>
 </li>
 </ul>
@@ -340,7 +341,7 @@
 </pre></div>
 
 
-<h2 id="hashtable">Hashtable</h2>
+<h2 id="hashtableclass">Hashtable(class)</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hashtable</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">extends</span> <span class="n">Dictionary</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span> <span class="o">{</span>
@@ -448,7 +449,7 @@
 </pre></div>
 
 
-<h2 id="linkedhashmap">LinkedHashMap</h2>
+<h2 id="linkedhashmapclass">LinkedHashMap(class)</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LinkedHashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">extends</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
@@ -992,12 +993,14 @@
 
 
 <h3 id="null">不允许 null 值</h3>
+<h3 id="_11">非线程安全，树结构</h3>
+<p>可以由<code>TreeMap</code>实现</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-05-27 23:49:44</p>
+        <p>Site Generated 2019-06-01 20:41:07</p>
       </span>
     </div>
 
