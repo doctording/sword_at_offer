@@ -242,7 +242,7 @@ b=null
 */
 ```
 
-## Hashtable
+## Hashtable(class)
 
 ```java
 public class Hashtable<K,V>
@@ -354,7 +354,7 @@ mp.forEach((key,val)->{
     }
 ```
 
-## LinkedHashMap
+## LinkedHashMap(class)
 
 ```java
 public class LinkedHashMap<K,V>
@@ -934,3 +934,7 @@ public class TreeSet<E> extends AbstractSet<E>
 ```
 
 ### 不允许 null 值
+
+### 非线程安全，树结构
+
+可以由`TreeMap`实现

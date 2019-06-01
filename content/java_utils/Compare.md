@@ -100,7 +100,7 @@ Process finished with exit code 1
 
 ```
 
-修改如下： 区分等于
+修改如下： 区分**等于**
 
 ```java
 sizeList.sort((c1, c2)->{

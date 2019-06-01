@@ -17,7 +17,7 @@ Final类的对象是只读的，可以在多线程环境下安全的共享，不
 ```java
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence {
-    /** The value is used for character storage. */
+    /** The value is used fo r character storage. */
     private final char value[];
 
     /** Cache the hash code for the string */
@@ -308,3 +308,41 @@ public static void testStringBuffer () {
 ### 非线程安全
 
 适用于单线程下在字符缓冲区进行大量操作的情况
+
+### append字符串 对比 string +
+
+```java
+// 对于String，会不断的创建、回收对象，速度会很慢。
+static void testStringAdd(){
+    int num = 10000;
+    String[] arrs = new String[num];
+    for(int i=0; i<arrs.length; ++i) {
+        arrs[i] = String.valueOf(i * i);
+    }
+    String s = "";
+    long start = System.currentTimeMillis();
+    for(int i=0; i<arrs.length; ++i) {
+        s += arrs[i];
+    }
+    System.out.println(s.length());
+    long end = System.currentTimeMillis();
+    System.out.println("cost:" + (end - start));
+}
+
+static void testStringBuilderAdd(){
+    int num = 10000;
+    String[] arrs = new String[num];
+    for(int i=0; i<arrs.length; ++i) {
+        arrs[i] = String.valueOf(i * i);
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    long start = System.currentTimeMillis();
+    for(int i=0; i<arrs.length; ++i) {
+        stringBuilder.append(arrs[i]);
+    }
+    String s = stringBuilder.toString();
+    System.out.println(s.length());
+    long end = System.currentTimeMillis();
+    System.out.println("cost:" + (end - start));
+}
+```
