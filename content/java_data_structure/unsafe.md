@@ -8,4 +8,4 @@ date: 2019-05-25 00:00
 
 # unsafe
 
-`../java8/thread_cas.md`
+<a href="https://doctording.github.io/sword_at_offer/java8/thread_cas.html">cas & unsage</a>

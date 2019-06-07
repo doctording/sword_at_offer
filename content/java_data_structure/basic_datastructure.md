@@ -1,5 +1,5 @@
 ---
-title: "Java 数据结构"
+title: "Java 基础数据结构"
 layout: page
 date: 2019-05-25 00:00
 ---
