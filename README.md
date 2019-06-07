@@ -60,3 +60,9 @@ $ python tool.py "更新了README文档"
 ```bash
 $ python tool.py
 ```
+
+图片使用例子
+
+```bash
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/solved_by_java/imgs/circle.png)
+```
