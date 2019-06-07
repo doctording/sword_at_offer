@@ -46,7 +46,7 @@ for(int i=0;i<20;i++){
 
 ## 懒汉式，`synchronized`同步
 
-`getInstance`统一时刻只能被一个线程访问，效率很低
+`getInstance`同一时刻只能被一个线程访问，效率很低
 
 ```java
 final class Singleton{

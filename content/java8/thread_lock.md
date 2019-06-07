@@ -247,6 +247,19 @@ B end
 main end
 ```
 
+## lock 对比 synchronized
+
+* Lock是一个接口，而synchronized是Java中的关键字，synchronized是内置的语言实现。
+* synchronized在发生异常时，会自动释放线程占有的锁，因此不会导致死锁现象发生。Lock在发生异常时，如果没有主动通过unLock()方法去释放锁，则很可能造成死锁的现象，因此使用Lock时需要在finally块中释放锁。
+* Lock可以让等待锁的线程响应中断，而synchronized却不行，使用synchronized时，等待的线程会一直等待下去，不能够响应中断。
+* 通过Lock可以知道有没有成功获取锁，而synchronized却无法办到。
+* Lock可以提高多个线程进行读操作的效率。
+
+作者：TomyZhang
+链接：https://www.jianshu.com/p/1927e60f358f
+来源：简书
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
+
 ## ReentrantLock (可重入锁)
 
 * 公平锁
