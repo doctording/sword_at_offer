@@ -112,6 +112,13 @@
 </li>
 </ul>
 <h2 id="_4">红黑树</h2>
+<p>性质1. 节点是红色或黑色。<br />
+性质2. 根节点是黑色。<br />
+性质3. 每个红色节点的两个子节点都是黑色。(从每个叶子到根的所有路径上不能有两个连续的红色节点)<br />
+性质4. 从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点。</p>
+<p><strong>从根到叶子的最长的可能路径不多于最短的可能路径的两倍长</strong></p>
+<p>红黑树高度依然是平均log(n)，且最坏情况高度不会超过2log(n)。</p>
+<p>任何不平衡都会在3次旋转之内解决， 红黑树能够以<code>O(log2(N))</code>的时间复杂度进行搜索、插入、删除操作</p>
 <h2 id="trie-tree">Trie Tree(字典树)</h2>
 <p>参考：https://blog.csdn.net/qq_26437925/article/category/5773761</p>
 <h2 id="todo">// TODO</h2>
@@ -120,7 +127,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-07 09:00:59</p>
+        <p>Site Generated 2019-06-07 17:38:56</p>
       </span>
     </div>
 

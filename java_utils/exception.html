@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java异常&错误 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_utils">java_utils</a>&nbsp;&#187;&nbsp;Java异常&错误
+    <span class="updated">Page Updated&nbsp;
+      2019-06-07 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java异常&错误</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#java-throwable">Java Throwable</a><ul>
+<li><a href="#checked-exception">checked exception</a></li>
+<li><a href="#unchecked-exceptions">unchecked exceptions</a></li>
+<li><a href="#finallyreturn">finally块和return</a><ul>
+<li><a href="#finally-tryreturn">finally 一定会执行, try中也return了</a></li>
+<li><a href="#finallyreturntrycatch">finally中的return会抑制（消灭）前面try或者catch块中的异常</a></li>
+<li><a href="#finally-throw">finally throw 异常</a></li>
+<li><a href="#_1">建议</a></li>
+</ul>
+</li>
+<li><a href="#exception-ioexception">继承 Exception, IOException</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="java-throwable">Java Throwable</h1>
+<div class="hlcode"><pre>            Throwable
+          /          <span class="se">\</span>
+         /            <span class="se">\</span>
+    Error            Exception
+                   /            <span class="se">\</span>
+                  /              <span class="se">\</span>
+                checked           unchkecked
+                                      |
+                                      |
+                                  RuntimeException
+</pre></div>
+
+
+<h2 id="checked-exception">checked exception</h2>
+<p>编译器要求必须处置的异常，正确的程序在运行中，很容易出现的、情理可容的异常状况。可查异常虽然是异常状况，但在一定程度上它的发生是可以预计的，而且一旦发生这种异常状况，就必须采取某种方式进行处理。</p>
+<p>除了<code>RuntimeException</code>及其子类以外，其他的Exception类及其子类都属于可查异常。这种异常的特点是Java编译器会检查它，也就是说，当程序中可能出现这类异常，要么用try-catch语句捕获它，要么用throws子句声明抛出它，否则<strong>编译</strong>不会通过。</p>
+<p>如SQLException , IOException,ClassNotFoundException 等。</p>
+<h2 id="unchecked-exceptions">unchecked exceptions</h2>
+<p>javac在编译时，不会提示和发现这样的异常，不要求在程序处理这些异常。所以如果愿意，我们可以编写代码处理（使用try…catch…finally）这样的异常，也可以不处理。对于这些异常，我们应该修正代码，而不是去通过异常处理器处理 。这样的异常发生的原因多半是代码写的有问题。如除0错误ArithmeticException，错误的强制类型转换错误ClassCastException，数组索引越界ArrayIndexOutOfBoundsException，使用了空对象NullPointerException等等。</p>
+<h2 id="finallyreturn">finally块和return</h2>
+<h3 id="finally-tryreturn">finally 一定会执行, try中也return了</h3>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">re</span> <span class="o">=</span> <span class="n">bar</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">re</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">bar</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="mi">5</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;finally&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*输出：</span>
+<span class="cm">finally</span>
+<span class="cm">5</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h3 id="finallyreturntrycatch">finally中的return会抑制（消灭）前面try或者catch块中的异常</h3>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">re</span> <span class="o">=</span> <span class="n">bar</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">re</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">bar</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="mi">5</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;finally&quot;</span><span class="o">);</span>
+            <span class="k">return</span> <span class="mi">15</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*输出：</span>
+<span class="cm">finally</span>
+<span class="cm">15</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h3 id="finally-throw">finally throw 异常</h3>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">foo</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>    <span class="c1">//输出：我是finaly中的Exception</span>
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span> <span class="c1">// -1</span>
+        <span class="o">}</span>
+
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">result</span>  <span class="o">=</span> <span class="n">bar</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>    <span class="c1">//输出：我是finaly中的Exception</span>
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span> <span class="c1">// -1</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="c1">//catch中的异常被抑制</span>
+    <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&quot;finally&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">foo</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span><span class="o">/</span><span class="mi">0</span><span class="o">;</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">ArithmeticException</span> <span class="n">amExp</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="o">(</span><span class="s">&quot;foo 我将被忽略，因为下面的finally中抛出了新的异常&quot;</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="o">(</span><span class="s">&quot;foo 我是finaly中的Exception&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">//try中的异常被抑制</span>
+    <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&quot;finally&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">bar</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span><span class="o">/</span><span class="mi">0</span><span class="o">;</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">Exception</span><span class="o">(</span><span class="s">&quot;bar 我是finaly中的Exception&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*输出：</span>
+<span class="cm">foo 我是finaly中的Exception</span>
+<span class="cm">-1</span>
+<span class="cm">bar 我是finaly中的Exception</span>
+<span class="cm">-1</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h3 id="_1">建议</h3>
+<ul>
+<li>不要在fianlly中使用return。</li>
+<li>不要在finally中抛出异常。</li>
+<li>减轻finally的任务，不要在finally中做一些其它的事情，finally块仅仅用来释放资源是最合适的。</li>
+<li>将尽量将所有的return写在函数的最后面，而不是<code>try … catch … finally</code>中</li>
+</ul>
+<p>参考：http://www.importnew.com/26613.html</p>
+<h2 id="exception-ioexception">继承 Exception, IOException</h2>
+<div class="hlcode"><pre><span class="kd">public</span>
+<span class="kd">class</span> <span class="nc">IOException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">7818375828146090155L</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Constructs an {@code IOException} with {@code null}</span>
+<span class="cm">     * as its error detail message.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">IOException</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Constructs an {@code IOException} with the specified detail message.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param message</span>
+<span class="cm">     *        The detail message (which is saved for later retrieval</span>
+<span class="cm">     *        by the {@link #getMessage()} method)</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">IOException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Constructs an {@code IOException} with the specified detail message</span>
+<span class="cm">     * and cause.</span>
+<span class="cm">     *</span>
+<span class="cm">     * &lt;p&gt; Note that the detail message associated with {@code cause} is</span>
+<span class="cm">     * &lt;i&gt;not&lt;/i&gt; automatically incorporated into this exception&#39;s detail</span>
+<span class="cm">     * message.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param message</span>
+<span class="cm">     *        The detail message (which is saved for later retrieval</span>
+<span class="cm">     *        by the {@link #getMessage()} method)</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param cause</span>
+<span class="cm">     *        The cause (which is saved for later retrieval by the</span>
+<span class="cm">     *        {@link #getCause()} method).  (A null value is permitted,</span>
+<span class="cm">     *        and indicates that the cause is nonexistent or unknown.)</span>
+<span class="cm">     *</span>
+<span class="cm">     * @since 1.6</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">IOException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">cause</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">cause</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Constructs an {@code IOException} with the specified cause and a</span>
+<span class="cm">     * detail message of {@code (cause==null ? null : cause.toString())}</span>
+<span class="cm">     * (which typically contains the class and detail message of {@code cause}).</span>
+<span class="cm">     * This constructor is useful for IO exceptions that are little more</span>
+<span class="cm">     * than wrappers for other throwables.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param cause</span>
+<span class="cm">     *        The cause (which is saved for later retrieval by the</span>
+<span class="cm">     *        {@link #getCause()} method).  (A null value is permitted,</span>
+<span class="cm">     *        and indicates that the cause is nonexistent or unknown.)</span>
+<span class="cm">     *</span>
+<span class="cm">     * @since 1.6</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">IOException</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">cause</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">cause</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-06-07 17:38:56</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
