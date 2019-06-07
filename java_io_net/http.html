@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>http response - 剑指Offer</title>
+    <title>http - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,30 +16,44 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io_net">java_io_net</a>&nbsp;&#187;&nbsp;http response
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io_net">java_io_net</a>&nbsp;&#187;&nbsp;http
     <span class="updated">Page Updated&nbsp;
-      2019-05-28 00:00
+      2019-06-03 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">http response</div>
+<div class="page_title">http</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#response-responsebuilder">Response &amp; ResponseBuilder</a><ul>
-<li><a href="#responsebuilder">ResponseBuilder</a></li>
+<li><a href="#http">HTTP的一些重要知识点</a><ul>
+<li><a href="#http-10-11">http 1.0 / 1.1</a></li>
+<li><a href="#http_1">http 连接池</a></li>
+<li><a href="#http-chunked">http chunked</a></li>
+<li><a href="#_1"></a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="response-responsebuilder">Response &amp; ResponseBuilder</h1>
-<h2 id="responsebuilder">ResponseBuilder</h2>
+<h1 id="http">HTTP的一些重要知识点</h1>
+<p>】</p>
+<h2 id="http-10-11">http 1.0 / 1.1</h2>
+<h2 id="http_1">http 连接池</h2>
+<h2 id="http-chunked">http chunked</h2>
+<p>服务端边产生数据边传输(<code>Transfer-Encoding: chunked</code>)</p>
+<ol>
+<li>当选择分块传输时，响应头中可以不包含<code>Content-Length</code></li>
+<li>服务器会先回复一个不带数据的报文（只有响应行和响应头和\r\n），然后开始传输若干个数据</li>
+<li>当传输完若干个数据块后，需要再传输一个空的数据块</li>
+<li>当客户端收到空的数据块时，则客户端知道数据接收完毕</li>
+</ol>
+<h2 id="_1"></h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-01 21:48:21</p>
+        <p>Site Generated 2019-06-07 09:00:59</p>
       </span>
     </div>
 
