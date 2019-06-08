@@ -25,10 +25,54 @@
 
 <div class="page_title">分布式存储系统基础</div>
 
-  <h1 id="_1">分布式存储系统基础</h1>
-<p>来源：51CTO,分布式存储系统视频课程</p>
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">分布式存储系统基础</a><ul>
+<li><a href="#_2">大数据对分布式存储对需求</a></li>
+<li><a href="#_3">小概率故障</a></li>
+<li><a href="#_4">常见分布式系统</a></li>
+<li><a href="#_5">分布式系统设计要点</a></li>
+<li><a href="#_6">写入流程</a><ul>
+<li><a href="#_7">链式写入流程</a></li>
+<li><a href="#_8">主从模式</a></li>
+<li><a href="#_9">总结</a></li>
+</ul>
+</li>
+<li><a href="#_10">读取流程</a><ul>
+<li><a href="#_11">总结</a></li>
+</ul>
+</li>
+<li><a href="#qos">Qos</a></li>
+<li><a href="#checksum">CheckSum</a></li>
+<li><a href="#replication">Replication</a></li>
+<li><a href="#rebalance">Rebalance（数据均衡）</a></li>
+<li><a href="#gc">GC</a><ul>
+<li><a href="#_12">垃圾回收场景</a></li>
+</ul>
+</li>
+<li><a href="#erasure-coding">Erasure Coding（？）</a></li>
+<li><a href="#_13">元数据管理的高可用</a><ul>
+<li><a href="#_14">高可用方案</a></li>
+<li><a href="#hdfs-namenode">HDFS NameNode (主从模式)</a></li>
+<li><a href="#pangu-metadata-server">Pangu Metadata Server</a></li>
+<li><a href="#ceph-metadata-server">Ceph Metadata Server</a></li>
+<li><a href="#paxos">Paxos 协议</a></li>
+<li><a href="#raft">Raft协议</a></li>
+</ul>
+</li>
+<li><a href="#_15">元数据管理的可扩展性</a></li>
+<li><a href="#_16">数据的混合存储</a><ul>
+<li><a href="#ramcloud">RAMCloud内存存储</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="_1">分布式存储系统基础</h1>
+<p><strong>来源：51CTO,分布式存储系统视频课程</strong></p>
+<hr />
 <h2 id="_2">大数据对分布式存储对需求</h2>
-<p>问题引入： 对 1PB 数据排序，我们需要怎么样的存储系统</p>
+<p>问题引入：对 1PB 数据排序，我们需要怎么样的存储系统</p>
 <ol>
 <li>存储容量大</li>
 <li>高吞吐量</li>
@@ -137,7 +181,7 @@
 </em> Rebalacne（平横）<br />
 <em> GC<br />
 </em> Erasure Coding(成本)</p>
-<h2 id="_6">分布式系统，写入流程</h2>
+<h2 id="_6">写入流程</h2>
 <h3 id="_7">链式写入流程</h3>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed/imgs/lian.png" /></p>
 <p>写入，某个节点有错误的情况</p>
@@ -187,7 +231,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_10">分布式系统，读取流程</h2>
+<h2 id="_10">读取流程</h2>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed/imgs/read_error.png" /></p>
 <ul>
 <li>Backup Read</li>
@@ -363,7 +407,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-08 11:23:51</p>
+        <p>Site Generated 2019-06-08 11:31:16</p>
       </span>
     </div>
 
