@@ -4,13 +4,17 @@ layout: page
 date: 2019-06-07 00:00
 ---
 
+[TOC]
+
 # 分布式存储系统基础
 
-来源：51CTO,分布式存储系统视频课程
+**来源：51CTO,分布式存储系统视频课程**
+
+----
 
 ## 大数据对分布式存储对需求
 
-问题引入： 对 1PB 数据排序，我们需要怎么样的存储系统
+问题引入：对 1PB 数据排序，我们需要怎么样的存储系统
 
 1. 存储容量大
 2. 高吞吐量
@@ -101,7 +105,7 @@ Checksum
 * GC
 * Erasure Coding(成本)
 
-## 分布式系统，写入流程
+## 写入流程
 
 ### 链式写入流程
 
@@ -129,7 +133,7 @@ Checksum
 重写修复 | 能最大程度保留之前写入的数据 | - 直接剔除异常节点会导致后续写入的replica数降低 - 如果补充新的replica进来，需要补齐之前写入的数据，给新的replica
 Seal and New | 简单快速，可以绕过异常节点 | Chunk长度不固定，需要更多的meta管理
 
-## 分布式系统，读取流程
+## 读取流程
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed/imgs/read_error.png)
 
