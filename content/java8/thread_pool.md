@@ -164,21 +164,21 @@ public ThreadPoolExecutor(int corePoolSize,
 }
 ```
 
-* corePoolSize:指定了线程池中的线程数量，它的数量决定了添加的任务是开辟新的线程去执行，还是放到workQueue任务队列中去；
+* `corePoolSize`: 指定了线程池中的线程数量，它的数量决定了添加的任务是开辟新的线程去执行，还是放到workQueue任务队列中去；
 
-* maximumPoolSize:指定了线程池中的最大线程数量，这个参数会根据你使用的workQueue任务队列的类型，决定线程池会开辟的最大线程数量；
+* `maximumPoolSize`: 指定了线程池中的最大线程数量，这个参数会根据你使用的workQueue任务队列的类型，决定线程池会开辟的最大线程数量；
 
-* keepAliveTime:当线程池中空闲线程数量超过corePoolSize时，多余的线程会在多长时间内被销毁；
+* `keepAliveTime`: 当线程池中空闲线程数量超过corePoolSize时，多余的线程会在多长时间内被销毁；
 
-* unit:keepAliveTime的单位
+* `unit`: keepAliveTime的单位
 
-* workQueue:阻塞任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为直接提交队列、有界任务队列、无界任务队列、优先任务队列几种；
+* `workQueue`: 阻塞任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为直接提交队列、有界任务队列、无界任务队列、优先任务队列几种；
 
-* threadFactory:线程工厂，用于创建线程，一般用默认即可；
+* `threadFactory`: 线程工厂，用于创建线程，一般用默认即可；
 
-* handler:拒绝策略；当任务太多来不及处理时，如何拒绝任务；
+* `handler`: 拒绝策略；当任务太多来不及处理时，如何拒绝任务；
 
-* workerCount 当前活跃的线程数(也即线程池中的线程数量)
+* `workerCount`: 当前活跃的线程数(也即线程池中的线程数量)
 
 ## ThreadPoolExecutor 的使用
 
@@ -335,7 +335,7 @@ public static void main(String[] args){
 
 * CachedThreadPool 的线程 keepAliveTime 默认为 60s ，核心线程数量为 0 ，所以不会有核心线程存活阻止线程池自动关闭。 详见 线程池之ThreadPoolExecutor构造 ，为了更快的模拟，构造后将 keepAliveTime 修改为1纳秒，相当于线程执行完马上会消亡，所以线程池可以被回收。实际开发中，如果CachedThreadPool 确实忘记关闭，在一定时间后是可以被回收的。但仍然建议显示关闭。
 
-#### 线程池shutdown，shutdownNow
+#### 线程池`shutdown`，`shutdownNow`
 
 ```java
 package com.threadpool;
@@ -441,6 +441,101 @@ public class ThreadPoolUse {
     public static void main(String[] args){
         test();
         System.out.println("main end");
+    }
+
+}
+```
+
+## FutureTask & 线程池
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+
+class Task implements Callable<Integer>{
+    String name;
+
+    public Task(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        Integer res = new Random().nextInt(100);
+        Thread.sleep(1000);
+        System.out.println("任务执行:获取到结果 :"+res);
+        return  res;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+public class Solution {
+
+    public void testFutureAndThreadPool(){
+        // 线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        //进行异步任务列表
+        List<FutureTask<Integer>> futureTasks = new ArrayList<>();
+        long start = System.currentTimeMillis();
+        int n = 10;
+        for(int i=0;i<n;i++){
+            Task task = new Task("name_" + i);
+            //创建一个异步任务
+            FutureTask<Integer> futureTask = new FutureTask<>(task);
+            futureTasks.add(futureTask);
+            //提交异步任务到线程池，让线程池管理任务 特爽把。
+            //由于是异步并行任务，所以这里并不会阻塞
+            executorService.submit(futureTask);
+        }
+        int count = 0;
+        for (FutureTask<Integer> futureTask : futureTasks) {
+            // get()
+            // get(long timeout, TimeUnit unit) 第一个参数为最大等待时间，第二个为时间的单位
+            try{
+                count += futureTask.get();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        //清理线程池
+        executorService.shutdown();
+
+        long end = System.currentTimeMillis();
+        System.out.println("线程池的任务全部完成:结果为:"+count+"，main线程关闭，进行线程的清理");
+        System.out.println("使用时间："+(end-start)+"ms");
+    }
+
+    public void testLine(){
+        long start = System.currentTimeMillis();
+        int n = 10;
+        int count = 0;
+        for(int i=0;i<n;i++){
+            Task task = new Task("name_" + i);
+            try{
+                count += task.call();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("线程池的任务全部完成:结果为:"+count+"，main线程关闭，进行线程的清理");
+        System.out.println("使用时间："+(end-start)+"ms");
+        //清理线程池
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        solution.testFutureAndThreadPool();
+        solution.testLine();
+        System.out.println("the end");
     }
 
 }
