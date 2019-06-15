@@ -670,6 +670,26 @@ public interface Queue<E> extends Collection<E> {
     E peek();
 ```
 
+### 使用例子
+
+```java
+public static void main(String[] args) {
+    Queue<Integer> queue = new LinkedList<>();
+    queue.offer(1);
+    queue.offer(null);
+    queue.offer(2);
+    while(!queue.isEmpty()){
+        Integer i = queue.poll();
+        System.out.println(i);
+    }
+}
+/* output
+1
+null
+2
+*/
+```
+
 ## Deque(interface) 双向队列，继承了Queue
 
 ```java

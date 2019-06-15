@@ -91,4 +91,14 @@ B树主要应用于文件系统以及部分数据库索引
 
 参考：https://blog.csdn.net/qq_26437925/article/category/5773761
 
+## Log Structured Merge Trees（日志结构的合并树）
+
+### 磁盘的读写快慢问题
+
+顺序读写磁盘（不管是SATA还是SSD）快于随机读写主存，而且快至少三个数量级
+
+### LSM Tree 分析
+
+### 适用场景
+
 ## // TODO
