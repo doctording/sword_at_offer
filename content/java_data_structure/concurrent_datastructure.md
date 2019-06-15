@@ -6,7 +6,7 @@ date: 2019-05-25 00:00
 
 [TOC]
 
-# concurrent数据结构
+# `concurrent`数据结构
 
 ## ConcurrentMap(interface)
 
@@ -188,7 +188,7 @@ public long mappingCount() {
 
 * 在于并发扩容的时候，由于操作的table都是同一个，不像JDK7中分段控制，所以这里需要等扩容完之后，所有的读写操作才能进行，所以扩容的效率就成为了整个并发的一个瓶颈点
 
-* 引入了一个ForwardingNode类，在一个线程发起扩容的时候，就会改变sizeCtl这个值
+* 引入了一个ForwardingNode类，在一个线程发起扩容的时候，就会改变`sizeCtl`这个值
 
 ```java
 sizeCtl ：默认为0，用来控制table的初始化和扩容操作，具体应用在后续会体现出来。
@@ -225,7 +225,7 @@ public class CopyOnWriteArrayList<E>
 
 * 线程安全的`ArrayList`, 读方法不加锁，写方法加锁
 
-### add 方法使用`ReentrantLock`
+### add方法使用`ReentrantLock`
 
 ```java
 public boolean add(E e) {
@@ -280,7 +280,7 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
     }
 ```
 
-add采用`CopyOnWriteArrayList`的`addIfAbsent`方法，加了锁保护，并创建一个新的Object数组；每次add都要进行数组的遍历，性能低
+add操作采用`CopyOnWriteArrayList`的`addIfAbsent`方法，加了锁保护，并创建一个新的Object数组；每次add都要进行数组的遍历，性能低
 
 ## ArrayBlockingQueue(class) 基于数组的阻塞队列
 
@@ -545,4 +545,4 @@ class Main {
 }
 ```
 
-## 
+## TODO
