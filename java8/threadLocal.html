@@ -26,16 +26,176 @@
 <div class="page_title">ThreadLocal</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#threadlocal">ThreadLocal</a></li>
+<li><a href="#threadlocal">ThreadLocal</a><ul>
+<li><a href="#_1">实现思路</a></li>
+<li><a href="#_2">使用场景</a></li>
+<li><a href="#threadlocal_1">使用ThreadLocal设计线程上下文</a></li>
+<li><a href="#todo">TODO</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="threadlocal">ThreadLocal</h1>
+<p><code>ThreadLocal</code>并不是一个<code>Thread</code>，而是<code>Thread</code>的局部变量</p>
+<p>threadLocal用于保存某个线程共享变量：对于同一个static ThreadLocal，不同线程只能从中get，set，remove自己的变量，而不会影响其他线程的变量</p>
+<h2 id="_1">实现思路</h2>
+<p>Thread类有一个类型为ThreadLocal.ThreadLocalMap的实例变量threadLocals，也就是说每个线程有一个自己的ThreadLocalMap。ThreadLocalMap有自己的独立实现，可以简单地将它的key视作ThreadLocal，value为代码中放入的值（实际上key并不是ThreadLocal本身，而是它的一个弱引用）。每个线程在往某个ThreadLocal里塞值的时候，都会往自己的ThreadLocalMap里存，读也是以某个ThreadLocal作为引用，在自己的map里找对应的key，从而实现了线程隔离。</p>
+<h2 id="_2">使用场景</h2>
+<ol>
+<li>
+<p>在进行对象跨层传递的时候，可以考虑<code>ThreadLocal</code>，避免方法多次传递，打破层次间的约束</p>
+</li>
+<li>
+<p>线程间数据隔离</p>
+</li>
+<li>
+<p>进行事务操作，用于存储线程事务信息</p>
+</li>
+</ol>
+<h2 id="threadlocal_1">使用<code>ThreadLocal</code>设计线程上下文</h2>
+<ul>
+<li>转自如下</li>
+</ul>
+<p>作者：香沙小熊<br />
+链接：https://www.jianshu.com/p/72df0c834696<br />
+来源：简书<br />
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。</p>
+<ul>
+<li>每个action调用context的时候传入进去</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExecutionTask</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">QueryFromDBAction</span> <span class="n">queryAction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryFromDBAction</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="n">QueryFromHttpAction</span> <span class="n">httpAction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryFromHttpAction</span><span class="o">();</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="n">Context</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Context</span><span class="o">();</span>
+        <span class="n">queryAction</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The name query successful&quot;</span><span class="o">);</span>
+        <span class="n">httpAction</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The cardId query successful&quot;</span><span class="o">);</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The Name is &quot;</span> <span class="o">+</span> <span class="n">context</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; and CardId &quot;</span> <span class="o">+</span> <span class="n">context</span><span class="o">.</span><span class="na">getCardId</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QueryFromDBAction</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000L</span><span class="o">);</span>
+            <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Jack &quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">();</span>
+            <span class="n">context</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QueryFromHttpAction</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+            <span class="n">String</span> <span class="n">cardId</span> <span class="o">=</span> <span class="n">getCardId</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="n">context</span><span class="o">.</span><span class="na">setCardId</span><span class="o">(</span><span class="n">cardId</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="nf">getCardId</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000L</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="s">&quot;Tom &quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getId</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>使用<code>ThreadLocal</code></li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ActionContext</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">ThreadLocal</span><span class="o">&lt;</span><span class="n">Context</span><span class="o">&gt;</span> <span class="n">threadLocal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadLocal</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">protected</span> <span class="n">Object</span> <span class="nf">initialValue</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Context</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ActionContext</span> <span class="nf">getActionContext</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">ContextHolder</span><span class="o">.</span><span class="na">actionContext</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Context</span> <span class="nf">getContext</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="k">return</span> <span class="n">threadLocal</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ContextHolder</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">ActionContext</span> <span class="n">actionContext</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ActionContext</span><span class="o">();</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExecutionTask</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">QueryFromDBAction</span> <span class="n">queryAction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryFromDBAction</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="n">QueryFromHttpAction</span> <span class="n">httpAction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryFromHttpAction</span><span class="o">();</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="n">Context</span> <span class="n">context</span> <span class="o">=</span> <span class="n">ActionContext</span><span class="o">.</span><span class="na">getActionContext</span><span class="o">().</span><span class="na">getContext</span><span class="o">();</span>
+        <span class="n">queryAction</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The name query successful&quot;</span><span class="o">);</span>
+        <span class="n">httpAction</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The cardId query successful&quot;</span><span class="o">);</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The Name is &quot;</span> <span class="o">+</span> <span class="n">context</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; and CardId &quot;</span> <span class="o">+</span> <span class="n">context</span><span class="o">.</span><span class="na">getCardId</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QueryFromDBAction</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000L</span><span class="o">);</span>
+            <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Jack &quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">();</span>
+            <span class="n">ActionContext</span><span class="o">.</span><span class="na">getActionContext</span><span class="o">().</span><span class="na">getContext</span><span class="o">().</span><span class="na">setName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="todo">TODO</h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-08 11:31:16</p>
+        <p>Site Generated 2019-06-15 21:15:26</p>
       </span>
     </div>
 

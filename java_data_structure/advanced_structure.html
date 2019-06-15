@@ -46,6 +46,12 @@
 </li>
 <li><a href="#_4">红黑树</a></li>
 <li><a href="#trie-tree">Trie Tree(字典树)</a></li>
+<li><a href="#log-structured-merge-trees">Log Structured Merge Trees（日志结构的合并树）</a><ul>
+<li><a href="#_5">磁盘的读写快慢问题</a></li>
+<li><a href="#lsm-tree">LSM Tree 分析</a></li>
+<li><a href="#_6">适用场景</a></li>
+</ul>
+</li>
 <li><a href="#todo">// TODO</a></li>
 </ul>
 </li>
@@ -121,13 +127,18 @@
 <p>任何不平衡都会在3次旋转之内解决， 红黑树能够以<code>O(log2(N))</code>的时间复杂度进行搜索、插入、删除操作</p>
 <h2 id="trie-tree">Trie Tree(字典树)</h2>
 <p>参考：https://blog.csdn.net/qq_26437925/article/category/5773761</p>
+<h2 id="log-structured-merge-trees">Log Structured Merge Trees（日志结构的合并树）</h2>
+<h3 id="_5">磁盘的读写快慢问题</h3>
+<p>顺序读写磁盘（不管是SATA还是SSD）快于随机读写主存，而且快至少三个数量级</p>
+<h3 id="lsm-tree">LSM Tree 分析</h3>
+<h3 id="_6">适用场景</h3>
 <h2 id="todo">// TODO</h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-08 11:31:16</p>
+        <p>Site Generated 2019-06-15 21:15:26</p>
       </span>
     </div>
 

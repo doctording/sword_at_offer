@@ -41,7 +41,7 @@
 </li>
 <li><a href="#concurrentlinkedqueueclass">ConcurrentLinkedQueue(class)</a></li>
 <li><a href="#copyonwritearraylistclass">CopyOnWriteArrayList(class) 适合读多写少的并发场景</a><ul>
-<li><a href="#add-reentrantlock">add 方法使用ReentrantLock</a></li>
+<li><a href="#addreentrantlock">add方法使用ReentrantLock</a></li>
 </ul>
 </li>
 <li><a href="#copyonwritearraysetclass-copyonwritearraylist">CopyOnWriteArraySet(class 基于CopyOnWriteArrayList)</a></li>
@@ -56,12 +56,12 @@
 <li><a href="#linkedblockingqueue">基于LinkedBlockingQueue的生产者和消费者</a></li>
 </ul>
 </li>
-<li><a href="#_4"></a></li>
+<li><a href="#todo">TODO</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="concurrent">concurrent数据结构</h1>
+<h1 id="concurrent"><code>concurrent</code>数据结构</h1>
 <h2 id="concurrentmapinterface">ConcurrentMap(interface)</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ConcurrentMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
 </pre></div>
@@ -242,7 +242,7 @@
 <p>在于并发扩容的时候，由于操作的table都是同一个，不像JDK7中分段控制，所以这里需要等扩容完之后，所有的读写操作才能进行，所以扩容的效率就成为了整个并发的一个瓶颈点</p>
 </li>
 <li>
-<p>引入了一个ForwardingNode类，在一个线程发起扩容的时候，就会改变sizeCtl这个值</p>
+<p>引入了一个ForwardingNode类，在一个线程发起扩容的时候，就会改变<code>sizeCtl</code>这个值</p>
 </li>
 </ul>
 <div class="hlcode"><pre><span class="n">sizeCtl</span> <span class="err">：默认为</span><span class="mi">0</span><span class="err">，用来控制</span><span class="n">table</span><span class="err">的初始化和扩容操作，具体应用在后续会体现出来。</span>
@@ -278,7 +278,7 @@
 <ul>
 <li>线程安全的<code>ArrayList</code>, 读方法不加锁，写方法加锁</li>
 </ul>
-<h3 id="add-reentrantlock">add 方法使用<code>ReentrantLock</code></h3>
+<h3 id="addreentrantlock">add方法使用<code>ReentrantLock</code></h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">add</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="kd">final</span> <span class="n">ReentrantLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">lock</span><span class="o">;</span>
     <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
@@ -331,7 +331,7 @@
 </pre></div>
 
 
-<p>add采用<code>CopyOnWriteArrayList</code>的<code>addIfAbsent</code>方法，加了锁保护，并创建一个新的Object数组；每次add都要进行数组的遍历，性能低</p>
+<p>add操作采用<code>CopyOnWriteArrayList</code>的<code>addIfAbsent</code>方法，加了锁保护，并创建一个新的Object数组；每次add都要进行数组的遍历，性能低</p>
 <h2 id="arrayblockingqueueclass">ArrayBlockingQueue(class) 基于数组的阻塞队列</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ArrayBlockingQueue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">AbstractQueue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
         <span class="kd">implements</span> <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span> <span class="o">{</span>
@@ -583,13 +583,13 @@
 </pre></div>
 
 
-<h2 id="_4"></h2>
+<h2 id="todo">TODO</h2>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-08 11:31:16</p>
+        <p>Site Generated 2019-06-15 21:15:26</p>
       </span>
     </div>
 

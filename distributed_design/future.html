@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Future 设计模式 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#distributed_design">distributed_design</a>&nbsp;&#187;&nbsp;Future 设计模式
+    <span class="updated">Page Updated&nbsp;
+      2019-06-07 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Future 设计模式</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#future">Future</a><ul>
+<li><a href="#callable">Callable 接口</a></li>
+<li><a href="#future_1">Future 接口</a></li>
+<li><a href="#runnablefuture">RunnableFuture 接口</a></li>
+<li><a href="#futuretask">FutureTask 类</a><ul>
+<li><a href="#get">get 方法获取返回结果</a></li>
+<li><a href="#run">run 方法执行任务</a></li>
+<li><a href="#futuretask-thread">FutureTask &amp; Thread 简单使用</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="future">Future</h1>
+<p>"凭据"：如果有任务执行需要比较长的时间，通常需要等待任务执行结束或者出错才能返回结果，在此期间调用者只能陷入阻塞苦苦等待，对此，Future设计模式提供了一种凭据式解决方案。可以先提交任务，立即返回一个凭据，调用者可稍后凭借凭借查询执行结果。</p>
+<h2 id="callable">Callable 接口</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> * A task that returns a result and may throw an exception.</span>
+<span class="cm"> * Implementors define a single method with no arguments called</span>
+<span class="cm"> * {@code call}.</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;The {@code Callable} interface is similar to {@link</span>
+<span class="cm"> * java.lang.Runnable}, in that both are designed for classes whose</span>
+<span class="cm"> * instances are potentially executed by another thread.  A</span>
+<span class="cm"> * {@code Runnable}, however, does not return a result and cannot</span>
+<span class="cm"> * throw a checked exception.</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;The {@link Executors} class contains utility methods to</span>
+<span class="cm"> * convert from other common forms to {@code Callable} classes.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @see Executor</span>
+<span class="cm"> * @since 1.5</span>
+<span class="cm"> * @author Doug Lea</span>
+<span class="cm"> * @param &lt;V&gt; the result type of method {@code call}</span>
+<span class="cm"> */</span>
+<span class="nd">@FunctionalInterface</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Callable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Computes a result, or throws an exception if unable to do so.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return computed result</span>
+<span class="cm">     * @throws Exception if unable to compute a result</span>
+<span class="cm">     */</span>
+    <span class="n">V</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="future_1">Future 接口</h2>
+<p><code>Future</code>就是对于具体的<code>Runnable</code>或者<code>Callable</code>任务的执行结果进行取消、查询是否完成、获取结果。</p>
+<p>主要是将一些耗时的操作交给一个线程去执行，从而达到异步的目的；在提交线程在提交任务和获得任务结果的过程中可以进行其它任务操作，而不是傻傻的等待</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Future</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Attempts to cancel execution of this task.  This attempt will</span>
+<span class="cm">     * fail if the task has already completed, has already been cancelled,</span>
+<span class="cm">     * or could not be cancelled for some other reason. If successful,</span>
+<span class="cm">     * and this task has not started when {@code cancel} is called,</span>
+<span class="cm">     * this task should never run.  If the task has already started,</span>
+<span class="cm">     * then the {@code mayInterruptIfRunning} parameter determines</span>
+<span class="cm">     * whether the thread executing this task should be interrupted in</span>
+<span class="cm">     * an attempt to stop the task.</span>
+<span class="cm">     *</span>
+<span class="cm">     * &lt;p&gt;After this method returns, subsequent calls to {@link #isDone} will</span>
+<span class="cm">     * always return {@code true}.  Subsequent calls to {@link #isCancelled}</span>
+<span class="cm">     * will always return {@code true} if this method returned {@code true}.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param mayInterruptIfRunning {@code true} if the thread executing this</span>
+<span class="cm">     * task should be interrupted; otherwise, in-progress tasks are allowed</span>
+<span class="cm">     * to complete</span>
+<span class="cm">     * @return {@code false} if the task could not be cancelled,</span>
+<span class="cm">     * typically because it has already completed normally;</span>
+<span class="cm">     * {@code true} otherwise</span>
+<span class="cm">     */</span>
+    <span class="kt">boolean</span> <span class="nf">cancel</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">mayInterruptIfRunning</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Returns {@code true} if this task was cancelled before it completed</span>
+<span class="cm">     * normally.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return {@code true} if this task was cancelled before it completed</span>
+<span class="cm">     */</span>
+    <span class="kt">boolean</span> <span class="nf">isCancelled</span><span class="o">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Returns {@code true} if this task completed.</span>
+<span class="cm">     *</span>
+<span class="cm">     * Completion may be due to normal termination, an exception, or</span>
+<span class="cm">     * cancellation -- in all of these cases, this method will return</span>
+<span class="cm">     * {@code true}.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return {@code true} if this task completed</span>
+<span class="cm">     */</span>
+    <span class="kt">boolean</span> <span class="nf">isDone</span><span class="o">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Waits if necessary for the computation to complete, and then</span>
+<span class="cm">     * retrieves its result.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return the computed result</span>
+<span class="cm">     * @throws CancellationException if the computation was cancelled</span>
+<span class="cm">     * @throws ExecutionException if the computation threw an</span>
+<span class="cm">     * exception</span>
+<span class="cm">     * @throws InterruptedException if the current thread was interrupted</span>
+<span class="cm">     * while waiting</span>
+<span class="cm">     */</span>
+    <span class="n">V</span> <span class="nf">get</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">,</span> <span class="n">ExecutionException</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Waits if necessary for at most the given time for the computation</span>
+<span class="cm">     * to complete, and then retrieves its result, if available.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param timeout the maximum time to wait</span>
+<span class="cm">     * @param unit the time unit of the timeout argument</span>
+<span class="cm">     * @return the computed result</span>
+<span class="cm">     * @throws CancellationException if the computation was cancelled</span>
+<span class="cm">     * @throws ExecutionException if the computation threw an</span>
+<span class="cm">     * exception</span>
+<span class="cm">     * @throws InterruptedException if the current thread was interrupted</span>
+<span class="cm">     * while waiting</span>
+<span class="cm">     * @throws TimeoutException if the wait timed out</span>
+<span class="cm">     */</span>
+    <span class="n">V</span> <span class="nf">get</span><span class="o">(</span><span class="kt">long</span> <span class="n">timeout</span><span class="o">,</span> <span class="n">TimeUnit</span> <span class="n">unit</span><span class="o">)</span>
+        <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">,</span> <span class="n">ExecutionException</span><span class="o">,</span> <span class="n">TimeoutException</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="runnablefuture">RunnableFuture 接口</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> * A {@link Future} that is {@link Runnable}. Successful execution of</span>
+<span class="cm"> * the {@code run} method causes completion of the {@code Future}</span>
+<span class="cm"> * and allows access to its results.</span>
+<span class="cm"> * @see FutureTask</span>
+<span class="cm"> * @see Executor</span>
+<span class="cm"> * @since 1.6</span>
+<span class="cm"> * @author Doug Lea</span>
+<span class="cm"> * @param &lt;V&gt; The result type returned by this Future&#39;s {@code get} method</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">RunnableFuture</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">Runnable</span><span class="o">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Sets this Future to the result of its computation</span>
+<span class="cm">     * unless it has been cancelled.</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">run</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="futuretask">FutureTask 类</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> * A cancellable asynchronous computation.  This class provides a base</span>
+<span class="cm"> * implementation of {@link Future}, with methods to start and cancel</span>
+<span class="cm"> * a computation, query to see if the computation is complete, and</span>
+<span class="cm"> * retrieve the result of the computation.  The result can only be</span>
+<span class="cm"> * retrieved when the computation has completed; the {@code get}</span>
+<span class="cm"> * methods will block if the computation has not yet completed.  Once</span>
+<span class="cm"> * the computation has completed, the computation cannot be restarted</span>
+<span class="cm"> * or cancelled (unless the computation is invoked using</span>
+<span class="cm"> * {@link #runAndReset}).</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;A {@code FutureTask} can be used to wrap a {@link Callable} or</span>
+<span class="cm"> * {@link Runnable} object.  Because {@code FutureTask} implements</span>
+<span class="cm"> * {@code Runnable}, a {@code FutureTask} can be submitted to an</span>
+<span class="cm"> * {@link Executor} for execution.</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;In addition to serving as a standalone class, this class provides</span>
+<span class="cm"> * {@code protected} functionality that may be useful when creating</span>
+<span class="cm"> * customized task classes.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @since 1.5</span>
+<span class="cm"> * @author Doug Lea</span>
+<span class="cm"> * @param &lt;V&gt; The result type returned by this FutureTask&#39;s {@code get} methods</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FutureTask</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">RunnableFuture</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></div>
+
+
+<h3 id="get">get 方法获取返回结果</h3>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">     * @throws CancellationException {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">V</span> <span class="nf">get</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">,</span> <span class="n">ExecutionException</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">state</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="n">COMPLETING</span><span class="o">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">awaitDone</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="mi">0L</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">report</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">     * Awaits completion or aborts on interrupt or timeout.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param timed true if use timed waits</span>
+<span class="cm">     * @param nanos time to wait, if timed</span>
+<span class="cm">     * @return state upon completion</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">awaitDone</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">timed</span><span class="o">,</span> <span class="kt">long</span> <span class="n">nanos</span><span class="o">)</span>
+        <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="kt">long</span> <span class="n">deadline</span> <span class="o">=</span> <span class="n">timed</span> <span class="o">?</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">()</span> <span class="o">+</span> <span class="n">nanos</span> <span class="o">:</span> <span class="mi">0L</span><span class="o">;</span>
+        <span class="n">WaitNode</span> <span class="n">q</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="kt">boolean</span> <span class="n">queued</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">removeWaiter</span><span class="o">(</span><span class="n">q</span><span class="o">);</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">InterruptedException</span><span class="o">();</span>
+            <span class="o">}</span>
+
+            <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">state</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="n">COMPLETING</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">q</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+                    <span class="n">q</span><span class="o">.</span><span class="na">thread</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">s</span> <span class="o">==</span> <span class="n">COMPLETING</span><span class="o">)</span> <span class="c1">// cannot time out yet</span>
+                <span class="n">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
+            <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">q</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WaitNode</span><span class="o">();</span>
+            <span class="k">else</span> <span class="nf">if</span> <span class="o">(!</span><span class="n">queued</span><span class="o">)</span>
+                <span class="n">queued</span> <span class="o">=</span> <span class="n">UNSAFE</span><span class="o">.</span><span class="na">compareAndSwapObject</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">waitersOffset</span><span class="o">,</span>
+                                                     <span class="n">q</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">waiters</span><span class="o">,</span> <span class="n">q</span><span class="o">);</span>
+            <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">timed</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">nanos</span> <span class="o">=</span> <span class="n">deadline</span> <span class="o">-</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">nanos</span> <span class="o">&lt;=</span> <span class="mi">0L</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">removeWaiter</span><span class="o">(</span><span class="n">q</span><span class="o">);</span>
+                    <span class="k">return</span> <span class="n">state</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">LockSupport</span><span class="o">.</span><span class="na">parkNanos</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">nanos</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">else</span>
+                <span class="n">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h3 id="run">run 方法执行任务</h3>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">//1.判断状态是否是NEW，不是NEW，说明任务已经被其他线程执行，甚至执行结束，或者被取消了，直接返回</span>
+    <span class="c1">//2.调用CAS方法，判断RUNNER为null的话，就将当前线程保存到RUNNER中，设置RUNNER失败，就直接返回</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="o">!=</span> <span class="n">NEW</span> <span class="o">||</span>
+            <span class="o">!</span><span class="n">U</span><span class="o">.</span><span class="na">compareAndSwapObject</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">RUNNER</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">()))</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">Callable</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">callable</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">state</span> <span class="o">==</span> <span class="n">NEW</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">V</span> <span class="n">result</span><span class="o">;</span>
+            <span class="kt">boolean</span> <span class="n">ran</span><span class="o">;</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="c1">//3.执行Callable任务，结果保存到result中</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
+                <span class="n">ran</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">//3.1 如果执行任务过程中发生异常，将调用setException()设置异常</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                <span class="n">ran</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="n">setException</span><span class="o">(</span><span class="n">ex</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="c1">//3.2 任务正常执行结束调用set(result)保存结果</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">ran</span><span class="o">)</span>
+                <span class="n">set</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+        <span class="c1">// runner must be non-null until state is settled to</span>
+        <span class="c1">// prevent concurrent calls to run()</span>
+        <span class="c1">//4. 任务执行结束，runner设置为null，表示当前没有线程在执行这个任务了</span>
+        <span class="n">runner</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="c1">// state must be re-read after nulling runner to prevent</span>
+        <span class="c1">// leaked interrupts</span>
+        <span class="c1">//5. 读取状态，判断是否在执行的过程中，被中断了，如果被中断，处理中断</span>
+        <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">state</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="n">INTERRUPTING</span><span class="o">)</span>
+            <span class="n">handlePossibleCancellationInterrupt</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="futuretask-thread">FutureTask &amp; Thread 简单使用</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.Callable</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.FutureTask</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+
+        <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">callable</span> <span class="o">=</span> <span class="o">()-&gt;{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Thread [&quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;] is running&quot;</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">;++</span><span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="o">};</span>
+
+        <span class="c1">// 2. 新建FutureTask,需要一个实现了Callable接口的类的实例作为构造函数参数</span>
+        <span class="n">FutureTask</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">futureTask</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FutureTask</span><span class="o">&lt;&gt;(</span><span class="n">callable</span><span class="o">);</span>
+        <span class="c1">// 3. 新建Thread对象并启动</span>
+        <span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">futureTask</span><span class="o">);</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;Task thread&quot;</span><span class="o">);</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Thread [&quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;] is running&quot;</span><span class="o">);</span>
+
+        <span class="c1">// 4. 调用isDone()判断任务是否结束</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">futureTask</span><span class="o">.</span><span class="na">isDone</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Task is not done&quot;</span><span class="o">);</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;get 1:&quot;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+            <span class="c1">// 5. 调用get()方法获取任务结果,如果任务没有执行完成则阻塞等待</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">futureTask</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;get 2:&quot;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;result is &quot;</span> <span class="o">+</span> <span class="n">result</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-06-15 21:15:26</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
