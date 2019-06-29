@@ -1,0 +1,142 @@
+---
+title: "Semaphore"
+layout: page
+date: 2019-06-27 00:00
+---
+
+[TOC]
+
+# Semaphore
+
+信号量(Semaphore)，有时被称为信号灯，是在多线程环境下使用的一种设施，是可以用来保证两个或多个关键代码段不被并发调用。在进入一个关键代码段之前，线程必须获取一个信号量；一旦该关键代码段完成了，那么该线程必须释放信号量。其它想进入该关键代码段的线程必须等待直到第一个线程释放信号量。为了完成这个过程，需要创建一个信号量VI，然后将Acquire Semaphore VI以及Release Semaphore VI分别放置在每个关键代码段的首末端。确认这些信号量VI引用的是初始创建的信号量。（百度百科）
+
+## Java Semaphore
+
+### 常用API
+
+名称 | 用法
+-|-
+acquire() | 获取一个信号量（许可）
+acquire(int permits) | 获取 permits 数量的信号量，在获取到 permits 数量的信号量之前会一直阻塞等待，并且数量必须小于等于 Semaphore 允许的总信号量，否则会出现死锁
+acquireUninterruptibly() | 获取一个不可被中断的信号量
+tryAcquire() | 尝试去回去一个信号量，获取到了，返回 true，否则 false
+tryAcquire(long timeout, TimeUnit unit) | 在限定时间内尝试去回去一个信号量，获取到了，返回 true，否则 false
+release() | 释放当前的信号量
+release(int permits) | 同样，上面获取了多少个信号量，这里就需要释放多少个，否则容易出现死锁一直等待的情况
+
+### 例子代码
+
+```java
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.concurrent.*;
+
+/**
+ * @Author mubi
+ * @Date 2019/6/28 11:38 AM
+ *
+ * Semaphore 测试
+ */
+public class ContextTest {
+
+    static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,SSS");
+
+    // 限定进入线程的并发数量
+    private static final Semaphore semaphore = new Semaphore(3);
+
+    static class TestThread1 implements Runnable {
+        @Override
+        public void run() {
+            try {
+                semaphore.acquire(1);
+                Calendar cal = Calendar.getInstance();
+                System.out.println( df.format(cal.getTime()) + " :" + Thread.currentThread().getName());
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                semaphore.release(1);
+            }
+        }
+    }
+
+    static class TestThread2 implements Runnable {
+        @Override
+        public void run() {
+            try {
+                semaphore.acquire(2);
+                Calendar cal = Calendar.getInstance();
+                System.out.println( df.format(cal.getTime()) + " :" + Thread.currentThread().getName());
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                semaphore.release(2);
+            }
+        }
+    }
+
+    void test1(){
+        ExecutorService exec = new ThreadPoolExecutor(10,
+                Integer.MAX_VALUE,
+                60L,
+                TimeUnit.SECONDS,
+                new SynchronousQueue<>());
+        int n = 10;
+        for(int i=0;i<n;i++) {
+            Thread t = new Thread(new TestThread1(), "Thread_" + i);
+            exec.execute(t);
+        }
+        exec.shutdown();
+    }
+
+    void test2(){
+        ExecutorService exec = new ThreadPoolExecutor(10,
+                Integer.MAX_VALUE,
+                60L,
+                TimeUnit.SECONDS,
+                new SynchronousQueue<>());
+        int n = 10;
+        for(int i=0;i<n;i++) {
+            Thread t = new Thread(new TestThread2(), "Thread_" + i);
+            exec.execute(t);
+        }
+        exec.shutdown();
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ContextTest contextTest = new ContextTest();
+        contextTest.test1();
+        contextTest.test2();
+    }
+
+}
+/* test1 output, 能同时并发3个
+
+2019-06-28 12:00:52,195 :pool-1-thread-1
+2019-06-28 12:00:52,199 :pool-1-thread-2
+2019-06-28 12:00:52,199 :pool-1-thread-3
+2019-06-28 12:00:55,200 :pool-1-thread-4
+2019-06-28 12:00:55,204 :pool-1-thread-6
+2019-06-28 12:00:55,204 :pool-1-thread-5
+2019-06-28 12:00:58,204 :pool-1-thread-7
+2019-06-28 12:00:58,210 :pool-1-thread-9
+2019-06-28 12:00:58,210 :pool-1-thread-8
+2019-06-28 12:01:01,209 :pool-1-thread-10
+
+ */
+/* test2 output，只能并发1个
+
+ 2019-06-28 11:59:37,038 :pool-1-thread-1
+2019-06-28 11:59:40,043 :pool-1-thread-2
+2019-06-28 11:59:43,048 :pool-1-thread-3
+2019-06-28 11:59:46,050 :pool-1-thread-4
+2019-06-28 11:59:49,056 :pool-1-thread-5
+2019-06-28 11:59:52,060 :pool-1-thread-6
+2019-06-28 11:59:55,064 :pool-1-thread-7
+2019-06-28 11:59:58,067 :pool-1-thread-8
+2019-06-28 12:00:01,069 :pool-1-thread-9
+2019-06-28 12:00:04,073 :pool-1-thread-10
+
+ */
+```

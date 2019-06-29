@@ -160,4 +160,44 @@ public class QueryFromDBAction {
 }
 ```
 
-## TODO
+## ThreadLocalMap
+
+```java
+/**
+     * ThreadLocalMap is a customized hash map suitable only for
+     * maintaining thread local values. No operations are exported
+     * outside of the ThreadLocal class. The class is package private to
+     * allow declaration of fields in class Thread.  To help deal with
+     * very large and long-lived usages, the hash table entries use
+     * WeakReferences for keys. However, since reference queues are not
+     * used, stale entries are guaranteed to be removed only when
+     * the table starts running out of space.
+     */
+    static class ThreadLocalMap {
+
+        /**
+         * The entries in this hash map extend WeakReference, using
+         * its main ref field as the key (which is always a
+         * ThreadLocal object).  Note that null keys (i.e. entry.get()
+         * == null) mean that the key is no longer referenced, so the
+         * entry can be expunged from table.  Such entries are referred to
+         * as "stale entries" in the code that follows.
+         */
+        static class Entry extends WeakReference<ThreadLocal<?>> {
+            /** The value associated with this ThreadLocal. */
+            Object value;
+
+            Entry(ThreadLocal<?> k, Object v) {
+                super(k);
+                value = v;
+            }
+        }
+```
+
+1. 弱引用
+2. 环形索引
+3. 线性探测
+
+## ThreadLocal与内存泄漏
+
+参考： https://blog.csdn.net/qq_38184424/article/details/81842483

@@ -208,7 +208,7 @@ sizeCtl ：默认为0，用来控制table的初始化和扩容操作，具体应
 原文：https://blog.csdn.net/u010454030/article/details/82458413
 版权声明：本文为博主原创文章，转载请附上博文链接！
 
-## ConcurrentLinkedQueue(class)
+## ConcurrentLinkedQueue(class) 无界线程安全
 
 ```java
 public class ConcurrentLinkedQueue<E> extends AbstractQueue<E>
