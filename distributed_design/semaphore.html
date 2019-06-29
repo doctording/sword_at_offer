@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Semaphore - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#distributed_design">distributed_design</a>&nbsp;&#187;&nbsp;Semaphore
+    <span class="updated">Page Updated&nbsp;
+      2019-06-27 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Semaphore</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#semaphore">Semaphore</a><ul>
+<li><a href="#java-semaphore">Java Semaphore</a><ul>
+<li><a href="#api">常用API</a></li>
+<li><a href="#_1">例子代码</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="semaphore">Semaphore</h1>
+<p>信号量(Semaphore)，有时被称为信号灯，是在多线程环境下使用的一种设施，是可以用来保证两个或多个关键代码段不被并发调用。在进入一个关键代码段之前，线程必须获取一个信号量；一旦该关键代码段完成了，那么该线程必须释放信号量。其它想进入该关键代码段的线程必须等待直到第一个线程释放信号量。为了完成这个过程，需要创建一个信号量VI，然后将Acquire Semaphore VI以及Release Semaphore VI分别放置在每个关键代码段的首末端。确认这些信号量VI引用的是初始创建的信号量。（百度百科）</p>
+<h2 id="java-semaphore">Java Semaphore</h2>
+<h3 id="api">常用API</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>acquire()</td>
+<td>获取一个信号量（许可）</td>
+</tr>
+<tr>
+<td>acquire(int permits)</td>
+<td>获取 permits 数量的信号量，在获取到 permits 数量的信号量之前会一直阻塞等待，并且数量必须小于等于 Semaphore 允许的总信号量，否则会出现死锁</td>
+</tr>
+<tr>
+<td>acquireUninterruptibly()</td>
+<td>获取一个不可被中断的信号量</td>
+</tr>
+<tr>
+<td>tryAcquire()</td>
+<td>尝试去回去一个信号量，获取到了，返回 true，否则 false</td>
+</tr>
+<tr>
+<td>tryAcquire(long timeout, TimeUnit unit)</td>
+<td>在限定时间内尝试去回去一个信号量，获取到了，返回 true，否则 false</td>
+</tr>
+<tr>
+<td>release()</td>
+<td>释放当前的信号量</td>
+</tr>
+<tr>
+<td>release(int permits)</td>
+<td>同样，上面获取了多少个信号量，这里就需要释放多少个，否则容易出现死锁一直等待的情况</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_1">例子代码</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Calendar</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/6/28 11:38 AM</span>
+<span class="cm"> *</span>
+<span class="cm"> * Semaphore 测试</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ContextTest</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="n">SimpleDateFormat</span> <span class="n">df</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd hh:mm:ss,SSS&quot;</span><span class="o">);</span>
+
+    <span class="c1">// 限定进入线程的并发数量</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Semaphore</span> <span class="n">semaphore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Semaphore</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TestThread1</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">semaphore</span><span class="o">.</span><span class="na">acquire</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">Calendar</span> <span class="n">cal</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">df</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">cal</span><span class="o">.</span><span class="na">getTime</span><span class="o">())</span> <span class="o">+</span> <span class="s">&quot; :&quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                <span class="n">semaphore</span><span class="o">.</span><span class="na">release</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TestThread2</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">semaphore</span><span class="o">.</span><span class="na">acquire</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+                <span class="n">Calendar</span> <span class="n">cal</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">df</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">cal</span><span class="o">.</span><span class="na">getTime</span><span class="o">())</span> <span class="o">+</span> <span class="s">&quot; :&quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                <span class="n">semaphore</span><span class="o">.</span><span class="na">release</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">test1</span><span class="o">(){</span>
+        <span class="n">ExecutorService</span> <span class="n">exec</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span>
+                <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">,</span>
+                <span class="mi">60L</span><span class="o">,</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">,</span>
+                <span class="k">new</span> <span class="n">SynchronousQueue</span><span class="o">&lt;&gt;());</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">TestThread1</span><span class="o">(),</span> <span class="s">&quot;Thread_&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">exec</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">exec</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">test2</span><span class="o">(){</span>
+        <span class="n">ExecutorService</span> <span class="n">exec</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span>
+                <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">,</span>
+                <span class="mi">60L</span><span class="o">,</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">,</span>
+                <span class="k">new</span> <span class="n">SynchronousQueue</span><span class="o">&lt;&gt;());</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">TestThread2</span><span class="o">(),</span> <span class="s">&quot;Thread_&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">exec</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">exec</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">ContextTest</span> <span class="n">contextTest</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ContextTest</span><span class="o">();</span>
+        <span class="n">contextTest</span><span class="o">.</span><span class="na">test1</span><span class="o">();</span>
+        <span class="n">contextTest</span><span class="o">.</span><span class="na">test2</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/* test1 output, 能同时并发3个</span>
+
+<span class="cm">2019-06-28 12:00:52,195 :pool-1-thread-1</span>
+<span class="cm">2019-06-28 12:00:52,199 :pool-1-thread-2</span>
+<span class="cm">2019-06-28 12:00:52,199 :pool-1-thread-3</span>
+<span class="cm">2019-06-28 12:00:55,200 :pool-1-thread-4</span>
+<span class="cm">2019-06-28 12:00:55,204 :pool-1-thread-6</span>
+<span class="cm">2019-06-28 12:00:55,204 :pool-1-thread-5</span>
+<span class="cm">2019-06-28 12:00:58,204 :pool-1-thread-7</span>
+<span class="cm">2019-06-28 12:00:58,210 :pool-1-thread-9</span>
+<span class="cm">2019-06-28 12:00:58,210 :pool-1-thread-8</span>
+<span class="cm">2019-06-28 12:01:01,209 :pool-1-thread-10</span>
+
+<span class="cm"> */</span>
+<span class="cm">/* test2 output，只能并发1个</span>
+
+<span class="cm"> 2019-06-28 11:59:37,038 :pool-1-thread-1</span>
+<span class="cm">2019-06-28 11:59:40,043 :pool-1-thread-2</span>
+<span class="cm">2019-06-28 11:59:43,048 :pool-1-thread-3</span>
+<span class="cm">2019-06-28 11:59:46,050 :pool-1-thread-4</span>
+<span class="cm">2019-06-28 11:59:49,056 :pool-1-thread-5</span>
+<span class="cm">2019-06-28 11:59:52,060 :pool-1-thread-6</span>
+<span class="cm">2019-06-28 11:59:55,064 :pool-1-thread-7</span>
+<span class="cm">2019-06-28 11:59:58,067 :pool-1-thread-8</span>
+<span class="cm">2019-06-28 12:00:01,069 :pool-1-thread-9</span>
+<span class="cm">2019-06-28 12:00:04,073 :pool-1-thread-10</span>
+
+<span class="cm"> */</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-06-29 19:38:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
