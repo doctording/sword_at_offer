@@ -40,6 +40,7 @@
 <li><a href="#_9">数组的初始化</a></li>
 </ul>
 </li>
+<li><a href="#_10">抽象类初始化问题</a></li>
 </ul>
 </li>
 </ul>
@@ -172,17 +173,14 @@
 <h3 id="class-class">总结一个对象的创建过程(class &amp; class实例 =&gt; 对象)</h3>
 <p>假设有一个名为Dog的类</p>
 <ol>
-<li>即使没有显示地使用static关键字，构造器其实也可以看成静态方法。首次创建Dog类的对象时，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位Dog.class文件</li>
-<li>
-<p>然后载入Dog.class(这将创建一个Dog对象)，有关静态初始化的所有动作都会执行。因此，<strong>静态初始化只在Class对象首次加载的时候执行一次</strong></p>
-</li>
-<li>
-<p>当用new Dog()创建对象的时候，首先将在<code>堆</code>上为Dog对象分配足够的存储空间</p>
-</li>
+<li>即使没有显示地使用static关键字，构造器其实也可以看成静态方法。首次创建Dog类的对象时，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位<code>Dog.class</code>文件</li>
+<li>然后载入<code>Dog.class</code>(这将创建一个Dog对象)，有关静态初始化的所有动作都会执行。因此，<strong>静态初始化只在Class对象首次加载的时候执行一次</strong></li>
+<li>当用new Dog()创建对象的时候，首先将在<code>堆</code>上为Dog对象分配足够的存储空间</li>
 <li>这块存储空间会被清零，这就自动地将Dog对象中的所有基本类型都设置成了默认值（<code>0</code>，<code>flase</code>，<code>null</code>等默认值）</li>
 <li>执行所有出现于字段定义外的初始化动作</li>
 <li>执行构造器</li>
 </ol>
+<p><code>静态数据成员 -&gt; 静态代码块 -&gt; 非静态数据成员 -&gt; 非静态代码块 -&gt; 构造方法</code></p>
 <h3 id="_9">数组的初始化</h3>
 <div class="hlcode"><pre><span class="kt">int</span><span class="o">[]</span> <span class="n">a1</span><span class="o">;</span> <span class="c1">// int a1[];</span>
 </pre></div>
@@ -200,12 +198,41 @@
 
 <p>如果忘记了创建对象，并且试图使用数组中的空引用，就会出现runtime exception</p>
 <p>由于所有的类都继承自<code>Object</code>类，所以也可以用Object数组</p>
+<h2 id="_10">抽象类初始化问题</h2>
+<p>可以初始化,但是不能直接初始化(即new，即不能实例化),要么通过多态,要么通过静态的内存来指向一块区域让你去调用抽象类的某个方法(即局部初始化)</p>
+<div class="hlcode"><pre><span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Abs_A</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">a</span><span class="o">;</span>
+    <span class="c1">//这是一个抽象方法，</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">();</span>
+    <span class="n">Abs_A</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Abs_A()&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kt">void</span> <span class="nf">test</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">A</span> <span class="kd">extends</span> <span class="n">Abs_A</span><span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;run&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">A</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">A</span><span class="o">();</span>
+<span class="n">a</span><span class="o">.</span><span class="na">test</span><span class="o">();</span>
+<span class="cm">/*</span>
+<span class="cm">Abs_A()</span>
+<span class="cm">test</span>
+<span class="cm">*/</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-06-29 19:38:02</p>
+        <p>Site Generated 2019-08-03 14:18:57</p>
       </span>
     </div>
 
