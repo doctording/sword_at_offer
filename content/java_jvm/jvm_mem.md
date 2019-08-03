@@ -482,5 +482,159 @@ G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc�
       [Humongous Reclaim: 0.0 ms]
       [Free CSet: 0.7 ms]
    [Eden: 1160.0M(1160.0M)->0.0B(1153.0M) Survivors: 68.0M->75.0M Heap: 1551.2M(2048.0M)->398.7M(2048.0M)]
- [Times: user=0.14 sys=0.00, real=0.07 secs] 
+ [Times: user=0.14 sys=0.00, real=0.07 secs]
 ```
+
+## JVM参数与GC
+
+年轻代 | 老年代 | jvm 参数 |
+-|-|-|
+Serial (DefNew) | Serial Old(PSOldGen) | -XX:+UseSerialGC
+Parallel Scavenge (PSYoungGen) | Serial Old(PSOldGen) | -XX:+UseParallelGC
+Parallel Scavenge (PSYoungGen) | Parallel Old (ParOldGen) | -XX:+UseParallelOldGC
+ParNew (ParNew) | Serial Old(PSOldGen) | -XX:-UseParNewGC
+ParNew (ParNew) | CMS+Serial Old(PSOldGen) | -XX:+UseConcMarkSweepGC
+G1 | G1 | -XX:+UseG1GC
+
+### Java8 默认GC
+
+* jvm 配置
+
+```java
+-Xloggc:/Users/mubi/git_workspace/java8/gc.log -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -XX:+PrintGCDetails
+```
+
+* java 程序
+
+```java
+ public static void testAllocation() throws InterruptedException{
+        byte[] a1, a2, a3, a4;
+
+        System.out.println("free:" + Runtime.getRuntime().freeMemory() / 1024 / 1024);
+        System.out.println("total:" + Runtime.getRuntime().totalMemory() / 1024 / 1024);
+        System.out.println("max:" + Runtime.getRuntime().maxMemory() / 1024 / 1024);
+        System.out.println("used:" + ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024);
+
+        a1 = new byte[2 * _1MB];
+
+        a2 = new byte[2 * _1MB];
+
+        System.out.println("free:" + Runtime.getRuntime().freeMemory() / 1024 / 1024);
+        System.out.println("total:" + Runtime.getRuntime().totalMemory() / 1024 / 1024);
+        System.out.println("max:" + Runtime.getRuntime().maxMemory() / 1024 / 1024);
+        System.out.println("used:" + ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
+                / 1024 / 1024);
+
+        a3 = new byte[2 * _1MB];
+
+        a4 = new byte[6 * _1MB];
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        testAllocation();
+        TimeUnit.SECONDS.sleep(30);
+    }
+```
+
+* gc.log 文件
+
+```java
+Java HotSpot(TM) 64-Bit Server VM (25.171-b11) for bsd-amd64 JRE (1.8.0_171-b11), built on Mar 28 2018 12:50:57 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
+Memory: 4k page, physical 16777216k(3251600k free)
+
+/proc/meminfo:
+
+CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:NewSize=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC
+0.240: [GC (Allocation Failure) [PSYoungGen: 6524K->706K(9216K)] 6524K->4810K(19456K), 0.0127210 secs] [Times: user=0.01 sys=0.00, real=0.02 secs]
+0.256: [GC (Allocation Failure) [PSYoungGen: 2754K->690K(9216K)] 6858K->6850K(19456K), 0.0114299 secs] [Times: user=0.00 sys=0.00, real=0.01 secs]
+0.267: [Full GC (Ergonomics) [PSYoungGen: 690K->0K(9216K)] [ParOldGen: 6160K->6699K(10240K)] 6850K->6699K(19456K), [Metaspace: 3305K->3305K(1056768K)], 0.0128112 secs] [Times: user=0.01 sys=0.00, real=0.01 secs]
+Heap
+ PSYoungGen      total 9216K, used 6547K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)
+  eden space 8192K, 79% used [0x00000007bf600000,0x00000007bfc64d10,0x00000007bfe00000)
+  from space 1024K, 0% used [0x00000007bff00000,0x00000007bff00000,0x00000007c0000000)
+  to   space 1024K, 0% used [0x00000007bfe00000,0x00000007bfe00000,0x00000007bff00000)
+ ParOldGen       total 10240K, used 6699K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)
+  object space 10240K, 65% used [0x00000007bec00000,0x00000007bf28afe8,0x00000007bf600000)
+ Metaspace       used 3339K, capacity 4500K, committed 4864K, reserved 1056768K
+  class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
+
+```
+
+gc 类型 | 方式
+-|-
+yong gc | Parallel Scavenge（PSYoungGen）
+full gc | Parallel Old（ParOldGen）
+
+## 各种 GC收集器
+
+### Serial 收集器 (年轻代)
+
+* 是一个单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其他所有的工作线程，直到收集结束**
+
+* 标记，清除
+
+### Parallel Scavenge 收集器 (年轻代)
+
+使用复制算法的**并行多线程收集器**。Parallel Scavenge是Java1.8默认的收集器，特点是并行的多线程回收，以吞吐量（CPU用于运行用户代码的时间与CPU总消耗时间的比值，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)）优先
+
+停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验，而高吞吐量则可以高效率地利用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务
+
+### ParNew 收集器 (年轻代)
+
+是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余与Serial收集器完全一样。
+
+### CMS收集器 （老年代）
+
+### G1 gc.log
+
+```java
+Java HotSpot(TM) 64-Bit Server VM (25.171-b11) for bsd-amd64 JRE (1.8.0_171-b11), built on Mar 28 2018 12:50:57 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
+Memory: 4k page, physical 16777216k(1978920k free)
+
+/proc/meminfo:
+
+CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:NewSize=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC
+0.196: [GC pause (G1 Humongous Allocation) (young) (initial-mark), 0.0022978 secs]
+   [Parallel Time: 2.0 ms, GC Workers: 4]
+      [GC Worker Start (ms): Min: 196.2, Avg: 196.2, Max: 196.3, Diff: 0.0]
+      [Ext Root Scanning (ms): Min: 0.6, Avg: 0.6, Max: 0.6, Diff: 0.0, Sum: 2.4]
+      [Update RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+         [Processed Buffers: Min: 0, Avg: 0.0, Max: 0, Diff: 0, Sum: 0]
+      [Scan RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Code Root Scanning (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Object Copy (ms): Min: 0.8, Avg: 1.1, Max: 1.3, Diff: 0.5, Sum: 4.3]
+      [Termination (ms): Min: 0.0, Avg: 0.3, Max: 0.5, Diff: 0.5, Sum: 1.1]
+         [Termination Attempts: Min: 1, Avg: 1.2, Max: 2, Diff: 1, Sum: 5]
+      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [GC Worker Total (ms): Min: 1.9, Avg: 2.0, Max: 2.0, Diff: 0.0, Sum: 7.8]
+      [GC Worker End (ms): Min: 198.2, Avg: 198.2, Max: 198.2, Diff: 0.0]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.0 ms]
+   [Other: 0.2 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.1 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.0 ms]
+      [Humongous Register: 0.0 ms]
+      [Humongous Reclaim: 0.0 ms]
+      [Free CSet: 0.0 ms]
+   [Eden: 3072.0K(10.0M)->0.0B(9216.0K) Survivors: 0.0B->1024.0K Heap: 8629.0K(20.0M)->6823.5K(20.0M)]
+ [Times: user=0.00 sys=0.00, real=0.01 secs] 
+0.199: [GC concurrent-root-region-scan-start]
+0.199: [GC concurrent-root-region-scan-end, 0.0005314 secs]
+0.199: [GC concurrent-mark-start]
+0.199: [GC concurrent-mark-end, 0.0000251 secs]
+0.202: [GC remark 0.202: [Finalize Marking, 0.0000621 secs] 0.202: [GC ref-proc, 0.0000215 secs] 0.202: [Unloading, 0.0003779 secs], 0.0005651 secs]
+ [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.203: [GC cleanup 13M->13M(20M), 0.0001664 secs]
+ [Times: user=0.00 sys=0.00, real=0.00 secs] 
+ Heap
+ garbage-first heap   total 20480K, used 12967K [0x00000007bec00000, 0x00000007bed000a0, 0x00000007c0000000)
+  region size 1024K, 2 young (2048K), 1 survivors (1024K)
+ Metaspace       used 3342K, capacity 4500K, committed 4864K, reserved 1056768K
+  class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
+```
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png)
+
