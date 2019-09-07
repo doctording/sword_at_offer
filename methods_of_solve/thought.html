@@ -392,6 +392,11 @@ http://blog.csdn.net/yi_afly/article/details/52012593</p>
 <p><code>f(N,M)=(f(N−1,M)+M)%N</code></p>
 <p><code>f(N,M)</code>表示，<code>N</code>个人报数，每报到<code>M</code>时杀掉那个人，最终胜利者的编号<br />
 <code>f(N−1,M)</code>表示，<code>N-1</code>个人报数，每报到M时杀掉那个人，最终胜利者的编号</p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/solved_by_java/imgs/Joseph.png" /></p>
+<p><code>f(11, 3) = 7</code>, 可以看到<code>7</code>不断的往前面移动<code>3</code>即每杀掉一个人，其实就是把这个数组(环)向前移动了M位.</p>
+<p>假设：<code>n</code>个人，最后胜利者是<code>Pn</code>位置；则经过一轮以后:变成<code>n-1</code>个人，最后胜利者位置是<code>Pn-1</code><br />
+那么显然有： <code>Pn = ( Pn-1 + k ) % n</code><br />
+所以有：<code>f(N,M) = ( f(N−1, M ) + M ) % N</code></p>
 <h1 id="47-123n">47 求1+2+3+...+n</h1>
 <ul>
 <li>数学公式</li>
@@ -495,7 +500,7 @@ http://blog.csdn.net/yi_afly/article/details/52012593</p>
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-09-07 10:28:46</p>
+        <p>Site Generated 2019-09-07 12:05:42</p>
       </span>
     </div>
 
