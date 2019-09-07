@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>JDK的命令行工具使用 - 剑指Offer</title>
+    <title>JVM相关的命令工具使用 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,19 +16,21 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;JDK的命令行工具使用
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;JVM相关的命令工具使用
     <span class="updated">Page Updated&nbsp;
       2019-02-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">JDK的命令行工具使用</div>
+<div class="page_title">JVM相关的命令工具使用</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java">Java自带的各类型工具</a><ul>
 <li><a href="#jps">jps</a></li>
 <li><a href="#jstat">jstat</a></li>
+<li><a href="#jmap">jmap</a></li>
+<li><a href="#jstack">jstack</a></li>
 </ul>
 </li>
 </ul>
@@ -202,12 +204,28 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
   <span class="mf">0.00</span> <span class="mf">100.00</span>  <span class="mf">43.24</span>   <span class="mf">3.73</span>  <span class="mf">97.04</span>  <span class="mf">92.86</span>      <span class="mi">6</span>    <span class="mf">0.058</span>     <span class="mi">0</span>    <span class="mf">0.000</span>    <span class="mf">0.058</span>
   <span class="mf">0.00</span> <span class="mf">100.00</span>  <span class="mf">43.24</span>   <span class="mf">3.73</span>  <span class="mf">97.04</span>  <span class="mf">92.86</span>      <span class="mi">6</span>    <span class="mf">0.058</span>     <span class="mi">0</span>    <span class="mf">0.000</span>    <span class="mf">0.058</span>
 </pre></div>
+
+
+<h2 id="jmap">jmap</h2>
+<ul>
+<li>dump jvm信息</li>
+</ul>
+<div class="hlcode"><pre><span class="n">jmap</span> <span class="o">-</span><span class="nl">dump:</span><span class="n">format</span><span class="o">=</span><span class="n">b</span><span class="o">,</span><span class="n">file</span><span class="o">=</span><span class="n">xx</span><span class="o">.</span><span class="na">hprof</span> <span class="o">&lt;</span><span class="n">pid</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<h2 id="jstack">jstack</h2>
+<ul>
+<li>堆栈信息</li>
+</ul>
+<div class="hlcode"><pre><span class="n">jstack</span> <span class="o">-</span><span class="n">F</span> <span class="o">&lt;</span><span class="n">PID</span><span class="o">&gt;</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-08-03 14:18:57</p>
+        <p>Site Generated 2019-09-07 10:28:46</p>
       </span>
     </div>
 

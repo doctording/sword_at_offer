@@ -34,7 +34,7 @@
 <li><a href="#_5">流操作</a><ul>
 <li><a href="#reduce">规约(reduce)</a></li>
 <li><a href="#max-min">max, min</a></li>
-<li><a href="#_6">流操作: 无状态和有状态 ?</a></li>
+<li><a href="#_6">流操作: 无状态和有状态</a></li>
 </ul>
 </li>
 </ul>
@@ -200,18 +200,18 @@
 </pre></div>
 
 
-<h4 id="_6">流操作: 无状态和有状态 ?</h4>
+<h4 id="_6">流操作: 无状态和有状态</h4>
 <p>诸如<code>map</code>或<code>filter</code>等操作会从输入流中获取每一个元素，并在输出流中输出0个或1个结果，这些操作是<code>无状态</code>的:它们没有内部状态（假设用户提高的lambda或方法引用没有内部可变状态）</p>
 <p>诸如<code>reduce</code>,<code>sum</code>，<code>max</code>等操作需要<code>内部状态</code>来累计结果，要求流是<code>有界</code>的</p>
 <p>诸如<code>sort</code>或<code>distince</code>等操作，开始与<code>map</code>,<code>filter</code>相同，但是需要有个缓冲区存放所有元素，这个存储要求是<code>无界</code>的</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_operate2.png" /></p>
-<p>注：如果能避开有状态，选用无状态操作，就能获得更好的<code>并行</code>性能。</p>
+<p>注：如果能避开 有状态，选用无状态操作，就能获得更好的<code>并行</code>性能。</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-08-03 14:18:57</p>
+        <p>Site Generated 2019-09-07 10:28:46</p>
       </span>
     </div>
 

@@ -49,7 +49,10 @@
 </li>
 </ul>
 </li>
-<li><a href="#futuretask">FutureTask &amp; 线程池</a></li>
+<li><a href="#futuretask">FutureTask &amp; 线程池</a><ul>
+<li><a href="#_5">线程池新进来的任务被拒绝</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -585,12 +588,119 @@
 
 <span class="o">}</span>
 </pre></div>
+
+
+<h3 id="_5">线程池新进来的任务被拒绝</h3>
+<ol>
+<li>线程池shutdown了，新进来的任务会被拒绝</li>
+<li>线程池用满了，且新进来的任务超过了任务队列大小，任务被拒绝</li>
+</ol>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.AtomicInteger</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/9/2 21:38</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadPoolTest</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="n">SimpleDateFormat</span> <span class="n">df</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd HH:mm:ss,SSS&quot;</span><span class="o">);</span>
+
+    <span class="kd">static</span> <span class="n">RejectedExecutionHandler</span> <span class="n">defaultHandler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RejectedExecutionHandler</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">rejectedExecution</span><span class="o">(</span><span class="n">Runnable</span> <span class="n">r</span><span class="o">,</span> <span class="n">ThreadPoolExecutor</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RejectedExecutionException</span><span class="o">(</span><span class="s">&quot;MyTest Task &quot;</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span>
+                    <span class="s">&quot; rejected from &quot;</span> <span class="o">+</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+
+    <span class="kd">static</span> <span class="n">AtomicInteger</span> <span class="n">atomicInteger</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+    <span class="n">ThreadFactory</span> <span class="n">threadFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadFactory</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">Thread</span> <span class="nf">newThread</span><span class="o">(</span><span class="n">Runnable</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">r</span><span class="o">);</span>
+            <span class="n">thread</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;mythread-&quot;</span> <span class="o">+</span> <span class="n">atomicInteger</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+            <span class="n">atomicInteger</span><span class="o">.</span><span class="na">incrementAndGet</span><span class="o">();</span>
+            <span class="k">return</span> <span class="n">thread</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+
+    <span class="kt">void</span> <span class="nf">test1</span><span class="o">(){</span>
+        <span class="n">ThreadPoolExecutor</span> <span class="n">EXECUTOR</span> <span class="o">=</span>
+                <span class="k">new</span> <span class="nf">ThreadPoolExecutor</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
+                        <span class="mi">10</span><span class="o">,</span>
+                        <span class="mi">3000L</span><span class="o">,</span>
+                        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">,</span>
+                        <span class="k">new</span> <span class="n">LinkedBlockingQueue</span><span class="o">&lt;&gt;(</span><span class="mi">2</span><span class="o">),</span>
+                        <span class="n">threadFactory</span><span class="o">,</span>
+                        <span class="n">defaultHandler</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="c1">// 使用前可以判断</span>
+<span class="c1">//            if(!EXECUTOR.isShutdown()) {</span>
+            <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="n">threadFactory</span><span class="o">.</span><span class="na">newThread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+                    <span class="k">try</span><span class="o">{</span>
+                        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+                    <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+                    <span class="o">}</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World2&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+            <span class="n">EXECUTOR</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+<span class="c1">//            }else {</span>
+<span class="c1">//                System.out.println(&quot;executor already shutdown&quot;);</span>
+<span class="c1">//            }</span>
+            <span class="n">EXECUTOR</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">test2</span><span class="o">(){</span>
+        <span class="n">ThreadPoolExecutor</span> <span class="n">EXECUTOR</span> <span class="o">=</span>
+                <span class="k">new</span> <span class="nf">ThreadPoolExecutor</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
+                        <span class="mi">10</span><span class="o">,</span>
+                        <span class="mi">3000L</span><span class="o">,</span>
+                        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">,</span>
+                        <span class="k">new</span> <span class="n">LinkedBlockingQueue</span><span class="o">&lt;&gt;(</span><span class="mi">2</span><span class="o">),</span>
+                        <span class="n">threadFactory</span><span class="o">,</span>
+                        <span class="n">defaultHandler</span>
+                <span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">15</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kd">final</span> <span class="kt">int</span> <span class="n">tmpint</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="n">EXECUTOR</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">tmpint</span><span class="o">+</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+                        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000L</span><span class="o">);</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+        <span class="o">}</span>
+        <span class="n">EXECUTOR</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">ThreadPoolTest</span> <span class="n">threadPoolTest</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolTest</span><span class="o">();</span>
+        <span class="n">threadPoolTest</span><span class="o">.</span><span class="na">test2</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;end main()&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-08-03 14:18:57</p>
+        <p>Site Generated 2019-09-07 10:28:46</p>
       </span>
     </div>
 
