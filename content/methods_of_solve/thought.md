@@ -258,6 +258,14 @@ http://blog.csdn.net/yi_afly/article/details/52012593
 `f(N,M)`表示，`N`个人报数，每报到`M`时杀掉那个人，最终胜利者的编号
 `f(N−1,M)`表示，`N-1`个人报数，每报到M时杀掉那个人，最终胜利者的编号
 
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/solved_by_java/imgs/Joseph.png)
+
+`f(11, 3) = 7`, 可以看到`7`不断的往前面移动`3`即每杀掉一个人，其实就是把这个数组(环)向前移动了M位.
+
+假设：`n`个人，最后胜利者是`Pn`位置；则经过一轮以后:变成`n-1`个人，最后胜利者位置是`Pn-1`
+那么显然有： `Pn = ( Pn-1 + k ) % n`
+所以有：`f(N,M) = ( f(N−1, M ) + M ) % N`
+
 # 47 求1+2+3+...+n
 
 * 数学公式
