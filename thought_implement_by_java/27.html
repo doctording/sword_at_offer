@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>27 字符串的排列, 全排列问题 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#thought_implement_by_java">thought_implement_by_java</a>&nbsp;&#187;&nbsp;27 字符串的排列, 全排列问题
+    <span class="updated">Page Updated&nbsp;
+      2018-06-15 17:13
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">27 字符串的排列, 全排列问题</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac 递归思路</a></li>
+</ul>
+</div>
+<h1 id="ac">ac 递归思路</h1>
+<ul>
+<li>String final对象，不可更改，转换成char[]处理</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Collections</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">rs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">(</span><span class="mi">16</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">swap</span><span class="o">(</span><span class="kt">char</span><span class="o">[]</span> <span class="n">cs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">char</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">cs</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="n">cs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">cs</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+        <span class="n">cs</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="kt">char</span><span class="o">[]</span> <span class="n">charArray</span><span class="o">,</span> <span class="kt">int</span> <span class="n">len</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">len</span><span class="o">){</span>
+<span class="c1">//            System.out.println(charArray);</span>
+            <span class="n">rs</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">charArray</span><span class="o">));</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="cm">/**</span>
+<span class="cm">         * 后面的元素(包括当前)不断的与当前位置元素进行交换，index=0 1 ... len-1</span>
+<span class="cm">         * abc =&gt; 从第0位开始，后面的与第0位交换</span>
+<span class="cm">         * abc | bac | cba</span>
+<span class="cm">         *</span>
+<span class="cm">         * abc =&gt; 从第1位开始，后面的与第1位交换</span>
+<span class="cm">         * abc | acb</span>
+<span class="cm">         * abc(print) | acb(print) =&gt; 从第2位开始，后面的与第2位交换 =&gt; 结束(第2位是最后一位)</span>
+<span class="cm">         *</span>
+<span class="cm">         * 或者理解为</span>
+<span class="cm">         * 第一次固定了1个数字； 第2此固定了2个数字； 以此内推</span>
+<span class="cm">         * 固定了全部的数，就打印出来喽</span>
+<span class="cm">         *</span>
+<span class="cm">         * 固定a bc重新排</span>
+<span class="cm">         * 固定b ac重新排</span>
+<span class="cm">         * 固定c ab重新排</span>
+<span class="cm">         *</span>
+<span class="cm">         */</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">len</span><span class="o">;</span> <span class="n">j</span> <span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">j</span> <span class="o">!=</span> <span class="n">i</span> <span class="o">&amp;&amp;</span> <span class="n">charArray</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">charArray</span><span class="o">[</span><span class="n">i</span><span class="o">]){</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">swap</span><span class="o">(</span><span class="n">charArray</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+            <span class="n">dfs</span><span class="o">(</span><span class="n">charArray</span><span class="o">,</span> <span class="n">len</span><span class="o">,</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">swap</span><span class="o">(</span><span class="n">charArray</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">Permutation</span><span class="o">(</span><span class="n">String</span> <span class="n">str</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">str</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">str</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="k">return</span> <span class="n">rs</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">charArray</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">charArray</span><span class="o">,</span> <span class="n">len</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="c1">// 排序</span>
+        <span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">rs</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">rs</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-09-07 12:15:29</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

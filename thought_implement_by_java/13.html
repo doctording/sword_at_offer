@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>13 调整数组顺序使奇数位于偶数前面 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#thought_implement_by_java">thought_implement_by_java</a>&nbsp;&#187;&nbsp;13 调整数组顺序使奇数位于偶数前面
+    <span class="updated">Page Updated&nbsp;
+      2018-05-30 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">13 调整数组顺序使奇数位于偶数前面</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac代码</a><ul>
+<li><a href="#onon">空间复杂度为O(n),时间复杂度O(n)的就不考虑了</a></li>
+<li><a href="#o1">空间复杂度 O(1)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac代码</h1>
+<h2 id="onon">空间复杂度为<code>O(n)</code>,时间复杂度<code>O(n)</code>的就不考虑了</h2>
+<h2 id="o1">空间复杂度 O(1)</h2>
+<ol>
+<li>不考虑顺序,类似快排思路；前后两个游标，不断的查找交换</li>
+</ol>
+<p>时间复杂度<code>O(n)</code></p>
+<div class="hlcode"><pre> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reOrderArray</span><span class="o">(</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="k">while</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="o">){</span>
+        <span class="c1">// 从左往右找偶数</span>
+        <span class="k">while</span><span class="o">(</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span> <span class="o">&amp;&amp;</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="n">i</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">while</span><span class="o">(</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="o">&amp;&amp;</span> <span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">j</span><span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+            <span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ol>
+<li>考虑顺序一致</li>
+</ol>
+<p>插入排序，移动元素<br />
+时间复杂度<code>O(n^2)</code>, 空间复杂度<code>O(1)</code></p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reOrderArray</span><span class="o">(</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="c1">// 已经有的奇数个数</span>
+        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="c1">// 是奇数</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="c1">// 后移元素</span>
+                <span class="k">while</span><span class="o">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="n">k</span><span class="o">){</span>
+                    <span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+                    <span class="n">j</span><span class="o">--;</span>
+                <span class="o">}</span>
+                <span class="n">array</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+                <span class="n">k</span><span class="o">++;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<ol>
+<li>归并排序</li>
+</ol>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * 可以理解为，两个有序数组的合并排序</span>
+<span class="cm">     * 思路：维持两个数组的游标，不断的比较</span>
+<span class="cm">     * 当前比较规则是： 奇数在前，偶数后面</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">merge2</span><span class="o">(</span><span class="kt">int</span> <span class="n">arr</span><span class="o">[],</span> <span class="kt">int</span> <span class="n">sta</span><span class="o">,</span> <span class="kt">int</span> <span class="n">mid</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sta</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// sta mid -1</span>
+        <span class="c1">// mid end</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arrTmp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">end</span> <span class="o">-</span> <span class="n">sta</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="c1">// p1, p2 游标</span>
+        <span class="kt">int</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">sta</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p1</span> <span class="o">&lt;=</span> <span class="n">mid</span> <span class="o">&amp;&amp;</span> <span class="n">p2</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="o">){</span>
+<span class="c1">//            if(arr[p1] &lt;= arr[p2]) {</span>
+<span class="c1">//                arrTmp[k++] = arr[p1++];</span>
+<span class="c1">//            }else {</span>
+<span class="c1">//                arrTmp[k++] = arr[p2++];</span>
+<span class="c1">//            }</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">p1</span><span class="o">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">arrTmp</span><span class="o">[</span><span class="n">k</span><span class="o">++]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">p1</span><span class="o">++];</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">p2</span><span class="o">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">arrTmp</span><span class="o">[</span><span class="n">k</span><span class="o">++]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">p2</span><span class="o">++];</span>
+                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                    <span class="c1">// 都是偶数，p1优先；因为p1本来就在p2的前面，为了不改变顺序</span>
+                    <span class="n">arrTmp</span><span class="o">[</span><span class="n">k</span><span class="o">++]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">p1</span><span class="o">++];</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p1</span> <span class="o">&lt;=</span> <span class="n">mid</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 如果第一个序列未检测完，直接将后面所有元素加到合并的序列中</span>
+            <span class="n">arrTmp</span><span class="o">[</span><span class="n">k</span><span class="o">++]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">p1</span><span class="o">++];</span>
+        <span class="o">}</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p2</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="o">){</span>
+            <span class="c1">// 同上</span>
+            <span class="n">arrTmp</span><span class="o">[</span><span class="n">k</span><span class="o">++]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">p2</span><span class="o">++];</span>
+        <span class="o">}</span>
+        <span class="c1">// 复制回去</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">sta</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">arrTmp</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">sta</span><span class="o">];</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">mergeSort</span><span class="o">(</span><span class="kt">int</span> <span class="n">arr</span><span class="o">[],</span> <span class="kt">int</span> <span class="n">sta</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sta</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">sta</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">sta</span><span class="o">;</span>
+        <span class="n">mergeSort</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">sta</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span>
+        <span class="n">mergeSort</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+        <span class="c1">// 左右处理完，然后归并</span>
+        <span class="n">merge2</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">sta</span><span class="o">,</span> <span class="n">mid</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reOrderArray</span><span class="o">(</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="n">mergeSort</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="mi">0</span> <span class="o">,</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-09-07 12:15:29</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>63 二叉搜索树的第k个结点 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#thought_implement_by_java">thought_implement_by_java</a>&nbsp;&#187;&nbsp;63 二叉搜索树的第k个结点
+    <span class="updated">Page Updated&nbsp;
+      2018-09-02 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">63 二叉搜索树的第k个结点</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+<li><a href="#ac2">ac2</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="cm">/*</span>
+<span class="cm">public class TreeNode {</span>
+<span class="cm">    int val = 0;</span>
+<span class="cm">    TreeNode left = null;</span>
+<span class="cm">    TreeNode right = null;</span>
+
+<span class="cm">    public TreeNode(int val) {</span>
+<span class="cm">        this.val = val;</span>
+
+<span class="cm">    }</span>
+
+<span class="cm">}</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">TreeNode</span> <span class="nf">KthNode</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">pRoot</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">pRoot</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">sta</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+        <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">pRoot</span><span class="o">);</span>
+        <span class="n">TreeNode</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pRoot</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">||</span> <span class="o">!</span><span class="n">sta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">p</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">TreeNode</span> <span class="n">popNode</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+            <span class="n">i</span><span class="o">++;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">k</span><span class="o">){</span>
+                <span class="k">return</span> <span class="n">popNode</span><span class="o">;</span>
+            <span class="o">}</span>
+<span class="c1">//            System.out.print(popNode.val + &quot; &quot;);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">popNode</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">popNode</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<h1 id="ac2">ac2</h1>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="cm">/*</span>
+<span class="cm">public class TreeNode {</span>
+<span class="cm">    int val = 0;</span>
+<span class="cm">    TreeNode left = null;</span>
+<span class="cm">    TreeNode right = null;</span>
+
+<span class="cm">    public TreeNode(int val) {</span>
+<span class="cm">        this.val = val;</span>
+
+<span class="cm">    }</span>
+
+<span class="cm">}</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">TreeNode</span> <span class="nf">KthNode</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">pRoot</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">pRoot</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">TreeNode</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">pRoot</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span> <span class="c1">// 最左</span>
+<span class="c1">//                System.out.print(cur.val + &quot; &quot;);</span>
+                <span class="n">i</span><span class="o">++;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">k</span><span class="o">){</span>
+                    <span class="k">return</span> <span class="n">cur</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">TreeNode</span> <span class="n">preCur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+                <span class="k">while</span><span class="o">(</span><span class="n">preCur</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">preCur</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="n">cur</span><span class="o">){</span>
+                    <span class="n">preCur</span> <span class="o">=</span> <span class="n">preCur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">preCur</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span> <span class="c1">// 第一次访问</span>
+                    <span class="n">preCur</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">cur</span><span class="o">;</span>
+                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+<span class="c1">//                    System.out.print(cur.val + &quot; &quot;); // 第二次访问</span>
+                    <span class="n">i</span><span class="o">++;</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">k</span><span class="o">){</span>
+                        <span class="k">return</span> <span class="n">cur</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="n">preCur</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-09-07 12:15:29</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
