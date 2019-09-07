@@ -166,7 +166,7 @@ Optional<Integer> numberMax2 = numberList.stream()
 System.out.println("max2:"+ numberMax2);
 ```
 
-#### 流操作: 无状态和有状态 ?
+#### 流操作: 无状态和有状态
 
 诸如`map`或`filter`等操作会从输入流中获取每一个元素，并在输出流中输出0个或1个结果，这些操作是`无状态`的:它们没有内部状态（假设用户提高的lambda或方法引用没有内部可变状态）
 
@@ -176,4 +176,4 @@ System.out.println("max2:"+ numberMax2);
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_operate2.png)
 
-注：如果能避开有状态，选用无状态操作，就能获得更好的`并行`性能。
+注：如果能避开 有状态，选用无状态操作，就能获得更好的`并行`性能。

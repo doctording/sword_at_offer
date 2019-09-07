@@ -540,3 +540,110 @@ public class Solution {
 
 }
 ```
+
+### 线程池新进来的任务被拒绝
+
+1. 线程池shutdown了，新进来的任务会被拒绝
+2. 线程池用满了，且新进来的任务超过了任务队列大小，任务被拒绝
+
+```java
+import java.text.SimpleDateFormat;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * @Author mubi
+ * @Date 2019/9/2 21:38
+ */
+public class ThreadPoolTest {
+    static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+
+    static RejectedExecutionHandler defaultHandler = new RejectedExecutionHandler() {
+        @Override
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+            throw new RejectedExecutionException("MyTest Task " + r.toString() +
+                    " rejected from " +
+                    e.toString());
+        }
+    };
+
+    static AtomicInteger atomicInteger = new AtomicInteger(0);
+
+    ThreadFactory threadFactory = new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread thread = new Thread(r);
+            thread.setName("mythread-" + atomicInteger.get());
+            atomicInteger.incrementAndGet();
+            return thread;
+        }
+    };
+
+    void test1(){
+        ThreadPoolExecutor EXECUTOR =
+                new ThreadPoolExecutor(5,
+                        10,
+                        3000L,
+                        TimeUnit.MILLISECONDS,
+                        new LinkedBlockingQueue<>(2),
+                        threadFactory,
+                        defaultHandler);
+        int n = 2;
+        for (int i = 0; i < n; i++) {
+            // 使用前可以判断
+//            if(!EXECUTOR.isShutdown()) {
+            Thread t = threadFactory.newThread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Hello World");
+                    try{
+                        TimeUnit.SECONDS.sleep(5);
+                    }catch (Exception e){
+
+                    }
+                    System.out.println("Hello World2");
+                }
+            });
+            EXECUTOR.execute(t);
+//            }else {
+//                System.out.println("executor already shutdown");
+//            }
+            EXECUTOR.shutdown();
+        }
+    }
+
+    void test2(){
+        ThreadPoolExecutor EXECUTOR =
+                new ThreadPoolExecutor(5,
+                        10,
+                        3000L,
+                        TimeUnit.MILLISECONDS,
+                        new LinkedBlockingQueue<>(2),
+                        threadFactory,
+                        defaultHandler
+                );
+        int n = 15;
+        for (int i = 0; i < n; i++) {
+            final int tmpint = i;
+            EXECUTOR.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println(tmpint+"Hello World");
+                        TimeUnit.MILLISECONDS.sleep(1000L);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            });
+        }
+        EXECUTOR.shutdown();
+    }
+
+    public static void main(final String[] args) throws Exception {
+        ThreadPoolTest threadPoolTest = new ThreadPoolTest();
+        threadPoolTest.test2();
+        System.out.println("end main()");
+    }
+
+}
+```

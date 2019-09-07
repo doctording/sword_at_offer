@@ -45,4 +45,3 @@ while(true){
 在Reactor中，这些被拆分的小线程或者子过程对应的是`handler`，每一种`handler`会出处理一种`event`。
 
 这里会有一个全局的管理者`selector`，我们需要把`channel`注册感兴趣的事件，那么这个`selector`就会不断在`channel`上检测是否有该类型的事件发生，如果没有，那么主线程就会被阻塞，否则就会调用相应的事件处理函数即`handler`来处理。
-
