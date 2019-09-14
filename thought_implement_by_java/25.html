@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>25 复杂链表的复制 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#thought_implement_by_java">thought_implement_by_java</a>&nbsp;&#187;&nbsp;25 复杂链表的复制
+    <span class="updated">Page Updated&nbsp;
+      2019-09-08 17:13
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">25 复杂链表的复制</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="cm">/*</span>
+<span class="cm">public class RandomListNode {</span>
+<span class="cm">    int label;</span>
+<span class="cm">    RandomListNode next = null;</span>
+<span class="cm">    RandomListNode random = null;</span>
+
+<span class="cm">    RandomListNode(int label) {</span>
+<span class="cm">        this.label = label;</span>
+<span class="cm">    }</span>
+<span class="cm">}</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">RandomListNode</span> <span class="nf">Clone</span><span class="o">(</span><span class="n">RandomListNode</span> <span class="n">pHead</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">pHead</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 第一次遍历，new 新节点，构造&lt;A A&#39; B B&#39; C C&#39;&gt;</span>
+        <span class="n">RandomListNode</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">RandomListNode</span> <span class="n">pNext</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">RandomListNode</span> <span class="n">pCopy</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RandomListNode</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">label</span><span class="o">);</span>
+
+            <span class="n">pCopy</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">pNext</span><span class="o">;</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">pCopy</span><span class="o">;</span>
+
+            <span class="n">p</span> <span class="o">=</span> <span class="n">pNext</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 第二次 处理 random</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">RandomListNode</span> <span class="n">pNextCopy</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">RandomListNode</span> <span class="n">pNext</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">random</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">pNextCopy</span><span class="o">.</span><span class="na">random</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">random</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">pNextCopy</span><span class="o">.</span><span class="na">random</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">pNext</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 第三次 构造链表</span>
+        <span class="n">RandomListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">next</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">RandomListNode</span> <span class="n">pNext</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">pNext</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">pNext</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">head</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-09-14 22:06:05</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

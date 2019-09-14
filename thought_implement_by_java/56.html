@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>56 删除链表中重复的结点 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#thought_implement_by_java">thought_implement_by_java</a>&nbsp;&#187;&nbsp;56 删除链表中重复的结点
+    <span class="updated">Page Updated&nbsp;
+      2019-04-23 10:39
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">56 删除链表中重复的结点</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">一次遍历AC</a></li>
+</ul>
+</div>
+<h1 id="ac">一次遍历AC</h1>
+<div class="hlcode"><pre><span class="cm">/*</span>
+<span class="cm"> public class ListNode {</span>
+<span class="cm">    int val;</span>
+<span class="cm">    ListNode next = null;</span>
+
+<span class="cm">    ListNode(int val) {</span>
+<span class="cm">        this.val = val;</span>
+<span class="cm">    }</span>
+<span class="cm">}</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">deleteDuplication</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">pHead</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">pHead</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">pHead</span><span class="o">.</span><span class="na">next</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">pHead</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">pHead</span><span class="o">.</span><span class="na">val</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">head</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">;</span>
+
+        <span class="n">ListNode</span> <span class="n">last</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">ListNode</span> <span class="n">curNext</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">curNext</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">curNext</span><span class="o">.</span><span class="na">val</span> <span class="o">!=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">){</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="n">cur</span><span class="o">;</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">curNext</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">curNext</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">curNext</span><span class="o">.</span><span class="na">val</span> <span class="o">==</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">){</span>
+                    <span class="n">curNext</span> <span class="o">=</span> <span class="n">curNext</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">curNext</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                    <span class="n">last</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">last</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">curNext</span><span class="o">;</span>
+                    <span class="n">cur</span> <span class="o">=</span> <span class="n">curNext</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>测试用例</li>
+</ul>
+<div class="hlcode"><pre>    <span class="kt">void</span> <span class="nf">test1</span><span class="o">(){</span>
+        <span class="n">ListNode</span> <span class="n">n1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n5</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n6</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+
+        <span class="n">n1</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n2</span><span class="o">;</span>
+        <span class="n">n2</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n3</span><span class="o">;</span>
+        <span class="n">n3</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n4</span><span class="o">;</span>
+        <span class="n">n4</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n5</span><span class="o">;</span>
+        <span class="n">n5</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n6</span><span class="o">;</span>
+
+        <span class="n">ListNode</span> <span class="n">listNode</span> <span class="o">=</span> <span class="n">deleteDuplication</span><span class="o">(</span><span class="n">n1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">listNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">listNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+            <span class="n">listNode</span> <span class="o">=</span> <span class="n">listNode</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">test2</span><span class="o">(){</span>
+        <span class="n">ListNode</span> <span class="n">n1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n5</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n6</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+
+        <span class="n">n1</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n2</span><span class="o">;</span>
+        <span class="n">n2</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n3</span><span class="o">;</span>
+        <span class="n">n3</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n4</span><span class="o">;</span>
+        <span class="n">n4</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n5</span><span class="o">;</span>
+        <span class="n">n5</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n6</span><span class="o">;</span>
+
+        <span class="n">ListNode</span> <span class="n">listNode</span> <span class="o">=</span> <span class="n">deleteDuplication</span><span class="o">(</span><span class="n">n1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">listNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">listNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+            <span class="n">listNode</span> <span class="o">=</span> <span class="n">listNode</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">test3</span><span class="o">(){</span>
+        <span class="n">ListNode</span> <span class="n">n1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n5</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n6</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+        <span class="n">n1</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n2</span><span class="o">;</span>
+        <span class="n">n2</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n3</span><span class="o">;</span>
+        <span class="n">n3</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n4</span><span class="o">;</span>
+        <span class="n">n4</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n5</span><span class="o">;</span>
+        <span class="n">n5</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n6</span><span class="o">;</span>
+
+        <span class="n">ListNode</span> <span class="n">listNode</span> <span class="o">=</span> <span class="n">deleteDuplication</span><span class="o">(</span><span class="n">n1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">listNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">listNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+            <span class="n">listNode</span> <span class="o">=</span> <span class="n">listNode</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">test4</span><span class="o">(){</span>
+        <span class="n">ListNode</span> <span class="n">n1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n5</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">n6</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+        <span class="n">n1</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n2</span><span class="o">;</span>
+        <span class="n">n2</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n3</span><span class="o">;</span>
+        <span class="n">n3</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n4</span><span class="o">;</span>
+        <span class="n">n4</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n5</span><span class="o">;</span>
+        <span class="n">n5</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">n6</span><span class="o">;</span>
+
+        <span class="n">ListNode</span> <span class="n">listNode</span> <span class="o">=</span> <span class="n">deleteDuplication</span><span class="o">(</span><span class="n">n1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">listNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">listNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+            <span class="n">listNode</span> <span class="o">=</span> <span class="n">listNode</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-09-14 22:06:05</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
