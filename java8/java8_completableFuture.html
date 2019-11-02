@@ -124,7 +124,7 @@
 
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;======================&quot;</span><span class="o">);</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
-        <span class="c1">//  查询商店,试图取􏷄得􏳞􏱧商品的价格􏳠􏿧</span>
+        <span class="c1">//  查询商店,试图取􏷄得商品的价格</span>
         <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">futurePrice</span> <span class="o">=</span> <span class="n">shop</span><span class="o">.</span><span class="na">getPriceAsync</span><span class="o">(</span><span class="s">&quot;apple&quot;</span><span class="o">);</span>
         <span class="kt">long</span> <span class="n">invocationTime</span> <span class="o">=</span> <span class="o">((</span><span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">()</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">1</span><span class="n">_000_000</span><span class="o">);</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Invocation returned after &quot;</span> <span class="o">+</span> <span class="n">invocationTime</span> <span class="o">+</span> <span class="s">&quot; msecs&quot;</span><span class="o">);</span>
@@ -133,9 +133,9 @@
         <span class="n">shop</span><span class="o">.</span><span class="na">doSomethingElse</span><span class="o">();</span>
         <span class="c1">// 在计算商品价格的同时</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="c1">// 通过该对象􏳬􏰆可以在将来的某个时刻取得􏵑􏻌的价格</span>
-            <span class="c1">// 执行了这个操作后，􏳬􏰆要么获得Future中封装的值(如果异步任务已经完成)，</span>
-            <span class="c1">// 要么发生阻塞，直到该异步任务完成，期望􏰐􏳝的值能够访问。</span>
+            <span class="c1">// 通过该对象可以在将来的某个时刻取得的价格</span>
+            <span class="c1">// 执行了这个操作后，要么获得Future中封装的值(如果异步任务已经完成)，</span>
+            <span class="c1">// 要么发生阻塞，直到该异步任务完成，期望的值能够访问。</span>
             <span class="n">price</span> <span class="o">=</span> <span class="n">futurePrice</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Price is %.2f%n&quot;</span><span class="o">,</span> <span class="n">price</span><span class="o">);</span>
         <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -837,7 +837,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-09-14 22:06:05</p>
+        <p>Site Generated 2019-11-02 15:23:10</p>
       </span>
     </div>
 
