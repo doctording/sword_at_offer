@@ -78,7 +78,7 @@ public class MainTest {
 
         System.out.println("======================");
         start = System.nanoTime();
-        //  查询商店,试图取􏷄得􏳞􏱧商品的价格􏳠􏿧
+        //  查询商店,试图取􏷄得商品的价格
         Future<Double> futurePrice = shop.getPriceAsync("apple");
         long invocationTime = ((System.nanoTime() - start) / 1_000_000);
         System.out.println("Invocation returned after " + invocationTime + " msecs");
@@ -87,9 +87,9 @@ public class MainTest {
         shop.doSomethingElse();
         // 在计算商品价格的同时
         try {
-            // 通过该对象􏳬􏰆可以在将来的某个时刻取得􏵑􏻌的价格
-            // 执行了这个操作后，􏳬􏰆要么获得Future中封装的值(如果异步任务已经完成)，
-            // 要么发生阻塞，直到该异步任务完成，期望􏰐􏳝的值能够访问。
+            // 通过该对象可以在将来的某个时刻取得的价格
+            // 执行了这个操作后，要么获得Future中封装的值(如果异步任务已经完成)，
+            // 要么发生阻塞，直到该异步任务完成，期望的值能够访问。
             price = futurePrice.get();
             System.out.printf("Price is %.2f%n", price);
         } catch (Exception e) {
