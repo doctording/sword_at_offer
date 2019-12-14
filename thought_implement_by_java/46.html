@@ -42,12 +42,37 @@
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
+
+
+<ul>
+<li>N个人报数，每报到M时杀掉那个人，最终胜利者的编号</li>
+</ul>
+<div class="hlcode"><pre><span class="n">f</span><span class="o">(</span><span class="n">N</span><span class="o">,</span> <span class="n">M</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">N</span><span class="err">−</span><span class="mi">1</span><span class="o">,</span> <span class="n">M</span><span class="o">)</span> <span class="o">+</span> <span class="n">M</span><span class="o">)</span> <span class="o">%</span> <span class="n">N</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="mi">0</span>  <span class="mi">1</span>  <span class="o">...</span>  <span class="n">M</span><span class="o">-</span><span class="mi">3</span>  <span class="n">M</span><span class="o">-</span><span class="mi">2</span>  <span class="err">【</span><span class="n">M</span><span class="o">-</span><span class="mi">1</span><span class="err">】</span>  <span class="n">M</span>  <span class="n">M</span><span class="o">+</span><span class="mi">1</span> <span class="o">...</span> <span class="n">n</span><span class="o">-</span><span class="mi">2</span>  <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="err">第一次</span><span class="n">M</span><span class="o">-</span><span class="mi">1</span><span class="err">出局，剩下从</span><span class="n">M</span><span class="err">开始</span>
+
+<span class="n">M</span> <span class="n">M</span><span class="o">+</span><span class="mi">1</span> <span class="o">...</span>  <span class="n">n</span><span class="o">-</span><span class="mi">2</span>  <span class="n">n</span><span class="o">-</span><span class="mi">1</span>  <span class="mi">0</span>  <span class="mi">1</span>  <span class="o">...</span>  <span class="n">M</span><span class="o">-</span><span class="mi">3</span>   <span class="n">M</span><span class="o">-</span><span class="mi">2</span>
+
+<span class="err">对应</span>
+<span class="mi">0</span>  <span class="mi">1</span>  <span class="o">...</span>  <span class="n">M</span><span class="o">-</span><span class="mi">3</span>  <span class="n">M</span><span class="o">-</span><span class="mi">2</span>  <span class="err">【</span><span class="n">M</span><span class="o">-</span><span class="mi">1</span><span class="err">】</span> <span class="n">M</span>  <span class="n">M</span><span class="o">+</span><span class="mi">1</span>  <span class="o">...</span>  <span class="n">n</span><span class="o">-</span><span class="mi">2</span>  <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="err">相当于移动了</span><span class="n">M</span><span class="err">个位置</span>
+</pre></div>
+
+
+<p>【M-1】 对应 ？</p>
+<p>假设<code>f(n-1, m)</code>是<code>n-1</code>个数要出局的那个数，那么<code>n</code>个数，要出局的数为<br />
+<code>(f(n-1, m) + m) % n</code></p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-03 21:33:44</p>
+        <p>Site Generated 2019-12-14 21:38:42</p>
       </span>
     </div>
 
