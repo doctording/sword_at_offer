@@ -1,5 +1,5 @@
 ---
-title: "Java 堆 & GC"
+title: "Java 堆内存 & GC"
 layout: page
 date: 2019-02-15 00:00
 ---
@@ -245,6 +245,8 @@ no, i am dead
 ## G1(Garbage First)
 
 参考1： https://tech.meituan.com/2016/09/23/g1.html
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1heap.png)
 
 * 并行与并发
 
@@ -637,4 +639,3 @@ CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:Max
 ```
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png)
-
