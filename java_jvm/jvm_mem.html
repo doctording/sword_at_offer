@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java 堆 & GC - 剑指Offer</title>
+    <title>Java 堆栈 & 各种GC - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆 & GC
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 堆栈 & 各种GC
     <span class="updated">Page Updated&nbsp;
       2019-02-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java 堆 & GC</div>
+<div class="page_title">Java 堆栈 & 各种GC</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java7">Java7堆内存划分</a><ul>
@@ -49,23 +49,37 @@
 </li>
 <li><a href="#_8">收集器</a><ul>
 <li><a href="#cmsconcurrent-mark-sweep">CMS(Concurrent Mark Sweep)</a></li>
-<li><a href="#g1garbage-first">G1(Garbage First)</a></li>
-<li><a href="#_9">内存分配与回收策略</a><ul>
+<li><a href="#g1garbage-first">G1(Garbage First)</a><ul>
+<li><a href="#_9">参考学习文档</a></li>
+<li><a href="#g1">G1 内存区域分布图</a></li>
+<li><a href="#g1_1">G1 常用参数</a></li>
+</ul>
+</li>
+<li><a href="#g1gc">G1的gc运作</a></li>
+<li><a href="#young-gcgc">young gc(对年轻代的GC)</a></li>
+<li><a href="#gc">对老年代的GC</a><ul>
+<li><a href="#initial-marking-phase">Initial Marking Phase</a></li>
+<li><a href="#concurrent-marking-phase">Concurrent Marking Phase</a></li>
+<li><a href="#remark-phase">Remark Phase</a></li>
+<li><a href="#copyingcleanup-phase">Copying/Cleanup Phase</a></li>
+</ul>
+</li>
+<li><a href="#_10">内存分配与回收策略</a><ul>
 <li><a href="#eden">对象优先在Eden分配</a><ul>
 <li><a href="#minor-gc">minor gc</a></li>
 <li><a href="#major-gc-full-gc">major gc/ full gc</a></li>
 <li><a href="#java-gc">Java GC测试程序 和 初始堆情况</a></li>
-<li><a href="#gc">GC日志</a></li>
-<li><a href="#_10">参考：</a></li>
+<li><a href="#gc_1">GC日志</a></li>
+<li><a href="#_11">参考：</a></li>
 </ul>
 </li>
-<li><a href="#_11">大对象直接进入老年代</a></li>
-<li><a href="#_12">长期存活的对象将进入老年代</a></li>
-<li><a href="#_13">动态对象的年龄判定</a></li>
-<li><a href="#_14">空间分配担保</a></li>
-<li><a href="#gc_1">触发gc的条件</a><ul>
+<li><a href="#_12">大对象直接进入老年代</a></li>
+<li><a href="#_13">长期存活的对象将进入老年代</a></li>
+<li><a href="#_14">动态对象的年龄判定</a></li>
+<li><a href="#_15">空间分配担保</a></li>
+<li><a href="#gc_2">触发gc的条件</a><ul>
 <li><a href="#minor-gc_1">Minor GC触发条件</a></li>
-<li><a href="#full-gc">Full GC触发条件：</a></li>
+<li><a href="#full-gc">Full GC触发条件</a></li>
 </ul>
 </li>
 </ul>
@@ -75,7 +89,7 @@
 <li><a href="#java8-gc">Java8 默认GC</a></li>
 </ul>
 </li>
-<li><a href="#gc_2">各种 GC收集器</a><ul>
+<li><a href="#gc_3">各种 GC收集器</a><ul>
 <li><a href="#serial">Serial 收集器 (年轻代)</a></li>
 <li><a href="#parallel-scavenge">Parallel Scavenge 收集器 (年轻代)</a></li>
 <li><a href="#parnew">ParNew 收集器 (年轻代)</a></li>
@@ -320,30 +334,15 @@ no, i am dead
 </ul>
 <p>为了解决这个问题，CMS提供了一个开关参数（<code>-XX: UseCMSCompactAtFullCollection</code>），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(<code>-XX: CMSFullGCsBeforeCompaction</code>)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）</p>
 <h2 id="g1garbage-first">G1(Garbage First)</h2>
-<p>参考1： https://tech.meituan.com/2016/09/23/g1.html</p>
+<h3 id="_9">参考学习文档</h3>
+<p>参考学习1: <a target='_blank' href='https://tech.meituan.com/2016/09/23/g1.html'>美团技术文章</a></p>
+<p>参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document </a></p>
+<h3 id="g1">G1 内存区域分布图</h3>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png" /></p>
 <ul>
-<li>并行与并发</li>
+<li>Humongous区域：如果一个对象占用的空间超过了分区容量(<code>region size</code>)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在老年代</li>
 </ul>
-<p>G1能充分利用多CPU,多核环境下的硬件优势，使用多个CPU来缩短<code>Stop-The-World</code>停顿的时间，部分其它收集器原本需要停顿Java线程执行GC动作，G1收集器仍然可以通过并发的方式让Java程序继续执行</p>
-<ul>
-<li>分代收集</li>
-</ul>
-<p>虽然G1可以不需要其他收集器配合就能独立管理整个GC堆，但是还是保留了分代的概念。它能够采用不同的方式去处理新创建的对象和已经存活了一段时间，熬过多次GC的旧对象以获取更好的收集效果。</p>
-<ul>
-<li>空间整合</li>
-</ul>
-<p>与CMS的"标记--清理"算法不同，G1从整体来看是基于"标记整理"算法实现的收集器；从局部上来看是基于"复制"算法实现的。但无论如何，这两种算法都意味着G1运作期间不会产生内存空间碎片，收集后能够提供规整的可用内存</p>
-<ul>
-<li>可预测的停顿</li>
-</ul>
-<p>这是G1相对于CMS的另一个大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，</p>
-<p>运作大致如下步骤：</p>
-<ol>
-<li>初始标记（Initial Marking）</li>
-<li>并发标记（Concurrent Markding）</li>
-<li>最终标记（Final Marking）</li>
-<li>筛选回收（Live Data Counting and Evacuation）</li>
-</ol>
+<h3 id="g1_1">G1 常用参数</h3>
 <table>
 <thead>
 <tr>
@@ -382,11 +381,77 @@ no, i am dead
 </tr>
 </tbody>
 </table>
-<h2 id="_9">内存分配与回收策略</h2>
+<ul>
+<li>如下一个线上配置(机器<code>2C4G</code>)例子：</li>
+</ul>
+<div class="hlcode"><pre><span class="o">-</span><span class="n">Xms2700M</span> <span class="o">-</span><span class="n">Xmx2700M</span> <span class="o">-</span><span class="n">Xss512K</span> <span class="o">-</span><span class="nl">XX:</span><span class="n">MaxDirectMemorySize</span><span class="o">=</span><span class="mi">512</span><span class="n">M</span>
+
+<span class="o">-</span><span class="nl">XX:</span><span class="o">+</span><span class="n">UseG1GC</span> <span class="o">-</span><span class="nl">XX:</span><span class="n">MaxGCPauseMillis</span><span class="o">=</span><span class="mi">200</span> <span class="o">-</span><span class="nl">XX:</span><span class="n">ParallelGCThreads</span><span class="o">=</span><span class="mi">4</span> <span class="o">-</span><span class="nl">XX:</span><span class="n">ConcGCThreads</span><span class="o">=</span><span class="mi">2</span> <span class="o">-</span><span class="nl">XX:</span><span class="n">InitiatingHeapOccupancyPercent</span><span class="o">=</span><span class="mi">70</span> <span class="o">-</span><span class="nl">XX:</span><span class="n">MaxMetaspaceSize</span><span class="o">=</span><span class="mi">500</span><span class="n">m</span> <span class="o">-</span><span class="nl">XX:</span><span class="o">+</span><span class="n">PrintGCDetails</span>
+</pre></div>
+
+
+<h2 id="g1gc">G1的gc运作</h2>
+<p>G1不提供<code>Full GC</code>,G1的GC包括<code>young gc</code>和<code>mixed GC</code></p>
+<h2 id="young-gcgc">young gc(对年轻代的GC)</h2>
+<p>Live objects are evacuated to one or more survivor regions. If the aging threshold is met, some of the objects are promoted to old generation regions.</p>
+<p>（存活的对象会进入survivor区域，如果达到aging阈值则进入到老年代）</p>
+<p>This is a stop the world (STW) pause. Eden size and survivor size is calculated for the next young GC. Accounting information is kept to help calculate the size. Things like the pause time goal are taken into consideration.</p>
+<p>This approach makes it very easy to resize regions, making them bigger or smaller as needed.</p>
+<p>（这是一个stop the world的停顿,<code>eden</code>和<code>survivor</code>区域会重新计算分配，停顿时间是要考虑到的）</p>
+<h2 id="gc">对老年代的GC</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(1) Initial Mark (Stop the World Event)</td>
+<td>This is a stop the world event. With G1, it is piggybacked on a normal young GC. Mark survivor regions (root regions) which may have references to objects in old generation.</td>
+</tr>
+<tr>
+<td>(2) Root Region Scanning</td>
+<td>Scan survivor regions for references into the old generation. This happens while the application continues to run. The phase must be completed before a young GC can occur.</td>
+</tr>
+<tr>
+<td>(3) Concurrent Marking</td>
+<td>Find live objects over the entire heap. This happens while the application is running. This phase can be interrupted by young generation garbage collections.</td>
+</tr>
+<tr>
+<td>(4) Remark(Stop the World Event)</td>
+<td>Completes the marking of live object in the heap. Uses an algorithm called snapshot-at-the-beginning (SATB) which is much faster than what was used in the CMS collector.</td>
+</tr>
+<tr>
+<td>(5) Cleanup(Stop the World Event and Concurrent)</td>
+<td>* Performs accounting on live objects and completely free regions. (Stop the world); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)</td>
+</tr>
+<tr>
+<td>(*) Copying</td>
+<td>(Stop the World Event) These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].</td>
+</tr>
+</tbody>
+</table>
+<h3 id="initial-marking-phase">Initial Marking Phase</h3>
+<p>Initial marking of live object is piggybacked on a young generation garbage collection.(标记存活对象)</p>
+<p>gc log: <code>(young) (initial-mark)</code></p>
+<h3 id="concurrent-marking-phase">Concurrent Marking Phase</h3>
+<p>If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.<br />
+（空区域会立刻被标记，这个阶段会计算存活对象）</p>
+<h3 id="remark-phase">Remark Phase</h3>
+<p>Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.<br />
+（空区域会被删除可以让重新分配，所有区域的liveness会计算）</p>
+<h3 id="copyingcleanup-phase">Copying/Cleanup Phase</h3>
+<p>G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.</p>
+<p>（the lowest "liveness"有限被清理调）</p>
+<p>（<code>yong gc</code>和<code>mixed gc</code>会同时进行）</p>
+<p>gc log: <code>GC pause (mixed)</code></p>
+<h2 id="_10">内存分配与回收策略</h2>
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
 <h4 id="minor-gc">minor gc</h4>
-<p>新生代GC(<code>Minor GC</code>): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的特效，所以<code>Minor GC</code>非常频繁，一般回收速度也比较快</p>
+<p>新生代GC(<code>Minor GC</code>): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的性质，所以<code>Minor GC</code>非常频繁，一般回收速度也比较快</p>
 <p>新创建的对象都是用新生代分配内存，<code>Eden</code>空间不足时，触发<code>Minor GC</code>，这时会把存活的对象转移进Survivor区。</p>
 <p>新生代通常存活时间较短基于Copying算法进行回收，所谓Copying算法就是扫描出存活的对象，并复制到一块新的完全未使用的空间中，对应于新生代，就是在<code>Eden</code>和<code>From Space</code>或<code>To Space</code>之间copy。新生代采用空闲指针的方式来控制GC触发，指针保持最后一个分配的对象在新生代区间的位置，当有新的对象要分配内存时，用于检查空间是否足够，不够就触发GC。当连续分配对象时，对象会逐渐从Eden到Survivor，最后到老年代。</p>
 <h4 id="major-gc-full-gc">major gc/ full gc</h4>
@@ -445,7 +510,7 @@ no, i am dead
 </tr>
 </tbody>
 </table>
-<h4 id="gc">GC日志</h4>
+<h4 id="gc_1">GC日志</h4>
 <div class="hlcode"><pre><span class="p">[</span>GC <span class="p">[</span>PSYoungGen<span class="o">:</span> <span class="m">7534</span>K<span class="o">-&gt;</span><span class="m">416</span>K<span class="p">(</span><span class="m">9216</span>K<span class="p">)]</span> <span class="m">7534</span>K<span class="o">-&gt;</span><span class="m">6560</span>K<span class="p">(</span><span class="m">19456</span>K<span class="p">),</span> <span class="m">0.0049590</span> secs<span class="p">]</span> <span class="p">[</span>Times<span class="o">:</span> user<span class="o">=</span><span class="m">0.01</span> sys<span class="o">=</span><span class="m">0.00</span><span class="p">,</span> real<span class="o">=</span><span class="m">0.01</span> secs<span class="p">]</span>
 <span class="p">[</span>Full GC <span class="p">[</span>PSYoungGen<span class="o">:</span> <span class="m">416</span>K<span class="o">-&gt;</span><span class="m">0</span>K<span class="p">(</span><span class="m">9216</span>K<span class="p">)]</span> <span class="p">[</span>ParOldGen<span class="o">:</span> <span class="m">6144</span>K<span class="o">-&gt;</span><span class="m">6466</span>K<span class="p">(</span><span class="m">10240</span>K<span class="p">)]</span> <span class="m">6560</span>K<span class="o">-&gt;</span><span class="m">6466</span>K<span class="p">(</span><span class="m">19456</span>K<span class="p">)</span> <span class="p">[</span>PSPermGen<span class="o">:</span> <span class="m">3121</span>K<span class="o">-&gt;</span><span class="m">3120</span>K<span class="p">(</span><span class="m">21504</span>K<span class="p">)],</span> <span class="m">0.0103590</span> secs<span class="p">]</span> <span class="p">[</span>Times<span class="o">:</span> user<span class="o">=</span><span class="m">0.02</span> sys<span class="o">=</span><span class="m">0.00</span><span class="p">,</span> real<span class="o">=</span><span class="m">0.01</span> secs<span class="p">]</span>
 Heap
@@ -511,7 +576,7 @@ Heap
 </tr>
 </tbody>
 </table>
-<h4 id="_10">参考：</h4>
+<h4 id="_11">参考：</h4>
 <p>JVM GC log文件的查看<br />
 https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 <ul>
@@ -525,26 +590,26 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 </ol>
 </li>
 </ul>
-<h3 id="_11">大对象直接进入老年代</h3>
+<h3 id="_12">大对象直接进入老年代</h3>
 <p>这里所谓的大对象是指，需要大量连续内存空间的Java对象，，最典型的大对象就是那种很长的字符串以及数组。大对象对虚拟机的内存分配来说就是一个坏消息。（更坏的：一群"朝生夕灭"的"短命大对象"），经常出现大对象容易导致内存还有不少空间时就提前触发垃圾收集以获取足够的连续空间来"安置"它们</p>
 <p><code>-XX:PretenureSizeThreshold</code>参数，另大于这个设置值的对象直接在老年代分配。这样做的目的是避免在Eden区以及两个Survivor区之间发生大量的内存复制(复习一下：新生代采用复制算法收集内存)</p>
-<h3 id="_12">长期存活的对象将进入老年代</h3>
+<h3 id="_13">长期存活的对象将进入老年代</h3>
 <p>内存回收时，必须识别哪些对象应该在新生代，哪些对象应放到老年代。</p>
 <p>虚拟机给每个对象定义了一个对象年龄(<code>Age</code>)计数器。如果对象在<code>Eden</code>出生并经历过第一次<code>Minor GC</code>后仍然存活，并且能被<code>Survivor</code>容纳的话，将被移动到<code>Survivor</code>空间,并且对象的年龄为1.对象在<code>Survivor</code>区中每"熬过"一次<code>Minor GC</code>，年龄就增加1岁，当他的年龄增加到一定程度（默认15岁），就将会被晋升到老年代中。对象晋升老年代的年龄阈值，可以通过参数<code>-XX:MaxTenuringThreshold</code>设置</p>
-<h3 id="_13">动态对象的年龄判定</h3>
+<h3 id="_14">动态对象的年龄判定</h3>
 <p>为了更好地适应不同程序的内存状况，虚拟机并不是永远地要求对象的年龄必须达到了<code>MaxTenuringThreshold</code>才能晋升老年代，如果在<code>Survivor</code>空间中相同年龄所有对象大小的总和大于<code>Survivor</code>空间的一半，年龄大于或等于该年龄对象就可以直接进入老年代，无须等到<code>MaxTenuringThreshold</code>要求的年龄。</p>
-<h3 id="_14">空间分配担保</h3>
+<h3 id="_15">空间分配担保</h3>
 <p>老年代最大可用的连续空间 &gt; 新生代所有对象总空间, 这样能确保<code>Minor GC</code>是安全的。</p>
 <p>如果不成立，虚拟机会查看<code>HandlerPromotionFailure</code>设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</p>
 <p>如果大于，将尝试着进行一次<code>Minor GC</code>,尽管这次的<code>Minor GC</code>是有风险的</p>
 <p>如果小于，或者<code>HandlerPromotionFailure</code>设置值不允许担保失败，这时改为进行一次<code>Full GC</code></p>
-<h3 id="gc_1">触发gc的条件</h3>
+<h3 id="gc_2">触发gc的条件</h3>
 <p>“什么时候”即就是GC触发的条件。GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。</p>
 <h4 id="minor-gc_1">Minor GC触发条件</h4>
 <ul>
 <li>当<code>Eden</code>区满时，触发<code>Minor GC</code></li>
 </ul>
-<h4 id="full-gc">Full GC触发条件：</h4>
+<h4 id="full-gc">Full GC触发条件</h4>
 <ul>
 <li>
 <p>（1）调用System.gc时，系统建议执行Full GC，但是不必然执行</p>
@@ -757,7 +822,7 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 </tr>
 </tbody>
 </table>
-<h2 id="gc_2">各种 GC收集器</h2>
+<h2 id="gc_3">各种 GC收集器</h2>
 <h3 id="serial">Serial 收集器 (年轻代)</h3>
 <ul>
 <li>
@@ -821,15 +886,12 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
  <span class="n">Metaspace</span>       <span class="n">used</span> <span class="mi">3342</span><span class="n">K</span><span class="o">,</span> <span class="n">capacity</span> <span class="mi">4500</span><span class="n">K</span><span class="o">,</span> <span class="n">committed</span> <span class="mi">4864</span><span class="n">K</span><span class="o">,</span> <span class="n">reserved</span> <span class="mi">1056768</span><span class="n">K</span>
   <span class="kd">class</span> <span class="nc">space</span>    <span class="n">used</span> <span class="mi">371</span><span class="n">K</span><span class="o">,</span> <span class="n">capacity</span> <span class="mi">388</span><span class="n">K</span><span class="o">,</span> <span class="n">committed</span> <span class="mi">512</span><span class="n">K</span><span class="o">,</span> <span class="n">reserved</span> <span class="mi">1048576</span><span class="n">K</span>
 </pre></div>
-
-
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png" /></p>
     </div>
     <div id="footer">
       <span>
-        <p>Copyright © 2019 doctording.
+        <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-14 21:38:42</p>
+        <p>Site Generated 2020-02-08 21:23:55</p>
       </span>
     </div>
 
