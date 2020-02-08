@@ -1,12 +1,12 @@
 ---
-title: "JVM相关的命令工具使用"
+title: "JVM命令工具(jstack,jmap,jcmd...)"
 layout: page
 date: 2019-02-15 00:00
 ---
 
 [TOC]
 
-# Java自带的各类型工具
+# Java自带的各类型命令工具
 
 名称 | 主要作用
 -|-
@@ -15,7 +15,8 @@ jstat | JVM Statistics Monitoring Tool, 用于收集HotSpot虚拟机各方面的
 jinfo | Configuration Info for Java, 显示虚拟机配置信息
 jmap | Memory Map for Java, 生成虚拟机的内存转储快照(heapdump文件)
 jhat | JVM Heap Dump Brower, 用于分心heapdump文件，它会建立一个HTTP/HTML服务器, 让用户可以在浏览器上查看分析结果
-jstack | Stack Trce for Java, 显示虚拟机的线程快照
+jstack | Stack Trace for Java, 显示虚拟机的线程快照
+jcmd | 可以用它来查看Java进程，导出堆、线程信息、执行GC，还可以进行采样分析的一个多功能工具
 
 ## jps
 
@@ -169,4 +170,130 @@ jmap -dump:format=b,file=xx.hprof <pid>
 
 ```java
 jstack -F <PID>
+```
+
+## jcmd
+
+* 查看当前机器上所有的`jvm`进程信息
+
+```java
+jcmd -l
+```
+
+* 列出某个jvm进程可以执行的操作
+
+```java
+mubi@mubideMacBook-Pro Downloads $ jcmd 22553 help
+22553:
+The following commands are available:
+JFR.stop
+JFR.start
+JFR.dump
+JFR.check
+VM.native_memory
+VM.check_commercial_features
+VM.unlock_commercial_features
+ManagementAgent.stop
+ManagementAgent.start_local
+ManagementAgent.start
+GC.rotate_log
+Thread.print
+GC.class_stats
+GC.class_histogram
+GC.heap_dump
+GC.run_finalization
+GC.run
+VM.uptime
+VM.flags
+VM.system_properties
+VM.command_line
+VM.version
+help
+
+For more information about a specific command use 'help <command>'.
+mubi@mubideMacBook-Pro Downloads $
+```
+
+* 查看进程内存区域的详情(jvm加上`-XX:NativeMemoryTracking=detail`)
+
+```java
+mubi@mubideMacBook-Pro Downloads $ jcmd 22553 VM.native_memory detail > 22553.native_detail
+mubi@mubideMacBook-Pro Downloads $ head 22553.native_detail
+22553:
+
+Native Memory Tracking:
+
+Total: reserved=6033952KB, committed=2097428KB
+-                 Java Heap (reserved=4194304KB, committed=1537024KB)
+                            (mmap: reserved=4194304KB, committed=1537024KB)
+
+-                     Class (reserved=1125078KB, committed=85206KB)
+                            (classes #14483)
+mubi@mubideMacBook-Pro Downloads $
+```
+
+### Native Memory Tracking(简称:NMT) 分析
+
+参考文档见：<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/tooldescr007.html">NMT</a>
+
+```java
+22553:
+
+Native Memory Tracking:
+
+Total: reserved=6033952KB, committed=2097428KB
+-                 Java Heap (reserved=4194304KB, committed=1537024KB)
+                            (mmap: reserved=4194304KB, committed=1537024KB) 
+ 
+-                     Class (reserved=1125078KB, committed=85206KB)
+                            (classes #14483)
+                            (malloc=6870KB #17632) 
+                            (mmap: reserved=1118208KB, committed=78336KB) 
+ 
+-                    Thread (reserved=130665KB, committed=130665KB)
+                            (thread #128)
+                            (stack: reserved=130048KB, committed=130048KB)
+                            (malloc=404KB #641) 
+                            (arena=214KB #255)
+ 
+-                      Code (reserved=254310KB, committed=25318KB)
+                            (malloc=4710KB #11332) 
+                            (mmap: reserved=249600KB, committed=20608KB) 
+ 
+-                        GC (reserved=159021KB, committed=148641KB)
+                            (malloc=5777KB #297) 
+                            (mmap: reserved=153244KB, committed=142864KB) 
+ 
+-                  Compiler (reserved=177KB, committed=177KB)
+                            (malloc=46KB #844) 
+                            (arena=131KB #3)
+ 
+-                  Internal (reserved=143983KB, committed=143983KB)
+                            (malloc=143951KB #18708) 
+                            (mmap: reserved=32KB, committed=32KB) 
+ 
+-                    Symbol (reserved=21199KB, committed=21199KB)
+                            (malloc=17164KB #176970) 
+                            (arena=4036KB #1)
+ 
+-    Native Memory Tracking (reserved=3693KB, committed=3693KB)
+                            (malloc=120KB #1832) 
+                            (tracking overhead=3573KB)
+ 
+-               Arena Chunk (reserved=1521KB, committed=1521KB)
+                            (malloc=1521KB) 
+ 
+Virtual memory map:
+ 
+[0x00000001025e7000 - 0x00000001025ef000] reserved and committed 32KB for Internal from
+    [0x00000001032b4ae8] PerfMemory::create_memory_region(unsigned long)+0x728
+    [0x00000001032b41ef] PerfMemory::initialize()+0x39
+    [0x0000000103370c79] Threads::create_vm(JavaVMInitArgs*, bool*)+0x13b
+    [0x000000010312586e] JNI_CreateJavaVM+0x76
+```
+
+* committed 为真正使用的内存
+
+```java
+ From the sample output below, you will see reserved and committed memory. Note that only committed memory is actually used. For example, if you run with -Xms100m -Xmx1000m, the JVM will reserve 1000 MB for the Java Heap. Since the initial heap size is only 100 MB, only 100MB will be committed to begin with. For a 64-bit machine where address space is almost unlimited, there is no problem if a JVM reserves a lot of memory. The problem arises if more and more memory gets committed, which may lead to swapping or native OOM situations.
 ```

@@ -1,5 +1,5 @@
 ---
-title: "Java 堆内存 & GC"
+title: "Java 堆栈 & 各种GC"
 layout: page
 date: 2019-02-15 00:00
 ---
@@ -244,32 +244,19 @@ no, i am dead
 
 ## G1(Garbage First)
 
-参考1： https://tech.meituan.com/2016/09/23/g1.html
+### 参考学习文档
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1heap.png)
+参考学习1: <a target='_blank' href='https://tech.meituan.com/2016/09/23/g1.html'>美团技术文章</a>
 
-* 并行与并发
+参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document </a>
 
-G1能充分利用多CPU,多核环境下的硬件优势，使用多个CPU来缩短`Stop-The-World`停顿的时间，部分其它收集器原本需要停顿Java线程执行GC动作，G1收集器仍然可以通过并发的方式让Java程序继续执行
+### G1 内存区域分布图
 
-* 分代收集
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png)
 
-虽然G1可以不需要其他收集器配合就能独立管理整个GC堆，但是还是保留了分代的概念。它能够采用不同的方式去处理新创建的对象和已经存活了一段时间，熬过多次GC的旧对象以获取更好的收集效果。
+* Humongous区域：如果一个对象占用的空间超过了分区容量(`region size`)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在老年代
 
-* 空间整合
-
-与CMS的"标记--清理"算法不同，G1从整体来看是基于"标记整理"算法实现的收集器；从局部上来看是基于"复制"算法实现的。但无论如何，这两种算法都意味着G1运作期间不会产生内存空间碎片，收集后能够提供规整的可用内存
-
-* 可预测的停顿
-
-这是G1相对于CMS的另一个大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，
-
-运作大致如下步骤：
-
-1. 初始标记（Initial Marking）
-2. 并发标记（Concurrent Markding）
-3. 最终标记（Final Marking）
-4. 筛选回收（Live Data Counting and Evacuation）
+### G1 常用参数
 
 参数 | 含义
 -|-
@@ -281,6 +268,67 @@ G1能充分利用多CPU,多核环境下的硬件优势，使用多个CPU来缩�
 -XX:ConcGCThreads=n | 并发标记阶段，并行执行的线程数
 -XX:InitiatingHeapOccupancyPercent | 设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous
 
+* 如下一个线上配置(机器`2C4G`)例子：
+
+```java
+-Xms2700M -Xmx2700M -Xss512K -XX:MaxDirectMemorySize=512M
+
+-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 -XX:InitiatingHeapOccupancyPercent=70 -XX:MaxMetaspaceSize=500m -XX:+PrintGCDetails
+```
+
+## G1的gc运作
+
+G1不提供`Full GC`,G1的GC包括`young gc`和`mixed GC`
+
+## young gc(对年轻代的GC)
+
+Live objects are evacuated to one or more survivor regions. If the aging threshold is met, some of the objects are promoted to old generation regions.
+
+（存活的对象会进入survivor区域，如果达到aging阈值则进入到老年代）
+
+This is a stop the world (STW) pause. Eden size and survivor size is calculated for the next young GC. Accounting information is kept to help calculate the size. Things like the pause time goal are taken into consideration.
+
+This approach makes it very easy to resize regions, making them bigger or smaller as needed.
+
+（这是一个stop the world的停顿,`eden`和`survivor`区域会重新计算分配，停顿时间是要考虑到的）
+
+## 对老年代的GC
+
+Phase | Description
+-|-
+(1) Initial Mark (Stop the World Event) | This is a stop the world event. With G1, it is piggybacked on a normal young GC. Mark survivor regions (root regions) which may have references to objects in old generation.
+(2) Root Region Scanning | Scan survivor regions for references into the old generation. This happens while the application continues to run. The phase must be completed before a young GC can occur.
+(3) Concurrent Marking | Find live objects over the entire heap. This happens while the application is running. This phase can be interrupted by young generation garbage collections.
+(4) Remark(Stop the World Event) | Completes the marking of live object in the heap. Uses an algorithm called snapshot-at-the-beginning (SATB) which is much faster than what was used in the CMS collector.
+(5) Cleanup(Stop the World Event and Concurrent) | * Performs accounting on live objects and completely free regions. (Stop the world); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)
+(*) Copying | (Stop the World Event) These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].
+
+### Initial Marking Phase
+
+Initial marking of live object is piggybacked on a young generation garbage collection.(标记存活对象)
+
+gc log: `(young) (initial-mark)`
+
+### Concurrent Marking Phase
+
+If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.
+（空区域会立刻被标记，这个阶段会计算存活对象）
+
+### Remark Phase
+
+Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.
+（空区域会被删除可以让重新分配，所有区域的liveness会计算）
+
+### Copying/Cleanup Phase
+
+G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.
+
+（the lowest "liveness"有限被清理调）
+
+（`yong gc`和`mixed gc`会同时进行）
+
+gc log: `GC pause (mixed)`
+
 ## 内存分配与回收策略
 
 ### 对象优先在Eden分配
@@ -289,7 +337,7 @@ G1能充分利用多CPU,多核环境下的硬件优势，使用多个CPU来缩�
 
 #### minor gc
 
-新生代GC(`Minor GC`): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的特效，所以`Minor GC`非常频繁，一般回收速度也比较快
+新生代GC(`Minor GC`): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的性质，所以`Minor GC`非常频繁，一般回收速度也比较快
 
 新创建的对象都是用新生代分配内存，`Eden`空间不足时，触发`Minor GC`，这时会把存活的对象转移进Survivor区。
 
@@ -411,7 +459,7 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html
 
 * 当`Eden`区满时，触发`Minor GC`
 
-#### Full GC触发条件：
+#### Full GC触发条件
 
 * （1）调用System.gc时，系统建议执行Full GC，但是不必然执行
 
@@ -637,5 +685,3 @@ CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:Max
  Metaspace       used 3342K, capacity 4500K, committed 4864K, reserved 1056768K
   class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
 ```
-
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png)
