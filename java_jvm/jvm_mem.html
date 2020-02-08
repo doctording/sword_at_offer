@@ -53,15 +53,17 @@
 <li><a href="#_9">参考学习文档</a></li>
 <li><a href="#g1">G1 内存区域分布图</a></li>
 <li><a href="#g1_1">G1 常用参数</a></li>
-</ul>
-</li>
-<li><a href="#g1gc">G1的gc运作</a></li>
+<li><a href="#g1gc">G1的gc运作</a><ul>
 <li><a href="#young-gcgc">young gc(对年轻代的GC)</a></li>
 <li><a href="#gc">对老年代的GC</a><ul>
 <li><a href="#initial-marking-phase">Initial Marking Phase</a></li>
 <li><a href="#concurrent-marking-phase">Concurrent Marking Phase</a></li>
 <li><a href="#remark-phase">Remark Phase</a></li>
 <li><a href="#copyingcleanup-phase">Copying/Cleanup Phase</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_10">内存分配与回收策略</a><ul>
@@ -390,15 +392,15 @@ no, i am dead
 </pre></div>
 
 
-<h2 id="g1gc">G1的gc运作</h2>
+<h3 id="g1gc">G1的gc运作</h3>
 <p>G1不提供<code>Full GC</code>,G1的GC包括<code>young gc</code>和<code>mixed GC</code></p>
-<h2 id="young-gcgc">young gc(对年轻代的GC)</h2>
+<h4 id="young-gcgc">young gc(对年轻代的GC)</h4>
 <p>Live objects are evacuated to one or more survivor regions. If the aging threshold is met, some of the objects are promoted to old generation regions.</p>
 <p>（存活的对象会进入survivor区域，如果达到aging阈值则进入到老年代）</p>
 <p>This is a stop the world (STW) pause. Eden size and survivor size is calculated for the next young GC. Accounting information is kept to help calculate the size. Things like the pause time goal are taken into consideration.</p>
 <p>This approach makes it very easy to resize regions, making them bigger or smaller as needed.</p>
 <p>（这是一个stop the world的停顿,<code>eden</code>和<code>survivor</code>区域会重新计算分配，停顿时间是要考虑到的）</p>
-<h2 id="gc">对老年代的GC</h2>
+<h4 id="gc">对老年代的GC</h4>
 <table>
 <thead>
 <tr>
@@ -433,16 +435,16 @@ no, i am dead
 </tr>
 </tbody>
 </table>
-<h3 id="initial-marking-phase">Initial Marking Phase</h3>
+<h5 id="initial-marking-phase">Initial Marking Phase</h5>
 <p>Initial marking of live object is piggybacked on a young generation garbage collection.(标记存活对象)</p>
 <p>gc log: <code>(young) (initial-mark)</code></p>
-<h3 id="concurrent-marking-phase">Concurrent Marking Phase</h3>
+<h5 id="concurrent-marking-phase">Concurrent Marking Phase</h5>
 <p>If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.<br />
 （空区域会立刻被标记，这个阶段会计算存活对象）</p>
-<h3 id="remark-phase">Remark Phase</h3>
+<h5 id="remark-phase">Remark Phase</h5>
 <p>Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.<br />
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）</p>
-<h3 id="copyingcleanup-phase">Copying/Cleanup Phase</h3>
+<h5 id="copyingcleanup-phase">Copying/Cleanup Phase</h5>
 <p>G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.</p>
 <p>（the lowest "liveness"有限被清理调）</p>
 <p>（<code>yong gc</code>和<code>mixed gc</code>会同时进行）</p>
@@ -891,7 +893,7 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-02-08 21:23:55</p>
+        <p>Site Generated 2020-02-08 21:33:25</p>
       </span>
     </div>
 
