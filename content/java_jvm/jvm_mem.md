@@ -276,11 +276,11 @@ no, i am dead
 -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 -XX:InitiatingHeapOccupancyPercent=70 -XX:MaxMetaspaceSize=500m -XX:+PrintGCDetails
 ```
 
-## G1的gc运作
+### G1的gc运作
 
 G1不提供`Full GC`,G1的GC包括`young gc`和`mixed GC`
 
-## young gc(对年轻代的GC)
+#### young gc(对年轻代的GC)
 
 Live objects are evacuated to one or more survivor regions. If the aging threshold is met, some of the objects are promoted to old generation regions.
 
@@ -292,7 +292,7 @@ This approach makes it very easy to resize regions, making them bigger or smalle
 
 （这是一个stop the world的停顿,`eden`和`survivor`区域会重新计算分配，停顿时间是要考虑到的）
 
-## 对老年代的GC
+#### 对老年代的GC
 
 Phase | Description
 -|-
@@ -303,23 +303,23 @@ Phase | Description
 (5) Cleanup(Stop the World Event and Concurrent) | * Performs accounting on live objects and completely free regions. (Stop the world); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)
 (*) Copying | (Stop the World Event) These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].
 
-### Initial Marking Phase
+##### Initial Marking Phase
 
 Initial marking of live object is piggybacked on a young generation garbage collection.(标记存活对象)
 
 gc log: `(young) (initial-mark)`
 
-### Concurrent Marking Phase
+##### Concurrent Marking Phase
 
 If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.
 （空区域会立刻被标记，这个阶段会计算存活对象）
 
-### Remark Phase
+##### Remark Phase
 
 Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）
 
-### Copying/Cleanup Phase
+##### Copying/Cleanup Phase
 
 G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.
 
