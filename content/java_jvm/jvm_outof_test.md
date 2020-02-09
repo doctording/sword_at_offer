@@ -144,7 +144,7 @@ Exception in thread "main" java.lang.StackOverflowError
 
 * Java7中
 
-永久代仍存在； 符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。
+* Java7 永久代仍存在；对比java6，其中：符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。
 
 ### Java7 常量池 仍是`java.lang.OutOfMemoryError: Java heap space`
 

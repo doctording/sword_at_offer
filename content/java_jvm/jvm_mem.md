@@ -8,7 +8,7 @@ date: 2019-02-15 00:00
 
 # Java7堆内存划分
 
-##《深入理解java虚拟机》堆的描述
+## 图书《深入理解java虚拟机》堆的描述
 
 1. Java堆（Java Heap）是java虚拟机所管理的内存中最大的一块
 2. Java堆被所有线程共享的一块内存区域
@@ -28,7 +28,7 @@ date: 2019-02-15 00:00
 
 `jstat`查看gc相关的堆信息
 
-### Java7 堆的各区域
+## Java7 堆的各区域
 
 ```java
 ^Cmubi@mubideMacBook-Pro Home $ pwd
@@ -44,7 +44,7 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
   0.00   85.81  77.33  56.33      �    161    1.624    14    0.603    2.227
 ```
 
-* E    — Heap上的 Eden space 区已使用空间的百分比(`Edem`)
+* E    — Heap上的 Eden space 区已使用空间的百分比(`Eden`)
 * S0   — Heap上的 Survivor space 0 区已使用空间的百分比(`From`)
 * S1   — Heap上的 Survivor space 1 区已使用空间的百分比(`To`)
 * O    — Heap上的 Old space 区已使用空间的百分比(`Old`)
@@ -55,6 +55,58 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
 * FGCT – 从应用程序启动到采样时 Full GC 所用的时间(单位秒)
 * GCT  — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)
 
+### 永久代(Perm space)
+
+这个区域的内存回收目标主要是针对常量池的回收和对类型的卸载
+
+# Java8 内存区域
+
+```java
+Cmubi@mubideMacBook-Pro Home $ pwd
+/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home
+mubi@mubideMacBook-Pro Home $ bin/jstat -gcutil 62850 1000 10
+Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
+Warning: Unresolved Symbol: sun.gc.generation.2.space.0.used substituted NaN
+Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
+  S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT
+  0.00  85.81  76.97  56.33      �    161    1.624    14    0.603    2.227
+  0.00  85.81  77.08  56.33      �    161    1.624    14    0.603    2.227
+  0.00  85.81  77.22  56.33      �    161    1.624    14    0.603    2.227
+  0.00  85.81  77.33  56.33      �    161    1.624    14    0.603    2.227
+^Cmubi@mubideMacBook-Pro Home $ jstat -gcutil 62850 1000 10
+  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT
+  0.00  85.81  78.86  56.33  93.46  89.80    161    1.624    14    0.603    2.227
+  0.00  85.81  78.93  56.33  93.46  89.80    161    1.624    14    0.603    2.227
+  0.00  85.81  79.04  56.33  93.46  89.80    161    1.624    14    0.603    2.227
+  0.00  85.81  79.17  56.33  93.46  89.80    161    1.624    14    0.603    2.227
+  0.00  85.81  79.29  56.33  93.46  89.80    161    1.624    14    0.603    2.227
+^Cmubi@mubideMacBook-Pro Home $
+```
+
+* S0   — Heap上的 Survivor space 0 区已使用空间的百分比(`From`)
+* S1   — Heap上的 Survivor space 1 区已使用空间的百分比(`To`)
+* E    — Heap上的 Eden space 区已使用空间的百分比(`Eden`)
+* O    — Heap上的 Old space 区已使用空间的百分比(`Old`)
+* M    - 元空间（Metaspace）： Klass Metaspace, NoKlass Metaspace
+* CCS  - 表示的是NoKlass Metaspace的使用率
+* YGC  — 从应用程序启动到采样时发生 Young GC 的次数
+* YGCT – 从应用程序启动到采样时 Young GC 所用的时间(单位秒)
+* FGC  — 从应用程序启动到采样时发生 Full GC 的次数
+* FGCT – 从应用程序启动到采样时 Full GC 所用的时间(单位秒)
+* GCT  — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)
+
+## 元空间
+
+参考学习1: <a target='_blank' href='http://openjdk.java.net/jeps/122'>openjdk相关文档</a>
+
+Class metadata, interned Strings and class static variables will be moved from the permanent generation to either the Java heap or native memory.
+(原来的永久代(class元信息、字面常量、静态变量等)转移到heap或者native memory中)
+
+**Metaspace**由两大部分组成：Klass Metaspace和NoKlass Metaspace。
+
+1. klass Metaspace就是用来存klass的，就是class文件在jvm里的运行时数据结构，是一块连续的内存区域，紧接着Heap
+2. NoKlass Metaspace专门来存klass相关的其他的内容，比如method，constantPool等，可以由多块不连续的内存组成
+
 # 常见的垃圾回收算法
 
 参考学习：
@@ -63,19 +115,19 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
 
 # 垃圾收集器
 
-## 三个问题 ？
+## 三个问题
 
-1. 哪些内存需要回收
+### 1.哪些内存需要回收
 
-2. 什么时候回收
+### 2.什么时候回收
 
-3. 如何回收
+### 3.如何回收
 
 ## `可达性分析` 判定对象是否存活
 
 算法的基本思路就是通过一系列的称为`GC Roots`的对象作为起始点，从这些节点向下搜索，搜索所走过的路径称为`引用链(Reference Chain)`,当一个对象到`GC Roots`没有任何引用链相连(用图论的话来说，就是`GC Roots`到这个对象不可达)时，则证明此对象是不可用的。
 
-### Java中可作为`GC Roots`的对象包括：
+### Java中可作为`GC Roots`的对象包括
 
 * 虚拟机栈（栈帧中的本地变量表）中引用的对象
 * 方法区中类静态属性引用的对象
@@ -248,13 +300,17 @@ no, i am dead
 
 参考学习1: <a target='_blank' href='https://tech.meituan.com/2016/09/23/g1.html'>美团技术文章</a>
 
-参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document </a>
+参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document</a>
 
-### G1 内存区域分布图
+参考学习3: <a target='_blank' href='https://blogs.oracle.com/poonam/understanding-g1-gc-logs'>g1 log</a>
+
+### G1 内存区域分布图和概念介绍
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png)
 
 * Humongous区域：如果一个对象占用的空间超过了分区容量(`region size`)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在老年代
+
+When performing garbage collections, G1 operates in a manner similar to the CMS collector. G1 performs a concurrent global marking phase to determine the liveness of objects throughout the heap. After the mark phase completes, G1 knows which regions are mostly empty. It collects in these regions first, which usually yields a large amount of free space. This is why this method of garbage collection is called Garbage-First.
 
 ### G1 常用参数
 
@@ -279,6 +335,8 @@ no, i am dead
 ### G1的gc运作
 
 G1不提供`Full GC`,G1的GC包括`young gc`和`mixed GC`
+
+**Note:** G1 has both concurrent (runs along with application threads, e.g., refinement, marking, cleanup) and parallel (multi-threaded, e.g., stop the world) phases. Full garbage collections are still single threaded, but if tuned properly your applications should avoid full GCs.
 
 #### young gc(对年轻代的GC)
 
@@ -329,13 +387,34 @@ G1 selects the regions with the lowest "liveness", those regions which can be co
 
 gc log: `GC pause (mixed)`
 
-## 内存分配与回收策略
+#### 对年轻代和老年代GC的总结
+
+* 对年轻代的GC
+
+1. young gc需要stop the world
+2. young gc是多线程并行处理的
+3. eden会到达`survivor`或者`old` generation regions
+
+* 对老年代的GC
+
+1. Concurrent Marking Phase
+    * Liveness information is calculated concurrently while the application is running.
+    * This liveness information identifies which regions will be best to reclaim during an evacuation pause.
+    * There is no sweeping phase like in CMS.
+2. Remark Phase
+    * Uses the Snapshot-at-the-Beginning (SATB) algorithm which is much faster then what was used with CMS.
+    * Completely empty regions are reclaimed.(完全空的regions会立刻被会收掉)
+3. Copying/Cleanup Phase
+    * Young generation and old generation are reclaimed at the same time.（年轻代和老年代会同时被回收）
+    * Old generation regions are selected based on their liveness.
+
+## 内存分配与回收策略(理论基础)
 
 ### 对象优先在Eden分配
 
 大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次`Minor GC`。（`-XX:+PrintGCDetails`）
 
-#### minor gc
+#### minor gc(yong gc)
 
 新生代GC(`Minor GC`): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的性质，所以`Minor GC`非常频繁，一般回收速度也比较快
 
@@ -357,7 +436,7 @@ gc log: `GC pause (mixed)`
 * -XXNewRatio 默认为2
 * -XX:SurvivorRatio 默认为8，表示Suvivor:eden=2:8,即一个Survivor占年轻代的1/10
 
-#### Java GC测试程序 和 初始堆情况
+#### Java GC测试程序 和 初始堆情况(Java7 CMS)
 
 * jdk1.7.0_80
 
@@ -388,7 +467,7 @@ eden | from survivor | to survivor | old
 -|-|-|-
 8192K | 1024K | 1024K | 10240K
 
-#### GC日志
+##### 对应GC日志
 
 ```s
 [GC [PSYoungGen: 7534K->416K(9216K)] 7534K->6560K(19456K), 0.0049590 secs] [Times: user=0.01 sys=0.00, real=0.01 secs]
@@ -414,10 +493,9 @@ Heap
 内存重新分配 | 3M存alloc4 | - | - | old使用了6M用来存alloc1,2,3
 最后使用占比 | 37%多 | 0% | 0% | 60%多
 
-#### 参考：
+#### 参考
 
-JVM GC log文件的查看
-https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html
+JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html'>参考博文链接</a>
 
 * [PSYoungGen: 7698K->448K(9216K)]
     1. PSYoungGen 新生代/
@@ -501,7 +579,7 @@ G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc�
 
 * full gc
 
-如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的serial old gc，会导致异常长时间的暂停时间，需要进行不断的调优，尽可能的避免full gc
+如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的`serial old gc`，会导致异常长时间的暂停时间，需要进行不断的调优，尽可能的避免full gc
 
 **yong gc log**
 
@@ -615,27 +693,31 @@ gc 类型 | 方式
 yong gc | Parallel Scavenge（PSYoungGen）
 full gc | Parallel Old（ParOldGen）
 
-## 各种 GC收集器
+## GC收集器及其发展
 
-### Serial 收集器 (年轻代)
+### (一) Serial 收集器
 
-* 是一个单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其他所有的工作线程，直到收集结束**
+* 是一个单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其他所有的工作线程，直到收集结束**即`Stop The World`
 
 * 标记，清除
 
-### Parallel Scavenge 收集器 (年轻代)
+### (二) Parallel Scavenge 收集器
 
 使用复制算法的**并行多线程收集器**。Parallel Scavenge是Java1.8默认的收集器，特点是并行的多线程回收，以吞吐量（CPU用于运行用户代码的时间与CPU总消耗时间的比值，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)）优先
 
 停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验，而高吞吐量则可以高效率地利用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务
 
-### ParNew 收集器 (年轻代)
+### (二) ParNew 收集器
 
-是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余与Serial收集器完全一样。
+是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余与Serial收集器完全一样
 
-### CMS收集器 （老年代）
+### (三) CMS收集器
 
-### G1 gc.log
+CMS收集器在Minor GC时会暂停所有的应用线程，并以多线程的方式进行垃圾回收。在Full GC时不再暂停应用线程，而是使用若干个后台线程定期的对老年代空间进行扫描，及时回收其中不再使用的对象
+
+### (四) G1
+
+G1收集器（或者垃圾优先收集器）的设计初衷是为了尽量缩短处理超大堆（大于4GB）时产生的停顿。相对于CMS的优势而言是内存碎片的产生率大大降低
 
 ```java
 Java HotSpot(TM) 64-Bit Server VM (25.171-b11) for bsd-amd64 JRE (1.8.0_171-b11), built on Mar 28 2018 12:50:57 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)

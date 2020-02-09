@@ -8,6 +8,10 @@ date: 2019-02-15 00:00
 
 # Java 内存模型与线程
 
+## 学习文档
+
+参考学习1: <a target='_blank' href='http://tutorials.jenkov.com/java-concurrency/java-memory-model.html'>Java Memory Model外文文档</a>
+
 ## 硬件的效率 与 一致性
 
 每个处理器都有自己的高速缓存，而它们又共享同一内存（Main Memory）；当多个处理器的运算任务都涉及同一块主内存区域时，将可能导致各自的缓存数据不一致
