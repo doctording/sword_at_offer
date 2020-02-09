@@ -27,31 +27,41 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java7">Java7堆内存划分</a><ul>
-<li><a href="#java">《深入理解java虚拟机》堆的描述</a></li>
-<li><a href="#_1">堆区域</a><ul>
-<li><a href="#java7_1">Java7 堆的各区域</a></li>
+<li><a href="#java">图书《深入理解java虚拟机》堆的描述</a></li>
+<li><a href="#_1">堆区域</a></li>
+<li><a href="#java7_1">Java7 堆的各区域</a><ul>
+<li><a href="#perm-space">永久代(Perm space)</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_2">常见的垃圾回收算法</a></li>
-<li><a href="#_3">垃圾收集器</a><ul>
-<li><a href="#_4">三个问题 ？</a></li>
-<li><a href="#_5">可达性分析 判定对象是否存活</a><ul>
-<li><a href="#javagc-roots">Java中可作为GC Roots的对象包括：</a></li>
+<li><a href="#java8">Java8 内存区域</a><ul>
+<li><a href="#_2">元空间</a></li>
+</ul>
+</li>
+<li><a href="#_3">常见的垃圾回收算法</a></li>
+<li><a href="#_4">垃圾收集器</a><ul>
+<li><a href="#_5">三个问题</a><ul>
+<li><a href="#1">1.哪些内存需要回收</a></li>
+<li><a href="#2">2.什么时候回收</a></li>
+<li><a href="#3">3.如何回收</a></li>
+</ul>
+</li>
+<li><a href="#_6">可达性分析 判定对象是否存活</a><ul>
+<li><a href="#javagc-roots">Java中可作为GC Roots的对象包括</a></li>
 </ul>
 </li>
 <li><a href="#reference">引用Reference</a></li>
-<li><a href="#_6">对象是生存还是死亡的？(两次标记)</a></li>
-<li><a href="#_7">回收方法区</a></li>
+<li><a href="#_7">对象是生存还是死亡的？(两次标记)</a></li>
+<li><a href="#_8">回收方法区</a></li>
 <li><a href="#hotspot">HotSpot 算法实现</a></li>
 </ul>
 </li>
-<li><a href="#_8">收集器</a><ul>
+<li><a href="#_9">收集器</a><ul>
 <li><a href="#cmsconcurrent-mark-sweep">CMS(Concurrent Mark Sweep)</a></li>
 <li><a href="#g1garbage-first">G1(Garbage First)</a><ul>
-<li><a href="#_9">参考学习文档</a></li>
-<li><a href="#g1">G1 内存区域分布图</a></li>
+<li><a href="#_10">参考学习文档</a></li>
+<li><a href="#g1">G1 内存区域分布图和概念介绍</a></li>
 <li><a href="#g1_1">G1 常用参数</a></li>
 <li><a href="#g1gc">G1的gc运作</a><ul>
 <li><a href="#young-gcgc">young gc(对年轻代的GC)</a></li>
@@ -62,25 +72,28 @@
 <li><a href="#copyingcleanup-phase">Copying/Cleanup Phase</a></li>
 </ul>
 </li>
+<li><a href="#gc_1">对年轻代和老年代GC的总结</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_10">内存分配与回收策略</a><ul>
+<li><a href="#_11">内存分配与回收策略(理论基础)</a><ul>
 <li><a href="#eden">对象优先在Eden分配</a><ul>
-<li><a href="#minor-gc">minor gc</a></li>
+<li><a href="#minor-gcyong-gc">minor gc(yong gc)</a></li>
 <li><a href="#major-gc-full-gc">major gc/ full gc</a></li>
-<li><a href="#java-gc">Java GC测试程序 和 初始堆情况</a></li>
-<li><a href="#gc_1">GC日志</a></li>
-<li><a href="#_11">参考：</a></li>
+<li><a href="#java-gc-java7-cms">Java GC测试程序 和 初始堆情况(Java7 CMS)</a><ul>
+<li><a href="#gc_2">对应GC日志</a></li>
 </ul>
 </li>
-<li><a href="#_12">大对象直接进入老年代</a></li>
-<li><a href="#_13">长期存活的对象将进入老年代</a></li>
-<li><a href="#_14">动态对象的年龄判定</a></li>
-<li><a href="#_15">空间分配担保</a></li>
-<li><a href="#gc_2">触发gc的条件</a><ul>
-<li><a href="#minor-gc_1">Minor GC触发条件</a></li>
+<li><a href="#_12">参考</a></li>
+</ul>
+</li>
+<li><a href="#_13">大对象直接进入老年代</a></li>
+<li><a href="#_14">长期存活的对象将进入老年代</a></li>
+<li><a href="#_15">动态对象的年龄判定</a></li>
+<li><a href="#_16">空间分配担保</a></li>
+<li><a href="#gc_3">触发gc的条件</a><ul>
+<li><a href="#minor-gc">Minor GC触发条件</a></li>
 <li><a href="#full-gc">Full GC触发条件</a></li>
 </ul>
 </li>
@@ -91,12 +104,12 @@
 <li><a href="#java8-gc">Java8 默认GC</a></li>
 </ul>
 </li>
-<li><a href="#gc_3">各种 GC收集器</a><ul>
-<li><a href="#serial">Serial 收集器 (年轻代)</a></li>
-<li><a href="#parallel-scavenge">Parallel Scavenge 收集器 (年轻代)</a></li>
-<li><a href="#parnew">ParNew 收集器 (年轻代)</a></li>
-<li><a href="#cms">CMS收集器 （老年代）</a></li>
-<li><a href="#g1-gclog">G1 gc.log</a></li>
+<li><a href="#gc_4">GC收集器及其发展</a><ul>
+<li><a href="#serial">(一) Serial 收集器</a></li>
+<li><a href="#parallel-scavenge">(二) Parallel Scavenge 收集器</a></li>
+<li><a href="#parnew">(二) ParNew 收集器</a></li>
+<li><a href="#cms">(三) CMS收集器</a></li>
+<li><a href="#g1_2">(四) G1</a></li>
 </ul>
 </li>
 </ul>
@@ -104,7 +117,7 @@
 </ul>
 </div>
 <h1 id="java7">Java7堆内存划分</h1>
-<h2 id="java">《深入理解java虚拟机》堆的描述</h2>
+<h2 id="java">图书《深入理解java虚拟机》堆的描述</h2>
 <ol>
 <li>Java堆（Java Heap）是java虚拟机所管理的内存中最大的一块</li>
 <li>Java堆被所有线程共享的一块内存区域</li>
@@ -123,7 +136,7 @@
 <li>新生代实际可用的内存空间为 9/10 ( 即90% )的新生代空间。</li>
 </ul>
 <p><code>jstat</code>查看gc相关的堆信息</p>
-<h3 id="java7_1">Java7 堆的各区域</h3>
+<h2 id="java7_1">Java7 堆的各区域</h2>
 <div class="hlcode"><pre><span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">pwd</span>
 <span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">Java</span><span class="o">/</span><span class="n">JavaVirtualMachines</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">7.0</span><span class="n">_80</span><span class="o">.</span><span class="na">jdk</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">Home</span>
 <span class="n">mubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">bin</span><span class="o">/</span><span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
@@ -139,7 +152,7 @@
 
 
 <ul>
-<li>E    — Heap上的 Eden space 区已使用空间的百分比(<code>Edem</code>)</li>
+<li>E    — Heap上的 Eden space 区已使用空间的百分比(<code>Eden</code>)</li>
 <li>S0   — Heap上的 Survivor space 0 区已使用空间的百分比(<code>From</code>)</li>
 <li>S1   — Heap上的 Survivor space 1 区已使用空间的百分比(<code>To</code>)</li>
 <li>O    — Heap上的 Old space 区已使用空间的百分比(<code>Old</code>)</li>
@@ -150,25 +163,64 @@
 <li>FGCT – 从应用程序启动到采样时 Full GC 所用的时间(单位秒)</li>
 <li>GCT  — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)</li>
 </ul>
-<h1 id="_2">常见的垃圾回收算法</h1>
+<h3 id="perm-space">永久代(Perm space)</h3>
+<p>这个区域的内存回收目标主要是针对常量池的回收和对类型的卸载</p>
+<h1 id="java8">Java8 内存区域</h1>
+<div class="hlcode"><pre><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">pwd</span>
+<span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">Java</span><span class="o">/</span><span class="n">JavaVirtualMachines</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">7.0</span><span class="n">_80</span><span class="o">.</span><span class="na">jdk</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">Home</span>
+<span class="n">mubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">bin</span><span class="o">/</span><span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">capacity</span> <span class="n">substituted</span> <span class="n">NaN</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">used</span> <span class="n">substituted</span> <span class="n">NaN</span>
+<span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">capacity</span> <span class="n">substituted</span> <span class="n">NaN</span>
+  <span class="n">S0</span>     <span class="n">S1</span>     <span class="n">E</span>      <span class="n">O</span>      <span class="n">P</span>     <span class="n">YGC</span>     <span class="n">YGCT</span>    <span class="n">FGC</span>    <span class="n">FGCT</span>     <span class="n">GCT</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">76.97</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.08</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.22</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.33</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+<span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
+  <span class="n">S0</span>     <span class="n">S1</span>     <span class="n">E</span>      <span class="n">O</span>      <span class="n">M</span>     <span class="n">CCS</span>    <span class="n">YGC</span>     <span class="n">YGCT</span>    <span class="n">FGC</span>    <span class="n">FGCT</span>     <span class="n">GCT</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">78.86</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">78.93</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">79.04</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">79.17</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+  <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">79.29</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+<span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span>
+</pre></div>
+
+
+<ul>
+<li>S0   — Heap上的 Survivor space 0 区已使用空间的百分比(<code>From</code>)</li>
+<li>S1   — Heap上的 Survivor space 1 区已使用空间的百分比(<code>To</code>)</li>
+<li>E    — Heap上的 Eden space 区已使用空间的百分比(<code>Eden</code>)</li>
+<li>O    — Heap上的 Old space 区已使用空间的百分比(<code>Old</code>)</li>
+<li>M    - 元空间（Metaspace）： Klass Metaspace, NoKlass Metaspace</li>
+<li>CCS  - 表示的是NoKlass Metaspace的使用率</li>
+<li>YGC  — 从应用程序启动到采样时发生 Young GC 的次数</li>
+<li>YGCT – 从应用程序启动到采样时 Young GC 所用的时间(单位秒)</li>
+<li>FGC  — 从应用程序启动到采样时发生 Full GC 的次数</li>
+<li>FGCT – 从应用程序启动到采样时 Full GC 所用的时间(单位秒)</li>
+<li>GCT  — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)</li>
+</ul>
+<h2 id="_2">元空间</h2>
+<p>参考学习1: <a target='_blank' href='http://openjdk.java.net/jeps/122'>openjdk相关文档</a></p>
+<p>Class metadata, interned Strings and class static variables will be moved from the permanent generation to either the Java heap or native memory.<br />
+(原来的永久代(class元信息、字面常量、静态变量等)转移到heap或者native memory中)</p>
+<p><strong>Metaspace</strong>由两大部分组成：Klass Metaspace和NoKlass Metaspace。</p>
+<ol>
+<li>klass Metaspace就是用来存klass的，就是class文件在jvm里的运行时数据结构，是一块连续的内存区域，紧接着Heap</li>
+<li>NoKlass Metaspace专门来存klass相关的其他的内容，比如method，constantPool等，可以由多块不连续的内存组成</li>
+</ol>
+<h1 id="_3">常见的垃圾回收算法</h1>
 <p>参考学习：</p>
 <p><a href='https://blog.csdn.net/qq_26437925/article/details/53728388'>几种垃圾回收算法</a></p>
-<h1 id="_3">垃圾收集器</h1>
-<h2 id="_4">三个问题 ？</h2>
-<ol>
-<li>
-<p>哪些内存需要回收</p>
-</li>
-<li>
-<p>什么时候回收</p>
-</li>
-<li>
-<p>如何回收</p>
-</li>
-</ol>
-<h2 id="_5"><code>可达性分析</code> 判定对象是否存活</h2>
+<h1 id="_4">垃圾收集器</h1>
+<h2 id="_5">三个问题</h2>
+<h3 id="1">1.哪些内存需要回收</h3>
+<h3 id="2">2.什么时候回收</h3>
+<h3 id="3">3.如何回收</h3>
+<h2 id="_6"><code>可达性分析</code> 判定对象是否存活</h2>
 <p>算法的基本思路就是通过一系列的称为<code>GC Roots</code>的对象作为起始点，从这些节点向下搜索，搜索所走过的路径称为<code>引用链(Reference Chain)</code>,当一个对象到<code>GC Roots</code>没有任何引用链相连(用图论的话来说，就是<code>GC Roots</code>到这个对象不可达)时，则证明此对象是不可用的。</p>
-<h3 id="javagc-roots">Java中可作为<code>GC Roots</code>的对象包括：</h3>
+<h3 id="javagc-roots">Java中可作为<code>GC Roots</code>的对象包括</h3>
 <ul>
 <li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
 <li>方法区中类静态属性引用的对象</li>
@@ -205,7 +257,7 @@
 <li>虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。<code>PhantomReference</code></li>
 </ul>
 <p>参考：https://www.cnblogs.com/fengbs/p/7019687.html</p>
-<h2 id="_6">对象是生存还是死亡的？(两次标记)</h2>
+<h2 id="_7">对象是生存还是死亡的？(两次标记)</h2>
 <p>对对象进行可达性分析 ？<br />
 =》没有GC Roots的引用链 =》 判断对象是否有必要执行<code>finalize()</code>方法</p>
 <ol>
@@ -280,7 +332,7 @@ no, i am dead
 <ul>
 <li>最后，不推荐<code>finalize()</code></li>
 </ul>
-<h2 id="_7">回收方法区</h2>
+<h2 id="_8">回收方法区</h2>
 <p>堆中，新生代进行一次垃圾收集一般可以回收70%-95%的空间，而永久代的垃圾收集效率远低于此。</p>
 <p>永久代主要回收两部分内容： 废弃常量和无用的类， 判断"无用的类"：</p>
 <ol>
@@ -298,7 +350,7 @@ no, i am dead
 <li>可能导致引用关系变化，或者说OopMap内容变化的指令特别多，如果为每一条指令都生成对应的OopMap，那将会需要大量的额外空间，这样GC的空间成本将会变得很高</li>
 </ul>
 <p>实际上，HotSpot没有为每条指令都生成<code>oopMap</code>, 安全点(<code>Sagepoint</code>) GC， 选举以"是否具有让程序长时间执行的特征"为标准进行选定，如方法调用，循环跳转，异常跳转等，这些功能的指令会产生安全点</p>
-<h1 id="_8">收集器</h1>
+<h1 id="_9">收集器</h1>
 <p>垃圾收集器，并发&amp;并行</p>
 <ul>
 <li>
@@ -336,14 +388,16 @@ no, i am dead
 </ul>
 <p>为了解决这个问题，CMS提供了一个开关参数（<code>-XX: UseCMSCompactAtFullCollection</code>），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(<code>-XX: CMSFullGCsBeforeCompaction</code>)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）</p>
 <h2 id="g1garbage-first">G1(Garbage First)</h2>
-<h3 id="_9">参考学习文档</h3>
+<h3 id="_10">参考学习文档</h3>
 <p>参考学习1: <a target='_blank' href='https://tech.meituan.com/2016/09/23/g1.html'>美团技术文章</a></p>
-<p>参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document </a></p>
-<h3 id="g1">G1 内存区域分布图</h3>
+<p>参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document</a></p>
+<p>参考学习3: <a target='_blank' href='https://blogs.oracle.com/poonam/understanding-g1-gc-logs'>g1 log</a></p>
+<h3 id="g1">G1 内存区域分布图和概念介绍</h3>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png" /></p>
 <ul>
 <li>Humongous区域：如果一个对象占用的空间超过了分区容量(<code>region size</code>)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在老年代</li>
 </ul>
+<p>When performing garbage collections, G1 operates in a manner similar to the CMS collector. G1 performs a concurrent global marking phase to determine the liveness of objects throughout the heap. After the mark phase completes, G1 knows which regions are mostly empty. It collects in these regions first, which usually yields a large amount of free space. This is why this method of garbage collection is called Garbage-First.</p>
 <h3 id="g1_1">G1 常用参数</h3>
 <table>
 <thead>
@@ -394,6 +448,7 @@ no, i am dead
 
 <h3 id="g1gc">G1的gc运作</h3>
 <p>G1不提供<code>Full GC</code>,G1的GC包括<code>young gc</code>和<code>mixed GC</code></p>
+<p><strong>Note:</strong> G1 has both concurrent (runs along with application threads, e.g., refinement, marking, cleanup) and parallel (multi-threaded, e.g., stop the world) phases. Full garbage collections are still single threaded, but if tuned properly your applications should avoid full GCs.</p>
 <h4 id="young-gcgc">young gc(对年轻代的GC)</h4>
 <p>Live objects are evacuated to one or more survivor regions. If the aging threshold is met, some of the objects are promoted to old generation regions.</p>
 <p>（存活的对象会进入survivor区域，如果达到aging阈值则进入到老年代）</p>
@@ -449,10 +504,44 @@ no, i am dead
 <p>（the lowest "liveness"有限被清理调）</p>
 <p>（<code>yong gc</code>和<code>mixed gc</code>会同时进行）</p>
 <p>gc log: <code>GC pause (mixed)</code></p>
-<h2 id="_10">内存分配与回收策略</h2>
+<h4 id="gc_1">对年轻代和老年代GC的总结</h4>
+<ul>
+<li>
+<p>对年轻代的GC</p>
+</li>
+<li>
+<p>young gc需要stop the world</p>
+</li>
+<li>young gc是多线程并行处理的</li>
+<li>
+<p>eden会到达<code>survivor</code>或者<code>old</code> generation regions</p>
+</li>
+<li>
+<p>对老年代的GC</p>
+</li>
+<li>
+<p>Concurrent Marking Phase</p>
+<ul>
+<li>Liveness information is calculated concurrently while the application is running.</li>
+<li>This liveness information identifies which regions will be best to reclaim during an evacuation pause.</li>
+<li>There is no sweeping phase like in CMS.</li>
+</ul>
+</li>
+<li>Remark Phase<ul>
+<li>Uses the Snapshot-at-the-Beginning (SATB) algorithm which is much faster then what was used with CMS.</li>
+<li>Completely empty regions are reclaimed.(完全空的regions会立刻被会收掉)</li>
+</ul>
+</li>
+<li>Copying/Cleanup Phase<ul>
+<li>Young generation and old generation are reclaimed at the same time.（年轻代和老年代会同时被回收）</li>
+<li>Old generation regions are selected based on their liveness.</li>
+</ul>
+</li>
+</ul>
+<h2 id="_11">内存分配与回收策略(理论基础)</h2>
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
-<h4 id="minor-gc">minor gc</h4>
+<h4 id="minor-gcyong-gc">minor gc(yong gc)</h4>
 <p>新生代GC(<code>Minor GC</code>): 指发生在新生代的垃圾收集动作，因为Java对象大多数都具备朝生夕灭的性质，所以<code>Minor GC</code>非常频繁，一般回收速度也比较快</p>
 <p>新创建的对象都是用新生代分配内存，<code>Eden</code>空间不足时，触发<code>Minor GC</code>，这时会把存活的对象转移进Survivor区。</p>
 <p>新生代通常存活时间较短基于Copying算法进行回收，所谓Copying算法就是扫描出存活的对象，并复制到一块新的完全未使用的空间中，对应于新生代，就是在<code>Eden</code>和<code>From Space</code>或<code>To Space</code>之间copy。新生代采用空闲指针的方式来控制GC触发，指针保持最后一个分配的对象在新生代区间的位置，当有新的对象要分配内存时，用于检查空间是否足够，不够就触发GC。当连续分配对象时，对象会逐渐从Eden到Survivor，最后到老年代。</p>
@@ -467,7 +556,7 @@ no, i am dead
 <li>-XXNewRatio 默认为2</li>
 <li>-XX:SurvivorRatio 默认为8，表示Suvivor:eden=2:8,即一个Survivor占年轻代的1/10</li>
 </ul>
-<h4 id="java-gc">Java GC测试程序 和 初始堆情况</h4>
+<h4 id="java-gc-java7-cms">Java GC测试程序 和 初始堆情况(Java7 CMS)</h4>
 <ul>
 <li>jdk1.7.0_80</li>
 </ul>
@@ -512,7 +601,7 @@ no, i am dead
 </tr>
 </tbody>
 </table>
-<h4 id="gc_1">GC日志</h4>
+<h5 id="gc_2">对应GC日志</h5>
 <div class="hlcode"><pre><span class="p">[</span>GC <span class="p">[</span>PSYoungGen<span class="o">:</span> <span class="m">7534</span>K<span class="o">-&gt;</span><span class="m">416</span>K<span class="p">(</span><span class="m">9216</span>K<span class="p">)]</span> <span class="m">7534</span>K<span class="o">-&gt;</span><span class="m">6560</span>K<span class="p">(</span><span class="m">19456</span>K<span class="p">),</span> <span class="m">0.0049590</span> secs<span class="p">]</span> <span class="p">[</span>Times<span class="o">:</span> user<span class="o">=</span><span class="m">0.01</span> sys<span class="o">=</span><span class="m">0.00</span><span class="p">,</span> real<span class="o">=</span><span class="m">0.01</span> secs<span class="p">]</span>
 <span class="p">[</span>Full GC <span class="p">[</span>PSYoungGen<span class="o">:</span> <span class="m">416</span>K<span class="o">-&gt;</span><span class="m">0</span>K<span class="p">(</span><span class="m">9216</span>K<span class="p">)]</span> <span class="p">[</span>ParOldGen<span class="o">:</span> <span class="m">6144</span>K<span class="o">-&gt;</span><span class="m">6466</span>K<span class="p">(</span><span class="m">10240</span>K<span class="p">)]</span> <span class="m">6560</span>K<span class="o">-&gt;</span><span class="m">6466</span>K<span class="p">(</span><span class="m">19456</span>K<span class="p">)</span> <span class="p">[</span>PSPermGen<span class="o">:</span> <span class="m">3121</span>K<span class="o">-&gt;</span><span class="m">3120</span>K<span class="p">(</span><span class="m">21504</span>K<span class="p">)],</span> <span class="m">0.0103590</span> secs<span class="p">]</span> <span class="p">[</span>Times<span class="o">:</span> user<span class="o">=</span><span class="m">0.02</span> sys<span class="o">=</span><span class="m">0.00</span><span class="p">,</span> real<span class="o">=</span><span class="m">0.01</span> secs<span class="p">]</span>
 Heap
@@ -578,9 +667,8 @@ Heap
 </tr>
 </tbody>
 </table>
-<h4 id="_11">参考：</h4>
-<p>JVM GC log文件的查看<br />
-https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
+<h4 id="_12">参考</h4>
+<p>JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html'>参考博文链接</a></p>
 <ul>
 <li>[PSYoungGen: 7698K-&gt;448K(9216K)]<ol>
 <li>PSYoungGen 新生代/</li>
@@ -592,22 +680,22 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 </ol>
 </li>
 </ul>
-<h3 id="_12">大对象直接进入老年代</h3>
+<h3 id="_13">大对象直接进入老年代</h3>
 <p>这里所谓的大对象是指，需要大量连续内存空间的Java对象，，最典型的大对象就是那种很长的字符串以及数组。大对象对虚拟机的内存分配来说就是一个坏消息。（更坏的：一群"朝生夕灭"的"短命大对象"），经常出现大对象容易导致内存还有不少空间时就提前触发垃圾收集以获取足够的连续空间来"安置"它们</p>
 <p><code>-XX:PretenureSizeThreshold</code>参数，另大于这个设置值的对象直接在老年代分配。这样做的目的是避免在Eden区以及两个Survivor区之间发生大量的内存复制(复习一下：新生代采用复制算法收集内存)</p>
-<h3 id="_13">长期存活的对象将进入老年代</h3>
+<h3 id="_14">长期存活的对象将进入老年代</h3>
 <p>内存回收时，必须识别哪些对象应该在新生代，哪些对象应放到老年代。</p>
 <p>虚拟机给每个对象定义了一个对象年龄(<code>Age</code>)计数器。如果对象在<code>Eden</code>出生并经历过第一次<code>Minor GC</code>后仍然存活，并且能被<code>Survivor</code>容纳的话，将被移动到<code>Survivor</code>空间,并且对象的年龄为1.对象在<code>Survivor</code>区中每"熬过"一次<code>Minor GC</code>，年龄就增加1岁，当他的年龄增加到一定程度（默认15岁），就将会被晋升到老年代中。对象晋升老年代的年龄阈值，可以通过参数<code>-XX:MaxTenuringThreshold</code>设置</p>
-<h3 id="_14">动态对象的年龄判定</h3>
+<h3 id="_15">动态对象的年龄判定</h3>
 <p>为了更好地适应不同程序的内存状况，虚拟机并不是永远地要求对象的年龄必须达到了<code>MaxTenuringThreshold</code>才能晋升老年代，如果在<code>Survivor</code>空间中相同年龄所有对象大小的总和大于<code>Survivor</code>空间的一半，年龄大于或等于该年龄对象就可以直接进入老年代，无须等到<code>MaxTenuringThreshold</code>要求的年龄。</p>
-<h3 id="_15">空间分配担保</h3>
+<h3 id="_16">空间分配担保</h3>
 <p>老年代最大可用的连续空间 &gt; 新生代所有对象总空间, 这样能确保<code>Minor GC</code>是安全的。</p>
 <p>如果不成立，虚拟机会查看<code>HandlerPromotionFailure</code>设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</p>
 <p>如果大于，将尝试着进行一次<code>Minor GC</code>,尽管这次的<code>Minor GC</code>是有风险的</p>
 <p>如果小于，或者<code>HandlerPromotionFailure</code>设置值不允许担保失败，这时改为进行一次<code>Full GC</code></p>
-<h3 id="gc_2">触发gc的条件</h3>
+<h3 id="gc_3">触发gc的条件</h3>
 <p>“什么时候”即就是GC触发的条件。GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。</p>
-<h4 id="minor-gc_1">Minor GC触发条件</h4>
+<h4 id="minor-gc">Minor GC触发条件</h4>
 <ul>
 <li>当<code>Eden</code>区满时，触发<code>Minor GC</code></li>
 </ul>
@@ -660,7 +748,7 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 <ul>
 <li>full gc</li>
 </ul>
-<p>如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的serial old gc，会导致异常长时间的暂停时间，需要进行不断的调优，尽可能的避免full gc</p>
+<p>如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的<code>serial old gc</code>，会导致异常长时间的暂停时间，需要进行不断的调优，尽可能的避免full gc</p>
 <p><strong>yong gc log</strong></p>
 <div class="hlcode"><pre><span class="o">[</span><span class="n">GC</span> <span class="n">pause</span> <span class="o">(</span><span class="n">G1</span> <span class="n">Evacuation</span> <span class="n">Pause</span><span class="o">)</span> <span class="o">(</span><span class="n">young</span><span class="o">),</span> <span class="mf">0.0707344</span> <span class="n">secs</span><span class="o">]</span>
    <span class="o">[</span><span class="n">Parallel</span> <span class="nl">Time:</span> <span class="mf">68.6</span> <span class="n">ms</span><span class="o">,</span> <span class="n">GC</span> <span class="nl">Workers:</span> <span class="mi">2</span><span class="o">]</span>
@@ -824,23 +912,25 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
 </tr>
 </tbody>
 </table>
-<h2 id="gc_3">各种 GC收集器</h2>
-<h3 id="serial">Serial 收集器 (年轻代)</h3>
+<h2 id="gc_4">GC收集器及其发展</h2>
+<h3 id="serial">(一) Serial 收集器</h3>
 <ul>
 <li>
-<p>是一个单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用<strong>一个CPU</strong>或者<strong>一条收集线程</strong>去完成垃圾收集工作，更重要的是它进行垃圾收集时，<strong>必须暂停其他所有的工作线程，直到收集结束</strong></p>
+<p>是一个单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用<strong>一个CPU</strong>或者<strong>一条收集线程</strong>去完成垃圾收集工作，更重要的是它进行垃圾收集时，<strong>必须暂停其他所有的工作线程，直到收集结束</strong>即<code>Stop The World</code></p>
 </li>
 <li>
 <p>标记，清除</p>
 </li>
 </ul>
-<h3 id="parallel-scavenge">Parallel Scavenge 收集器 (年轻代)</h3>
+<h3 id="parallel-scavenge">(二) Parallel Scavenge 收集器</h3>
 <p>使用复制算法的<strong>并行多线程收集器</strong>。Parallel Scavenge是Java1.8默认的收集器，特点是并行的多线程回收，以吞吐量（CPU用于运行用户代码的时间与CPU总消耗时间的比值，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)）优先</p>
 <p>停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验，而高吞吐量则可以高效率地利用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务</p>
-<h3 id="parnew">ParNew 收集器 (年轻代)</h3>
-<p>是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余与Serial收集器完全一样。</p>
-<h3 id="cms">CMS收集器 （老年代）</h3>
-<h3 id="g1-gclog">G1 gc.log</h3>
+<h3 id="parnew">(二) ParNew 收集器</h3>
+<p>是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余与Serial收集器完全一样</p>
+<h3 id="cms">(三) CMS收集器</h3>
+<p>CMS收集器在Minor GC时会暂停所有的应用线程，并以多线程的方式进行垃圾回收。在Full GC时不再暂停应用线程，而是使用若干个后台线程定期的对老年代空间进行扫描，及时回收其中不再使用的对象</p>
+<h3 id="g1_2">(四) G1</h3>
+<p>G1收集器（或者垃圾优先收集器）的设计初衷是为了尽量缩短处理超大堆（大于4GB）时产生的停顿。相对于CMS的优势而言是内存碎片的产生率大大降低</p>
 <div class="hlcode"><pre><span class="n">Java</span> <span class="nf">HotSpot</span><span class="o">(</span><span class="n">TM</span><span class="o">)</span> <span class="mi">64</span><span class="o">-</span><span class="n">Bit</span> <span class="n">Server</span> <span class="n">VM</span> <span class="o">(</span><span class="mf">25.171</span><span class="o">-</span><span class="n">b11</span><span class="o">)</span> <span class="k">for</span> <span class="n">bsd</span><span class="o">-</span><span class="n">amd64</span> <span class="n">JRE</span> <span class="o">(</span><span class="mf">1.8</span><span class="o">.</span><span class="mi">0</span><span class="n">_171</span><span class="o">-</span><span class="n">b11</span><span class="o">),</span> <span class="n">built</span> <span class="n">on</span> <span class="n">Mar</span> <span class="mi">28</span> <span class="mi">2018</span> <span class="mi">12</span><span class="o">:</span><span class="mi">50</span><span class="o">:</span><span class="mi">57</span> <span class="n">by</span> <span class="s">&quot;java_re&quot;</span> <span class="n">with</span> <span class="n">gcc</span> <span class="mf">4.2</span><span class="o">.</span><span class="mi">1</span> <span class="o">(</span><span class="n">Based</span> <span class="n">on</span> <span class="n">Apple</span> <span class="n">Inc</span><span class="o">.</span> <span class="n">build</span> <span class="mi">5658</span><span class="o">)</span> <span class="o">(</span><span class="n">LLVM</span> <span class="n">build</span> <span class="mf">2336.11</span><span class="o">.</span><span class="mi">00</span><span class="o">)</span>
 <span class="nl">Memory:</span> <span class="mi">4</span><span class="n">k</span> <span class="n">page</span><span class="o">,</span> <span class="n">physical</span> <span class="mi">16777216</span><span class="n">k</span><span class="o">(</span><span class="mi">1978920</span><span class="n">k</span> <span class="n">free</span><span class="o">)</span>
 
@@ -893,7 +983,7 @@ https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html</p>
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-02-08 21:33:25</p>
+        <p>Site Generated 2020-02-09 22:56:28</p>
       </span>
     </div>
 

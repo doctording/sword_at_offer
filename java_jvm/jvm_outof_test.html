@@ -179,9 +179,13 @@
 <h2 id="_2">方法区和运行时常量池溢出</h2>
 <p>方法区用于存放Class的相关信息，如：类名，访问修饰符，常量池，字符描述，方法描述等。对于这个区域的测试，基本思路是运行时产生大量的类去填满方法区，直到溢出。</p>
 <ul>
-<li>Java7中</li>
+<li>
+<p>Java7中</p>
+</li>
+<li>
+<p>Java7 永久代仍存在；对比java6，其中：符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。</p>
+</li>
 </ul>
-<p>永久代仍存在； 符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。</p>
 <h3 id="java7-javalangoutofmemoryerror-java-heap-space">Java7 常量池 仍是<code>java.lang.OutOfMemoryError: Java heap space</code></h3>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">java7</span><span class="o">;</span>
 
@@ -280,7 +284,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-02-08 21:33:25</p>
+        <p>Site Generated 2020-02-09 22:56:28</p>
       </span>
     </div>
 
