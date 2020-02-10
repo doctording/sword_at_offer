@@ -28,11 +28,23 @@
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java">Java自带的各类型命令工具</a><ul>
 <li><a href="#jps">jps</a></li>
-<li><a href="#jstat">jstat</a></li>
-<li><a href="#jmap">jmap</a></li>
-<li><a href="#jstack">jstack</a></li>
+<li><a href="#jstat">jstat</a><ul>
+<li><a href="#1jstat-gcgc">例1（jstat -gc）查看gc信息</a></li>
+<li><a href="#2jstat-gccapacity">例2（jstat -gccapacity）</a></li>
+<li><a href="#3-jstat-gcutilgc">例3 (jstat -gcutil)查看gc情况</a></li>
+</ul>
+</li>
+<li><a href="#jmap">jmap</a><ul>
+<li><a href="#dump-jvm">dump jvm堆内存信息</a></li>
+</ul>
+</li>
+<li><a href="#jstack">jstack</a><ul>
+<li><a href="#java-stacknative-stack">查看java stack和native stack的线程信息</a></li>
+</ul>
+</li>
 <li><a href="#jcmd">jcmd</a><ul>
 <li><a href="#native-memory-trackingnmt">Native Memory Tracking(简称:NMT) 分析</a></li>
+<li><a href="#heap">举例heap内存分布</a></li>
 </ul>
 </li>
 </ul>
@@ -139,9 +151,7 @@
 -gcutil　　           显示垃圾收集信息；<br />
 -gccause             显示垃圾回收的相关信息（通-gcutil）,同时显示最后一次或当前正在发生的垃圾回收的诱因；<br />
 -printcompilation 输出JIT编译的方法信息；</p>
-<ul>
-<li>例1</li>
-</ul>
+<h3 id="1jstat-gcgc">例1（jstat -gc）查看gc信息</h3>
 <div class="hlcode"><pre><span class="nx">mubi</span><span class="err">@</span><span class="nx">mubideMacBook</span><span class="o">-</span><span class="nx">Pro</span> <span class="nx">webapps</span> <span class="nx">$</span> <span class="nx">jps</span>
 <span class="mi">4402</span> <span class="nx">Jps</span>
 <span class="mi">2611</span> <span class="nx">Launcher</span>
@@ -174,9 +184,7 @@ YGCT：年轻代垃圾回收消耗时间<br />
 FGC：老年代垃圾回收次数<br />
 FGCT：老年代垃圾回收消耗时间<br />
 GCT：垃圾回收消耗总时间</p>
-<ul>
-<li>例2</li>
-</ul>
+<h3 id="2jstat-gccapacity">例2（jstat -gccapacity）</h3>
 <div class="hlcode"><pre> <span class="nx">jstat</span> <span class="o">-</span><span class="nx">gccapacity</span> <span class="mi">8207</span>
  <span class="nx">NGCMN</span>    <span class="nx">NGCMX</span>     <span class="nx">NGC</span>     <span class="nx">S0C</span>   <span class="nx">S1C</span>       <span class="nx">EC</span>      <span class="nx">OGCMN</span>      <span class="nx">OGCMX</span>       <span class="nx">OGC</span>         <span class="nx">OC</span>       <span class="nx">MCMN</span>     <span class="nx">MCMX</span>      <span class="nx">MC</span>     <span class="nx">CCSMN</span>    <span class="nx">CCSMX</span>     <span class="nx">CCSC</span>    <span class="nx">YGC</span>    <span class="nx">FGC</span>
      <span class="mf">0.0</span> <span class="mf">1048576.0</span>  <span class="mf">82944.0</span>    <span class="mf">0.0</span> <span class="mf">7168.0</span>  <span class="mf">75776.0</span>        <span class="mf">0.0</span>  <span class="mf">1048576.0</span>   <span class="mf">965632.0</span>   <span class="mf">965632.0</span>      <span class="mf">0.0</span> <span class="mf">1083392.0</span>  <span class="mf">40572.0</span>      <span class="mf">0.0</span> <span class="mf">1048576.0</span>   <span class="mf">6320.0</span>      <span class="mi">6</span>     <span class="mi">0</span>
@@ -201,9 +209,7 @@ CCSMX：最大压缩类空间大小<br />
 CCSC：当前压缩类空间大小<br />
 YGC：从应用程序启动到采样时年轻代中gc次数<br />
 FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
-<ul>
-<li>例3 每隔1秒打印一次gc信息，总共打印5次</li>
-</ul>
+<h3 id="3-jstat-gcutilgc">例3 (jstat -gcutil)查看gc情况</h3>
 <div class="hlcode"><pre><span class="nx">jstat</span> <span class="o">-</span><span class="nx">gcutil</span> <span class="mi">8207</span> <span class="mi">1000</span> <span class="mi">5</span>
   <span class="nx">S0</span>     <span class="nx">S1</span>     <span class="nx">E</span>      <span class="nx">O</span>      <span class="nx">M</span>     <span class="nx">CCS</span>    <span class="nx">YGC</span>     <span class="nx">YGCT</span>    <span class="nx">FGC</span>    <span class="nx">FGCT</span>     <span class="nx">GCT</span>
   <span class="mf">0.00</span> <span class="mf">100.00</span>  <span class="mf">43.24</span>   <span class="mf">3.73</span>  <span class="mf">97.04</span>  <span class="mf">92.86</span>      <span class="mi">6</span>    <span class="mf">0.058</span>     <span class="mi">0</span>    <span class="mf">0.000</span>    <span class="mf">0.058</span>
@@ -215,18 +221,15 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
 
 
 <h2 id="jmap">jmap</h2>
-<ul>
-<li>dump jvm信息</li>
-</ul>
+<h3 id="dump-jvm">dump jvm堆内存信息</h3>
 <div class="hlcode"><pre><span class="n">jmap</span> <span class="o">-</span><span class="nl">dump:</span><span class="n">format</span><span class="o">=</span><span class="n">b</span><span class="o">,</span><span class="n">file</span><span class="o">=</span><span class="n">xx</span><span class="o">.</span><span class="na">hprof</span> <span class="o">&lt;</span><span class="n">pid</span><span class="o">&gt;</span>
 </pre></div>
 
 
 <h2 id="jstack">jstack</h2>
-<ul>
-<li>堆栈信息</li>
-</ul>
-<div class="hlcode"><pre><span class="n">jstack</span> <span class="o">-</span><span class="n">F</span> <span class="o">&lt;</span><span class="n">PID</span><span class="o">&gt;</span>
+<h3 id="java-stacknative-stack">查看java stack和native stack的线程信息</h3>
+<div class="hlcode"><pre><span class="n">jstack</span> <span class="o">&lt;</span><span class="n">PID</span><span class="o">&gt;</span>
+<span class="n">jstack</span> <span class="o">-</span><span class="n">F</span> <span class="o">&lt;</span><span class="n">PID</span><span class="o">&gt;</span>
 </pre></div>
 
 
@@ -351,16 +354,54 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
 
 
 <ul>
-<li>committed 为真正使用的内存</li>
+<li>reserved表示应用可用的内存大小, committed 为真正使用的内存</li>
 </ul>
 <div class="hlcode"><pre> <span class="n">From</span> <span class="n">the</span> <span class="n">sample</span> <span class="n">output</span> <span class="n">below</span><span class="o">,</span> <span class="n">you</span> <span class="n">will</span> <span class="n">see</span> <span class="n">reserved</span> <span class="n">and</span> <span class="n">committed</span> <span class="n">memory</span><span class="o">.</span> <span class="n">Note</span> <span class="n">that</span> <span class="n">only</span> <span class="n">committed</span> <span class="n">memory</span> <span class="n">is</span> <span class="n">actually</span> <span class="n">used</span><span class="o">.</span> <span class="n">For</span> <span class="n">example</span><span class="o">,</span> <span class="k">if</span> <span class="n">you</span> <span class="n">run</span> <span class="n">with</span> <span class="o">-</span><span class="n">Xms100m</span> <span class="o">-</span><span class="n">Xmx1000m</span><span class="o">,</span> <span class="n">the</span> <span class="n">JVM</span> <span class="n">will</span> <span class="n">reserve</span> <span class="mi">1000</span> <span class="n">MB</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Java</span> <span class="n">Heap</span><span class="o">.</span> <span class="n">Since</span> <span class="n">the</span> <span class="n">initial</span> <span class="n">heap</span> <span class="n">size</span> <span class="n">is</span> <span class="n">only</span> <span class="mi">100</span> <span class="n">MB</span><span class="o">,</span> <span class="n">only</span> <span class="mi">100</span><span class="n">MB</span> <span class="n">will</span> <span class="n">be</span> <span class="n">committed</span> <span class="n">to</span> <span class="n">begin</span> <span class="n">with</span><span class="o">.</span> <span class="n">For</span> <span class="n">a</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">machine</span> <span class="n">where</span> <span class="n">address</span> <span class="n">space</span> <span class="n">is</span> <span class="n">almost</span> <span class="n">unlimited</span><span class="o">,</span> <span class="n">there</span> <span class="n">is</span> <span class="n">no</span> <span class="n">problem</span> <span class="k">if</span> <span class="n">a</span> <span class="n">JVM</span> <span class="n">reserves</span> <span class="n">a</span> <span class="n">lot</span> <span class="n">of</span> <span class="n">memory</span><span class="o">.</span> <span class="n">The</span> <span class="n">problem</span> <span class="n">arises</span> <span class="k">if</span> <span class="n">more</span> <span class="n">and</span> <span class="n">more</span> <span class="n">memory</span> <span class="n">gets</span> <span class="n">committed</span><span class="o">,</span> <span class="n">which</span> <span class="n">may</span> <span class="n">lead</span> <span class="n">to</span> <span class="n">swapping</span> <span class="n">or</span> <span class="kd">native</span> <span class="n">OOM</span> <span class="n">situations</span><span class="o">.</span>
+</pre></div>
+
+
+<h3 id="heap">举例heap内存分布</h3>
+<ul>
+<li>堆可用内存总大小:4194304KB,映射地址<code>[0x00000006c0000000 - 0x00000007c0000000]</code></li>
+</ul>
+<p><code>committed</code>的映射地址范围为已经使用的内存</p>
+<p>58880KB + 80384KB + 1310720KB + 87040KB = 1537024KB(与Native Memory Tracking中的<code>Java Heap</code>一致)</p>
+<div class="hlcode"><pre><span class="o">[</span><span class="mh">0x00000006c0000000</span> <span class="o">-</span> <span class="mh">0x00000007c0000000</span><span class="o">]</span> <span class="n">reserved</span> <span class="mi">4194304</span><span class="n">KB</span> <span class="k">for</span> <span class="n">Java</span> <span class="n">Heap</span> <span class="n">from</span>
+    <span class="o">[</span><span class="mh">0x00000001033b1e8a</span><span class="o">]</span> <span class="nl">ReservedSpace:</span><span class="o">:</span><span class="n">initialize</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">bool</span><span class="o">,</span> <span class="kt">char</span><span class="o">*,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">bool</span><span class="o">)+</span><span class="mh">0x14a</span>
+    <span class="o">[</span><span class="mh">0x00000001033b211e</span><span class="o">]</span> <span class="nl">ReservedHeapSpace:</span><span class="o">:</span><span class="n">ReservedHeapSpace</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">bool</span><span class="o">,</span> <span class="kt">char</span><span class="o">*)+</span><span class="mh">0x78</span>
+    <span class="o">[</span><span class="mh">0x0000000103380b80</span><span class="o">]</span> <span class="nl">Universe:</span><span class="o">:</span><span class="n">reserve_heap</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x84</span>
+    <span class="o">[</span><span class="mh">0x000000010329fe27</span><span class="o">]</span> <span class="nl">ParallelScavengeHeap:</span><span class="o">:</span><span class="n">initialize</span><span class="o">()+</span><span class="mh">0x89</span>
+
+    <span class="o">[</span><span class="mh">0x00000006c4e80000</span> <span class="o">-</span> <span class="mh">0x00000006c8800000</span><span class="o">]</span> <span class="n">committed</span> <span class="mi">58880</span><span class="n">KB</span> <span class="n">from</span>
+            <span class="o">[</span><span class="mh">0x00000001032ce10b</span><span class="o">]</span> <span class="nl">PSVirtualSpace:</span><span class="o">:</span><span class="n">expand_by</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x3d</span>
+            <span class="o">[</span><span class="mh">0x00000001032c35fa</span><span class="o">]</span> <span class="nl">PSOldGen:</span><span class="o">:</span><span class="n">expand_by</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x1c</span>
+            <span class="o">[</span><span class="mh">0x00000001032c3724</span><span class="o">]</span> <span class="nl">PSOldGen:</span><span class="o">:</span><span class="n">expand</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0xa8</span>
+            <span class="o">[</span><span class="mh">0x00000001032c380a</span><span class="o">]</span> <span class="nl">PSOldGen:</span><span class="o">:</span><span class="n">resize</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0xb4</span>
+
+    <span class="o">[</span><span class="mh">0x00000006c0000000</span> <span class="o">-</span> <span class="mh">0x00000006c4e80000</span><span class="o">]</span> <span class="n">committed</span> <span class="mi">80384</span><span class="n">KB</span> <span class="n">from</span>
+            <span class="o">[</span><span class="mh">0x00000001032ce10b</span><span class="o">]</span> <span class="nl">PSVirtualSpace:</span><span class="o">:</span><span class="n">expand_by</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x3d</span>
+            <span class="o">[</span><span class="mh">0x00000001032c3d14</span><span class="o">]</span> <span class="nl">PSOldGen:</span><span class="o">:</span><span class="n">initialize_virtual_space</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x72</span>
+            <span class="o">[</span><span class="mh">0x00000001032c3d85</span><span class="o">]</span> <span class="nl">PSOldGen:</span><span class="o">:</span><span class="n">initialize</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="kt">char</span> <span class="kd">const</span><span class="o">*,</span> <span class="kt">int</span><span class="o">)+</span><span class="mh">0x49</span>
+            <span class="o">[</span><span class="mh">0x0000000102ea09b2</span><span class="o">]</span> <span class="nl">AdjoiningGenerations:</span><span class="o">:</span><span class="n">AdjoiningGenerations</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">GenerationSizer</span><span class="o">*,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x36c</span>
+
+    <span class="o">[</span><span class="mh">0x0000000770000000</span> <span class="o">-</span> <span class="mh">0x00000007c0000000</span><span class="o">]</span> <span class="n">committed</span> <span class="mi">1310720</span><span class="n">KB</span> <span class="n">from</span>
+            <span class="o">[</span><span class="mh">0x00000001032ce10b</span><span class="o">]</span> <span class="nl">PSVirtualSpace:</span><span class="o">:</span><span class="n">expand_by</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x3d</span>
+            <span class="o">[</span><span class="mh">0x00000001032ce7f9</span><span class="o">]</span> <span class="nl">PSYoungGen:</span><span class="o">:</span><span class="n">resize_generation</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x57</span>
+            <span class="o">[</span><span class="mh">0x00000001032cf032</span><span class="o">]</span> <span class="nl">PSYoungGen:</span><span class="o">:</span><span class="n">resize</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x24</span>
+            <span class="o">[</span><span class="mh">0x00000001032cc81c</span><span class="o">]</span> <span class="nl">PSScavenge:</span><span class="o">:</span><span class="n">invoke_no_policy</span><span class="o">()+</span><span class="mh">0xfb2</span>
+
+    <span class="o">[</span><span class="mh">0x000000076ab00000</span> <span class="o">-</span> <span class="mh">0x0000000770000000</span><span class="o">]</span> <span class="n">committed</span> <span class="mi">87040</span><span class="n">KB</span> <span class="n">from</span>
+            <span class="o">[</span><span class="mh">0x00000001032ce10b</span><span class="o">]</span> <span class="nl">PSVirtualSpace:</span><span class="o">:</span><span class="n">expand_by</span><span class="o">(</span><span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x3d</span>
+            <span class="o">[</span><span class="mh">0x00000001032cee37</span><span class="o">]</span> <span class="nl">PSYoungGen:</span><span class="o">:</span><span class="n">initialize_virtual_space</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x6f</span>
+            <span class="o">[</span><span class="mh">0x00000001032cedb9</span><span class="o">]</span> <span class="nl">PSYoungGen:</span><span class="o">:</span><span class="n">initialize</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x41</span>
+            <span class="o">[</span><span class="mh">0x0000000102ea0962</span><span class="o">]</span> <span class="nl">AdjoiningGenerations:</span><span class="o">:</span><span class="n">AdjoiningGenerations</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">GenerationSizer</span><span class="o">*,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x31c</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-02-09 22:56:28</p>
+        <p>Site Generated 2020-02-10 09:02:42</p>
       </span>
     </div>
 
