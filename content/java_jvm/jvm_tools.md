@@ -82,7 +82,7 @@ Definitions:
 -gccause             显示垃圾回收的相关信息（通-gcutil）,同时显示最后一次或当前正在发生的垃圾回收的诱因；
 -printcompilation 输出JIT编译的方法信息；
 
-* 例1
+### 例1（jstat -gc）查看gc信息
 
 ```js
 mubi@mubideMacBook-Pro webapps $ jps
@@ -117,7 +117,7 @@ FGC：老年代垃圾回收次数
 FGCT：老年代垃圾回收消耗时间
 GCT：垃圾回收消耗总时间
 
-* 例2
+### 例2（jstat -gccapacity）
 
 ```js
  jstat -gccapacity 8207
@@ -144,7 +144,7 @@ CCSC：当前压缩类空间大小
 YGC：从应用程序启动到采样时年轻代中gc次数
 FGC：从应用程序启动到采样时old代(全gc)gc次数
 
-* 例3 每隔1秒打印一次gc信息，总共打印5次
+### 例3 (jstat -gcutil)查看gc情况
 
 ```js
 jstat -gcutil 8207 1000 5
@@ -158,7 +158,7 @@ jstat -gcutil 8207 1000 5
 
 ## jmap
 
-* dump jvm信息
+### dump jvm堆内存信息
 
 ```java
 jmap -dump:format=b,file=xx.hprof <pid>
@@ -166,9 +166,10 @@ jmap -dump:format=b,file=xx.hprof <pid>
 
 ## jstack
 
-* 堆栈信息
+### 查看java stack和native stack的线程信息
 
 ```java
+jstack <PID>
 jstack -F <PID>
 ```
 
@@ -292,8 +293,48 @@ Virtual memory map:
     [0x000000010312586e] JNI_CreateJavaVM+0x76
 ```
 
-* committed 为真正使用的内存
+* reserved表示应用可用的内存大小, committed 为真正使用的内存
 
 ```java
  From the sample output below, you will see reserved and committed memory. Note that only committed memory is actually used. For example, if you run with -Xms100m -Xmx1000m, the JVM will reserve 1000 MB for the Java Heap. Since the initial heap size is only 100 MB, only 100MB will be committed to begin with. For a 64-bit machine where address space is almost unlimited, there is no problem if a JVM reserves a lot of memory. The problem arises if more and more memory gets committed, which may lead to swapping or native OOM situations.
+```
+
+### 举例heap内存分布
+
+* 堆可用内存总大小:4194304KB,映射地址`[0x00000006c0000000 - 0x00000007c0000000]`
+
+`committed`的映射地址范围为已经使用的内存
+
+58880KB + 80384KB + 1310720KB + 87040KB = 1537024KB(与Native Memory Tracking中的`Java Heap`一致)
+
+```java
+[0x00000006c0000000 - 0x00000007c0000000] reserved 4194304KB for Java Heap from
+    [0x00000001033b1e8a] ReservedSpace::initialize(unsigned long, unsigned long, bool, char*, unsigned long, bool)+0x14a
+    [0x00000001033b211e] ReservedHeapSpace::ReservedHeapSpace(unsigned long, unsigned long, bool, char*)+0x78
+    [0x0000000103380b80] Universe::reserve_heap(unsigned long, unsigned long)+0x84
+    [0x000000010329fe27] ParallelScavengeHeap::initialize()+0x89
+
+	[0x00000006c4e80000 - 0x00000006c8800000] committed 58880KB from
+            [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
+            [0x00000001032c35fa] PSOldGen::expand_by(unsigned long)+0x1c
+            [0x00000001032c3724] PSOldGen::expand(unsigned long)+0xa8
+            [0x00000001032c380a] PSOldGen::resize(unsigned long)+0xb4
+
+	[0x00000006c0000000 - 0x00000006c4e80000] committed 80384KB from
+            [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
+            [0x00000001032c3d14] PSOldGen::initialize_virtual_space(ReservedSpace, unsigned long)+0x72
+            [0x00000001032c3d85] PSOldGen::initialize(ReservedSpace, unsigned long, char const*, int)+0x49
+            [0x0000000102ea09b2] AdjoiningGenerations::AdjoiningGenerations(ReservedSpace, GenerationSizer*, unsigned long)+0x36c
+
+	[0x0000000770000000 - 0x00000007c0000000] committed 1310720KB from
+            [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
+            [0x00000001032ce7f9] PSYoungGen::resize_generation(unsigned long, unsigned long)+0x57
+            [0x00000001032cf032] PSYoungGen::resize(unsigned long, unsigned long)+0x24
+            [0x00000001032cc81c] PSScavenge::invoke_no_policy()+0xfb2
+
+	[0x000000076ab00000 - 0x0000000770000000] committed 87040KB from
+            [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
+            [0x00000001032cee37] PSYoungGen::initialize_virtual_space(ReservedSpace, unsigned long)+0x6f
+            [0x00000001032cedb9] PSYoungGen::initialize(ReservedSpace, unsigned long)+0x41
+            [0x0000000102ea0962] AdjoiningGenerations::AdjoiningGenerations(ReservedSpace, GenerationSizer*, unsigned long)+0x31c
 ```
