@@ -173,6 +173,15 @@ jstack <PID>
 jstack -F <PID>
 ```
 
+* 参数选项
+
+```java
+-F  to force a thread dump. Use when jstack <pid> does not respond (process is hung)
+-m  to print both java and native frames (mixed mode)
+-l  long listing. Prints additional information about locks
+-h or -help to print this help message
+```
+
 ## jcmd
 
 * 查看当前机器上所有的`jvm`进程信息
@@ -337,4 +346,38 @@ Virtual memory map:
             [0x00000001032cee37] PSYoungGen::initialize_virtual_space(ReservedSpace, unsigned long)+0x6f
             [0x00000001032cedb9] PSYoungGen::initialize(ReservedSpace, unsigned long)+0x41
             [0x0000000102ea0962] AdjoiningGenerations::AdjoiningGenerations(ReservedSpace, GenerationSizer*, unsigned long)+0x31c
+```
+
+## linux pmap 命令(查看进程的内存映像信息)
+
+参考文档见：<a href="https://linux.die.net/man/1/pmap">linux pmap 帮助文档</a>
+
+The pmap command reports the memory map of a process or processes.
+
+* 参数
+
+-x	extended	Show the extended format.(显示扩展格式)
+-d	device	Show the device format.(显示设备格式)
+-q	quiet	Do not display some header/footer lines.(不显示头尾行)
+-V	show version	Displays version of program.(显示版本)
+
+* 字段说明
+
+1. Address:	start address of map
+2. Kbytes:	size of map in kilobytes
+3. RSS:	resident set size in kilobytes
+4. Dirty:	dirty pages (both shared and private) in kilobytes
+5. Mode:	permissions on map: read, write, execute, shared, private (copy on write)
+6. Mapping:	file backing the map, or '[ anon ]' for allocated memory, or '[ stack ]' for the program stack
+7. Offset:	offset into the file
+8. Device:	device name (major:minor)
+
+## linux strace 命令(追踪进程执行时的系统调用和所接收的信号)
+
+参考文档见：<a href="https://linux.die.net/man/1/pmap">linux strace 帮助文档</a>
+
+```java
+-p pid
+
+Attach to the process with the process ID pid and begin tracing. The trace may be terminated at any time by a keyboard interrupt signal ( CTRL -C). strace will respond by detaching itself from the traced process(es) leaving it (them) to continue running. Multiple -p options can be used to attach to up to 32 processes in addition to command (which is optional if at least one -p option is given).
 ```
