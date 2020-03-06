@@ -47,6 +47,8 @@
 <li><a href="#heap">举例heap内存分布</a></li>
 </ul>
 </li>
+<li><a href="#linux-pmap">linux pmap 命令(查看进程的内存映像信息)</a></li>
+<li><a href="#linux-strace">linux strace 命令(追踪进程执行时的系统调用和所接收的信号)</a></li>
 </ul>
 </li>
 </ul>
@@ -233,6 +235,16 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
 </pre></div>
 
 
+<ul>
+<li>参数选项</li>
+</ul>
+<div class="hlcode"><pre><span class="o">-</span><span class="n">F</span>  <span class="n">to</span> <span class="n">force</span> <span class="n">a</span> <span class="n">thread</span> <span class="n">dump</span><span class="o">.</span> <span class="n">Use</span> <span class="n">when</span> <span class="n">jstack</span> <span class="o">&lt;</span><span class="n">pid</span><span class="o">&gt;</span> <span class="n">does</span> <span class="n">not</span> <span class="n">respond</span> <span class="o">(</span><span class="n">process</span> <span class="n">is</span> <span class="n">hung</span><span class="o">)</span>
+<span class="o">-</span><span class="n">m</span>  <span class="n">to</span> <span class="n">print</span> <span class="n">both</span> <span class="n">java</span> <span class="n">and</span> <span class="kd">native</span> <span class="n">frames</span> <span class="o">(</span><span class="n">mixed</span> <span class="n">mode</span><span class="o">)</span>
+<span class="o">-</span><span class="n">l</span>  <span class="kt">long</span> <span class="n">listing</span><span class="o">.</span> <span class="n">Prints</span> <span class="n">additional</span> <span class="n">information</span> <span class="n">about</span> <span class="n">locks</span>
+<span class="o">-</span><span class="n">h</span> <span class="n">or</span> <span class="o">-</span><span class="n">help</span> <span class="n">to</span> <span class="n">print</span> <span class="k">this</span> <span class="n">help</span> <span class="n">message</span>
+</pre></div>
+
+
 <h2 id="jcmd">jcmd</h2>
 <ul>
 <li>查看当前机器上所有的<code>jvm</code>进程信息</li>
@@ -396,12 +408,45 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
             <span class="o">[</span><span class="mh">0x00000001032cedb9</span><span class="o">]</span> <span class="nl">PSYoungGen:</span><span class="o">:</span><span class="n">initialize</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x41</span>
             <span class="o">[</span><span class="mh">0x0000000102ea0962</span><span class="o">]</span> <span class="nl">AdjoiningGenerations:</span><span class="o">:</span><span class="n">AdjoiningGenerations</span><span class="o">(</span><span class="n">ReservedSpace</span><span class="o">,</span> <span class="n">GenerationSizer</span><span class="o">*,</span> <span class="n">unsigned</span> <span class="kt">long</span><span class="o">)+</span><span class="mh">0x31c</span>
 </pre></div>
+
+
+<h2 id="linux-pmap">linux pmap 命令(查看进程的内存映像信息)</h2>
+<p>参考文档见：<a href="https://linux.die.net/man/1/pmap">linux pmap 帮助文档</a></p>
+<p>The pmap command reports the memory map of a process or processes.</p>
+<ul>
+<li>参数</li>
+</ul>
+<p>-x  extended    Show the extended format.(显示扩展格式)<br />
+-d  device  Show the device format.(显示设备格式)<br />
+-q  quiet   Do not display some header/footer lines.(不显示头尾行)<br />
+-V  show version    Displays version of program.(显示版本)</p>
+<ul>
+<li>
+<p>字段说明</p>
+</li>
+<li>
+<p>Address: start address of map</p>
+</li>
+<li>Kbytes:  size of map in kilobytes</li>
+<li>RSS: resident set size in kilobytes</li>
+<li>Dirty:   dirty pages (both shared and private) in kilobytes</li>
+<li>Mode:    permissions on map: read, write, execute, shared, private (copy on write)</li>
+<li>Mapping: file backing the map, or '[ anon ]' for allocated memory, or '[ stack ]' for the program stack</li>
+<li>Offset:  offset into the file</li>
+<li>Device:  device name (major:minor)</li>
+</ul>
+<h2 id="linux-strace">linux strace 命令(追踪进程执行时的系统调用和所接收的信号)</h2>
+<p>参考文档见：<a href="https://linux.die.net/man/1/pmap">linux strace 帮助文档</a></p>
+<div class="hlcode"><pre><span class="o">-</span><span class="n">p</span> <span class="n">pid</span>
+
+<span class="n">Attach</span> <span class="n">to</span> <span class="n">the</span> <span class="n">process</span> <span class="n">with</span> <span class="n">the</span> <span class="n">process</span> <span class="n">ID</span> <span class="n">pid</span> <span class="n">and</span> <span class="n">begin</span> <span class="n">tracing</span><span class="o">.</span> <span class="n">The</span> <span class="n">trace</span> <span class="n">may</span> <span class="n">be</span> <span class="n">terminated</span> <span class="n">at</span> <span class="n">any</span> <span class="n">time</span> <span class="n">by</span> <span class="n">a</span> <span class="n">keyboard</span> <span class="n">interrupt</span> <span class="nf">signal</span> <span class="o">(</span> <span class="n">CTRL</span> <span class="o">-</span><span class="n">C</span><span class="o">).</span> <span class="n">strace</span> <span class="n">will</span> <span class="n">respond</span> <span class="n">by</span> <span class="n">detaching</span> <span class="n">itself</span> <span class="n">from</span> <span class="n">the</span> <span class="n">traced</span> <span class="n">process</span><span class="o">(</span><span class="n">es</span><span class="o">)</span> <span class="n">leaving</span> <span class="n">it</span> <span class="o">(</span><span class="n">them</span><span class="o">)</span> <span class="n">to</span> <span class="k">continue</span> <span class="n">running</span><span class="o">.</span> <span class="n">Multiple</span> <span class="o">-</span><span class="n">p</span> <span class="n">options</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">attach</span> <span class="n">to</span> <span class="n">up</span> <span class="n">to</span> <span class="mi">32</span> <span class="n">processes</span> <span class="n">in</span> <span class="n">addition</span> <span class="n">to</span> <span class="n">command</span> <span class="o">(</span><span class="n">which</span> <span class="n">is</span> <span class="n">optional</span> <span class="k">if</span> <span class="n">at</span> <span class="n">least</span> <span class="n">one</span> <span class="o">-</span><span class="n">p</span> <span class="n">option</span> <span class="n">is</span> <span class="n">given</span><span class="o">).</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-02-10 09:02:42</p>
+        <p>Site Generated 2020-03-06 23:38:28</p>
       </span>
     </div>
 
