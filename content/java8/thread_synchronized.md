@@ -1,5 +1,5 @@
 ---
-title: "Thread synchronized 关键字"
+title: "synchronized 关键字"
 layout: page
 date: 2019-03-09 00:00
 ---

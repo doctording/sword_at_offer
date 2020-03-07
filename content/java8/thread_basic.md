@@ -1,5 +1,5 @@
 ---
-title: "Thread & Runnable"
+title: "线程"
 layout: page
 date: 2019-02-15 00:00
 ---
@@ -7,22 +7,6 @@ date: 2019-02-15 00:00
 [TOC]
 
 # Thread 类 & Runnable 接口
-
-* 线程的各种状态
-
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/thread_status.png)
-
-<small>转自： https://www.cnblogs.com/happy-coder/p/6587092.html，当然说的也不完全准确，知晓这些状态是必须的。</small>
-
-* 阻塞状态(Blocked)
-
-线程运行过程中，可能由于各种原因进入阻塞状态:
-    1. 线程通过调用sleep方法进入睡眠状态；
-    2. 线程调用一个在I/O上被阻塞的操作，即该操作在输入输出操作完成之前不会返回到它的调用者；
-    3. 线程试图得到一个锁，而该锁正被其他线程持有；
-    4. 线程在等待某个触发条件；
-    5. ...
-所谓阻塞状态是正在运行的线程没有运行结束，暂时让出CPU，这时其他处于就绪状态的线程就可以获得CPU时间，进入运行状态。
 
 ## `interface Runnale` 源码
 
@@ -244,6 +228,181 @@ private long stackSize;
 虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存
 
 JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系
+
+# 线程的状态
+
+* Thread类源码
+
+```java
+ /**
+     * A thread state.  A thread can be in one of the following states:
+     * <ul>
+     * <li>{@link #NEW}<br>
+     *     A thread that has not yet started is in this state.
+     *     </li>
+     * <li>{@link #RUNNABLE}<br>
+     *     A thread executing in the Java virtual machine is in this state.
+     *     </li>
+     * <li>{@link #BLOCKED}<br>
+     *     A thread that is blocked waiting for a monitor lock
+     *     is in this state.
+     *     </li>
+     * <li>{@link #WAITING}<br>
+     *     A thread that is waiting indefinitely for another thread to
+     *     perform a particular action is in this state.
+     *     </li>
+     * <li>{@link #TIMED_WAITING}<br>
+     *     A thread that is waiting for another thread to perform an action
+     *     for up to a specified waiting time is in this state.
+     *     </li>
+     * <li>{@link #TERMINATED}<br>
+     *     A thread that has exited is in this state.
+     *     </li>
+     * </ul>
+     *
+     * <p>
+     * A thread can be in only one state at a given point in time.
+     * These states are virtual machine states which do not reflect
+     * any operating system thread states.
+     *
+     * @since   1.5
+     * @see #getState
+     */
+    public enum State {
+        /**
+         * Thread state for a thread which has not yet started.
+         */
+        NEW,
+
+        /**
+         * Thread state for a runnable thread.  A thread in the runnable
+         * state is executing in the Java virtual machine but it may
+         * be waiting for other resources from the operating system
+         * such as processor.
+         */
+        RUNNABLE,
+
+        /**
+         * Thread state for a thread blocked waiting for a monitor lock.
+         * A thread in the blocked state is waiting for a monitor lock
+         * to enter a synchronized block/method or
+         * reenter a synchronized block/method after calling
+         * {@link Object#wait() Object.wait}.
+         */
+        BLOCKED,
+
+        /**
+         * Thread state for a waiting thread.
+         * A thread is in the waiting state due to calling one of the
+         * following methods:
+         * <ul>
+         *   <li>{@link Object#wait() Object.wait} with no timeout</li>
+         *   <li>{@link #join() Thread.join} with no timeout</li>
+         *   <li>{@link LockSupport#park() LockSupport.park}</li>
+         * </ul>
+         *
+         * <p>A thread in the waiting state is waiting for another thread to
+         * perform a particular action.
+         *
+         * For example, a thread that has called <tt>Object.wait()</tt>
+         * on an object is waiting for another thread to call
+         * <tt>Object.notify()</tt> or <tt>Object.notifyAll()</tt> on
+         * that object. A thread that has called <tt>Thread.join()</tt>
+         * is waiting for a specified thread to terminate.
+         */
+        WAITING,
+
+        /**
+         * Thread state for a waiting thread with a specified waiting time.
+         * A thread is in the timed waiting state due to calling one of
+         * the following methods with a specified positive waiting time:
+         * <ul>
+         *   <li>{@link #sleep Thread.sleep}</li>
+         *   <li>{@link Object#wait(long) Object.wait} with timeout</li>
+         *   <li>{@link #join(long) Thread.join} with timeout</li>
+         *   <li>{@link LockSupport#parkNanos LockSupport.parkNanos}</li>
+         *   <li>{@link LockSupport#parkUntil LockSupport.parkUntil}</li>
+         * </ul>
+         */
+        TIMED_WAITING,
+
+        /**
+         * Thread state for a terminated thread.
+         * The thread has completed execution.
+         */
+        TERMINATED;
+    }
+```
+
+# Monitor
+
+<a href="https://www.programcreek.com/2011/12/monitors-java-synchronization-mechanism/" target="_blank">Monitors – The Basic Idea of Java Synchronization</a>
+
+# 对象的wait,notify方法
+
+* wait: 在其他线程调用此对象的`notify()`方法或`notifyAll()`方法前，导致当前线程等待
+* notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。
+* `sleep`方法没有释放锁，而`wait`方法释放了锁，使得其他线程可以使用同步控制块或方法
+
+```java
+参考文档： https://www.baeldung.com/java-wait-notify
+
+Simply put, when we call wait() – this forces the current thread to wait until some other thread invokes notify() or notifyAll() on the same object.
+
+For this, the current thread must own the object's monitor. According to Javadocs, this can happen when:
+
+we've executed synchronized instance method for the given object
+we've executed the body of a synchronized block on the given object
+by executing synchronized static methods for objects of type Class
+Note that only one active thread can own an object's monitor at a time.
+
+
+The wait() method causes the current thread to wait indefinitely until another thread either invokes notify() for this object or notifyAll().
+```
+
+```java
+class ThreadA extends Thread{
+    public ThreadA(String name) {
+        super(name);
+    }
+    public void run() {
+        synchronized (this) {
+            try {
+                Thread.sleep(1000); //  使当前线阻塞 1 s，确保主程序的 t1.wait(); 执行之后再执行 notify()
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName()+" call notify()");
+            // 唤醒当前的wait线程
+            this.notify();
+        }
+    }
+}
+
+// main 线程
+public static void main(String[] args) {
+    ThreadA t1 = new ThreadA("t1");
+    synchronized(t1) {
+        try {
+            // 启动“线程t1”
+            System.out.println(Thread.currentThread().getName()+" start t1");
+            t1.start();
+            // 主线程等待t1通过notify()唤醒。
+            System.out.println(Thread.currentThread().getName()+" wait()");
+            t1.wait();  //  不是使t1线程等待，而是当前执行wait的线程等待
+            System.out.println(Thread.currentThread().getName()+" continue");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+/* 执行结果
+main start t1
+main wait()
+t1 call notify()
+main continue
+*/
+```
 
 # `ThreadGroup`线程组
 
