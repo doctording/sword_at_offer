@@ -33,13 +33,16 @@
 <li><a href="#_4">有序性</a></li>
 </ul>
 </li>
-<li><a href="#synchronized">synchronized的几个性质</a></li>
-<li><a href="#_5">基本用法</a><ul>
+<li><a href="#synchronized">synchronized的几个性质</a><ul>
+<li><a href="#_5">反编译查看</a></li>
+</ul>
+</li>
+<li><a href="#_6">基本用法</a><ul>
 <li><a href="#synchronizedthisobject">synchronized(this/Object)</a></li>
 </ul>
 </li>
-<li><a href="#_6">实际例子</a></li>
-<li><a href="#_7">多个锁的交叉导致的死锁</a></li>
+<li><a href="#_7">实际例子</a></li>
+<li><a href="#_8">多个锁的交叉导致的死锁</a></li>
 <li><a href="#this-monotor">this monotor</a></li>
 <li><a href="#class-monitor">class monitor</a></li>
 <li><a href="#synchronized_1">synchronized 的缺陷</a><ul>
@@ -87,7 +90,58 @@
 <p><code>synchronized</code> 严格准守<code>Java happends-before</code>规则，一个<code>monitor exit</code>指令之前必定要有一个<code>monitor enter</code></p>
 </li>
 </ul>
-<h2 id="_5">基本用法</h2>
+<h3 id="_5">反编译查看</h3>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SynchronizedDemo</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">method</span> <span class="o">(){</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;method 1 start!!!!&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="n">javac</span> <span class="o">-</span><span class="n">encoding</span> <span class="n">utf</span><span class="o">-</span><span class="mi">8</span> <span class="n">SynchronizedDemo</span><span class="o">.</span><span class="na">java</span>
+<span class="n">javap</span> <span class="o">-</span><span class="n">c</span> <span class="n">SynchronizedDemo</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="n">Compiled</span> <span class="n">from</span> <span class="s">&quot;SynchronizedDemo.java&quot;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SynchronizedDemo</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="nf">SynchronizedDemo</span><span class="o">();</span>
+    <span class="nl">Code:</span>
+       <span class="mi">0</span><span class="o">:</span> <span class="n">aload_0</span>
+       <span class="mi">1</span><span class="o">:</span> <span class="n">invokespecial</span> <span class="err">#</span><span class="mi">1</span>                  <span class="c1">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span>
+       <span class="mi">4</span><span class="o">:</span> <span class="k">return</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">method</span><span class="o">();</span>
+    <span class="nl">Code:</span>
+       <span class="mi">0</span><span class="o">:</span> <span class="n">aload_0</span>
+       <span class="mi">1</span><span class="o">:</span> <span class="n">dup</span>
+       <span class="mi">2</span><span class="o">:</span> <span class="n">astore_1</span>
+       <span class="mi">3</span><span class="o">:</span> <span class="n">monitorenter</span>
+       <span class="mi">4</span><span class="o">:</span> <span class="n">getstatic</span>     <span class="err">#</span><span class="mi">2</span>                  <span class="c1">// Field java/lang/System.out:Ljava/io/PrintStream;</span>
+       <span class="mi">7</span><span class="o">:</span> <span class="n">ldc</span>           <span class="err">#</span><span class="mi">3</span>                  <span class="c1">// String method 1 start!!!!</span>
+       <span class="mi">9</span><span class="o">:</span> <span class="n">invokevirtual</span> <span class="err">#</span><span class="mi">4</span>                  <span class="c1">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
+      <span class="mi">12</span><span class="o">:</span> <span class="n">aload_1</span>
+      <span class="mi">13</span><span class="o">:</span> <span class="n">monitorexit</span>
+      <span class="mi">14</span><span class="o">:</span> <span class="k">goto</span>          <span class="mi">22</span>
+      <span class="mi">17</span><span class="o">:</span> <span class="n">astore_2</span>
+      <span class="mi">18</span><span class="o">:</span> <span class="n">aload_1</span>
+      <span class="mi">19</span><span class="o">:</span> <span class="n">monitorexit</span>
+      <span class="mi">20</span><span class="o">:</span> <span class="n">aload_2</span>
+      <span class="mi">21</span><span class="o">:</span> <span class="n">athrow</span>
+      <span class="mi">22</span><span class="o">:</span> <span class="k">return</span>
+    <span class="n">Exception</span> <span class="nl">table:</span>
+       <span class="n">from</span>    <span class="n">to</span>  <span class="n">target</span> <span class="n">type</span>
+           <span class="mi">4</span>    <span class="mi">14</span>    <span class="mi">17</span>   <span class="n">any</span>
+          <span class="mi">17</span>    <span class="mi">20</span>    <span class="mi">17</span>   <span class="n">any</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>参考：<a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14" target="_blank">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14</a></p>
+<h2 id="_6">基本用法</h2>
 <p><code>synchronized</code> 可用于代码块或方法进行修饰，而不能对class以及变量进行修饰, eg:</p>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">sync</span><span class="o">(){}</span>
 
@@ -196,7 +250,7 @@
 <li>synchronized 锁住的不同，决定两个方法(代码块)是否能同时运行，即是同步而不是相互阻塞的</li>
 </ul>
 <p><code>synchronized(this)</code> 对 <code>synchronized</code>方法 和 <code>synchronized(this)</code>都是同步对</p>
-<h2 id="_6">实际例子</h2>
+<h2 id="_7">实际例子</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
@@ -259,7 +313,7 @@
 </pre></div>
 
 
-<h2 id="_7">多个锁的交叉导致的死锁</h2>
+<h2 id="_8">多个锁的交叉导致的死锁</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
@@ -542,7 +596,7 @@ synchronized (a) {<br />
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 21:53:53</p>
+        <p>Site Generated 2020-03-07 22:17:36</p>
       </span>
     </div>
 
