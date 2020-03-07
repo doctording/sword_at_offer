@@ -213,8 +213,6 @@ public class Main {
 * this指代当前类的实例
 * synchronized 锁住的不同，决定两个方法(代码块)是否能同时运行，即是同步而不是相互阻塞的
 
-`synchronized(this)` 对 `synchronized`方法 和 `synchronized(this)`都是同步对
-
 ## 实际例子
 
 ```java
@@ -355,7 +353,7 @@ public class Main {
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_3.png)
 
-## this monotor
+## this monitor
 
 ```java
 package com.thread;
@@ -367,7 +365,6 @@ public class Main {
     public synchronized void method1(){
         System.out.println(Thread.currentThread().getName() + " enter to method 1  ");
         while (true) {
-
             try {
                 TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
@@ -405,7 +402,7 @@ T1 enter to method 1
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/
 monitor_jstack.png)
 
-两个`synchronized`方法挣抢的是同一个`monitor`的`lock`,而与之关联的引用则是`ThisMonitor`的实例引用
+两个`synchronized`方法挣抢的是同一个`monitor`的`lock`,而与之关联的引用则是`This Monitor`的实例引用
 
 方法2等同如下：
 
@@ -502,7 +499,7 @@ public class Main {
 
 1. thread1 先执行进入同步方法，然后sleep
 2. 接着 thread2 进入同步方法，会阻塞，其获得执行权取决于 thread1 何时释放 monitor (如果thread2计划最多1分钟获得执行权，否则就放弃，使用 synchronized 无法做到)
-3. thread2 竞争 monitor 而陷入阻塞状态，那么 thread2 会无法中断（因为 synchronized 无法被打断）
+3. thread2 竞争 monitor 而陷入阻塞状态，那么 thread2 会无法中断（因为**synchronized 无法被打断**）
 
 ```java
 public class Main {
@@ -551,7 +548,7 @@ public class Main {
 
 * 当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用`synchronized`，一个线程占用了monitor,其它线程只能等)
 
-参考：https://www.cnblogs.com/dolphin0520/p/3923167.html
+参考：<a href="https://www.cnblogs.com/dolphin0520/p/3923167.html" target="_blank">lock</a>
 
 ## `synchronized`使用原则
 
@@ -565,7 +562,94 @@ public class Main {
 synchronized (a) {
     a.wait() // (1)
 }
+```
 
-若其他线程在线程1进入(1)时更改了a值，那么线程1会直接抛出一个IllegalMonitorException，表示在a.wait()前没有获得a的对象锁。推荐的做法还是声明一个专门用于线程同步的Object，这个Object永远不变。
+若其他线程在线程1进入(1)时更改了a值，那么线程1会直接抛出一个`IllegalMonitorStateException`，表示在`a.wait()`前没有获得a的对象锁。推荐的做法还是声明一个专门用于线程同步的Object，这个Object永远不变。
 
-参考：https://blog.csdn.net/xad707348125/article/details/46956911
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+
+public class Main {
+
+    private Object Mutex = new Object();
+    public int num;
+    static int n = 16;
+
+    void add(){
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        this.num++;
+    }
+
+    void addSync(){
+        synchronized (Mutex){
+            try {
+                System.out.println("addSync" + this.num);
+                Mutex.wait();
+                TimeUnit.SECONDS.sleep(new Random().nextInt(5));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            this.num++;
+        }
+    }
+
+    void change(){
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("change");
+        Mutex.notify();
+        Mutex = new Object();
+    }
+
+    void printNum(){
+        System.out.println("num:" + this.num);
+    }
+
+    public static void main(String[] args) throws Exception{
+        Main main = new Main();
+        main.num = 1;
+
+        Thread tChange = new Thread(()-> main.change());
+        tChange.start();
+
+        List<Thread> threadList = new ArrayList<>(n);
+        for(int i=0;i<n;i++){
+//            Thread t = new Thread( ()-> main.add(), "myname" + i);
+            Thread t = new Thread(()-> main.addSync());
+            threadList.add(t);
+        }
+        threadList.forEach(t->t.start());
+        threadList.forEach(t->{
+            try{
+                t.join();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+        main.printNum();
+    }
+}
+```
+
+* output
+
+```java
+Exception in thread "Thread-0" java.lang.IllegalMonitorStateException
+	at java.lang.Object.notify(Native Method)
+	at Main.change(Main.java:45)
+	at Main.lambda$main$0(Main.java:57)
+	at java.lang.Thread.run(Thread.java:748)
+```
+
+参考：<a href="https://blog.csdn.net/xad707348125/article/details/46956911" target="_blank">synchronized锁分析</a>
