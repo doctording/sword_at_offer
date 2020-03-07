@@ -39,10 +39,11 @@
 <li><a href="#threadpoolexecutor">ThreadPoolExecutor 构造函数和成员含义</a></li>
 </ul>
 </li>
+<li><a href="#_3">拒绝策略</a></li>
 <li><a href="#threadpoolexecutor_1">ThreadPoolExecutor 的使用</a><ul>
 <li><a href="#threadpoolexecutor-1">ThreadPoolExecutor 实例1</a></li>
-<li><a href="#_3">线程池使用后关闭问题？</a><ul>
-<li><a href="#_4">固定线程池</a></li>
+<li><a href="#_4">线程池使用后关闭问题？</a><ul>
+<li><a href="#_5">固定线程池</a></li>
 <li><a href="#cachedthreadpool">CachedThreadPool</a></li>
 <li><a href="#shutdownshutdownnow">线程池shutdown，shutdownNow</a></li>
 </ul>
@@ -50,7 +51,7 @@
 </ul>
 </li>
 <li><a href="#futuretask">FutureTask &amp; 线程池</a><ul>
-<li><a href="#_5">线程池新进来的任务被拒绝</a></li>
+<li><a href="#_6">线程池新进来的任务被拒绝</a></li>
 </ul>
 </li>
 </ul>
@@ -69,6 +70,7 @@
 <p>线程池的实现需要注意哪些细节 ？</p>
 </li>
 </ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/thread_pool_flow.png" /></p>
 <h2 id="_2">常见类</h2>
 <h3 id="interface-executor">interface Executor</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Executor</span> <span class="o">{</span>
@@ -227,7 +229,7 @@
 <p><code>unit</code>: keepAliveTime的单位</p>
 </li>
 <li>
-<p><code>workQueue</code>: 阻塞任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为直接提交队列、有界任务队列、无界任务队列、优先任务队列几种；</p>
+<p><code>workQueue</code>: 阻塞任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为:1.直接提交队列、2.有界任务队列、3.无界任务队列、4.优先任务队列(特殊的无界队列)几种；</p>
 </li>
 <li>
 <p><code>threadFactory</code>: 线程工厂，用于创建线程，一般用默认即可；</p>
@@ -239,6 +241,15 @@
 <p><code>workerCount</code>: 当前活跃的线程数(也即线程池中的线程数量)</p>
 </li>
 </ul>
+<h2 id="_3">拒绝策略</h2>
+<p>线程池的拒绝策略，是指当任务添加到线程池中被拒绝，而采取的处理措施。</p>
+<p>当任务添加到线程池中之所以被拒绝，可能是由于：第一，线程池异常关闭。第二，任务数量超过线程池的最大限制,并设置有界的<code>workeQueue</code></p>
+<ol>
+<li><code>ThreadPoolExecutor.AbortPolicy</code>:丢弃任务并抛出RejectedExecutionException异常。（默认）</li>
+<li><code>ThreadPoolExecutor.DiscardPolicy</code>：丢弃任务，但是不抛出异常。</li>
+<li><code>ThreadPoolExecutor.DiscardOldestPolicy</code>：丢弃队列最前面的任务，然后重新提交被拒绝的任务</li>
+<li><code>ThreadPoolExecutor.CallerRunsPolicy</code>：由调用线程（提交任务的线程）处理该任务</li>
+</ol>
 <h2 id="threadpoolexecutor_1">ThreadPoolExecutor 的使用</h2>
 <ol>
 <li>当线程池<strong>小于corePoolSize</strong>时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程</li>
@@ -322,14 +333,14 @@
 </pre></div>
 
 
-<h3 id="_3">线程池使用后关闭问题？</h3>
+<h3 id="_4">线程池使用后关闭问题？</h3>
 <p>是否需要关闭？如何关闭？</p>
 <p>A pool that is no longer referenced in a program and has no remaining threads will be shutdown automatically.</p>
 <p>如果程序中不再持有线程池的引用，并且线程池中没有线程时，线程池将会自动关闭。</p>
 <p>注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡。然而我们常用的FixedThreadPool的核心线程没有超时策略，所以并不会自动关闭。</small></p>
 <hr />
 <p>https://www.jianshu.com/p/bdf06e2c1541</p>
-<h4 id="_4">固定线程池</h4>
+<h4 id="_5">固定线程池</h4>
 <div class="hlcode"><pre><span class="kd">static</span> <span class="kt">void</span> <span class="nf">testFixPool</span><span class="o">(){</span>
     <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">ExecutorService</span> <span class="n">executorService</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="mi">8</span><span class="o">);</span>
@@ -539,7 +550,7 @@
             <span class="c1">//创建一个异步任务</span>
             <span class="n">FutureTask</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">futureTask</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FutureTask</span><span class="o">&lt;&gt;(</span><span class="n">task</span><span class="o">);</span>
             <span class="n">futureTasks</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">futureTask</span><span class="o">);</span>
-            <span class="c1">//提交异步任务到线程池，让线程池管理任务 特爽把。</span>
+            <span class="c1">//提交异步任务到线程池，让线程池管理任务。</span>
             <span class="c1">//由于是异步并行任务，所以这里并不会阻塞</span>
             <span class="n">executorService</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="n">futureTask</span><span class="o">);</span>
         <span class="o">}</span>
@@ -590,7 +601,7 @@
 </pre></div>
 
 
-<h3 id="_5">线程池新进来的任务被拒绝</h3>
+<h3 id="_6">线程池新进来的任务被拒绝</h3>
 <ol>
 <li>线程池shutdown了，新进来的任务会被拒绝</li>
 <li>线程池用满了，且新进来的任务超过了任务队列大小，任务被拒绝</li>
@@ -700,7 +711,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-06 23:38:28</p>
+        <p>Site Generated 2020-03-07 16:41:26</p>
       </span>
     </div>
 
