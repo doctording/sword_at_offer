@@ -49,6 +49,59 @@ date: 2019-03-09 00:00
 
 * `synchronized` 严格准守`Java happends-before`规则，一个`monitor exit`指令之前必定要有一个`monitor enter`
 
+### 反编译查看
+
+```java
+public class SynchronizedDemo {
+    public void method (){
+        synchronized (this) {
+            System.out.println("method 1 start!!!!");
+        }
+    }
+}
+```
+
+```java
+javac -encoding utf-8 SynchronizedDemo.java
+javap -c SynchronizedDemo
+```
+
+```java
+Compiled from "SynchronizedDemo.java"
+public class SynchronizedDemo {
+  public SynchronizedDemo();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void method();
+    Code:
+       0: aload_0
+       1: dup
+       2: astore_1
+       3: monitorenter
+       4: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       7: ldc           #3                  // String method 1 start!!!!
+       9: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      12: aload_1
+      13: monitorexit
+      14: goto          22
+      17: astore_2
+      18: aload_1
+      19: monitorexit
+      20: aload_2
+      21: athrow
+      22: return
+    Exception table:
+       from    to  target type
+           4    14    17   any
+          17    20    17   any
+}
+```
+
+参考：<a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14" target="_blank">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14</a>
+
 ## 基本用法
 
 `synchronized` 可用于代码块或方法进行修饰，而不能对class以及变量进行修饰, eg:
