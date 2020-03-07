@@ -43,7 +43,7 @@
 </li>
 <li><a href="#_7">实际例子</a></li>
 <li><a href="#_8">多个锁的交叉导致的死锁</a></li>
-<li><a href="#this-monotor">this monotor</a></li>
+<li><a href="#this-monitor">this monitor</a></li>
 <li><a href="#class-monitor">class monitor</a></li>
 <li><a href="#synchronized_1">synchronized 的缺陷</a><ul>
 <li><a href="#synchronized_2">synchronized 缺陷例子</a></li>
@@ -249,7 +249,6 @@
 <li>this指代当前类的实例</li>
 <li>synchronized 锁住的不同，决定两个方法(代码块)是否能同时运行，即是同步而不是相互阻塞的</li>
 </ul>
-<p><code>synchronized(this)</code> 对 <code>synchronized</code>方法 和 <code>synchronized(this)</code>都是同步对</p>
 <h2 id="_7">实际例子</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
@@ -381,7 +380,7 @@
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_1.png" /></p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_2.png" /></p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_3.png" /></p>
-<h2 id="this-monotor">this monotor</h2>
+<h2 id="this-monitor">this monitor</h2>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
@@ -391,7 +390,6 @@
     <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">method1</span><span class="o">(){</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; enter to method 1  &quot;</span><span class="o">);</span>
         <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
-
             <span class="k">try</span> <span class="o">{</span>
                 <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
             <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -429,7 +427,7 @@
 
 <p>![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/<br />
 monitor_jstack.png)</p>
-<p>两个<code>synchronized</code>方法挣抢的是同一个<code>monitor</code>的<code>lock</code>,而与之关联的引用则是<code>ThisMonitor</code>的实例引用</p>
+<p>两个<code>synchronized</code>方法挣抢的是同一个<code>monitor</code>的<code>lock</code>,而与之关联的引用则是<code>This Monitor</code>的实例引用</p>
 <p>方法2等同如下：</p>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kt">void</span> <span class="nf">method2</span><span class="o">(){</span>
     <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">){</span>
@@ -524,7 +522,7 @@ monitor_jstack.png)</p>
 <ol>
 <li>thread1 先执行进入同步方法，然后sleep</li>
 <li>接着 thread2 进入同步方法，会阻塞，其获得执行权取决于 thread1 何时释放 monitor (如果thread2计划最多1分钟获得执行权，否则就放弃，使用 synchronized 无法做到)</li>
-<li>thread2 竞争 monitor 而陷入阻塞状态，那么 thread2 会无法中断（因为 synchronized 无法被打断）</li>
+<li>thread2 竞争 monitor 而陷入阻塞状态，那么 thread2 会无法中断（因为<strong>synchronized 无法被打断</strong>）</li>
 </ol>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
@@ -572,7 +570,7 @@ monitor_jstack.png)</p>
 <ul>
 <li>当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用<code>synchronized</code>，一个线程占用了monitor,其它线程只能等)</li>
 </ul>
-<p>参考：https://www.cnblogs.com/dolphin0520/p/3923167.html</p>
+<p>参考：<a href="https://www.cnblogs.com/dolphin0520/p/3923167.html" target="_blank">lock</a></p>
 <h2 id="synchronized_3"><code>synchronized</code>使用原则</h2>
 <ol>
 <li>
@@ -585,18 +583,107 @@ monitor_jstack.png)</p>
 <p>尽量不要在可变引用上<code>wait()</code>和<code>notify()</code>，例如:</p>
 </li>
 </ol>
-<p>```java<br />
-synchronized (a) {<br />
-    a.wait() // (1)<br />
-}</p>
-<p>若其他线程在线程1进入(1)时更改了a值，那么线程1会直接抛出一个IllegalMonitorException，表示在a.wait()前没有获得a的对象锁。推荐的做法还是声明一个专门用于线程同步的Object，这个Object永远不变。</p>
-<p>参考：https://blog.csdn.net/xad707348125/article/details/46956911</p>
+<div class="hlcode"><pre><span class="kd">synchronized</span> <span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">a</span><span class="o">.</span><span class="na">wait</span><span class="o">()</span> <span class="c1">// (1)</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>若其他线程在线程1进入(1)时更改了a值，那么线程1会直接抛出一个<code>IllegalMonitorStateException</code>，表示在<code>a.wait()</code>前没有获得a的对象锁。推荐的做法还是声明一个专门用于线程同步的Object，这个Object永远不变。</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="n">Mutex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="n">num</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">16</span><span class="o">;</span>
+
+    <span class="kt">void</span> <span class="nf">add</span><span class="o">(){</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">num</span><span class="o">++;</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">addSync</span><span class="o">(){</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Mutex</span><span class="o">){</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;addSync&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">num</span><span class="o">);</span>
+                <span class="n">Mutex</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="k">new</span> <span class="n">Random</span><span class="o">().</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">num</span><span class="o">++;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">change</span><span class="o">(){</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;change&quot;</span><span class="o">);</span>
+        <span class="n">Mutex</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+        <span class="n">Mutex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">printNum</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;num:&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">num</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">Main</span> <span class="n">main</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Main</span><span class="o">();</span>
+        <span class="n">main</span><span class="o">.</span><span class="na">num</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+        <span class="n">Thread</span> <span class="n">tChange</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="n">main</span><span class="o">.</span><span class="na">change</span><span class="o">());</span>
+        <span class="n">tChange</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">threadList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">n</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+<span class="c1">//            Thread t = new Thread( ()-&gt; main.add(), &quot;myname&quot; + i);</span>
+            <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="n">main</span><span class="o">.</span><span class="na">addSync</span><span class="o">());</span>
+            <span class="n">threadList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">threadList</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">t</span><span class="o">.</span><span class="na">start</span><span class="o">());</span>
+        <span class="n">threadList</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span><span class="o">-&gt;{</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="n">t</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+        <span class="n">main</span><span class="o">.</span><span class="na">printNum</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">Exception</span> <span class="n">in</span> <span class="n">thread</span> <span class="s">&quot;Thread-0&quot;</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">IllegalMonitorStateException</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">notify</span><span class="o">(</span><span class="n">Native</span> <span class="n">Method</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">Main</span><span class="o">.</span><span class="na">change</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">45</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">Main</span><span class="o">.</span><span class="na">lambda</span><span class="n">$main$0</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">57</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">748</span><span class="o">)</span>
+</pre></div>
+
+
+<p>参考：<a href="https://blog.csdn.net/xad707348125/article/details/46956911" target="_blank">synchronized锁分析</a></p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 22:17:36</p>
+        <p>Site Generated 2020-03-07 23:03:32</p>
       </span>
     </div>
 
