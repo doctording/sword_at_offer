@@ -14,6 +14,8 @@ date: 2019-02-15 00:00
 
 * 线程池的实现需要注意哪些细节 ？
 
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/thread_pool_flow.png)
+
 ## 常见类
 
 ### interface Executor
@@ -172,13 +174,24 @@ public ThreadPoolExecutor(int corePoolSize,
 
 * `unit`: keepAliveTime的单位
 
-* `workQueue`: 阻塞任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为直接提交队列、有界任务队列、无界任务队列、优先任务队列几种；
+* `workQueue`: 阻塞任务队列，被添加到线程池中，但尚未被执行的任务；它一般分为:1.直接提交队列、2.有界任务队列、3.无界任务队列、4.优先任务队列(特殊的无界队列)几种；
 
 * `threadFactory`: 线程工厂，用于创建线程，一般用默认即可；
 
 * `handler`: 拒绝策略；当任务太多来不及处理时，如何拒绝任务；
 
 * `workerCount`: 当前活跃的线程数(也即线程池中的线程数量)
+
+## 拒绝策略
+
+线程池的拒绝策略，是指当任务添加到线程池中被拒绝，而采取的处理措施。
+
+当任务添加到线程池中之所以被拒绝，可能是由于：第一，线程池异常关闭。第二，任务数量超过线程池的最大限制,并设置有界的`workeQueue`
+
+1. `ThreadPoolExecutor.AbortPolicy`:丢弃任务并抛出RejectedExecutionException异常。（默认）
+2. `ThreadPoolExecutor.DiscardPolicy`：丢弃任务，但是不抛出异常。
+3. `ThreadPoolExecutor.DiscardOldestPolicy`：丢弃队列最前面的任务，然后重新提交被拒绝的任务
+4. `ThreadPoolExecutor.CallerRunsPolicy`：由调用线程（提交任务的线程）处理该任务
 
 ## ThreadPoolExecutor 的使用
 
@@ -491,7 +504,7 @@ public class Solution {
             //创建一个异步任务
             FutureTask<Integer> futureTask = new FutureTask<>(task);
             futureTasks.add(futureTask);
-            //提交异步任务到线程池，让线程池管理任务 特爽把。
+            //提交异步任务到线程池，让线程池管理任务。
             //由于是异步并行任务，所以这里并不会阻塞
             executorService.submit(futureTask);
         }
