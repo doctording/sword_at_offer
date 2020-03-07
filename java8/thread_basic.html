@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Thread & Runnable - 剑指Offer</title>
+    <title>线程 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Thread & Runnable
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;线程
     <span class="updated">Page Updated&nbsp;
       2019-02-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Thread & Runnable</div>
+<div class="page_title">线程</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#thread-runnable">Thread 类 &amp; Runnable 接口</a><ul>
@@ -39,9 +39,12 @@
 <li><a href="#stacksize">stackSize</a></li>
 </ul>
 </li>
+<li><a href="#_2">线程的状态</a></li>
+<li><a href="#monitor">Monitor</a></li>
+<li><a href="#waitnotify">对象的wait,notify方法</a></li>
 <li><a href="#threadgroup">ThreadGroup线程组</a><ul>
-<li><a href="#_2">线程组认识</a></li>
-<li><a href="#_3">线程组源码</a></li>
+<li><a href="#_3">线程组认识</a></li>
+<li><a href="#_4">线程组源码</a></li>
 <li><a href="#daemon">守护(Daemon)线程</a></li>
 </ul>
 </li>
@@ -51,9 +54,9 @@
 <li><a href="#sleep-yield">sleep 与 yield的区别</a></li>
 </ul>
 </li>
-<li><a href="#_4">线程的优先级</a></li>
+<li><a href="#_5">线程的优先级</a></li>
 <li><a href="#id">线程ID</a><ul>
-<li><a href="#_5">获取当前线程</a></li>
+<li><a href="#_6">获取当前线程</a></li>
 <li><a href="#todo">设置线程上下文类加载器 //TODO</a></li>
 </ul>
 </li>
@@ -65,12 +68,12 @@
 <li><a href="#join_1">join源码分析</a></li>
 </ul>
 </li>
-<li><a href="#_6">关闭一个线程</a><ul>
-<li><a href="#_7">正常结束</a></li>
-<li><a href="#_8">捕获中断信号关闭线程</a></li>
+<li><a href="#_7">关闭一个线程</a><ul>
+<li><a href="#_8">正常结束</a></li>
+<li><a href="#_9">捕获中断信号关闭线程</a></li>
 <li><a href="#volatile">使用volatile开关控制</a></li>
-<li><a href="#_9">异常退出</a></li>
-<li><a href="#_10">进程假死</a></li>
+<li><a href="#_10">异常退出</a></li>
+<li><a href="#_11">进程假死</a></li>
 </ul>
 </li>
 </ul>
@@ -78,21 +81,6 @@
 </ul>
 </div>
 <h1 id="thread-runnable">Thread 类 &amp; Runnable 接口</h1>
-<ul>
-<li>线程的各种状态</li>
-</ul>
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/thread_status.png" /></p>
-<p><small>转自： https://www.cnblogs.com/happy-coder/p/6587092.html，当然说的也不完全准确，知晓这些状态是必须的。</small></p>
-<ul>
-<li>阻塞状态(Blocked)</li>
-</ul>
-<p>线程运行过程中，可能由于各种原因进入阻塞状态:<br />
-    1. 线程通过调用sleep方法进入睡眠状态；<br />
-    2. 线程调用一个在I/O上被阻塞的操作，即该操作在输入输出操作完成之前不会返回到它的调用者；<br />
-    3. 线程试图得到一个锁，而该锁正被其他线程持有；<br />
-    4. 线程在等待某个触发条件；<br />
-    5. ...<br />
-所谓阻塞状态是正在运行的线程没有运行结束，暂时让出CPU，这时其他处于就绪状态的线程就可以获得CPU时间，进入运行状态。</p>
 <h2 id="interface-runnale"><code>interface Runnale</code> 源码</h2>
 <p>一个<code>FunctionalInterface</code></p>
 <div class="hlcode"><pre><span class="nd">@FunctionalInterface</span>
@@ -307,8 +295,181 @@
 <p>操作系统对一个进程的最大内存是有限制的</p>
 <p>虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存</p>
 <p>JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系</p>
+<h1 id="_2">线程的状态</h1>
+<ul>
+<li>Thread类源码</li>
+</ul>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">     * A thread state.  A thread can be in one of the following states:</span>
+<span class="cm">     * &lt;ul&gt;</span>
+<span class="cm">     * &lt;li&gt;{@link #NEW}&lt;br&gt;</span>
+<span class="cm">     *     A thread that has not yet started is in this state.</span>
+<span class="cm">     *     &lt;/li&gt;</span>
+<span class="cm">     * &lt;li&gt;{@link #RUNNABLE}&lt;br&gt;</span>
+<span class="cm">     *     A thread executing in the Java virtual machine is in this state.</span>
+<span class="cm">     *     &lt;/li&gt;</span>
+<span class="cm">     * &lt;li&gt;{@link #BLOCKED}&lt;br&gt;</span>
+<span class="cm">     *     A thread that is blocked waiting for a monitor lock</span>
+<span class="cm">     *     is in this state.</span>
+<span class="cm">     *     &lt;/li&gt;</span>
+<span class="cm">     * &lt;li&gt;{@link #WAITING}&lt;br&gt;</span>
+<span class="cm">     *     A thread that is waiting indefinitely for another thread to</span>
+<span class="cm">     *     perform a particular action is in this state.</span>
+<span class="cm">     *     &lt;/li&gt;</span>
+<span class="cm">     * &lt;li&gt;{@link #TIMED_WAITING}&lt;br&gt;</span>
+<span class="cm">     *     A thread that is waiting for another thread to perform an action</span>
+<span class="cm">     *     for up to a specified waiting time is in this state.</span>
+<span class="cm">     *     &lt;/li&gt;</span>
+<span class="cm">     * &lt;li&gt;{@link #TERMINATED}&lt;br&gt;</span>
+<span class="cm">     *     A thread that has exited is in this state.</span>
+<span class="cm">     *     &lt;/li&gt;</span>
+<span class="cm">     * &lt;/ul&gt;</span>
+<span class="cm">     *</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">     * A thread can be in only one state at a given point in time.</span>
+<span class="cm">     * These states are virtual machine states which do not reflect</span>
+<span class="cm">     * any operating system thread states.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @since   1.5</span>
+<span class="cm">     * @see #getState</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">State</span> <span class="o">{</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Thread state for a thread which has not yet started.</span>
+<span class="cm">         */</span>
+        <span class="n">NEW</span><span class="o">,</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Thread state for a runnable thread.  A thread in the runnable</span>
+<span class="cm">         * state is executing in the Java virtual machine but it may</span>
+<span class="cm">         * be waiting for other resources from the operating system</span>
+<span class="cm">         * such as processor.</span>
+<span class="cm">         */</span>
+        <span class="n">RUNNABLE</span><span class="o">,</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Thread state for a thread blocked waiting for a monitor lock.</span>
+<span class="cm">         * A thread in the blocked state is waiting for a monitor lock</span>
+<span class="cm">         * to enter a synchronized block/method or</span>
+<span class="cm">         * reenter a synchronized block/method after calling</span>
+<span class="cm">         * {@link Object#wait() Object.wait}.</span>
+<span class="cm">         */</span>
+        <span class="n">BLOCKED</span><span class="o">,</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Thread state for a waiting thread.</span>
+<span class="cm">         * A thread is in the waiting state due to calling one of the</span>
+<span class="cm">         * following methods:</span>
+<span class="cm">         * &lt;ul&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link Object#wait() Object.wait} with no timeout&lt;/li&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link #join() Thread.join} with no timeout&lt;/li&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link LockSupport#park() LockSupport.park}&lt;/li&gt;</span>
+<span class="cm">         * &lt;/ul&gt;</span>
+<span class="cm">         *</span>
+<span class="cm">         * &lt;p&gt;A thread in the waiting state is waiting for another thread to</span>
+<span class="cm">         * perform a particular action.</span>
+<span class="cm">         *</span>
+<span class="cm">         * For example, a thread that has called &lt;tt&gt;Object.wait()&lt;/tt&gt;</span>
+<span class="cm">         * on an object is waiting for another thread to call</span>
+<span class="cm">         * &lt;tt&gt;Object.notify()&lt;/tt&gt; or &lt;tt&gt;Object.notifyAll()&lt;/tt&gt; on</span>
+<span class="cm">         * that object. A thread that has called &lt;tt&gt;Thread.join()&lt;/tt&gt;</span>
+<span class="cm">         * is waiting for a specified thread to terminate.</span>
+<span class="cm">         */</span>
+        <span class="n">WAITING</span><span class="o">,</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Thread state for a waiting thread with a specified waiting time.</span>
+<span class="cm">         * A thread is in the timed waiting state due to calling one of</span>
+<span class="cm">         * the following methods with a specified positive waiting time:</span>
+<span class="cm">         * &lt;ul&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link #sleep Thread.sleep}&lt;/li&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link Object#wait(long) Object.wait} with timeout&lt;/li&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link #join(long) Thread.join} with timeout&lt;/li&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link LockSupport#parkNanos LockSupport.parkNanos}&lt;/li&gt;</span>
+<span class="cm">         *   &lt;li&gt;{@link LockSupport#parkUntil LockSupport.parkUntil}&lt;/li&gt;</span>
+<span class="cm">         * &lt;/ul&gt;</span>
+<span class="cm">         */</span>
+        <span class="n">TIMED_WAITING</span><span class="o">,</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Thread state for a terminated thread.</span>
+<span class="cm">         * The thread has completed execution.</span>
+<span class="cm">         */</span>
+        <span class="n">TERMINATED</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h1 id="monitor">Monitor</h1>
+<p><a href="https://www.programcreek.com/2011/12/monitors-java-synchronization-mechanism/" target="_blank">Monitors – The Basic Idea of Java Synchronization</a></p>
+<h1 id="waitnotify">对象的wait,notify方法</h1>
+<ul>
+<li>wait: 在其他线程调用此对象的<code>notify()</code>方法或<code>notifyAll()</code>方法前，导致当前线程等待</li>
+<li>notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。</li>
+<li><code>sleep</code>方法没有释放锁，而<code>wait</code>方法释放了锁，使得其他线程可以使用同步控制块或方法</li>
+</ul>
+<div class="hlcode"><pre><span class="err">参考文档：</span> <span class="nl">https:</span><span class="c1">//www.baeldung.com/java-wait-notify</span>
+
+<span class="n">Simply</span> <span class="n">put</span><span class="o">,</span> <span class="n">when</span> <span class="n">we</span> <span class="n">call</span> <span class="n">wait</span><span class="o">()</span> <span class="err">–</span> <span class="k">this</span> <span class="n">forces</span> <span class="n">the</span> <span class="n">current</span> <span class="n">thread</span> <span class="n">to</span> <span class="n">wait</span> <span class="n">until</span> <span class="n">some</span> <span class="n">other</span> <span class="n">thread</span> <span class="n">invokes</span> <span class="n">notify</span><span class="o">()</span> <span class="n">or</span> <span class="n">notifyAll</span><span class="o">()</span> <span class="n">on</span> <span class="n">the</span> <span class="n">same</span> <span class="n">object</span><span class="o">.</span>
+
+<span class="n">For</span> <span class="k">this</span><span class="o">,</span> <span class="n">the</span> <span class="n">current</span> <span class="n">thread</span> <span class="n">must</span> <span class="n">own</span> <span class="n">the</span> <span class="n">object</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">monitor</span><span class="o">.</span> <span class="n">According</span> <span class="n">to</span> <span class="n">Javadocs</span><span class="o">,</span> <span class="k">this</span> <span class="n">can</span> <span class="n">happen</span> <span class="nl">when:</span>
+
+<span class="n">we</span><span class="err">&#39;</span><span class="n">ve</span> <span class="n">executed</span> <span class="kd">synchronized</span> <span class="n">instance</span> <span class="n">method</span> <span class="k">for</span> <span class="n">the</span> <span class="n">given</span> <span class="n">object</span>
+<span class="n">we</span><span class="err">&#39;</span><span class="n">ve</span> <span class="n">executed</span> <span class="n">the</span> <span class="n">body</span> <span class="n">of</span> <span class="n">a</span> <span class="kd">synchronized</span> <span class="n">block</span> <span class="n">on</span> <span class="n">the</span> <span class="n">given</span> <span class="n">object</span>
+<span class="n">by</span> <span class="n">executing</span> <span class="kd">synchronized</span> <span class="kd">static</span> <span class="n">methods</span> <span class="k">for</span> <span class="n">objects</span> <span class="n">of</span> <span class="n">type</span> <span class="n">Class</span>
+<span class="n">Note</span> <span class="n">that</span> <span class="n">only</span> <span class="n">one</span> <span class="n">active</span> <span class="n">thread</span> <span class="n">can</span> <span class="n">own</span> <span class="n">an</span> <span class="n">object</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">monitor</span> <span class="n">at</span> <span class="n">a</span> <span class="n">time</span><span class="o">.</span>
+
+
+<span class="n">The</span> <span class="nf">wait</span><span class="o">()</span> <span class="n">method</span> <span class="n">causes</span> <span class="n">the</span> <span class="n">current</span> <span class="n">thread</span> <span class="n">to</span> <span class="n">wait</span> <span class="n">indefinitely</span> <span class="n">until</span> <span class="n">another</span> <span class="n">thread</span> <span class="n">either</span> <span class="n">invokes</span> <span class="n">notify</span><span class="o">()</span> <span class="k">for</span> <span class="k">this</span> <span class="n">object</span> <span class="n">or</span> <span class="n">notifyAll</span><span class="o">().</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span> <span class="c1">//  使当前线阻塞 1 s，确保主程序的 t1.wait(); 执行之后再执行 notify()</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span><span class="s">&quot; call notify()&quot;</span><span class="o">);</span>
+            <span class="c1">// 唤醒当前的wait线程</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// main 线程</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ThreadA</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="s">&quot;t1&quot;</span><span class="o">);</span>
+    <span class="kd">synchronized</span><span class="o">(</span><span class="n">t1</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">// 启动“线程t1”</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span><span class="s">&quot; start t1&quot;</span><span class="o">);</span>
+            <span class="n">t1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+            <span class="c1">// 主线程等待t1通过notify()唤醒。</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span><span class="s">&quot; wait()&quot;</span><span class="o">);</span>
+            <span class="n">t1</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>  <span class="c1">//  不是使t1线程等待，而是当前执行wait的线程等待</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span><span class="s">&quot; continue&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* 执行结果</span>
+<span class="cm">main start t1</span>
+<span class="cm">main wait()</span>
+<span class="cm">t1 call notify()</span>
+<span class="cm">main continue</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
 <h1 id="threadgroup"><code>ThreadGroup</code>线程组</h1>
-<h2 id="_2">线程组认识</h2>
+<h2 id="_3">线程组认识</h2>
 <div class="hlcode"><pre><span class="n">ThreadGroup</span> <span class="n">tg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadGroup</span><span class="o">(</span><span class="s">&quot;tg&quot;</span><span class="o">);</span>
 <span class="n">Thread</span> <span class="n">tr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">tg</span><span class="o">,</span><span class="s">&quot;tr&quot;</span><span class="o">);</span>
 
@@ -370,7 +531,7 @@
 </pre></div>
 
 
-<h2 id="_3">线程组源码</h2>
+<h2 id="_4">线程组源码</h2>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm"> * A thread group represents a set of threads. In addition, a thread</span>
 <span class="cm"> * group can also include other thread groups. The thread groups form</span>
@@ -549,7 +710,7 @@
 <li><code>sleep</code>回使得线程短暂的<code>Blocked</code>, 会在给定的时间内释放CPU资源</li>
 <li>一个线程<code>sleep</code>,另一个线程调用<code>interrupt</code>会捕获到中断信号，而<code>yield</code>则不会</li>
 </ul>
-<h2 id="_4">线程的优先级</h2>
+<h2 id="_5">线程的优先级</h2>
 <p>理论上，线程优先级高的会获得优先被CPU调度的机会，但实际上这也是个<code>hint</code>操作</p>
 <ul>
 <li>
@@ -616,7 +777,7 @@
 </pre></div>
 
 
-<h3 id="_5">获取当前线程</h3>
+<h3 id="_6">获取当前线程</h3>
 <div class="hlcode"><pre><span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="nd">@Override</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
@@ -761,9 +922,9 @@
 </pre></div>
 
 
-<h2 id="_6">关闭一个线程</h2>
-<h3 id="_7">正常结束</h3>
-<h3 id="_8">捕获中断信号关闭线程</h3>
+<h2 id="_7">关闭一个线程</h2>
+<h3 id="_8">正常结束</h3>
+<h3 id="_9">捕获中断信号关闭线程</h3>
 <h3 id="volatile">使用volatile开关控制</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
@@ -798,14 +959,14 @@
 </pre></div>
 
 
-<h3 id="_9">异常退出</h3>
-<h3 id="_10">进程假死</h3>
+<h3 id="_10">异常退出</h3>
+<h3 id="_11">进程假死</h3>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 16:41:26</p>
+        <p>Site Generated 2020-03-07 21:53:53</p>
       </span>
     </div>
 
