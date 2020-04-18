@@ -34,7 +34,7 @@
 <li><a href="#synchronized-reentrantlock">对比synchronized, ReentrantLock的一些高级功能</a></li>
 <li><a href="#_1">锁申请等待限时实际例子</a></li>
 <li><a href="#_2">公平锁</a></li>
-<li><a href="#_3">公平锁</a></li>
+<li><a href="#_3">公平锁/非公平锁</a></li>
 </ul>
 </li>
 <li><a href="#_4">读写锁</a><ul>
@@ -53,12 +53,11 @@
 </div>
 <h1 id="lock">Lock</h1>
 <h2 id="lock_1">Lock基本用法例子</h2>
+<p><code>Lock是</code>Java中的一个<code>interface</code></p>
 <ul>
 <li>lock, unlock</li>
 </ul>
-<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
@@ -432,7 +431,7 @@
 </pre></div>
 
 
-<h3 id="_3">公平锁</h3>
+<h3 id="_3">公平锁/非公平锁</h3>
 <ul>
 <li>
 <p>公平锁每次获取到锁为同步队列中的第一个节点，保证请求资源时间上的绝对顺序，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其他线程永远无法获取到锁，造成<code>饥饿</code>现象。</p>
@@ -581,7 +580,7 @@
 <p>在分布式的部署环境下，通过锁机制来让多客户端互斥的对共享资源进行访问</p>
 <ul>
 <li>
-<p>排他性：在同一时间只会有一个客户端能获取到锁，其它客户端无法同时获取</p>
+<p>排它性：在同一时间只会有一个客户端能获取到锁，其它客户端无法同时获取</p>
 </li>
 <li>
 <p>避免死锁：这把锁在一段有限的时间之后，一定会被释放（正常释放或异常释放）</p>
@@ -607,7 +606,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 

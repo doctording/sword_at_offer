@@ -27,10 +27,10 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#_1">单例模式</a><ul>
-<li><a href="#_2">懒汉式， 非同步</a></li>
-<li><a href="#synchronized">懒汉式，synchronized同步</a></li>
-<li><a href="#double-check">double-check</a></li>
-<li><a href="#double-check-volatile">double-check &amp; volatile</a></li>
+<li><a href="#_2">懒汉式 + 非同步</a></li>
+<li><a href="#synchronized">懒汉式 + synchronized同步</a></li>
+<li><a href="#double-check">double-check（仍然线程不安全）</a></li>
+<li><a href="#double-check-volatile">double-check &amp; volatile（懒汉式）</a></li>
 <li><a href="#holder">Holder方式（静态内部类）</a></li>
 <li><a href="#_3">枚举</a></li>
 </ul>
@@ -51,7 +51,7 @@
 <p>饿汉：在初始化的时候，就创建了唯一的实例，不管是否需要用到。不需要自己加同步，一定产生唯一的实例。</p>
 </li>
 </ul>
-<h2 id="_2">懒汉式， 非同步</h2>
+<h2 id="_2">懒汉式 + 非同步</h2>
 <div class="hlcode"><pre><span class="kd">final</span> <span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
     <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
 
@@ -77,7 +77,7 @@
 </pre></div>
 
 
-<h2 id="synchronized">懒汉式，<code>synchronized</code>同步</h2>
+<h2 id="synchronized">懒汉式 + <code>synchronized</code>同步</h2>
 <p><code>getInstance</code>同一时刻只能被一个线程访问，效率很低</p>
 <div class="hlcode"><pre><span class="kd">final</span> <span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
     <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
@@ -96,7 +96,7 @@
 </pre></div>
 
 
-<h2 id="double-check">double-check</h2>
+<h2 id="double-check">double-check（仍然线程不安全）</h2>
 <p>首次初始化的时候加锁，之后多线程调用<code>getInstance</code></p>
 <div class="hlcode"><pre><span class="kd">final</span> <span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
     <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
@@ -121,7 +121,7 @@
             <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Singleton</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">{</span>
                 <span class="k">if</span><span class="o">(</span><span class="kc">null</span> <span class="o">==</span> <span class="n">instance</span><span class="o">)</span> <span class="o">{</span>
                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;new Singleton&quot;</span><span class="o">);</span>
-                    <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+                    <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span> <span class="c1">// new 对象 可能会指令重排</span>
                 <span class="o">}</span>
             <span class="o">}</span>
         <span class="o">}</span>
@@ -133,7 +133,7 @@
 
 <p><img alt="" src="./imgs/double_check.png" /></p>
 <p>创建一个变量需要：一个是申请一块内存，调用构造方法进行初始化操作，另一个是分配一个指针指向这块内存。这两个操作谁在前谁在后呢？JVM规范并没有规定。那么就存在这么一种情况，JVM是先开辟出一块内存，然后把指针指向这块内存，最后调用构造方法进行初始化。</p>
-<h2 id="double-check-volatile">double-check &amp; volatile</h2>
+<h2 id="double-check-volatile">double-check &amp; volatile（懒汉式）</h2>
 <p><code>volatile</code>止指令重排，保证顺序性</p>
 <div class="hlcode"><pre><span class="kd">private</span> <span class="kd">volatile</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">instance</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 </pre></div>
@@ -170,7 +170,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 

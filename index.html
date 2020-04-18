@@ -19,27 +19,36 @@
 
 <div class="index">    
     <div class="category">
+      <h2 id="db_cache">Db_cache
+      </h2>
+      <div class="category_pages">
+        <ul>  
+          <li class="pagelist item_arrow">
+              <a href="./db_cache/consistent_hash.html">一致性Hash</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./db_cache/bloom.html">布隆过滤器</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./db_cache/mysql.html">数据库/表/查询</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./db_cache/cache.html">缓存</a>
+          </li>
+        </ul>
+      </div> <!-- end category_pages -->
+    </div> <!-- end category -->
+    <div class="clearfix"></div>  
+    <div class="category">
       <h2 id="distributed_design">Distributed_design
       </h2>
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
-              <a href="./distributed_design/future.html">Future 设计模式</a>
+              <a href="./distributed_design/nginx.html">nginx基础</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./distributed_design/reactor.html">Reactor 模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/semaphore.html">Semaphore</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/single_thread_execution.html">Single Thread Execution</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/51cto_store.html">分布式存储系统基础</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/context.html">线程上下文设计模式</a>
+              <a href="./distributed_design/design.html">设计模式</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./distributed_design/flow_limit.html">限流</a>
@@ -54,7 +63,10 @@
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
-              <a href="./java8/thread_cas.html">CAS(Conmpare And Swap) & AtomicInteger</a>
+              <a href="./java8/thread_cas.html">CAS(Conmpare And Swap) & unsafe</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java8/countdownlatch_cyclicBarrier.html">CountDownLatch & CyclicBarrier</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java8/java8_completableFuture.html">Java8 CompletableFuture</a>
@@ -85,6 +97,9 @@
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java8/thread_lock_type.html">Java中的各种锁概念</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java8/semaphore.html">Semaphore</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java8/thread_synchronized.html">synchronized 关键字</a>
@@ -120,13 +135,28 @@
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
+              <a href="./java_data_structure/b_tree.html">B/B+ Tree</a>
+          </li>  
+          <li class="pagelist item_arrow">
               <a href="./java_data_structure/basic_datastructure.html">Java 基础数据结构</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_data_structure/array_list.html">Java8 ArrayList & LinkedList</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_data_structure/concurrent_datastructure.html">Java8 concurrent</a>
           </li>  
           <li class="pagelist item_arrow">
+              <a href="./java_data_structure/hash_map.html">Java8 HashMap</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_data_structure/hash_table.html">Java8 HashTable</a>
+          </li>  
+          <li class="pagelist item_arrow">
               <a href="./java_data_structure/unsafe.html">Java8 unsafe</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_data_structure/fail_fast.html">集合 fail-fast,ConcurrentModificationException</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_data_structure/advanced_structure.html">高级数据结构</a>
@@ -140,6 +170,9 @@
       </h2>
       <div class="category_pages">
         <ul>  
+          <li class="pagelist item_arrow">
+              <a href="./java_io_net/http_tcp.html">Java http & tcp</a>
+          </li>  
           <li class="pagelist item_arrow">
               <a href="./java_io_net/io_basic.html">Java io基础</a>
           </li>  
@@ -156,22 +189,16 @@
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_outof_test.html">Java Jvm各内存区域溢出测试</a>
-          </li>  
-          <li class="pagelist item_arrow">
               <a href="./java_jvm/jvm_runtime.html">Java Runtime</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_jvm/jvm_mem_model.html">Java 内存模型与线程</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_mem_out.html">Java 堆外内存</a>
-          </li>  
-          <li class="pagelist item_arrow">
               <a href="./java_jvm/jvm_mem.html">Java 堆栈 & 各种GC</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_class_load.html">Java 类加载</a>
+              <a href="./java_jvm/jvm_class_load.html">Java 类加载机制和类加载器</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_jvm/jvm_tools.html">JVM命令工具(jstack,jmap,jcmd...)</a>
@@ -249,7 +276,7 @@
               <a href="./java_utils/wait_notify.html">对象的wait和notify方法</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./java_utils/thread_problems.html">常见的线程题目</a>
+              <a href="./java_utils/concurrency_problems.html">常见的线程题目</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_utils/quick_sort.html">快排(没事手写写)</a>
@@ -642,7 +669,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 

@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java 类加载 - 剑指Offer</title>
+    <title>Java 类加载机制和类加载器 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 类加载
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_jvm">java_jvm</a>&nbsp;&#187;&nbsp;Java 类加载机制和类加载器
     <span class="updated">Page Updated&nbsp;
       2019-02-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java 类加载</div>
+<div class="page_title">Java 类加载机制和类加载器</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#class">Class 文件</a><ul>
@@ -38,23 +38,26 @@
 </li>
 <li><a href="#_6">程序编译和代码优化</a><ul>
 <li><a href="#_7">类加载</a><ul>
-<li><a href="#_8">验证</a></li>
-<li><a href="#_9">准备</a></li>
-<li><a href="#_10">解析</a></li>
-<li><a href="#_11">初始化</a><ul>
-<li><a href="#_12">什么时候需要对类进行初始化？</a></li>
+<li><a href="#class_2">验证（class字节流的校验）</a></li>
+<li><a href="#_8">准备（分配内存，初始化默认值）</a></li>
+<li><a href="#_9">解析</a></li>
+<li><a href="#client">初始化（执行类构造器&lt;client&gt;）</a><ul>
+<li><a href="#_10">什么时候需要对类进行初始化</a></li>
 </ul>
 </li>
-<li><a href="#_13">类加载器</a><ul>
-<li><a href="#bootstrap-classloader">启动类加载器 Bootstrap ClassLoader</a></li>
-<li><a href="#extension-classloader">扩展类加载器 Extension ClassLoader</a></li>
-<li><a href="#application-classloader">应用程序类加载器 Application ClassLoader</a></li>
-<li><a href="#_14">* 双亲委派模型 *</a></li>
+<li><a href="#_11">类加载器分类</a><ul>
+<li><a href="#1-bootstrap-classloader">1. 启动类加载器 Bootstrap ClassLoader</a></li>
+<li><a href="#2-extension-classloader">2. 扩展类加载器 Extension ClassLoader</a></li>
+<li><a href="#3-application-classloader">3. 应用程序类加载器 Application ClassLoader</a></li>
+<li><a href="#_12">双亲委派模型（*）</a><ul>
+<li><a href="#_13">双亲委派优势</a></li>
+</ul>
+</li>
 <li><a href="#java7">类加载题目例子（Java7环境）</a><ul>
-<li><a href="#_15">结果分析</a><ul>
+<li><a href="#_14">结果分析</a><ul>
 <li><a href="#singleton">Singleton 结果分析</a></li>
 <li><a href="#singleton2">Singleton2 分析</a></li>
-<li><a href="#_16">静态初始化再次验证</a></li>
+<li><a href="#_15">静态初始化再次验证</a></li>
 </ul>
 </li>
 </ul>
@@ -65,7 +68,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#_17">自定义类加载器</a><ul>
+<li><a href="#_16">自定义类加载器</a><ul>
 <li><a href="#myclassloader">MyClassLoader 实践</a></li>
 <li><a href="#todo">自定义类加载器的优缺点 // TODO</a></li>
 </ul>
@@ -76,7 +79,7 @@
 <p>Class文件是一组以8位字节为基础单位的<code>二进制流</code>，任何一个Class文件都对应唯一一个类或接口的定义信息</p>
 <h2 id="class_1">魔数与Class文件的版本</h2>
 <h2 id="_1">常量池</h2>
-<p>主要存放两大类常量： 字面量（Literal 和 符号引用（Symbolic Reference）</p>
+<p>主要存放两大类常量：字面量（Literal）和 符号引用（Symbolic Reference）</p>
 <ol>
 <li>
 <p>字面量：如文本字符串，声明为final的常量值</p>
@@ -118,11 +121,11 @@
 </pre></div>
 
 
-<h3 id="_8">验证</h3>
+<h3 id="class_2">验证（class字节流的校验）</h3>
 <p>验证是链接阶段的第一步，这一步主要的目的是确保class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身安全。 验证阶段主要包括四个检验过程：文件格式验证、元数据验证、字节码验证和符号引用验证。</p>
-<h3 id="_9">准备</h3>
+<h3 id="_8">准备（分配内存，初始化默认值）</h3>
 <p>准备阶段是正式为类变量分配内存并设置类变量的初始值阶段，即在方法区中分配这些变量所使用的内存空间。</p>
-<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value</span>  <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">12</span><span class="o">;</span>
 </pre></div>
 
 
@@ -133,14 +136,14 @@
 
 
 <p>编译时javac将会为value生成ConstantValue属性，在准备阶段虚拟机就会根据ConstantValue的设置将value设置为123。</p>
-<h3 id="_10">解析</h3>
+<h3 id="_9">解析</h3>
 <p>解析阶段是虚拟机常量池内的符号引用替换为直接引用的过程。</p>
 <p>直接引用可以是指向目标的指针，相对偏移量或是一个能间接定位到目标的句柄。如果有了直接引用，那引用的目标必定已经在内存中存在。</p>
-<h3 id="_11">初始化</h3>
+<h3 id="client">初始化（执行类构造器<code>&lt;client&gt;</code>）</h3>
 <p>初始化阶段是类加载最后一个阶段，前面的类加载阶段之后，除了在加载阶段可以自定义类加载器以外，其它操作都由JVM主导。到了初始阶段，才开始真正执行类中定义的Java程序代码。</p>
 <p>初始化阶段是执行类构造器<code>&lt;client&gt;</code>方法的过程。</p>
 <p><code>&lt;client&gt;</code>方法是由编译器自动收集类中的<strong>类变量的赋值操作和静态语句块</strong>中的语句合并而成的。虚拟机会保证<code>&lt;client&gt;</code>方法执行之前，父类的<code>&lt;client&gt;</code>方法已经执行完毕。</p>
-<h4 id="_12">什么时候需要对类进行初始化？</h4>
+<h4 id="_10">什么时候需要对类进行初始化</h4>
 <ol>
 <li>使用<code>new</code>该类实例化对象的时候</li>
 <li>读取或设置<code>类静态字段</code>的时候（但被final修饰的字段，在编译器时就被放入常量池(static final)的静态字段除外）</li>
@@ -168,15 +171,15 @@
 <p>如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类<code>&lt;clinit&gt;</code>方法；</p>
 </li>
 </ul>
-<h3 id="_13">类加载器</h3>
+<h3 id="_11">类加载器分类</h3>
 <p>加载动作放到JVM外部实现，以便让应用程序决定如何获取所需的类, 类加载器大致可以分为以下3部分：</p>
-<h4 id="bootstrap-classloader">启动类加载器 Bootstrap ClassLoader</h4>
+<h4 id="1-bootstrap-classloader">1. 启动类加载器 Bootstrap ClassLoader</h4>
 <p>将存放于<code>&lt;JAVA_HOME&gt;\lib</code>目录中的，或者被<code>-Xbootclasspath</code>参数所指定的路径中的，并且是虚拟机识别的（仅按照文件名识别，如 rt.jar 名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用。</p>
-<h4 id="extension-classloader">扩展类加载器 Extension ClassLoader</h4>
+<h4 id="2-extension-classloader">2. 扩展类加载器 Extension ClassLoader</h4>
 <p>将<code>&lt;JAVA_HOME&gt;\lib\ext</code>目录下的，或者被java.ext.dirs系统变量所指定的路径中的所有类库加载。开发者可以直接使用扩展类加载器。</p>
-<h4 id="application-classloader">应用程序类加载器 Application ClassLoader</h4>
+<h4 id="3-application-classloader">3. 应用程序类加载器 Application ClassLoader</h4>
 <p>负责加载用户类路径(ClassPath)上所指定的类库,开发者可直接使用。</p>
-<h4 id="_14">* 双亲委派模型 *</h4>
+<h4 id="_12">双亲委派模型（*）</h4>
 <p>工作过程为：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载</p>
 <div class="hlcode"><pre><span class="kd">protected</span> <span class="kd">synchronized</span> <span class="n">Class</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">resolve</span><span class="o">)</span>
         <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
@@ -204,6 +207,15 @@
 </pre></div>
 
 
+<h5 id="_13">双亲委派优势</h5>
+<ol>
+<li>
+<p>采用双亲委派模式的是好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关可以避免类的重复加载，当父亲已经加载了该类时，就没有必要子ClassLoader再加载一次</p>
+</li>
+<li>
+<p>java核心api中定义类型不会被随意替换，假设通过网络传递一个名为java.lang.Integer的类，通过双亲委托模式传递到启动类加载器，而启动类加载器在核心Java API发现这个名字的类，发现该类已被加载，并不会重新加载网络传递的过来的java.lang.Integer，而直接返回已加载过的Integer.class，这样便可以防止核心API库被随意篡改</p>
+</li>
+</ol>
 <h4 id="java7">类加载题目例子（Java7环境）</h4>
 <div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
     <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
@@ -281,7 +293,7 @@
 </pre></div>
 
 
-<h5 id="_15">结果分析</h5>
+<h5 id="_14">结果分析</h5>
 <div class="hlcode"><pre><span class="nx">before</span> <span class="nx">Singleton</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">0</span>
 <span class="nx">after</span> <span class="nx">Singleton</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">value1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">value2</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">1</span>
 <span class="kr">static</span> <span class="nx">block</span>
@@ -304,7 +316,7 @@
 <ol>
 <li>首次创建对象时，类中的静态方法/静态字段首次被访问时，java解释器必须先查找类路径，以定位.class文件</li>
 <li>然后载入<code>.class</code>(这将创建一个class对象)，有关静态初始化的所有动作都会执行，按顺序执行。因此，<strong>静态初始化只在Class对象首次加载的时候进行一次</strong></li>
-<li>当用<code>new XX()</code>创建对象时，首先在<strong>堆上为对象分配足够的存储空间</strong></li>
+<li>当用<code>new XXX()</code>创建对象时，首先在<strong>堆上为对象分配足够的存储空间</strong></li>
 <li>这块存储空间会被清零，这就自动地将对象中的所有基本类型数据都设置成了缺省值（对数字来说就是0，对布尔型和字符型也相同），而引用则被设置成了null。</li>
 <li>执行所有出现于字段定义处的初始化动作（<strong>非静态对象的初始化</strong>）</li>
 <li>执行构造器。</li>
@@ -379,7 +391,7 @@
 </pre></div>
 
 
-<h6 id="_16">静态初始化再次验证</h6>
+<h6 id="_15">静态初始化再次验证</h6>
 <p>类中静态初始化语句，只会在类加载的时候执行一次</p>
 <ul>
 <li>code1</li>
@@ -443,7 +455,7 @@
 </pre></div>
 
 
-<h1 id="_17">自定义类加载器</h1>
+<h1 id="_16">自定义类加载器</h1>
 <p>自定义类加载器的一般步骤</p>
 <ol>
 <li>
@@ -645,7 +657,7 @@
 <p>部署在同一个服务器上的两个Web应用程序所使用的Java类库可以相互共享</p>
 </li>
 <li>
-<p>支持热替换</p>
+<p>支持热替换(特殊的动态加载机制)</p>
 </li>
 </ul>
     </div>
@@ -653,7 +665,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 

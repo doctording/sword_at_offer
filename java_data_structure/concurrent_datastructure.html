@@ -29,7 +29,7 @@
 <li><a href="#concurrent">concurrent数据结构</a><ul>
 <li><a href="#concurrentmapinterface">ConcurrentMap(interface)</a></li>
 <li><a href="#concurrenthashmapclass">ConcurrentHashMap(class)</a><ul>
-<li><a href="#cas-synchronized">底层，数组+链表/红黑树，CAS + synchronized控制并发</a></li>
+<li><a href="#cas-synchronized">底层:数组+链表/红黑树，CAS + synchronized控制并发</a></li>
 <li><a href="#put">put方法</a></li>
 <li><a href="#size">获取size</a></li>
 <li><a href="#java7">对比Java7分段锁优劣</a><ul>
@@ -73,7 +73,8 @@
 </pre></div>
 
 
-<h3 id="cas-synchronized">底层，数组+链表/红黑树，CAS + synchronized控制并发</h3>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/concurrent_hashmap.png" /></p>
+<h3 id="cas-synchronized">底层:数组+链表/红黑树，CAS + synchronized控制并发</h3>
 <div class="hlcode"><pre> <span class="cm">/* ---------------- Fields -------------- */</span>
 
 <span class="cm">/**</span>
@@ -199,7 +200,7 @@
 
 <ol>
 <li>
-<p>先判断key和value是否为null，为null扔出异常</p>
+<p>先判断key和value是否为null，为null则抛出异常</p>
 </li>
 <li>
 <p>判断table是否初始化，如果没有则进行初始化</p>
@@ -208,7 +209,7 @@
 <p>计算key的hash值，并得到插入的数组索引。</p>
 </li>
 <li>
-<p>找到table[i]的位置，如果为null直接插入，如果不为null判断此key是否存在，如果存在直接覆盖，如果不存在进行判断如果head节点是树节点，按照红黑树的方式插入新的节点，如果不是则按照链表的方式插入，同时会判断当前的链表长度是否大于8，如果大于则转为红黑树再插入，否则直接插入，插入采用的CAS自旋的方式。</p>
+<p>找到table[i]的位置，如果为null直接插入，如果不为null判断此key是否存在，如果存在直接覆盖，如果不存在进行判断如果head节点是树节点，按照红黑树的方式插入新的节点，如果不是则按照链表的方式插入，同时会判断当前的链表长度是否大于<code>TREEIFY_THRESHOLD=8</code>，如果大于则转为红黑树再插入，否则直接插入，插入采用的CAS自旋的方式。</p>
 </li>
 <li>
 <p>最后判断table的size是否需要扩容，如果需要则扩容，否则就结束。在扩容的时候会在链表头部插入forward，如果其他线程检测到需要插入的位置被forward节点占有，就帮助进行扩容。</p>
@@ -258,10 +259,11 @@
 <ul>
 <li>参考</li>
 </ul>
-<p>作者：葬月魔帝<br />
-来源：CSDN<br />
-原文：https://blog.csdn.net/u010454030/article/details/82458413<br />
-版权声明：本文为博主原创文章，转载请附上博文链接！</p>
+<p>作者：葬月魔帝</p>
+<p>来源：CSDN</p>
+<p>原文：<a href="https://blog.csdn.net/u010454030/article/details/82458413" target="_blank">理解Java7和8里面HashMap+ConcurrentHashMap的扩容策略<br />
+</a></p>
+<p>版权声明：本文为博主原创文章，转载请附上博文链接！</p>
 <h2 id="concurrentlinkedqueueclass">ConcurrentLinkedQueue(class) 无界线程安全</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConcurrentLinkedQueue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">AbstractQueue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
         <span class="kd">implements</span> <span class="n">Queue</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span> <span class="o">{</span>
@@ -589,7 +591,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 

@@ -16,7 +16,7 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#distributed_design">distributed_design</a>&nbsp;&#187;&nbsp;Semaphore
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Semaphore
     <span class="updated">Page Updated&nbsp;
       2019-06-27 00:00
     </span></div>
@@ -29,7 +29,8 @@
 <li><a href="#semaphore">Semaphore</a><ul>
 <li><a href="#java-semaphore">Java Semaphore</a><ul>
 <li><a href="#api">常用API</a></li>
-<li><a href="#_1">例子代码</a></li>
+<li><a href="#_1">"公平信号量"和"非公平信号量"</a></li>
+<li><a href="#_2">例子代码</a></li>
 </ul>
 </li>
 </ul>
@@ -78,7 +79,9 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_1">例子代码</h3>
+<h3 id="_1">"公平信号量"和"非公平信号量"</h3>
+<p>"公平信号量"和"非公平信号量"的释放信号量的机制是一样的！不同的是它们<strong>获取信号量</strong>的机制：线程在尝试获取信号量许可时，对于公平信号量而言，如果当前线程不在CLH队列(CLH即Craig, Landin, and Hagersten (CLH)。AQS内部维护着一个FIFO的队列，即CLH队列。AQS的同步机制就是依靠CLH队列实现的。CLH队列是FIFO的双端双向队列，实现公平锁。线程通过AQS获取锁失败，就会将线程封装成一个Node节点，插入队列尾。当有线程释放锁时，后尝试把队头的next节点占用锁。)的头部，则排队等候；而对于非公平信号量而言，无论当前线程是不是在CLH队列的头部，它都会直接获取信号量。该差异具体的体现在，它们的<code>tryAcquireShared()</code>函数的实现不同。</p>
+<h3 id="_2">例子代码</h3>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Calendar</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>
@@ -197,7 +200,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 

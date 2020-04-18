@@ -47,37 +47,43 @@
 <li><a href="#3">3.如何回收</a></li>
 </ul>
 </li>
-<li><a href="#_6">可达性分析 判定对象是否存活</a><ul>
+<li><a href="#_6">通过可达性分析来判定对象是否存活</a><ul>
 <li><a href="#javagc-roots">Java中可作为GC Roots的对象包括</a></li>
 </ul>
 </li>
 <li><a href="#reference">引用Reference</a></li>
 <li><a href="#_7">对象是生存还是死亡的？(两次标记)</a></li>
 <li><a href="#_8">回收方法区</a></li>
-<li><a href="#hotspot">HotSpot 算法实现</a></li>
+<li><a href="#hotspot">HotSpot 算法实现</a><ul>
+<li><a href="#stop-the-world">stop the world</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_9">收集器</a><ul>
+<li><a href="#_10">几中常见的垃圾回收方式</a></li>
 <li><a href="#cmsconcurrent-mark-sweep">CMS(Concurrent Mark Sweep)</a></li>
 <li><a href="#g1garbage-first">G1(Garbage First)</a><ul>
-<li><a href="#_10">参考学习文档</a></li>
-<li><a href="#g1">G1 内存区域分布图和概念介绍</a></li>
-<li><a href="#g1_1">G1 常用参数</a></li>
+<li><a href="#_11">参考学习文档</a></li>
+<li><a href="#g1">G1设计理念</a></li>
+<li><a href="#g1_1">G1 内存区域分布图和概念介绍</a></li>
+<li><a href="#g1_2">G1 常用参数</a></li>
 <li><a href="#g1gc">G1的gc运作</a><ul>
 <li><a href="#young-gcgc">young gc(对年轻代的GC)</a></li>
 <li><a href="#gc">对老年代的GC</a><ul>
-<li><a href="#initial-marking-phase">Initial Marking Phase</a></li>
-<li><a href="#concurrent-marking-phase">Concurrent Marking Phase</a></li>
-<li><a href="#remark-phase">Remark Phase</a></li>
-<li><a href="#copyingcleanup-phase">Copying/Cleanup Phase</a></li>
+<li><a href="#initial-marking-phasestop-the-world">Initial Marking Phase(初始标记，stop the world)</a></li>
+<li><a href="#concurrent-marking-phase">Concurrent Marking Phase（并发标记，与用户线程并发执行）</a></li>
+<li><a href="#remark-phasestop-the-world-cpu">Remark Phase（最终标记，stop the world, CPU停顿处理垃圾）</a></li>
+<li><a href="#copyingcleanup-phasestop-the-worldgc">Copying/Cleanup Phase（清理一些内存块，stop the world，根据用户期望的GC停顿时间回收）</a></li>
 </ul>
 </li>
 <li><a href="#gc_1">对年轻代和老年代GC的总结</a></li>
 </ul>
 </li>
+<li><a href="#g1_3">G1的优势（为什么能够设置一个停留时间）</a></li>
 </ul>
 </li>
-<li><a href="#_11">内存分配与回收策略(理论基础)</a><ul>
+<li><a href="#_12">内存分配与回收策略(理论基础)</a><ul>
 <li><a href="#eden">对象优先在Eden分配</a><ul>
 <li><a href="#minor-gcyong-gc">minor gc(yong gc)</a></li>
 <li><a href="#major-gc-full-gc">major gc/ full gc</a></li>
@@ -85,13 +91,13 @@
 <li><a href="#gc_2">对应GC日志</a></li>
 </ul>
 </li>
-<li><a href="#_12">参考</a></li>
+<li><a href="#_13">参考</a></li>
 </ul>
 </li>
-<li><a href="#_13">大对象直接进入老年代</a></li>
-<li><a href="#_14">长期存活的对象将进入老年代</a></li>
-<li><a href="#_15">动态对象的年龄判定</a></li>
-<li><a href="#_16">空间分配担保</a></li>
+<li><a href="#_14">大对象直接进入老年代</a></li>
+<li><a href="#_15">长期存活的对象将进入老年代</a></li>
+<li><a href="#_16">动态对象的年龄判定</a></li>
+<li><a href="#_17">空间分配担保</a></li>
 <li><a href="#gc_3">触发gc的条件</a><ul>
 <li><a href="#minor-gc">Minor GC触发条件</a></li>
 <li><a href="#full-gc">Full GC触发条件</a></li>
@@ -109,9 +115,28 @@
 <li><a href="#parallel-scavenge">(二) Parallel Scavenge 收集器</a></li>
 <li><a href="#parnew">(二) ParNew 收集器</a></li>
 <li><a href="#cms">(三) CMS收集器</a></li>
-<li><a href="#g1_2">(四) G1</a></li>
+<li><a href="#g1_4">(四) G1</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#_18">堆外内存</a><ul>
+<li><a href="#_19">问题</a></li>
+<li><a href="#_20">概念</a><ul>
+<li><a href="#_21">堆外内存溢出</a></li>
+<li><a href="#_22">堆外内存更适合</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#java_1">java 内存区域和内存溢出异常演练测试</a><ul>
+<li><a href="#outofmemoryerror">OutOfMemoryError</a></li>
+<li><a href="#_23">虚拟机栈和本地方法栈溢出</a></li>
+<li><a href="#_24">方法区和运行时常量池溢出</a><ul>
+<li><a href="#java7-javalangoutofmemoryerror-java-heap-space">Java7 常量池 仍是java.lang.OutOfMemoryError: Java heap space</a></li>
+</ul>
+</li>
+<li><a href="#_25">直接内存溢出</a></li>
 </ul>
 </li>
 </ul>
@@ -166,7 +191,8 @@
 <h3 id="perm-space">永久代(Perm space)</h3>
 <p>这个区域的内存回收目标主要是针对常量池的回收和对类型的卸载</p>
 <h1 id="java8">Java8 内存区域</h1>
-<div class="hlcode"><pre><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">pwd</span>
+<div class="hlcode"><pre><span class="c1">// java7</span>
+<span class="n">mubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">pwd</span>
 <span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">Java</span><span class="o">/</span><span class="n">JavaVirtualMachines</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">7.0</span><span class="n">_80</span><span class="o">.</span><span class="na">jdk</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">Home</span>
 <span class="n">mubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">bin</span><span class="o">/</span><span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
 <span class="nl">Warning:</span> <span class="n">Unresolved</span> <span class="nl">Symbol:</span> <span class="n">sun</span><span class="o">.</span><span class="na">gc</span><span class="o">.</span><span class="na">generation</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="na">space</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">capacity</span> <span class="n">substituted</span> <span class="n">NaN</span>
@@ -177,6 +203,8 @@
   <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.08</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
   <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.22</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
   <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">77.33</span>  <span class="mf">56.33</span>      <span class="err">�</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
+
+<span class="c1">// java 8</span>
 <span class="o">^</span><span class="n">Cmubi</span><span class="nd">@mubideMacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="n">Home</span> <span class="n">$</span> <span class="n">jstat</span> <span class="o">-</span><span class="n">gcutil</span> <span class="mi">62850</span> <span class="mi">1000</span> <span class="mi">10</span>
   <span class="n">S0</span>     <span class="n">S1</span>     <span class="n">E</span>      <span class="n">O</span>      <span class="n">M</span>     <span class="n">CCS</span>    <span class="n">YGC</span>     <span class="n">YGCT</span>    <span class="n">FGC</span>    <span class="n">FGCT</span>     <span class="n">GCT</span>
   <span class="mf">0.00</span>  <span class="mf">85.81</span>  <span class="mf">78.86</span>  <span class="mf">56.33</span>  <span class="mf">93.46</span>  <span class="mf">89.80</span>    <span class="mi">161</span>    <span class="mf">1.624</span>    <span class="mi">14</span>    <span class="mf">0.603</span>    <span class="mf">2.227</span>
@@ -218,8 +246,9 @@
 <h3 id="1">1.哪些内存需要回收</h3>
 <h3 id="2">2.什么时候回收</h3>
 <h3 id="3">3.如何回收</h3>
-<h2 id="_6"><code>可达性分析</code> 判定对象是否存活</h2>
+<h2 id="_6">通过<code>可达性分析</code>来判定对象是否存活</h2>
 <p>算法的基本思路就是通过一系列的称为<code>GC Roots</code>的对象作为起始点，从这些节点向下搜索，搜索所走过的路径称为<code>引用链(Reference Chain)</code>,当一个对象到<code>GC Roots</code>没有任何引用链相连(用图论的话来说，就是<code>GC Roots</code>到这个对象不可达)时，则证明此对象是不可用的。</p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/gc_roots.png" /></p>
 <h3 id="javagc-roots">Java中可作为<code>GC Roots</code>的对象包括</h3>
 <ul>
 <li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
@@ -232,7 +261,7 @@
 <ul>
 <li>强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。如</li>
 </ul>
-<div class="hlcode"><pre><span class="n">Object</span> <span class="n">o</span><span class="o">=</span><span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+<div class="hlcode"><pre><span class="n">Object</span> <span class="n">o</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
 </pre></div>
 
 
@@ -256,21 +285,19 @@
 <ul>
 <li>虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。<code>PhantomReference</code></li>
 </ul>
-<p>参考：https://www.cnblogs.com/fengbs/p/7019687.html</p>
+<p>参考：<a href="https://www.cnblogs.com/gudi/p/6403953.html" target="_blank">https://www.cnblogs.com/gudi/p/6403953.html</a></p>
 <h2 id="_7">对象是生存还是死亡的？(两次标记)</h2>
 <p>对对象进行可达性分析 ？<br />
 =》没有GC Roots的引用链 =》 判断对象是否有必要执行<code>finalize()</code>方法</p>
 <ol>
 <li>对象没有覆盖<code>finalize()</code>方法，或者<code>finalize()</code>方法已经被虚拟机调用过,虚拟机将这两种情况都视为"没有必要执行"</li>
-<li>如果这个对象被判定为有必要执行<code>finalize()</code>方法,则这个对象会放置在一个叫做<code>F-Queue</code>的队列之中，并在稍后由一个虚拟机自动建立的，低优先级的<code>Finalizer线程</code>去执行它。</li>
+<li>如果这个对象被判定为有必要执行<code>finalize()</code>方法,则这个对象会放置在一个叫做<code>F-Queue</code>的队列之中，并在稍后由一个虚拟机自动建立的，<strong>低优先级的</strong><code>Finalizer线程</code>去执行它。</li>
 </ol>
-<p>如果对象对象要在<code>finalize()</code>中成功拯救自己--只需要重新与引用链上的任何一个对象建立关联即可，GC对<code>F-Queue</code>中对对象进行第二次标记时，会将它移出"即将回收"的集合，否则会被回收</p>
+<p>如果对象要在<code>finalize()</code>中成功拯救自己--只需要重新与引用链上的任何一个对象建立关联即可，GC对<code>F-Queue</code>中对对象进行第二次标记时，会将它移出"即将回收"的集合，否则会被回收</p>
 <ul>
 <li>自救代码</li>
 </ul>
-<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">java7</span><span class="o">;</span>
-
-<span class="cm">/**</span>
+<div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm"> * 此代码说明如下两点：</span>
 <span class="cm"> * 1. 对象可以在GC时自我拯救</span>
 <span class="cm"> * 2. 这种自救的机会只有一次，因为一个对象的`finalize()`方法最多只会被系统自动调用一次</span>
@@ -279,9 +306,11 @@
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="n">FinalizeEscapeGC</span> <span class="n">SAVE_HOOK</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
     <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+
     <span class="kd">public</span> <span class="nf">FinalizeEscapeGC</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
     <span class="o">}</span>
+
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">isAlive</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes, i am still alive&quot;</span><span class="o">);</span>
     <span class="o">}</span>
@@ -293,6 +322,7 @@
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">);</span>
         <span class="n">FinalizeEscapeGC</span><span class="o">.</span><span class="na">SAVE_HOOK</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
     <span class="o">}</span>
+
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
         <span class="n">SAVE_HOOK</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FinalizeEscapeGC</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>
         <span class="c1">// 对象第一次成功拯救自己</span>
@@ -315,6 +345,7 @@
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no, i am dead&quot;</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
+
 <span class="o">}</span>
 </pre></div>
 
@@ -330,7 +361,7 @@ no, i am dead
 
 
 <ul>
-<li>最后，不推荐<code>finalize()</code></li>
+<li>最后，不推荐使用<code>finalize()</code></li>
 </ul>
 <h2 id="_8">回收方法区</h2>
 <p>堆中，新生代进行一次垃圾收集一般可以回收70%-95%的空间，而永久代的垃圾收集效率远低于此。</p>
@@ -350,6 +381,12 @@ no, i am dead
 <li>可能导致引用关系变化，或者说OopMap内容变化的指令特别多，如果为每一条指令都生成对应的OopMap，那将会需要大量的额外空间，这样GC的空间成本将会变得很高</li>
 </ul>
 <p>实际上，HotSpot没有为每条指令都生成<code>oopMap</code>, 安全点(<code>Sagepoint</code>) GC， 选举以"是否具有让程序长时间执行的特征"为标准进行选定，如方法调用，循环跳转，异常跳转等，这些功能的指令会产生安全点</p>
+<h3 id="stop-the-world">stop the world</h3>
+<p><a href="https://www.cubrid.org/blog/understanding-java-garbage-collection" target="_blank">参考文章</a></p>
+<div class="hlcode"><pre><span class="n">There</span> <span class="n">is</span> <span class="n">a</span> <span class="n">term</span> <span class="n">that</span> <span class="n">you</span> <span class="n">should</span> <span class="n">know</span> <span class="n">before</span> <span class="n">learning</span> <span class="n">about</span> <span class="n">GC</span><span class="o">.</span> <span class="n">The</span> <span class="n">term</span> <span class="n">is</span> <span class="s">&quot;stop-the-world.&quot;</span> <span class="n">Stop</span><span class="o">-</span><span class="n">the</span><span class="o">-</span><span class="n">world</span> <span class="n">will</span> <span class="n">occur</span> <span class="n">no</span> <span class="n">matter</span> <span class="n">which</span> <span class="n">GC</span> <span class="n">algorithm</span> <span class="n">you</span> <span class="n">choose</span><span class="o">.</span> <span class="n">Stop</span><span class="o">-</span><span class="n">the</span><span class="o">-</span><span class="n">world</span> <span class="n">means</span> <span class="n">that</span> <span class="n">the</span> <span class="n">JVM</span> <span class="n">is</span> <span class="n">stopping</span> <span class="n">the</span> <span class="n">application</span> <span class="n">from</span> <span class="n">running</span> <span class="n">to</span> <span class="n">execute</span> <span class="n">a</span> <span class="n">GC</span><span class="o">.</span> <span class="n">When</span> <span class="n">stop</span><span class="o">-</span><span class="n">the</span><span class="o">-</span><span class="n">world</span> <span class="n">occurs</span><span class="o">,</span> <span class="n">every</span> <span class="n">thread</span> <span class="n">except</span> <span class="k">for</span> <span class="n">the</span> <span class="n">threads</span> <span class="n">needed</span> <span class="k">for</span> <span class="n">the</span> <span class="n">GC</span> <span class="n">will</span> <span class="n">stop</span> <span class="n">their</span> <span class="n">tasks</span><span class="o">.</span> <span class="n">The</span> <span class="n">interrupted</span> <span class="n">tasks</span> <span class="n">will</span> <span class="n">resume</span> <span class="n">only</span> <span class="n">after</span> <span class="n">the</span> <span class="n">GC</span> <span class="n">task</span> <span class="n">has</span> <span class="n">completed</span><span class="o">.</span> <span class="n">GC</span> <span class="n">tuning</span> <span class="n">often</span> <span class="n">means</span> <span class="n">reducing</span> <span class="k">this</span> <span class="n">stop</span><span class="o">-</span><span class="n">the</span><span class="o">-</span><span class="n">world</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+
+
 <h1 id="_9">收集器</h1>
 <p>垃圾收集器，并发&amp;并行</p>
 <ul>
@@ -357,48 +394,89 @@ no, i am dead
 <p>并行(Parallel)： 指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态</p>
 </li>
 <li>
-<p>并发(Concurrent): 只用户线程与垃圾收集线程同时执行（但不一定是并行但，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上</p>
+<p>并发(Concurrent): 只用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上</p>
 </li>
 </ul>
+<h2 id="_10">几中常见的垃圾回收方式</h2>
+<p><a href="https://blog.csdn.net/qq_26437925/article/details/53728388" target="_blank">https://blog.csdn.net/qq_26437925/article/details/53728388</a></p>
+<p>Java垃圾回收的依据/假设</p>
+<ul>
+<li>Most objects soon become unreachable.</li>
+<li>References from old objects to young objects only exist in small numbers.</li>
+</ul>
 <h2 id="cmsconcurrent-mark-sweep">CMS(Concurrent Mark Sweep)</h2>
+<p><a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html">参考文档地址</a></p>
+<p>The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses and that can afford to share processor resources with the garbage collector while the application is running.</p>
 <ul>
 <li>并发收集，低停顿</li>
 </ul>
-<p>一种以获取最短回收停顿时间为目标但收集器：希望系统停顿时间最短，给用户带来较好但体验，4个步骤如下：</p>
+<p>一种以获取<strong>最短回收停顿时间为目标</strong>的收集器(以牺牲了吞吐量为代价)：希望系统停顿时间最短，给用户带来较好但体验，4个步骤如下：</p>
 <ol>
-<li>初始标记（CMS initial mark）</li>
+<li>初始标记（CMS initial mark）需要:"Stop The World"</li>
+</ol>
+<p>这个过程从垃圾回收的"根对象"开始，只扫描到能够和"根对象"直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。</p>
+<ol>
 <li>并发标记（CMS concurrent mark）</li>
-<li>重新标记（CMS remark）</li>
+</ol>
+<p>这个阶段紧随初始标记阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。</p>
+<ol>
+<li>重新标记（CMS remark）需要:"Stop The World"</li>
+</ol>
+<p>这个阶段会暂停虚拟机，收集器线程扫描在CMS堆中剩余的对象。扫描从"根对象"开始向下追溯，并处理对象关联。</p>
+<ol>
 <li>并发清除（CMS concurrent sweep）</li>
 </ol>
-<p>1,3两个步骤仍需要"Stop The World"</p>
+<p>清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行</p>
 <ul>
 <li>
 <p>缺点</p>
 </li>
 <li>
-<p>CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做对事情就是在并发标记和并发清除的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）</p>
+<p>CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做对事情就是在并发标记和并发清除的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）</p>
 </li>
 <li>
-<p>CMS处理器无法处理浮动垃圾（Floating Garbage）。由于CMS在并发清理阶段有用户线程还在运行这，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法再当次手机中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"，因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。</p>
+<p>CMS处理器无法处理浮动垃圾（Floating Garbage）。由于CMS在并发清除阶段<strong>有用户线程还在运行着</strong>，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"，因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。</p>
 </li>
 <li>
-<p>CMS是基于"标记--清除"算法实现的，所以在收集结束的时候会有大量的<code>空间碎片</code>产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发 full gc。</p>
+<p>CMS是基于(<code>mark-sweep</code>)"标记--清除"算法实现的，所以在收集结束的时候会有大量的<code>空间碎片</code>产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发<code>full gc</code>。</p>
 </li>
 </ul>
 <p>为了解决这个问题，CMS提供了一个开关参数（<code>-XX: UseCMSCompactAtFullCollection</code>），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(<code>-XX: CMSFullGCsBeforeCompaction</code>)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）</p>
 <h2 id="g1garbage-first">G1(Garbage First)</h2>
-<h3 id="_10">参考学习文档</h3>
+<h3 id="_11">参考学习文档</h3>
 <p>参考学习1: <a target='_blank' href='https://tech.meituan.com/2016/09/23/g1.html'>美团技术文章</a></p>
 <p>参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document</a></p>
 <p>参考学习3: <a target='_blank' href='https://blogs.oracle.com/poonam/understanding-g1-gc-logs'>g1 log</a></p>
-<h3 id="g1">G1 内存区域分布图和概念介绍</h3>
+<h3 id="g1">G1设计理念</h3>
+<ul>
+<li>
+<p>Can operate concurrently with applications threads like the CMS collector.<br />
+（能够像CMS收集器一样跟应用线程并发的去执行。【CMS本身就是一个并发的收集器，也就是GC线程与应用线程可以同时间执行】）</p>
+</li>
+<li>
+<p>Compact free space without lengthy GC induced pause times.<br />
+（可以压缩可用的空间，而不会让GC引起暂停时间过长。）</p>
+</li>
+<li>
+<p>Need more predictable GC pause durations.<br />
+（需要更多的可预测的GC暂停的间隔。【也就是说GC暂停的时间会尽量往我们设置的暂时时间来靠】）</p>
+</li>
+<li>
+<p>Do not want to sacrifice a lot of throughput performance.<br />
+（不想牺牲大量吞吐性能。）</p>
+</li>
+<li>
+<p>Do not require a much larger Java heap.<br />
+（不想需要大量Java的堆空间。）</p>
+</li>
+</ul>
+<h3 id="g1_1">G1 内存区域分布图和概念介绍</h3>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png" /></p>
 <ul>
 <li>Humongous区域：如果一个对象占用的空间超过了分区容量(<code>region size</code>)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在老年代</li>
 </ul>
 <p>When performing garbage collections, G1 operates in a manner similar to the CMS collector. G1 performs a concurrent global marking phase to determine the liveness of objects throughout the heap. After the mark phase completes, G1 knows which regions are mostly empty. It collects in these regions first, which usually yields a large amount of free space. This is why this method of garbage collection is called Garbage-First.</p>
-<h3 id="g1_1">G1 常用参数</h3>
+<h3 id="g1_2">G1 常用参数</h3>
 <table>
 <thead>
 <tr>
@@ -490,16 +568,16 @@ no, i am dead
 </tr>
 </tbody>
 </table>
-<h5 id="initial-marking-phase">Initial Marking Phase</h5>
+<h5 id="initial-marking-phasestop-the-world">Initial Marking Phase(初始标记，stop the world)</h5>
 <p>Initial marking of live object is piggybacked on a young generation garbage collection.(标记存活对象)</p>
 <p>gc log: <code>(young) (initial-mark)</code></p>
-<h5 id="concurrent-marking-phase">Concurrent Marking Phase</h5>
+<h5 id="concurrent-marking-phase">Concurrent Marking Phase（并发标记，与用户线程并发执行）</h5>
 <p>If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.<br />
 （空区域会立刻被标记，这个阶段会计算存活对象）</p>
-<h5 id="remark-phase">Remark Phase</h5>
+<h5 id="remark-phasestop-the-world-cpu">Remark Phase（最终标记，stop the world, CPU停顿处理垃圾）</h5>
 <p>Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.<br />
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）</p>
-<h5 id="copyingcleanup-phase">Copying/Cleanup Phase</h5>
+<h5 id="copyingcleanup-phasestop-the-worldgc">Copying/Cleanup Phase（清理一些内存块，stop the world，根据用户期望的GC停顿时间回收）</h5>
 <p>G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.</p>
 <p>（the lowest "liveness"有限被清理调）</p>
 <p>（<code>yong gc</code>和<code>mixed gc</code>会同时进行）</p>
@@ -538,7 +616,11 @@ no, i am dead
 </ul>
 </li>
 </ul>
-<h2 id="_11">内存分配与回收策略(理论基础)</h2>
+<h3 id="g1_3">G1的优势（为什么能够设置一个停留时间）</h3>
+<p>G1的另一个显著特点他能够让用户设置应用的暂停时间，为什么G1能做到这一点呢？也许你已经注意到了，G1是<strong>选择一些内存块，而不是整个代的内存来回收</strong>，这是G1跟其它GC非常不同的一点，其它GC每次回收都会回收整个Generation的内存(Eden, Old), 而回收内存所需的时间就取决于内存的大小，以及实际垃圾的多少，所以垃圾回收时间是不可控的；而G1每次并不会回收整代内存，到底回收多少内存就看用户配置的暂停时间，配置的时间短就少回收点，配置的时间长就多回收点，伸缩自如。</p>
+<p>由于内存被分成了很多小块，又带来了另外好处，由于内存块比较小，进行内存压缩整理的代价都比较小，相比其它GC算法，可以有效的规避内存碎片的问题。</p>
+<p>G1的思想，感觉有点像Java<code>CocurrentHashMap</code>，将一个大的分成若干个Region，然后再处理</p>
+<h2 id="_12">内存分配与回收策略(理论基础)</h2>
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
 <h4 id="minor-gcyong-gc">minor gc(yong gc)</h4>
@@ -667,7 +749,7 @@ Heap
 </tr>
 </tbody>
 </table>
-<h4 id="_12">参考</h4>
+<h4 id="_13">参考</h4>
 <p>JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html'>参考博文链接</a></p>
 <ul>
 <li>[PSYoungGen: 7698K-&gt;448K(9216K)]<ol>
@@ -680,15 +762,15 @@ Heap
 </ol>
 </li>
 </ul>
-<h3 id="_13">大对象直接进入老年代</h3>
+<h3 id="_14">大对象直接进入老年代</h3>
 <p>这里所谓的大对象是指，需要大量连续内存空间的Java对象，，最典型的大对象就是那种很长的字符串以及数组。大对象对虚拟机的内存分配来说就是一个坏消息。（更坏的：一群"朝生夕灭"的"短命大对象"），经常出现大对象容易导致内存还有不少空间时就提前触发垃圾收集以获取足够的连续空间来"安置"它们</p>
 <p><code>-XX:PretenureSizeThreshold</code>参数，另大于这个设置值的对象直接在老年代分配。这样做的目的是避免在Eden区以及两个Survivor区之间发生大量的内存复制(复习一下：新生代采用复制算法收集内存)</p>
-<h3 id="_14">长期存活的对象将进入老年代</h3>
+<h3 id="_15">长期存活的对象将进入老年代</h3>
 <p>内存回收时，必须识别哪些对象应该在新生代，哪些对象应放到老年代。</p>
 <p>虚拟机给每个对象定义了一个对象年龄(<code>Age</code>)计数器。如果对象在<code>Eden</code>出生并经历过第一次<code>Minor GC</code>后仍然存活，并且能被<code>Survivor</code>容纳的话，将被移动到<code>Survivor</code>空间,并且对象的年龄为1.对象在<code>Survivor</code>区中每"熬过"一次<code>Minor GC</code>，年龄就增加1岁，当他的年龄增加到一定程度（默认15岁），就将会被晋升到老年代中。对象晋升老年代的年龄阈值，可以通过参数<code>-XX:MaxTenuringThreshold</code>设置</p>
-<h3 id="_15">动态对象的年龄判定</h3>
+<h3 id="_16">动态对象的年龄判定</h3>
 <p>为了更好地适应不同程序的内存状况，虚拟机并不是永远地要求对象的年龄必须达到了<code>MaxTenuringThreshold</code>才能晋升老年代，如果在<code>Survivor</code>空间中相同年龄所有对象大小的总和大于<code>Survivor</code>空间的一半，年龄大于或等于该年龄对象就可以直接进入老年代，无须等到<code>MaxTenuringThreshold</code>要求的年龄。</p>
-<h3 id="_16">空间分配担保</h3>
+<h3 id="_17">空间分配担保</h3>
 <p>老年代最大可用的连续空间 &gt; 新生代所有对象总空间, 这样能确保<code>Minor GC</code>是安全的。</p>
 <p>如果不成立，虚拟机会查看<code>HandlerPromotionFailure</code>设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</p>
 <p>如果大于，将尝试着进行一次<code>Minor GC</code>,尽管这次的<code>Minor GC</code>是有风险的</p>
@@ -718,8 +800,6 @@ Heap
 </li>
 </ul>
 <h2 id="g1-cms">G1 和 CMS</h2>
-<p>参考1: http://www.woowen.com/java/2016/12/10/G1%20CMS%E5%8C%BA%E5%88%AB/</p>
-<p>参考2: https://www.jianshu.com/p/35cd012eeb8c</p>
 <ol>
 <li>
 <p>G1 和 CMS 堆空间分配不同</p>
@@ -929,7 +1009,7 @@ Heap
 <p>是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余与Serial收集器完全一样</p>
 <h3 id="cms">(三) CMS收集器</h3>
 <p>CMS收集器在Minor GC时会暂停所有的应用线程，并以多线程的方式进行垃圾回收。在Full GC时不再暂停应用线程，而是使用若干个后台线程定期的对老年代空间进行扫描，及时回收其中不再使用的对象</p>
-<h3 id="g1_2">(四) G1</h3>
+<h3 id="g1_4">(四) G1</h3>
 <p>G1收集器（或者垃圾优先收集器）的设计初衷是为了尽量缩短处理超大堆（大于4GB）时产生的停顿。相对于CMS的优势而言是内存碎片的产生率大大降低</p>
 <div class="hlcode"><pre><span class="n">Java</span> <span class="nf">HotSpot</span><span class="o">(</span><span class="n">TM</span><span class="o">)</span> <span class="mi">64</span><span class="o">-</span><span class="n">Bit</span> <span class="n">Server</span> <span class="n">VM</span> <span class="o">(</span><span class="mf">25.171</span><span class="o">-</span><span class="n">b11</span><span class="o">)</span> <span class="k">for</span> <span class="n">bsd</span><span class="o">-</span><span class="n">amd64</span> <span class="n">JRE</span> <span class="o">(</span><span class="mf">1.8</span><span class="o">.</span><span class="mi">0</span><span class="n">_171</span><span class="o">-</span><span class="n">b11</span><span class="o">),</span> <span class="n">built</span> <span class="n">on</span> <span class="n">Mar</span> <span class="mi">28</span> <span class="mi">2018</span> <span class="mi">12</span><span class="o">:</span><span class="mi">50</span><span class="o">:</span><span class="mi">57</span> <span class="n">by</span> <span class="s">&quot;java_re&quot;</span> <span class="n">with</span> <span class="n">gcc</span> <span class="mf">4.2</span><span class="o">.</span><span class="mi">1</span> <span class="o">(</span><span class="n">Based</span> <span class="n">on</span> <span class="n">Apple</span> <span class="n">Inc</span><span class="o">.</span> <span class="n">build</span> <span class="mi">5658</span><span class="o">)</span> <span class="o">(</span><span class="n">LLVM</span> <span class="n">build</span> <span class="mf">2336.11</span><span class="o">.</span><span class="mi">00</span><span class="o">)</span>
 <span class="nl">Memory:</span> <span class="mi">4</span><span class="n">k</span> <span class="n">page</span><span class="o">,</span> <span class="n">physical</span> <span class="mi">16777216</span><span class="n">k</span><span class="o">(</span><span class="mi">1978920</span><span class="n">k</span> <span class="n">free</span><span class="o">)</span>
@@ -978,12 +1058,274 @@ Heap
  <span class="n">Metaspace</span>       <span class="n">used</span> <span class="mi">3342</span><span class="n">K</span><span class="o">,</span> <span class="n">capacity</span> <span class="mi">4500</span><span class="n">K</span><span class="o">,</span> <span class="n">committed</span> <span class="mi">4864</span><span class="n">K</span><span class="o">,</span> <span class="n">reserved</span> <span class="mi">1056768</span><span class="n">K</span>
   <span class="kd">class</span> <span class="nc">space</span>    <span class="n">used</span> <span class="mi">371</span><span class="n">K</span><span class="o">,</span> <span class="n">capacity</span> <span class="mi">388</span><span class="n">K</span><span class="o">,</span> <span class="n">committed</span> <span class="mi">512</span><span class="n">K</span><span class="o">,</span> <span class="n">reserved</span> <span class="mi">1048576</span><span class="n">K</span>
 </pre></div>
+
+
+<h1 id="_18">堆外内存</h1>
+<h2 id="_19">问题</h2>
+<p><code>metaspace</code>没有限制，堆内存使用正常(没有<code>full gc</code>)，然后遇到<code>OOMKilled(程序因为内存使用超过限额被 kill -9 杀掉)</code></p>
+<h2 id="_20">概念</h2>
+<p>除了堆内存，Java 还可以使用堆外内存，也称直接内存（Direct Memory）。</p>
+<p>例如：在通信中，将存在于堆内存中的数据 flush 到远程时，需要首先将堆内存中的数据拷贝到堆外内存中，然后再写入 Socket 中；如果直接将数据存到堆外内存中就可以避免上述拷贝操作，提升性能。类似的例子还有读写文件。</p>
+<p>很多 NIO 框架 （如 netty，rpc） 会采用 Java 的 DirectByteBuffer 类来操作堆外内存，DirectByteBuffer 类对象本身位于 Java 内存模型的堆中，由 JVM 直接管控、操纵。DirectByteBuffer 中用于分配堆外内存的方法 unsafe.allocateMemory(size) 是个 native 方法，本质上是用 C 的 malloc 来进行分配的。</p>
+<p><strong>堆外内存并不直接控制于JVM，因此只能等到full GC的时候才能垃圾回收！</strong>（direct buffer归属的的JAVA对象是在堆上且能够被GC回收的，一旦它被回收，JVM将释放direct buffer的堆外空间。前提是没有关闭DisableExplicitGC）。堆外内存包含线程栈，应用程序代码，NIO缓存，JNI调用等.例如<code>ByteBuffer bb = ByteBuffer.allocateDirect(1024)</code>，这段代码的执行会在堆外占用<code>1k</code>的内存，Java堆内只会占用一个对象的指针引用的大小，堆外的这1k的空间只有当bb对象被回收时，才会被回收，这里会发现一个明显的不对称现象，就是堆外可能占用了很多，而堆内没占用多少，导致还没触发GC，那就很容易出现<strong>Direct Memory造成物理内存耗光</strong></p>
+<h3 id="_21">堆外内存溢出</h3>
+<ol>
+<li>最大的堆外内存设置的太小了</li>
+<li>没有full gc， 堆外内存没有及时被清理掉</li>
+</ol>
+<h3 id="_22">堆外内存更适合</h3>
+<ul>
+<li>存储生命周期长的对象</li>
+<li>可以在进程间可以共享，减少 JVM 间的对象复制，使得 JVM 的分割部署更容易实现</li>
+<li>本地缓存，减少磁盘缓存或者分布式缓存的响应时间</li>
+</ul>
+<h1 id="java_1">java 内存区域和内存溢出异常演练测试</h1>
+<h2 id="outofmemoryerror">OutOfMemoryError</h2>
+<p>java vm参数</p>
+<ul>
+<li>-Xms20M</li>
+</ul>
+<p>表示设置<code>堆容量的最小值</code>为20M，必须以M为单位</p>
+<ul>
+<li>-Xmx20M</li>
+</ul>
+<p>表示设置堆容量的最大值为20M，必须以M为单位。将-Xmx和-Xms设置为一样可以避免堆自动扩展。</p>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">java7</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 参数设置：-verbose:gc -Xms20M -Xmx20M -XX:+HeapDumpOnOutOfMemoryError</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/2/20 11:05 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HeapOOM</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">OOMObject</span><span class="o">{</span>
+
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">OOMObject</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="mi">16</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">OOMObject</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="o">[</span><span class="n">GC</span> <span class="mi">5499</span><span class="n">K</span><span class="o">-&gt;</span><span class="mi">3757</span><span class="n">K</span><span class="o">(</span><span class="mi">20480</span><span class="n">K</span><span class="o">),</span> <span class="mf">0.0069130</span> <span class="n">secs</span><span class="o">]</span>
+<span class="o">[</span><span class="n">GC</span> <span class="mi">9901</span><span class="n">K</span><span class="o">-&gt;</span><span class="mi">8805</span><span class="n">K</span><span class="o">(</span><span class="mi">20480</span><span class="n">K</span><span class="o">),</span> <span class="mf">0.0089900</span> <span class="n">secs</span><span class="o">]</span>
+<span class="o">[</span><span class="n">Full</span> <span class="n">GC</span> <span class="mi">18460</span><span class="n">K</span><span class="o">-&gt;</span><span class="mi">13805</span><span class="n">K</span><span class="o">(</span><span class="mi">20480</span><span class="n">K</span><span class="o">),</span> <span class="mf">0.1417260</span> <span class="n">secs</span><span class="o">]</span>
+<span class="o">[</span><span class="n">Full</span> <span class="n">GC</span> <span class="mi">17849</span><span class="n">K</span><span class="o">-&gt;</span><span class="mi">17803</span><span class="n">K</span><span class="o">(</span><span class="mi">20480</span><span class="n">K</span><span class="o">),</span> <span class="mf">0.1140610</span> <span class="n">secs</span><span class="o">]</span>
+<span class="o">[</span><span class="n">Full</span> <span class="n">GC</span> <span class="mi">17803</span><span class="n">K</span><span class="o">-&gt;</span><span class="mi">17791</span><span class="n">K</span><span class="o">(</span><span class="mi">20480</span><span class="n">K</span><span class="o">),</span> <span class="mf">0.0981060</span> <span class="n">secs</span><span class="o">]</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">OutOfMemoryError</span><span class="o">:</span> <span class="n">Java</span> <span class="n">heap</span> <span class="n">space</span>
+<span class="n">Dumping</span> <span class="n">heap</span> <span class="n">to</span> <span class="n">java_pid42185</span><span class="o">.</span><span class="na">hprof</span> <span class="o">...</span>
+<span class="n">Heap</span> <span class="n">dump</span> <span class="n">file</span> <span class="n">created</span> <span class="o">[</span><span class="mi">30470683</span> <span class="n">bytes</span> <span class="n">in</span> <span class="mf">0.161</span> <span class="n">secs</span><span class="o">]</span>
+<span class="n">Exception</span> <span class="n">in</span> <span class="n">thread</span> <span class="s">&quot;main&quot;</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">OutOfMemoryError</span><span class="o">:</span> <span class="n">Java</span> <span class="n">heap</span> <span class="n">space</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">2245</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">2219</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">ArrayList</span><span class="o">.</span><span class="na">grow</span><span class="o">(</span><span class="n">ArrayList</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">242</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">ArrayList</span><span class="o">.</span><span class="na">ensureExplicitCapacity</span><span class="o">(</span><span class="n">ArrayList</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">216</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">ArrayList</span><span class="o">.</span><span class="na">ensureCapacityInternal</span><span class="o">(</span><span class="n">ArrayList</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">208</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">ArrayList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">ArrayList</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">440</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">HeapOOM</span><span class="o">.</span><span class="na">main</span><span class="o">(</span><span class="n">HeapOOM</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">17</span><span class="o">)</span>
+</pre></div>
+
+
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/stream_operate.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/oom_analyse.png" /></p>
+<ul>
+<li>
+<p>Shallow heap是一个对象消费的内存数量。每个对象的引用需要32（或者64 bits，基于CPU架构）。</p>
+</li>
+<li>
+<p>Retained Heap显示的是那些当垃圾回收时候会清理的所有对象的Shallow Heap的总和。</p>
+</li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/histogram.png" /></p>
+<ul>
+<li>
+<p>参考</p>
+</li>
+<li>
+<p>《Java 虚拟机》（第二版）</p>
+</li>
+<li>
+<p>https://www.cnblogs.com/cnmenglang/p/6261435.html</p>
+</li>
+<li>
+<p>https://www.jianshu.com/p/759e02c1feee</p>
+</li>
+</ul>
+<h2 id="_23">虚拟机栈和本地方法栈溢出</h2>
+<ul>
+<li>
+<p>Java程序中，每个线程都有自己的Stack Space(堆栈)。</p>
+</li>
+<li>
+<p>-Xss128k：</p>
+</li>
+</ul>
+<p>设置每个线程的堆栈大小。JDK5.0以后每个线程堆 栈大小为1M，以前每个线程堆栈大小为256K。根据应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右</p>
+<p>Stack Space用来做方法的递归调用时压入Stack Frame(栈帧)。所以当递归调用太深的时候，就有可能耗尽Stack Space，爆出StackOverflow的错误。</p>
+<ul>
+<li>code</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">java7</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 参数设置：-Xss160k</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/2/20 11:05 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">JavaVMStackSOF</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">stackLength</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">stackLeak</span><span class="o">(){</span>
+        <span class="n">stackLength</span> <span class="o">++;</span>
+        <span class="n">stackLeak</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+       <span class="n">JavaVMStackSOF</span> <span class="n">javaVMStackSOF</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JavaVMStackSOF</span><span class="o">();</span>
+       <span class="k">try</span><span class="o">{</span>
+           <span class="n">javaVMStackSOF</span><span class="o">.</span><span class="na">stackLeak</span><span class="o">();</span>
+       <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">){</span>
+           <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;stackLength:&quot;</span> <span class="o">+</span> <span class="n">javaVMStackSOF</span><span class="o">.</span><span class="na">stackLength</span><span class="o">);</span>
+           <span class="k">throw</span> <span class="n">e</span><span class="o">;</span>
+       <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>output</p>
+<div class="hlcode"><pre><span class="nl">stackLength:</span><span class="mi">774</span>
+<span class="n">Exception</span> <span class="n">in</span> <span class="n">thread</span> <span class="s">&quot;main&quot;</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">StackOverflowError</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">JavaVMStackSOF</span><span class="o">.</span><span class="na">stackLeak</span><span class="o">(</span><span class="n">JavaVMStackSOF</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">10</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">JavaVMStackSOF</span><span class="o">.</span><span class="na">stackLeak</span><span class="o">(</span><span class="n">JavaVMStackSOF</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">11</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">JavaVMStackSOF</span><span class="o">.</span><span class="na">stackLeak</span><span class="o">(</span><span class="n">JavaVMStackSOF</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">11</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">JavaVMStackSOF</span><span class="o">.</span><span class="na">stackLeak</span><span class="o">(</span><span class="n">JavaVMStackSOF</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">11</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">JavaVMStackSOF</span><span class="o">.</span><span class="na">stackLeak</span><span class="o">(</span><span class="n">JavaVMStackSOF</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">11</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">JavaVMStackSOF</span><span class="o">.</span><span class="na">stackLeak</span><span class="o">(</span><span class="n">JavaVMStackSOF</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">11</span><span class="o">)</span>
+</pre></div>
+
+
+<p>参考：</p>
+<ol>
+<li>https://blog.csdn.net/z69183787/article/details/79228215</li>
+</ol>
+<h2 id="_24">方法区和运行时常量池溢出</h2>
+<p>方法区用于存放Class的相关信息，如：类名，访问修饰符，常量池，字符描述，方法描述等。对于这个区域的测试，基本思路是运行时产生大量的类去填满方法区，直到溢出。</p>
+<ul>
+<li>
+<p>Java7中</p>
+</li>
+<li>
+<p>Java7 永久代仍存在；对比java6，其中：符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。</p>
+</li>
+</ul>
+<h3 id="java7-javalangoutofmemoryerror-java-heap-space">Java7 常量池 仍是<code>java.lang.OutOfMemoryError: Java heap space</code></h3>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">java7</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * VM args: -XX:PermSize=10M -XX:MaxPermSize=10M</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">JavaMethodAreaOOM</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * 在JDK1.6中，intern()方法会把首次遇到的字符串复制到永久代中，</span>
+<span class="cm">     * 返回的也是永久代中这个字符串的引用，</span>
+<span class="cm">     * 而由StringBuilder创建的字符串实例在Java堆中，所以必然不是同一个引用，将返回false。</span>
+<span class="cm">     * </span>
+<span class="cm">     * 而JDK1.7(以及部分其他虚拟机，例如JRockit)的intern()实现不会再复制实例，而是在常量池中记录首次出现的实例引用，</span>
+<span class="cm">     * 因此intern()返回的引用和由StringBuilder创建的那个字符串是同一个。</span>
+<span class="cm">     */</span>
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testStringIntern</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;计算机&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;软件&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str1</span><span class="o">.</span><span class="na">intern</span><span class="o">()</span> <span class="o">==</span> <span class="n">str1</span><span class="o">);</span> <span class="c1">// true</span>
+
+        <span class="n">String</span> <span class="n">str2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;ja&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;va&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str2</span><span class="o">.</span><span class="na">intern</span><span class="o">()</span> <span class="o">==</span> <span class="n">str2</span><span class="o">);</span> <span class="c1">// false</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">String</span>  <span class="n">base</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+        <span class="c1">// 不断生成字符串常量</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="n">base</span><span class="o">;</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
+            <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">str</span><span class="o">.</span><span class="na">intern</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">Exception</span> <span class="n">in</span> <span class="n">thread</span> <span class="s">&quot;main&quot;</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">OutOfMemoryError</span><span class="o">:</span> <span class="n">Java</span> <span class="n">heap</span> <span class="n">space</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">2367</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">AbstractStringBuilder</span><span class="o">.</span><span class="na">expandCapacity</span><span class="o">(</span><span class="n">AbstractStringBuilder</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">130</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">AbstractStringBuilder</span><span class="o">.</span><span class="na">ensureCapacityInternal</span><span class="o">(</span><span class="n">AbstractStringBuilder</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">114</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">AbstractStringBuilder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">AbstractStringBuilder</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">415</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">StringBuilder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">StringBuilder</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">132</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">JavaMethodAreaOOM</span><span class="o">.</span><span class="na">main</span><span class="o">(</span><span class="n">JavaMethodAreaOOM</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">31</span>
+</pre></div>
+
+
+<p>参考：</p>
+<ol>
+<li>https://blog.csdn.net/tlk20071/article/details/77841841</li>
+</ol>
+<h2 id="_25">直接内存溢出</h2>
+<p>NIO的Buffer提供了一个可以不经过JVM内存直接访问系统物理内存的类——DirectBuffer。DirectBuffer类继承自ByteBuffer，但和普通的ByteBuffer不同，普通的ByteBuffer仍在JVM堆上分配内存，其最大内存受到最大堆内存的限制；而DirectBuffer直接分配在物理内存中，并不占用堆空间，其可申请的最大内存受操作系统限制。</p>
+<p>直接内存的读写操作比普通Buffer快，但它的创建、销毁比普通Buffer慢。</p>
+<p>因此直接内存使用于需要大内存空间且频繁访问的场合，不适用于频繁申请释放内存的场合。</p>
+<ul>
+<li><code>-XX:MaxDirectMemorySize</code>，该值是有上限的，默认是64M，最大为<code>sun.misc.VM.maxDirectMemory()</code>，此参数的含义是当Direct ByteBuffer分配的堆外内存到达指定大小后，即触发Full GC</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">java7</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.nio.ByteBuffer</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 参数设置：-verbose:-Xmx20M -XX:MaxDirectMemorySize=10M</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2019/2/20 11:05 PM</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DirectMemoryOOM</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">_1MB</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocateDirect</span><span class="o">(</span><span class="mi">11</span> <span class="o">*</span> <span class="n">_1MB</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>output</li>
+</ul>
+<div class="hlcode"><pre><span class="n">Exception</span> <span class="n">in</span> <span class="n">thread</span> <span class="s">&quot;main&quot;</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">OutOfMemoryError</span><span class="o">:</span> <span class="n">Direct</span> <span class="n">buffer</span> <span class="n">memory</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">nio</span><span class="o">.</span><span class="na">Bits</span><span class="o">.</span><span class="na">reserveMemory</span><span class="o">(</span><span class="n">Bits</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">658</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">nio</span><span class="o">.</span><span class="na">DirectByteBuffer</span><span class="o">.&lt;</span><span class="n">init</span><span class="o">&gt;(</span><span class="n">DirectByteBuffer</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">123</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">nio</span><span class="o">.</span><span class="na">ByteBuffer</span><span class="o">.</span><span class="na">allocateDirect</span><span class="o">(</span><span class="n">ByteBuffer</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">306</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java7</span><span class="o">.</span><span class="na">DirectMemoryOOM</span><span class="o">.</span><span class="na">main</span><span class="o">(</span><span class="n">DirectMemoryOOM</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">14</span><span class="o">)</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 

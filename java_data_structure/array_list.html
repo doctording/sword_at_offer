@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Java8 ArrayList & LinkedList - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_data_structure">java_data_structure</a>&nbsp;&#187;&nbsp;Java8 ArrayList & LinkedList
+    <span class="updated">Page Updated&nbsp;
+      2020-03-08 13:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Java8 ArrayList & LinkedList</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#arraylist">ArrayList （数组，非线程安全）</a><ul>
+<li><a href="#adde-e">add(E e)</a></li>
+<li><a href="#addint-index-e-element">add(int index, E element)</a></li>
+<li><a href="#removeint-index">remove(int index)</a></li>
+</ul>
+</li>
+<li><a href="#linkedlist">LinkedList（链表）</a><ul>
+<li><a href="#adde-e_1">add(E e)</a></li>
+<li><a href="#addint-index-e-element_1">add(int index, E element)</a></li>
+<li><a href="#removeint-index_1">remove(int index)</a></li>
+<li><a href="#get">get 索引</a></li>
+<li><a href="#vector">Vector</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="arraylist">ArrayList （数组，非线程安全）</h1>
+<ul>
+<li>get直接获取<code>O(1)</code></li>
+<li>reemove都要移动元素<code>O(n)</code></li>
+<li>add可能扩容(new，遍历拷贝)，或者是插入(遍历移动)<code>O(n)</code></li>
+</ul>
+<h2 id="adde-e">add(E e)</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">* Appends the specified element to the end of this list.</span>
+<span class="cm">*</span>
+<span class="cm">* @param e element to be appended to this list</span>
+<span class="cm">* @return &lt;tt&gt;true&lt;/tt&gt; (as specified by {@link Collection#add})</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">add</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ensureCapacityInternal</span><span class="o">(</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>  <span class="c1">// Increments modCount!!</span>
+    <span class="n">elementData</span><span class="o">[</span><span class="n">size</span><span class="o">++]</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">ensureCapacityInternal</span><span class="o">(</span><span class="kt">int</span> <span class="n">minCapacity</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ensureExplicitCapacity</span><span class="o">(</span><span class="n">calculateCapacity</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">minCapacity</span><span class="o">));</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">ensureExplicitCapacity</span><span class="o">(</span><span class="kt">int</span> <span class="n">minCapacity</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">modCount</span><span class="o">++;</span>
+
+    <span class="c1">// overflow-conscious code</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">minCapacity</span> <span class="o">-</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="n">grow</span><span class="o">(</span><span class="n">minCapacity</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">grow</span><span class="o">(</span><span class="kt">int</span> <span class="n">minCapacity</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// overflow-conscious code</span>
+    <span class="kt">int</span> <span class="n">oldCapacity</span> <span class="o">=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">newCapacity</span> <span class="o">=</span> <span class="n">oldCapacity</span> <span class="o">+</span> <span class="o">(</span><span class="n">oldCapacity</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">newCapacity</span> <span class="o">-</span> <span class="n">minCapacity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="n">newCapacity</span> <span class="o">=</span> <span class="n">minCapacity</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">newCapacity</span> <span class="o">-</span> <span class="n">MAX_ARRAY_SIZE</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="n">newCapacity</span> <span class="o">=</span> <span class="n">hugeCapacity</span><span class="o">(</span><span class="n">minCapacity</span><span class="o">);</span>
+    <span class="c1">// minCapacity is usually close to size, so this is a win:</span>
+    <span class="n">elementData</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">newCapacity</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>如有扩容，则需new新数组，然后遍历拷贝</li>
+</ul>
+<h2 id="addint-index-e-element">add(int index, E element)</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">* Inserts the specified element at the specified position in this</span>
+<span class="cm">* list. Shifts the element currently at that position (if any) and</span>
+<span class="cm">* any subsequent elements to the right (adds one to their indices).</span>
+<span class="cm">*</span>
+<span class="cm">* @param index index at which the specified element is to be inserted</span>
+<span class="cm">* @param element element to be inserted</span>
+<span class="cm">* @throws IndexOutOfBoundsException {@inheritDoc}</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="n">E</span> <span class="n">element</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">rangeCheckForAdd</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+
+    <span class="n">ensureCapacityInternal</span><span class="o">(</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>  <span class="c1">// Increments modCount!!</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">index</span><span class="o">,</span> <span class="n">elementData</span><span class="o">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span>
+                        <span class="n">size</span> <span class="o">-</span> <span class="n">index</span><span class="o">);</span>
+    <span class="n">elementData</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">;</span>
+    <span class="n">size</span><span class="o">++;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>插入要<code>System.arraycopy</code>移动元素</li>
+</ul>
+<h2 id="removeint-index">remove(int index)</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">* Removes the element at the specified position in this list.</span>
+<span class="cm">* Shifts any subsequent elements to the left (subtracts one from their</span>
+<span class="cm">* indices).</span>
+<span class="cm">*</span>
+<span class="cm">* @param index the index of the element to be removed</span>
+<span class="cm">* @return the element that was removed from the list</span>
+<span class="cm">* @throws IndexOutOfBoundsException {@inheritDoc}</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="n">E</span> <span class="nf">remove</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">rangeCheck</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+
+    <span class="n">modCount</span><span class="o">++;</span>
+    <span class="n">E</span> <span class="n">oldValue</span> <span class="o">=</span> <span class="n">elementData</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+
+    <span class="kt">int</span> <span class="n">numMoved</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">numMoved</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">elementData</span><span class="o">,</span> <span class="n">index</span><span class="o">,</span>
+                            <span class="n">numMoved</span><span class="o">);</span>
+    <span class="n">elementData</span><span class="o">[--</span><span class="n">size</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span> <span class="c1">// clear to let GC do its work</span>
+
+    <span class="k">return</span> <span class="n">oldValue</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li><code>System.arraycopy</code>移动元素</li>
+</ul>
+<h1 id="linkedlist">LinkedList（链表）</h1>
+<ul>
+<li>addLast <code>O(1)</code>, 插入要遍历前面的链表元素<code>O(n)</code></li>
+<li>remove <code>O(1)</code></li>
+<li>
+<p>get 遍历<code>O(n)</code></p>
+</li>
+<li>
+<p>双向链表</p>
+</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">extends</span> <span class="n">AbstractSequentialList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
+    <span class="kd">implements</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">Deque</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
+<span class="o">{</span>
+    <span class="kd">transient</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Pointer to first node.</span>
+<span class="cm">     * Invariant: (first == null &amp;&amp; last == null) ||</span>
+<span class="cm">     *            (first.prev == null &amp;&amp; first.item != null)</span>
+<span class="cm">     */</span>
+    <span class="kd">transient</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">first</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Pointer to last node.</span>
+<span class="cm">     * Invariant: (first == null &amp;&amp; last == null) ||</span>
+<span class="cm">     *            (last.next == null &amp;&amp; last.item != null)</span>
+<span class="cm">     */</span>
+    <span class="kd">transient</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">last</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Constructs an empty list.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">LinkedList</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h2 id="adde-e_1">add(E e)</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * Appends the specified element to the end of this list.</span>
+<span class="cm">    *</span>
+<span class="cm">    * &lt;p&gt;This method is equivalent to {@link #addLast}.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @param e element to be appended to this list</span>
+<span class="cm">    * @return {@code true} (as specified by {@link Collection#add})</span>
+<span class="cm">    */</span>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">add</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">linkLast</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="o">}</span>
+
+ <span class="cm">/**</span>
+<span class="cm">    * Links e as last element.</span>
+<span class="cm">    */</span>
+<span class="kt">void</span> <span class="nf">linkLast</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="n">last</span><span class="o">;</span>
+    <span class="kd">final</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">newNode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">&lt;&gt;(</span><span class="n">l</span><span class="o">,</span> <span class="n">e</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="n">newNode</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">l</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="n">newNode</span><span class="o">;</span>
+    <span class="k">else</span>
+        <span class="n">l</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">newNode</span><span class="o">;</span>
+    <span class="n">size</span><span class="o">++;</span>
+    <span class="n">modCount</span><span class="o">++;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="addint-index-e-element_1">add(int index, E element)</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * Inserts the specified element at the specified position in this list.</span>
+<span class="cm">    * Shifts the element currently at that position (if any) and any</span>
+<span class="cm">    * subsequent elements to the right (adds one to their indices).</span>
+<span class="cm">    *</span>
+<span class="cm">    * @param index index at which the specified element is to be inserted</span>
+<span class="cm">    * @param element element to be inserted</span>
+<span class="cm">    * @throws IndexOutOfBoundsException {@inheritDoc}</span>
+<span class="cm">    */</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="n">E</span> <span class="n">element</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">checkPositionIndex</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">==</span> <span class="n">size</span><span class="o">)</span>
+        <span class="n">linkLast</span><span class="o">(</span><span class="n">element</span><span class="o">);</span>
+    <span class="k">else</span>
+        <span class="nf">linkBefore</span><span class="o">(</span><span class="n">element</span><span class="o">,</span> <span class="n">node</span><span class="o">(</span><span class="n">index</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="removeint-index_1">remove(int index)</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * Removes the element at the specified position in this list.  Shifts any</span>
+<span class="cm">    * subsequent elements to the left (subtracts one from their indices).</span>
+<span class="cm">    * Returns the element that was removed from the list.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @param index the index of the element to be removed</span>
+<span class="cm">    * @return the element previously at the specified position</span>
+<span class="cm">    * @throws IndexOutOfBoundsException {@inheritDoc}</span>
+<span class="cm">    */</span>
+<span class="kd">public</span> <span class="n">E</span> <span class="nf">remove</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">checkElementIndex</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+    <span class="k">return</span> <span class="nf">unlink</span><span class="o">(</span><span class="n">node</span><span class="o">(</span><span class="n">index</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * Unlinks non-null node x.</span>
+<span class="cm">    */</span>
+<span class="n">E</span> <span class="nf">unlink</span><span class="o">(</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// assert x != null;</span>
+    <span class="kd">final</span> <span class="n">E</span> <span class="n">element</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">item</span><span class="o">;</span>
+    <span class="kd">final</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">next</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+    <span class="kd">final</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">prev</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">prev</span><span class="o">;</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">prev</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="n">next</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">prev</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">next</span><span class="o">;</span>
+        <span class="n">x</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">next</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">prev</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">next</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">prev</span><span class="o">;</span>
+        <span class="n">x</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="n">x</span><span class="o">.</span><span class="na">item</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="n">size</span><span class="o">--;</span>
+    <span class="n">modCount</span><span class="o">++;</span>
+    <span class="k">return</span> <span class="n">element</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="get">get 索引</h2>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * Returns the (non-null) Node at the specified element index.</span>
+<span class="cm">    */</span>
+<span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="nf">node</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// assert isElementIndex(index);</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="o">(</span><span class="n">size</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">first</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">index</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">last</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">index</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">prev</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>需要遍历链表</li>
+</ul>
+<h2 id="vector">Vector</h2>
+<ul>
+<li>
+<p>Vector使用同步方法实现, synchronizedList使用同步代码块实现</p>
+</li>
+<li>
+<p>ArrayList不可以设置扩展的容量, 默认1.5倍; Vector可以设置, 默认2倍</p>
+</li>
+<li>
+<p>ArrayList无参构造函数中初始量为0; Vector的无参构造函数初始容量为10</p>
+</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

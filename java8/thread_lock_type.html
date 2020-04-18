@@ -27,46 +27,39 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#_1">常见的各种锁</a><ul>
-<li><a href="#cas">CAS 原子操作</a><ul>
-<li><a href="#cas_1">CAS 优缺点</a><ul>
-<li><a href="#_2">性能 和 适用场景</a></li>
-<li><a href="#aba">ABA 问题</a></li>
-<li><a href="#java8-longadder">Java8 LongAdder</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#_3">自旋锁</a></li>
-<li><a href="#reentrantlock">ReentrantLock (可重入锁)</a><ul>
-<li><a href="#_4">公平锁</a></li>
-<li><a href="#_5">非公平锁</a><ul>
+<li><a href="#cas">CAS 原子操作</a></li>
+<li><a href="#_2">自旋锁</a></li>
+<li><a href="#reentrantlock">ReentrantLock (可重入锁，递归锁)</a><ul>
+<li><a href="#_3">公平锁</a></li>
+<li><a href="#_4">非公平锁</a><ul>
 <li><a href="#synchronized-reentrantlock">对比synchronized, ReentrantLock的一些高级功能</a></li>
 </ul>
 </li>
-<li><a href="#_6">锁申请等待限时实际例子</a></li>
+<li><a href="#_5">锁申请等待限时实际例子</a></li>
 </ul>
 </li>
-<li><a href="#_7">读写锁</a><ul>
-<li><a href="#_8">伪代码</a></li>
-<li><a href="#_9">实际例子</a></li>
+<li><a href="#_6">读写锁</a><ul>
+<li><a href="#_7">伪代码</a></li>
+<li><a href="#_8">实际例子</a></li>
 </ul>
 </li>
-<li><a href="#_10">分布式锁</a><ul>
-<li><a href="#_11">什么是分布式锁？</a></li>
-<li><a href="#_12">分布式锁的实现方式</a></li>
+<li><a href="#_9">分布式锁</a><ul>
+<li><a href="#_10">什么是分布式锁</a></li>
+<li><a href="#_11">分布式锁的实现方式</a></li>
 </ul>
 </li>
-<li><a href="#_13">共享锁(读锁) 和 排它锁(写锁)</a><ul>
+<li><a href="#_12">共享锁(读锁) 和 排它锁(写锁)</a><ul>
 <li><a href="#exclusive-locks">Exclusive locks</a></li>
 <li><a href="#shared-locks">Shared locks</a></li>
 </ul>
 </li>
-<li><a href="#_14">偏向锁</a></li>
-<li><a href="#_15">轻量级锁</a></li>
-<li><a href="#_16">重量级锁</a><ul>
-<li><a href="#_17">为什么说重量级锁开销大呢</a></li>
+<li><a href="#_13">偏向锁</a></li>
+<li><a href="#_14">轻量级锁</a></li>
+<li><a href="#_15">重量级锁</a><ul>
+<li><a href="#_16">为什么说重量级锁开销大呢</a></li>
 </ul>
 </li>
+<li><a href="#aqs">AQS</a></li>
 </ul>
 </li>
 </ul>
@@ -79,32 +72,9 @@
 <li><code>synchronized</code>属于<strong>悲观锁</strong>，悲观地认为程序中的并发情况严重，所以严防死守</li>
 <li><code>CAS</code>属于乐观锁，乐观地认为程序中的并发情况不那么严重，所以让线程不断去尝试更新</li>
 </ul>
-<h3 id="cas_1">CAS 优缺点</h3>
-<h4 id="_2">性能 和 适用场景</h4>
-<p>CAS 适合简单对象的操作，比如布尔值、整型值等；<br />
-CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长时间循环会导致 CPU 开销很大；</p>
-<ol>
-<li>
-<p>CPU开销较大<br />
-在并发量比较高的情况下，如果许多线程反复尝试更新某一个变量，却又一直更新不成功，循环往复，会给CPU带来很大的压力。</p>
-</li>
-<li>
-<p>不能保证代码块的原子性</p>
-</li>
-</ol>
-<p>CAS机制所保证的只是一个变量的原子性操作，而不能保证整个代码块的原子性。比如需要保证3个变量共同进行原子性的更新，就不得不使用Synchronized了。</p>
-<p>作者：Flagle<br />
-链接：https://www.jianshu.com/p/ae25eb3cfb5d<br />
-来源：简书<br />
-简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。</p>
-<h4 id="aba">ABA 问题</h4>
-<p>ABA问题的优化</p>
-<p>ABA问题导致的原因，是CAS过程中只简单进行了“值”的校验，再有些情况下，“值”相同不会引入错误的业务逻辑（例如库存），有些情况下，“值”虽然相同，却已经不是原来的数据了。</p>
-<p>CAS不能只比对<strong>值</strong>，还必须确保的是原来的数据，才能修改成功。增加<code>版本号</code>的比对，一个数据一个版本，版本变化，即使值相同，也不应该修改成功。</p>
-<h4 id="java8-longadder">Java8 LongAdder</h4>
-<p>高并发中的分段处理机制，例如：<code>ConcurrengHashMap</code></p>
-<h2 id="_3">自旋锁</h2>
-<p>自旋锁是采用让当前线程不停地的在循环体内执行实现的，当循环的条件被其他线程改变时 才能进入临界区</p>
+<h2 id="_2">自旋锁</h2>
+<p><a href="https://en.wikipedia.org/wiki/Spinlock" target="_blank">Spinlock WikiPedia</a></p>
+<p>自旋锁是采用让当前线程不停地的在循环体内执行实现的，当循环的条件被其他线程改变时，才能进入临界区</p>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm"> * 使用了CAS原子操作，lock函数将owner设置为当前线程，并且预测原来的值为空。unlock函数将owner设置为null，并且预测值为当前线程</span>
 <span class="cm"> *</span>
@@ -112,7 +82,7 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 <span class="cm"> *</span>
 <span class="cm"> */</span>
 <span class="kd">class</span> <span class="nc">SpinLock</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">sign</span> <span class="o">=</span><span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">private</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">sign</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;();</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">lock</span><span class="o">(){</span>
         <span class="n">Thread</span> <span class="n">current</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
         <span class="k">while</span><span class="o">(!</span><span class="n">sign</span> <span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">current</span><span class="o">)){</span>
@@ -167,14 +137,130 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 </pre></div>
 
 
-<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。如果线程竞争不激烈，并且保持锁的时间段，适合使用自旋锁。</p>
-<h2 id="reentrantlock">ReentrantLock (可重入锁)</h2>
+<p>由于自旋锁只是将当前线程不停地执行循环体，<strong>不进行线程状态的改变</strong>，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，<strong>占用CPU时间</strong>。如果线程竞争不激烈，并且保持锁的时间短，则适合使用自旋锁。</p>
+<p>In software engineering, a spinlock is a lock which causes a thread trying to acquire it to simply wait in a loop ("spin") while repeatedly checking if the lock is available. Since the thread remains active but is not performing a useful task, the use of such a lock is a kind of busy waiting. Once acquired, spinlocks will usually be held until they are explicitly released, although in some implementations they may be automatically released if the thread being waited on (the one which holds the lock) blocks, or "goes to sleep".</p>
+<p>Because they avoid overhead from operating system process rescheduling or context switching, spinlocks are efficient if threads are likely to be blocked for only short periods. For this reason, operating-system kernels often use spinlocks. However, spinlocks become wasteful if held for longer durations, as they may prevent other threads from running and require rescheduling. The longer a thread holds a lock, the greater the risk that the thread will be interrupted by the OS scheduler while holding the lock. If this happens, other threads will be left "spinning" (repeatedly trying to acquire the lock), while the thread holding the lock is not making progress towards releasing it. The result is an indefinite postponement until the thread holding the lock can finish and release it. This is especially true on a single-processor system, where each waiting thread of the same priority is likely to waste its quantum (allocated time where a thread can run) spinning until the thread that holds the lock is finally finished.</p>
+<ul>
+<li>线程状态不变，不导致上线文切换，适合短时间自旋</li>
+<li>长时间会耗CPU，影响其它线程的调度</li>
+</ul>
+<h2 id="reentrantlock">ReentrantLock (可重入锁，递归锁)</h2>
 <ul>
 <li>什么是可重入？</li>
 </ul>
 <p>同一个线程可以反复获取锁多次，然后需要释放多次</p>
-<h3 id="_4">公平锁</h3>
-<p>表示线程获取锁的顺序是按照线程加锁的顺序来分配的，即先来先得的FIFO先进先出顺序。</p>
+<p>同一个线程在外层函数获得锁之后，内层递归函数仍能获取该锁的代码，在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁，即：<strong>线程可以进入任何一个它已经拥有的锁所同步的代码块</strong>，防止死锁</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Lock</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Phone</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">sendSMS</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span> <span class="s">&quot;\t invoked sendSMS()&quot;</span><span class="o">);</span>
+        <span class="n">sendEmail</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">sendEmail</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span> <span class="s">&quot;\t #####invoked sendEmail()&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// ==============================================================</span>
+    <span class="cm">/**</span>
+<span class="cm">     *  可重入锁底层原理：公平锁和非公平锁(默认)</span>
+<span class="cm">     *  公平锁：是指多个线程按照申请锁的顺序来获取锁，类似排队打饭，先来后到。</span>
+<span class="cm">     *  非公平锁：是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁</span>
+<span class="cm">     *            在高并发的情况下，有可能会造成优先级反转或者饥饿现象。优点：吞吐量比公平锁大。</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">getd</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">getd</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span> <span class="s">&quot;\t invoked getd()&quot;</span><span class="o">);</span>
+            <span class="n">setd</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">setd</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span> <span class="c1">// 这里注释掉会出现：java.lang.IllegalMonitorStateException，所以锁一定要配对</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()+</span> <span class="s">&quot;\t ### invoked setd()&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @author doinb</span>
+<span class="cm"> * 可重入锁（也叫做递归锁） 作用：避免死锁</span>
+<span class="cm"> *</span>
+<span class="cm"> * 指的是同一线程外层函数获得锁之后，内层函数仍然能获取该锁代码，</span>
+<span class="cm"> * 在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁</span>
+<span class="cm"> *</span>
+<span class="cm"> * 也就是说，线程可以进入任何一个它已经拥有的锁所同步的代码块。</span>
+<span class="cm"> *</span>
+<span class="cm"> *  case 1 Synchronized就是一个典型的可重入锁</span>
+<span class="cm"> * t1    invoked sendSMS()          t1线程在外层方法获取锁的时候</span>
+<span class="cm"> * t1    #####invoked sendEmail()   t1在进入内层方法会自动获取锁</span>
+<span class="cm"> * t2    invoked sendSMS()</span>
+<span class="cm"> * t2    #####invoked sendEmail()</span>
+<span class="cm"> *</span>
+<span class="cm"> *  case 2 ReentrantLock也是一个典型的可重入锁</span>
+<span class="cm"> * t3    invoked getd()</span>
+<span class="cm"> * t3    ### invoked setd()</span>
+<span class="cm"> * t4    invoked getd()</span>
+<span class="cm"> * t4    ### invoked setd()</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">Phone</span> <span class="n">phone</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Phone</span><span class="o">();</span>
+
+        <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">phone</span><span class="o">.</span><span class="na">sendSMS</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">},</span> <span class="s">&quot;t1&quot;</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">phone</span><span class="o">.</span><span class="na">sendSMS</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">},</span> <span class="s">&quot;t2&quot;</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="c1">// 暂停一会</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;### lock的启动方式，因为实现了Runnable接口 ###&quot;</span><span class="o">);</span>
+
+        <span class="c1">// lock的启动方式，因为实现了Runnable接口</span>
+        <span class="n">Thread</span> <span class="n">t3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">phone</span><span class="o">,</span> <span class="s">&quot;t3&quot;</span><span class="o">);</span>
+        <span class="n">Thread</span> <span class="n">t4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">phone</span><span class="o">,</span> <span class="s">&quot;t4&quot;</span><span class="o">);</span>
+        <span class="n">t3</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">t4</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_3">公平锁</h3>
+<p>表示线程获取锁的顺序是按照线程申请锁的顺序来分配的，即<code>FIFO</code>, 队列结构</p>
 <div class="hlcode"><pre> <span class="cm">/**</span>
 <span class="cm">    * Sync object for fair locks</span>
 <span class="cm">    */</span>
@@ -214,14 +300,14 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 
 <ul>
 <li>
-<p>公平锁每次获取到锁为同步队列中的第一个节点，保证请求资源时间上的绝对顺序，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其他线程永远无法获取到锁，造成<code>饥饿</code>现象。</p>
+<p>公平锁每次获取到锁为同步队列中的第一个节点，保证请求资源时间上的绝对顺序，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其它线程永远无法获取到锁，造成<code>饥饿</code>现象。</p>
 </li>
 <li>
 <p>公平锁为了保证时间上的绝对顺序，需要频繁的上下文切换；而非公平锁会降低了一定的上下文切换，降低性能开销。</p>
 </li>
 </ul>
-<h3 id="_5">非公平锁</h3>
-<p>就是一种获取锁的抢占机制，是随机获得锁的，和公平锁不一样的就是先来的不一定先得到锁，这个方式可能造成某些线程一直拿不到锁，结果也就是不公平。</p>
+<h3 id="_4">非公平锁</h3>
+<p>就是一种获取锁的<code>抢占</code>机制，是随机获得锁的，和公平锁不一样的就是先来的不一定先得到锁，这个方式可能造成某些线程一直拿不到锁，结果也就是不公平。尝试抢占失败，就再采用公平锁的那种方式，<code>吞吐量</code>大于公平锁</p>
 <h4 id="synchronized-reentrantlock">对比<code>synchronized</code>, <code>ReentrantLock</code>的一些高级功能</h4>
 <ul>
 <li>等待可中断</li>
@@ -236,11 +322,9 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 <li>锁绑定多个条件</li>
 </ul>
 <p>一个<code>ReentrantLock</code>对象可以同时绑定对个对象。</p>
-<h3 id="_6">锁申请等待限时实际例子</h3>
+<h3 id="_5">锁申请等待限时实际例子</h3>
 <p>申请锁，一定时间内获取不到，选择放弃</p>
-<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Lock</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
@@ -297,13 +381,18 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main end&quot;</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
+<span class="cm">/* output</span>
+<span class="cm">A start</span>
+<span class="cm">Thread-1 tryLock error</span>
+<span class="cm">main end</span>
+<span class="cm">*/</span>
 </pre></div>
 
 
-<h2 id="_7">读写锁</h2>
+<h2 id="_6">读写锁</h2>
 <p>读写锁实际是一种特殊的自旋锁，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。</p>
 <p>一次只有一个线程可以占有<code>写模式</code>的读写锁, 但是可以有多个线程同时占有<code>读模式</code>的读写锁.</p>
-<h3 id="_8">伪代码</h3>
+<h3 id="_7">伪代码</h3>
 <div class="hlcode"><pre><span class="n">count_mutex</span> <span class="o">=</span> <span class="n">mutex_init</span><span class="p">();</span>
 <span class="n">write_mutex</span> <span class="o">=</span> <span class="n">mutex_init</span><span class="p">();</span>
 <span class="n">read_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -336,11 +425,9 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 </pre></div>
 
 
-<p>参考：https://www.cnblogs.com/xiehongfeng100/p/4782135.html</p>
-<h3 id="_9">实际例子</h3>
-<div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+<p>参考：<a href="https://www.cnblogs.com/xiehongfeng100/p/4782135.html" target="_blank">https://www.cnblogs.com/xiehongfeng100/p/4782135.html</a></p>
+<h3 id="_8">实际例子</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.ArrayBlockingQueue</span><span class="o">;</span>
@@ -429,18 +516,18 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 </pre></div>
 
 
-<h2 id="_10">分布式锁</h2>
+<h2 id="_9">分布式锁</h2>
 <p>很多时候我们需要保证一个方法在同一时间内只能被同一个线程执行。在单机环境中，通过 Java 提供的并发 API 我们可以解决，分布式环境下</p>
 <ol>
-<li>分布式与单机情况下最大的不同在于其不是多线程而是多进程</li>
+<li>分布式与单机情况下最大的不同在于其不是多线程而是<strong>多进程</strong></li>
 <li><code>多线程</code>由于可以<code>共享堆内存</code>，因此可以简单的采取内存作为标记存储位置。而进程之间甚至可能都不在同一台物理机上，因此需要将<code>标记</code>存储在一个<code>所有进程</code>都能看到的地方</li>
 </ol>
 <p><a target='_blank' href='https://www.cnblogs.com/seesun2012/p/9214653.html'>参考</a></p>
-<h3 id="_11">什么是分布式锁？</h3>
+<h3 id="_10">什么是分布式锁</h3>
 <p>在分布式的部署环境下，通过锁机制来让多客户端互斥的对共享资源进行访问</p>
 <ul>
 <li>
-<p>排他性：在同一时间只会有一个客户端能获取到锁，其它客户端无法同时获取</p>
+<p>排它性：在同一时间只会有一个客户端能获取到锁，其它客户端无法同时获取</p>
 </li>
 <li>
 <p>避免死锁：这把锁在一段有限的时间之后，一定会被释放（正常释放或异常释放）</p>
@@ -449,7 +536,7 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 <p>高可用：获取或释放锁的机制必须高可用且性能佳</p>
 </li>
 </ul>
-<h3 id="_12">分布式锁的实现方式</h3>
+<h3 id="_11">分布式锁的实现方式</h3>
 <ol>
 <li>
 <p>基于数据库实现</p>
@@ -461,7 +548,7 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 <p>基于ZooKeeper实现</p>
 </li>
 </ol>
-<h2 id="_13">共享锁(读锁) 和 排它锁(写锁)</h2>
+<h2 id="_12">共享锁(读锁) 和 排它锁(写锁)</h2>
 <h3 id="exclusive-locks">Exclusive locks</h3>
 <p>Exclusive locks protect updates to file resources, both recoverable and non-recoverable. They can be owned by only one transaction at a time. Any transaction that requires an exclusive lock must wait if another task currently owns an exclusive lock or a shared lock against the requested resource.</p>
 <p>独占锁保护文件资源(包括可恢复和不可恢复的文件资源)的更新。它们一次只能由一个事务拥有。如果另一个任务当前拥有对所请求资源的独占锁或共享锁，则任何需要对该资源申请独占锁的事务都必须等待。</p>
@@ -482,11 +569,11 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 <li>如果其他任务当前拥有此资源上的共享锁，则必须等待对独占锁的请求。</li>
 <li>如果另一个任务正在等待已经具有共享锁的资源的独占锁，则对共享锁的新请求必须等待。</li>
 </ul>
-<h2 id="_14">偏向锁</h2>
+<h2 id="_13">偏向锁</h2>
 <p>锁的实现机制与Java对象头息息相关，锁的所有信息，都记录在Java的对象头中。用2字（32位JVM中1字=32bit=4baye）存储对象头，如果是数组类型使用3字存储（还需存储数组长度）。对象头中记录了hash值、GC年龄、锁的状态、线程拥有者、类元数据的指针。</p>
 <p>大多数情况下，锁不仅不存在多线程竞争，而且总是由同一线程多次获得，这个线程就是锁的偏向线程。</p>
 <p>为了让线程获得锁的代价更低而引入偏向锁。那么只需要<strong>在锁第一次被拥有的时候，记录下偏向线程ID。这样偏向线程就一直持有着锁，直到竞争发生才释放锁</strong>。以后每次同步，检查锁的偏向线程ID与当前线程ID是否一致，如果一致直接进入同步/退出同步,也无需每次加锁解锁都去CAS更新对象头，如果不一致意味着发生了竞争，锁已经不是总是偏向于同一个线程了，这时候需要锁膨胀为轻量级锁，才能保证线程间公平竞争锁。</p>
-<h2 id="_15">轻量级锁</h2>
+<h2 id="_14">轻量级锁</h2>
 <p>轻量锁与偏向锁不同的是：</p>
 <ol>
 <li>轻量级锁每次退出同步块都需要释放锁，而偏向锁是在竞争发生时才释放锁</li>
@@ -495,17 +582,87 @@ CAS 适合冲突较少的情况，如果太多线程在同时自旋，那么长�
 </ol>
 <p>可以看到轻量锁适合在竞争情况下使用，其自旋锁可以保证响应速度快，但自旋操作会占用CPU，所以一些计算时间长的操作不适合使用轻量级锁。</p>
 <p>当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。</p>
-<h2 id="_16">重量级锁</h2>
+<h2 id="_15">重量级锁</h2>
 <p>当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。</p>
 <p>重量级锁是依赖对象内部的monitor锁来实现的，而monitor又依赖操作系统的MutexLock(互斥锁)来实现的，所以重量级锁也被成为互斥锁。</p>
-<h3 id="_17">为什么说重量级锁开销大呢</h3>
-<p>主要是，当系统检查到锁是重量级锁之后，会把等待想要获得锁的线程进行阻塞，被阻塞的线程不会消耗cup。但是阻塞或者唤醒一个线程时，都需要操作系统来帮忙，这就需要从用户态转换到内核态，而转换状态是需要消耗很多时间的，有可能比用户执行代码的时间还要长。这就是说为什么重量级线程开销很大的。</p>
+<h3 id="_16">为什么说重量级锁开销大呢</h3>
+<p>主要是，当系统检查到锁是重量级锁之后，会把等待想要获得锁的线程进行阻塞，被阻塞的线程不会消耗cup。但是阻塞或者唤醒一个线程时，都需要操作系统来帮忙，这就需要从<strong>用户态</strong>转换到<strong>内核态</strong>，而转换状态是需要消耗很多时间的，有可能比用户执行代码的时间还要长。这就是说为什么重量级线程开销很大的。</p>
+<h2 id="aqs">AQS</h2>
+<p><code>AbstractQuenedSynchronizer</code>抽象的队列式同步器,是除了java自带的<code>synchronized</code>关键字之外的锁机制</p>
+<div class="hlcode"><pre><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Provides</span> <span class="n">a</span> <span class="n">framework</span> <span class="k">for</span> <span class="n">implementing</span> <span class="n">blocking</span> <span class="n">locks</span> <span class="n">and</span> <span class="n">related</span>
+ <span class="o">*</span> <span class="n">synchronizers</span> <span class="o">(</span><span class="n">semaphores</span><span class="o">,</span> <span class="n">events</span><span class="o">,</span> <span class="n">etc</span><span class="o">)</span> <span class="n">that</span> <span class="n">rely</span> <span class="n">on</span>
+ <span class="o">*</span> <span class="n">first</span><span class="o">-</span><span class="n">in</span><span class="o">-</span><span class="n">first</span><span class="o">-</span><span class="n">out</span> <span class="o">(</span><span class="n">FIFO</span><span class="o">)</span> <span class="n">wait</span> <span class="n">queues</span><span class="o">.</span>  <span class="n">This</span> <span class="kd">class</span> <span class="nc">is</span> <span class="n">designed</span> <span class="n">to</span>
+ <span class="o">*</span> <span class="n">be</span> <span class="n">a</span> <span class="n">useful</span> <span class="n">basis</span> <span class="k">for</span> <span class="n">most</span> <span class="n">kinds</span> <span class="n">of</span> <span class="n">synchronizers</span> <span class="n">that</span> <span class="n">rely</span> <span class="n">on</span> <span class="n">a</span>
+ <span class="o">*</span> <span class="n">single</span> <span class="n">atomic</span> <span class="o">{</span><span class="nd">@code</span> <span class="kt">int</span><span class="o">}</span> <span class="n">value</span> <span class="n">to</span> <span class="n">represent</span> <span class="n">state</span><span class="o">.</span> <span class="n">Subclasses</span>
+ <span class="o">*</span> <span class="n">must</span> <span class="n">define</span> <span class="n">the</span> <span class="kd">protected</span> <span class="n">methods</span> <span class="n">that</span> <span class="n">change</span> <span class="k">this</span> <span class="n">state</span><span class="o">,</span> <span class="n">and</span> <span class="n">which</span>
+ <span class="o">*</span> <span class="n">define</span> <span class="n">what</span> <span class="n">that</span> <span class="n">state</span> <span class="n">means</span> <span class="n">in</span> <span class="n">terms</span> <span class="n">of</span> <span class="k">this</span> <span class="n">object</span> <span class="n">being</span> <span class="n">acquired</span>
+ <span class="o">*</span> <span class="n">or</span> <span class="n">released</span><span class="o">.</span>  <span class="n">Given</span> <span class="n">these</span><span class="o">,</span> <span class="n">the</span> <span class="n">other</span> <span class="n">methods</span> <span class="n">in</span> <span class="k">this</span> <span class="kd">class</span> <span class="nc">carry</span>
+ <span class="o">*</span> <span class="n">out</span> <span class="n">all</span> <span class="n">queuing</span> <span class="n">and</span> <span class="n">blocking</span> <span class="n">mechanics</span><span class="o">.</span> <span class="n">Subclasses</span> <span class="n">can</span> <span class="n">maintain</span>
+ <span class="o">*</span> <span class="n">other</span> <span class="n">state</span> <span class="n">fields</span><span class="o">,</span> <span class="n">but</span> <span class="n">only</span> <span class="n">the</span> <span class="n">atomically</span> <span class="n">updated</span> <span class="o">{</span><span class="nd">@code</span> <span class="kt">int</span><span class="o">}</span>
+ <span class="o">*</span> <span class="n">value</span> <span class="n">manipulated</span> <span class="n">using</span> <span class="n">methods</span> <span class="o">{</span><span class="nd">@link</span> <span class="err">#</span><span class="n">getState</span><span class="o">},</span> <span class="o">{</span><span class="nd">@link</span>
+ <span class="o">*</span> <span class="err">#</span><span class="n">setState</span><span class="o">}</span> <span class="n">and</span> <span class="o">{</span><span class="nd">@link</span> <span class="err">#</span><span class="n">compareAndSetState</span><span class="o">}</span> <span class="n">is</span> <span class="n">tracked</span> <span class="n">with</span> <span class="n">respect</span>
+ <span class="o">*</span> <span class="n">to</span> <span class="n">synchronization</span><span class="o">.</span>
+ <span class="o">*</span>
+</pre></div>
+
+
+<p>内部通过一个int类型的成员变量state来控制同步状态(对同步状态执行CAS操作)</p>
+<p>当state=0时，则说明没有任何线程占有共享资源的锁，当state=1时，则说明有线程目前正在使用共享变量，其他线程必须加入同步队列进行等待</p>
+<p>Node结点是对每一个访问同步代码的线程的封装,包含了需要同步的线程本身以及线程的状态，如是否被阻塞，是否等待唤醒，是否已经被取消等</p>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
+    <span class="c1">//共享模式</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">SHARED</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+    <span class="c1">//独占模式</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">EXCLUSIVE</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+    <span class="c1">//标识线程已处于结束状态</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CANCELLED</span> <span class="o">=</span>  <span class="mi">1</span><span class="o">;</span>
+    <span class="c1">//等待被唤醒状态</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">SIGNAL</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="c1">//条件状态，</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CONDITION</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">;</span>
+    <span class="c1">//在共享模式中使用表示获得的同步状态会被传播</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">PROPAGATE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span><span class="o">;</span>
+
+    <span class="c1">//等待状态,存在CANCELLED、SIGNAL、CONDITION、PROPAGATE 4种</span>
+    <span class="kd">volatile</span> <span class="kt">int</span> <span class="n">waitStatus</span><span class="o">;</span>
+
+    <span class="c1">//同步队列中前驱结点</span>
+    <span class="kd">volatile</span> <span class="n">Node</span> <span class="n">prev</span><span class="o">;</span>
+
+    <span class="c1">//同步队列中后继结点</span>
+    <span class="kd">volatile</span> <span class="n">Node</span> <span class="n">next</span><span class="o">;</span>
+
+    <span class="c1">//请求锁的线程</span>
+    <span class="kd">volatile</span> <span class="n">Thread</span> <span class="n">thread</span><span class="o">;</span>
+
+    <span class="c1">//等待队列中的后继结点，这个与Condition有关，稍后会分析</span>
+    <span class="n">Node</span> <span class="n">nextWaiter</span><span class="o">;</span>
+
+    <span class="c1">//判断是否为共享模式</span>
+    <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">isShared</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">nextWaiter</span> <span class="o">==</span> <span class="n">SHARED</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//获取前驱结点</span>
+    <span class="kd">final</span> <span class="n">Node</span> <span class="nf">predecessor</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">NullPointerException</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">p</span> <span class="o">=</span> <span class="n">prev</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span>
+        <span class="k">else</span>
+            <span class="k">return</span> <span class="n">p</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//.....</span>
+<span class="o">}</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-07 23:07:54</p>
+        <p>Site Generated 2020-04-18 18:00:51</p>
       </span>
     </div>
 
