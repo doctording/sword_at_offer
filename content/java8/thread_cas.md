@@ -10,6 +10,8 @@ date: 2019-03-24 00:00
 
 * 用于实现`多线程同步`的`原子指令`，非阻塞算法，是由CPU硬件实现（**比较并交换**）
 
+CAS通过调用JNI(java native interface)的代码来操作底层指令来实现，以Intel x86处理器来说，底层具体是`cmpxchg`一个原子指令。多核情况下，会给"总线"加锁，只有一个线程会对总线加锁成功，然后进行CAS操作。
+
 * 乐观锁
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/cas.png)
@@ -22,7 +24,7 @@ date: 2019-03-24 00:00
 
 （取出内存中某时刻的数据并在当下时刻比较并替换，那么在这个时间差异类会导致数据的变化，内存是变化过的，有中间这个过程）
 
-2. 自旋问题。循环时间长开销大。自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。如果JVM能支持处理器提供的pause指令那么效率会有一定的提升，pause指令有两个作用，第一它可以延迟流水线执行指令（de-pipeline）,使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零。第二它可以避免在退出循环的时候因内存顺序冲突（memory order violation）而引起CPU流水线被清空（CPU pipeline flush），从而提高CPU的执行效率
+2. 自旋问题。循环时间长开销大:自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。如果JVM能支持处理器提供的pause指令那么效率会有一定的提升，pause指令有两个作用，第一:它可以延迟流水线执行指令（de-pipeline）,使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零。第二:它可以避免在退出循环的时候因内存顺序冲突（memory order violation）而引起CPU流水线被清空（CPU pipeline flush），从而提高CPU的执行效率
 
 3. 只能保证一个共享变量的原子操作。当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁，或者有一个取巧的办法，就是把多个共享变量合并成一个共享变量来操作。比如有两个共享变量i＝2,j=a，合并一下ij=2a，然后用CAS来操作ij。从Java1.5开始JDK提供了AtomicReference类来保证引用对象之间的原子性，你可以把多个变量放在一个对象里来进行CAS操作
 
@@ -197,8 +199,7 @@ JVM的实现可以自由选择如何实现Java对象的"布局"，也就是在�
 
 作者：世界屋顶
 来源：CSDN
-原文：https://blog.csdn.net/blogs_broadcast/article/details/80672515 
-版权声明：本文为博主原创文章，转载请附上博文链接！
+原文：<a href="https://blog.csdn.net/blogs_broadcast/article/details/80672515">url地址</a>
 
 ### compareAndSwapInt
 
@@ -305,7 +306,7 @@ public class Main {
 }
 ```
 
-## 原子引用（AtomicReference）更新
+## 原子引用（AtomicReference）
 
 对`对象`进行原子操作,提供了一种读和写都是原子性的对象引用变量。原子意味着多个线程试图改变同一个AtomicReference(例如比较和交换操作)将不会使得AtomicReference处于不一致的状态。
 
@@ -368,7 +369,9 @@ public class Main {
 }
 ```
 
-### 时间戳原子引用（用版本解决ABA）
+### AtomicStampedReference（用版本解决ABA）
+
+#### ABA问题
 
 ```java
 public class Main {
@@ -389,7 +392,7 @@ public class Main {
                 TimeUnit.SECONDS.sleep(1);
             }catch (Exception e){
             }
-            // t2 修改成功
+            // t2 修改成功, 另外一个线程从 100 变成 101 又变成了 100， b比较判断是100，所以能修改成功
             boolean b = atomicReference.compareAndSet(100, 102);
             System.out.println(Thread.currentThread().getName() + " " + b + " " + atomicReference.get().toString());
         }, "t2").start();
@@ -398,7 +401,7 @@ public class Main {
 }
 ```
 
-ABA问题解决
+#### ABA问题的解决（加上版本）
 
 ```java
 public class Main {
@@ -432,8 +435,7 @@ public class Main {
                 TimeUnit.SECONDS.sleep(4);
             }catch (Exception e){
             }
-            boolean b = atomicStampedReference.compareAndSet(100, 102
-                    , stamp, stamp + 1);
+            boolean b = atomicStampedReference.compareAndSet(100, 102, stamp, stamp + 1);
             System.out.println(Thread.currentThread().getName() + " " + b + " " + atomicStampedReference.getStamp());
         }, "t2").start();
 
@@ -454,4 +456,4 @@ t2 false 3
 
 t1,t2某时候同一版本
 然后t1执行 A->B->A, 不过加上了版本
-然后t2判断是有版本变更的，所以操作false
+然后t2判断是有版本变更的，所以CAS操作失败
