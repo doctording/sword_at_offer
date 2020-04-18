@@ -41,8 +41,12 @@
 <li><a href="#unsafe_1">unsafe线程安全操作例子程序</a></li>
 </ul>
 </li>
-<li><a href="#atomicreference">原子引用（AtomicReference）更新</a><ul>
-<li><a href="#aba">时间戳原子引用（用版本解决ABA）</a></li>
+<li><a href="#atomicreference">原子引用（AtomicReference）</a><ul>
+<li><a href="#atomicstampedreferenceaba">AtomicStampedReference（用版本解决ABA）</a><ul>
+<li><a href="#aba">ABA问题</a></li>
+<li><a href="#aba_1">ABA问题的解决（加上版本）</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -51,12 +55,11 @@
 </div>
 <h1 id="cas">CAS</h1>
 <ul>
-<li>
-<p>用于实现<code>多线程同步</code>的<code>原子指令</code>，非阻塞算法，是由CPU硬件实现（<strong>比较并交换</strong>）</p>
-</li>
-<li>
-<p>乐观锁</p>
-</li>
+<li>用于实现<code>多线程同步</code>的<code>原子指令</code>，非阻塞算法，是由CPU硬件实现（<strong>比较并交换</strong>）</li>
+</ul>
+<p>CAS通过调用JNI(java native interface)的代码来操作底层指令来实现，以Intel x86处理器来说，底层具体是<code>cmpxchg</code>一个原子指令。多核情况下，会给"总线"加锁，只有一个线程会对总线加锁成功，然后进行CAS操作。</p>
+<ul>
+<li>乐观锁</li>
 </ul>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/cas.png" /></p>
 <h2 id="cas_1">CAS 的缺点</h2>
@@ -67,7 +70,7 @@
 <p>（取出内存中某时刻的数据并在当下时刻比较并替换，那么在这个时间差异类会导致数据的变化，内存是变化过的，有中间这个过程）</p>
 <ol>
 <li>
-<p>自旋问题。循环时间长开销大。自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。如果JVM能支持处理器提供的pause指令那么效率会有一定的提升，pause指令有两个作用，第一它可以延迟流水线执行指令（de-pipeline）,使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零。第二它可以避免在退出循环的时候因内存顺序冲突（memory order violation）而引起CPU流水线被清空（CPU pipeline flush），从而提高CPU的执行效率</p>
+<p>自旋问题。循环时间长开销大:自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。如果JVM能支持处理器提供的pause指令那么效率会有一定的提升，pause指令有两个作用，第一:它可以延迟流水线执行指令（de-pipeline）,使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零。第二:它可以避免在退出循环的时候因内存顺序冲突（memory order violation）而引起CPU流水线被清空（CPU pipeline flush），从而提高CPU的执行效率</p>
 </li>
 <li>
 <p>只能保证一个共享变量的原子操作。当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁，或者有一个取巧的办法，就是把多个共享变量合并成一个共享变量来操作。比如有两个共享变量i＝2,j=a，合并一下ij=2a，然后用CAS来操作ij。从Java1.5开始JDK提供了AtomicReference类来保证引用对象之间的原子性，你可以把多个变量放在一个对象里来进行CAS操作</p>
@@ -235,8 +238,7 @@
 </ul>
 <p>作者：世界屋顶<br />
 来源：CSDN<br />
-原文：https://blog.csdn.net/blogs_broadcast/article/details/80672515 <br />
-版权声明：本文为博主原创文章，转载请附上博文链接！</p>
+原文：<a href="https://blog.csdn.net/blogs_broadcast/article/details/80672515">url地址</a></p>
 <h3 id="compareandswapint">compareAndSwapInt</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">final</span> <span class="kd">native</span> <span class="kt">boolean</span> <span class="nf">compareAndSwapInt</span><span class="o">(</span><span class="n">Object</span> <span class="n">var1</span><span class="o">,</span> <span class="kt">long</span> <span class="n">var2</span><span class="o">,</span> <span class="kt">int</span> <span class="n">var4</span><span class="o">,</span> <span class="kt">int</span> <span class="n">var5</span><span class="o">);</span>
 </pre></div>
@@ -336,7 +338,7 @@
 </pre></div>
 
 
-<h2 id="atomicreference">原子引用（AtomicReference）更新</h2>
+<h2 id="atomicreference">原子引用（AtomicReference）</h2>
 <p>对<code>对象</code>进行原子操作,提供了一种读和写都是原子性的对象引用变量。原子意味着多个线程试图改变同一个AtomicReference(例如比较和交换操作)将不会使得AtomicReference处于不一致的状态。</p>
 <p><code>AtomicReference</code>和<code>AtomicInteger</code>非常类似，不同之处就在于<code>AtomicInteger</code>是对整数的封装，底层采用的是<code>compareAndSwapInt</code>实现<code>CAS</code>，比较的是数值是否相等，而<code>AtomicReference</code>则对应普通的对象引用，底层使用的是<code>compareAndSwapObject</code>实现<code>CAS</code>，比较的是<strong>两个对象的地址</strong>是否相等。也就是它可以保证你在修改对象引用时的线程安全性。</p>
 <div class="hlcode"><pre><span class="kd">class</span> <span class="nc">User</span><span class="o">{</span>
@@ -396,7 +398,8 @@
 </pre></div>
 
 
-<h3 id="aba">时间戳原子引用（用版本解决ABA）</h3>
+<h3 id="atomicstampedreferenceaba">AtomicStampedReference（用版本解决ABA）</h3>
+<h4 id="aba">ABA问题</h4>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
     <span class="kd">static</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">atomicReference</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;(</span><span class="mi">100</span><span class="o">);</span>
@@ -415,7 +418,7 @@
                 <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
             <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
             <span class="o">}</span>
-            <span class="c1">// t2 修改成功</span>
+            <span class="c1">// t2 修改成功, 另外一个线程从 100 变成 101 又变成了 100， b比较判断是100，所以能修改成功</span>
             <span class="kt">boolean</span> <span class="n">b</span> <span class="o">=</span> <span class="n">atomicReference</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="mi">100</span><span class="o">,</span> <span class="mi">102</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">atomicReference</span><span class="o">.</span><span class="na">get</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
         <span class="o">},</span> <span class="s">&quot;t2&quot;</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
@@ -425,7 +428,7 @@
 </pre></div>
 
 
-<p>ABA问题解决</p>
+<h4 id="aba_1">ABA问题的解决（加上版本）</h4>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
     <span class="kd">static</span> <span class="n">AtomicStampedReference</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">atomicStampedReference</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicStampedReference</span><span class="o">&lt;&gt;(</span><span class="mi">100</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
@@ -457,8 +460,7 @@
                 <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
             <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
             <span class="o">}</span>
-            <span class="kt">boolean</span> <span class="n">b</span> <span class="o">=</span> <span class="n">atomicStampedReference</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="mi">100</span><span class="o">,</span> <span class="mi">102</span>
-                    <span class="o">,</span> <span class="n">stamp</span><span class="o">,</span> <span class="n">stamp</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="kt">boolean</span> <span class="n">b</span> <span class="o">=</span> <span class="n">atomicStampedReference</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="mi">100</span><span class="o">,</span> <span class="mi">102</span><span class="o">,</span> <span class="n">stamp</span><span class="o">,</span> <span class="n">stamp</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">atomicStampedReference</span><span class="o">.</span><span class="na">getStamp</span><span class="o">());</span>
         <span class="o">},</span> <span class="s">&quot;t2&quot;</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
 
@@ -481,13 +483,13 @@
 
 <p>t1,t2某时候同一版本<br />
 然后t1执行 A-&gt;B-&gt;A, 不过加上了版本<br />
-然后t2判断是有版本变更的，所以操作false</p>
+然后t2判断是有版本变更的，所以CAS操作失败</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-04-18 18:00:51</p>
+        <p>Site Generated 2020-04-18 18:40:38</p>
       </span>
     </div>
 
