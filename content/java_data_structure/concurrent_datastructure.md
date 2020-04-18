@@ -21,7 +21,9 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     implements ConcurrentMap<K,V>, Serializable {
 ```
 
-### 底层，数组+链表/红黑树，CAS + synchronized控制并发
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/concurrent_hashmap.png)
+
+### 底层:数组+链表/红黑树，CAS + synchronized控制并发
 
 ```java
  /* ---------------- Fields -------------- */
@@ -147,13 +149,13 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 }
 ```
 
-1. 先判断key和value是否为null，为null扔出异常
+1. 先判断key和value是否为null，为null则抛出异常
 
 2. 判断table是否初始化，如果没有则进行初始化
 
 3. 计算key的hash值，并得到插入的数组索引。
 
-4. 找到table[i]的位置，如果为null直接插入，如果不为null判断此key是否存在，如果存在直接覆盖，如果不存在进行判断如果head节点是树节点，按照红黑树的方式插入新的节点，如果不是则按照链表的方式插入，同时会判断当前的链表长度是否大于8，如果大于则转为红黑树再插入，否则直接插入，插入采用的CAS自旋的方式。
+4. 找到table[i]的位置，如果为null直接插入，如果不为null判断此key是否存在，如果存在直接覆盖，如果不存在进行判断如果head节点是树节点，按照红黑树的方式插入新的节点，如果不是则按照链表的方式插入，同时会判断当前的链表长度是否大于`TREEIFY_THRESHOLD=8`，如果大于则转为红黑树再插入，否则直接插入，插入采用的CAS自旋的方式。
 
 5. 最后判断table的size是否需要扩容，如果需要则扩容，否则就结束。在扩容的时候会在链表头部插入forward，如果其他线程检测到需要插入的位置被forward节点占有，就帮助进行扩容。
 
@@ -204,8 +206,12 @@ sizeCtl ：默认为0，用来控制table的初始化和扩容操作，具体应
 * 参考
 
 作者：葬月魔帝
+
 来源：CSDN
-原文：https://blog.csdn.net/u010454030/article/details/82458413
+
+原文：<a href="https://blog.csdn.net/u010454030/article/details/82458413" target="_blank">理解Java7和8里面HashMap+ConcurrentHashMap的扩容策略
+</a>
+
 版权声明：本文为博主原创文章，转载请附上博文链接！
 
 ## ConcurrentLinkedQueue(class) 无界线程安全

@@ -16,7 +16,7 @@ date: 2019-03-20 00:00
 
 * 饿汉：在初始化的时候，就创建了唯一的实例，不管是否需要用到。不需要自己加同步，一定产生唯一的实例。
 
-## 懒汉式， 非同步
+## 懒汉式 + 非同步
 
 ```java
 final class Singleton{
@@ -44,7 +44,7 @@ for(int i=0;i<20;i++){
 }
 ```
 
-## 懒汉式，`synchronized`同步
+## 懒汉式 + `synchronized`同步
 
 `getInstance`同一时刻只能被一个线程访问，效率很低
 
@@ -65,7 +65,7 @@ final class Singleton{
 }
 ```
 
-## double-check
+## double-check（仍然线程不安全）
 
 首次初始化的时候加锁，之后多线程调用`getInstance`
 
@@ -93,7 +93,7 @@ final class Singleton{
             synchronized (Singleton.class) {
                 if(null == instance) {
                     System.out.println("new Singleton");
-                    instance = new Singleton();
+                    instance = new Singleton(); // new 对象 可能会指令重排
                 }
             }
         }
@@ -106,7 +106,7 @@ final class Singleton{
 
 创建一个变量需要：一个是申请一块内存，调用构造方法进行初始化操作，另一个是分配一个指针指向这块内存。这两个操作谁在前谁在后呢？JVM规范并没有规定。那么就存在这么一种情况，JVM是先开辟出一块内存，然后把指针指向这块内存，最后调用构造方法进行初始化。
 
-## double-check & volatile
+## double-check & volatile（懒汉式）
 
 `volatile`止指令重排，保证顺序性
 

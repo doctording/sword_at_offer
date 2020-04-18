@@ -62,7 +62,8 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
 # Java8 内存区域
 
 ```java
-Cmubi@mubideMacBook-Pro Home $ pwd
+// java7
+mubi@mubideMacBook-Pro Home $ pwd
 /Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home
 mubi@mubideMacBook-Pro Home $ bin/jstat -gcutil 62850 1000 10
 Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
@@ -73,6 +74,8 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
   0.00  85.81  77.08  56.33      �    161    1.624    14    0.603    2.227
   0.00  85.81  77.22  56.33      �    161    1.624    14    0.603    2.227
   0.00  85.81  77.33  56.33      �    161    1.624    14    0.603    2.227
+
+// java 8
 ^Cmubi@mubideMacBook-Pro Home $ jstat -gcutil 62850 1000 10
   S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT
   0.00  85.81  78.86  56.33  93.46  89.80    161    1.624    14    0.603    2.227
@@ -123,9 +126,11 @@ Class metadata, interned Strings and class static variables will be moved from t
 
 ### 3.如何回收
 
-## `可达性分析` 判定对象是否存活
+## 通过`可达性分析`来判定对象是否存活
 
 算法的基本思路就是通过一系列的称为`GC Roots`的对象作为起始点，从这些节点向下搜索，搜索所走过的路径称为`引用链(Reference Chain)`,当一个对象到`GC Roots`没有任何引用链相连(用图论的话来说，就是`GC Roots`到这个对象不可达)时，则证明此对象是不可用的。
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/gc_roots.png)
 
 ### Java中可作为`GC Roots`的对象包括
 
@@ -141,7 +146,7 @@ Class metadata, interned Strings and class static variables will be moved from t
 * 强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。如
 
 ```java
-Object o=new Object();
+Object o = new Object();
 ```
 
 * 软引用是用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会吧这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。`SoftReference`
@@ -161,7 +166,7 @@ str=null;
 
 * 虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。`PhantomReference`
 
-参考：https://www.cnblogs.com/fengbs/p/7019687.html
+参考：<a href="https://www.cnblogs.com/gudi/p/6403953.html" target="_blank">https://www.cnblogs.com/gudi/p/6403953.html</a>
 
 ## 对象是生存还是死亡的？(两次标记)
 
@@ -169,15 +174,13 @@ str=null;
 =》没有GC Roots的引用链 =》 判断对象是否有必要执行`finalize()`方法
 
 1. 对象没有覆盖`finalize()`方法，或者`finalize()`方法已经被虚拟机调用过,虚拟机将这两种情况都视为"没有必要执行"
-2. 如果这个对象被判定为有必要执行`finalize()`方法,则这个对象会放置在一个叫做`F-Queue`的队列之中，并在稍后由一个虚拟机自动建立的，低优先级的`Finalizer线程`去执行它。
+2. 如果这个对象被判定为有必要执行`finalize()`方法,则这个对象会放置在一个叫做`F-Queue`的队列之中，并在稍后由一个虚拟机自动建立的，**低优先级的**`Finalizer线程`去执行它。
 
-如果对象对象要在`finalize()`中成功拯救自己--只需要重新与引用链上的任何一个对象建立关联即可，GC对`F-Queue`中对对象进行第二次标记时，会将它移出"即将回收"的集合，否则会被回收
+如果对象要在`finalize()`中成功拯救自己--只需要重新与引用链上的任何一个对象建立关联即可，GC对`F-Queue`中对对象进行第二次标记时，会将它移出"即将回收"的集合，否则会被回收
 
 * 自救代码
 
 ```java
-package com.java7;
-
 /**
  * 此代码说明如下两点：
  * 1. 对象可以在GC时自我拯救
@@ -187,9 +190,11 @@ public class FinalizeEscapeGC {
 
     public static FinalizeEscapeGC SAVE_HOOK = null;
     public String name;
+
     public FinalizeEscapeGC(String name) {
         this.name = name;
     }
+
     public void isAlive() {
         System.out.println("yes, i am still alive");
     }
@@ -201,6 +206,7 @@ public class FinalizeEscapeGC {
         System.out.println(this.name);
         FinalizeEscapeGC.SAVE_HOOK = this;
     }
+
     public static void main(String[] args) throws Throwable {
         SAVE_HOOK = new FinalizeEscapeGC("abc");
         // 对象第一次成功拯救自己
@@ -223,6 +229,7 @@ public class FinalizeEscapeGC {
             System.out.println("no, i am dead");
         }
     }
+
 }
 ```
 
@@ -235,7 +242,7 @@ yes, i am still alive
 no, i am dead
 ```
 
-* 最后，不推荐`finalize()`
+* 最后，不推荐使用`finalize()`
 
 ## 回收方法区
 
@@ -263,34 +270,64 @@ no, i am dead
 
 实际上，HotSpot没有为每条指令都生成`oopMap`, 安全点(`Sagepoint`) GC， 选举以"是否具有让程序长时间执行的特征"为标准进行选定，如方法调用，循环跳转，异常跳转等，这些功能的指令会产生安全点
 
+### stop the world
+
+<a href="https://www.cubrid.org/blog/understanding-java-garbage-collection" target="_blank">参考文章</a>
+
+```java
+There is a term that you should know before learning about GC. The term is "stop-the-world." Stop-the-world will occur no matter which GC algorithm you choose. Stop-the-world means that the JVM is stopping the application from running to execute a GC. When stop-the-world occurs, every thread except for the threads needed for the GC will stop their tasks. The interrupted tasks will resume only after the GC task has completed. GC tuning often means reducing this stop-the-world time.
+```
+
 # 收集器
 
 垃圾收集器，并发&并行
 
 * 并行(Parallel)： 指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态
 
-* 并发(Concurrent): 只用户线程与垃圾收集线程同时执行（但不一定是并行但，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上
+* 并发(Concurrent): 只用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上
+
+## 几中常见的垃圾回收方式
+
+<a href="https://blog.csdn.net/qq_26437925/article/details/53728388" target="_blank">https://blog.csdn.net/qq_26437925/article/details/53728388</a>
+
+Java垃圾回收的依据/假设
+
+* Most objects soon become unreachable.
+* References from old objects to young objects only exist in small numbers.
 
 ## CMS(Concurrent Mark Sweep)
 
+<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html">参考文档地址</a>
+
+The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses and that can afford to share processor resources with the garbage collector while the application is running.
+
 * 并发收集，低停顿
 
-一种以获取最短回收停顿时间为目标但收集器：希望系统停顿时间最短，给用户带来较好但体验，4个步骤如下：
+一种以获取**最短回收停顿时间为目标**的收集器(以牺牲了吞吐量为代价)：希望系统停顿时间最短，给用户带来较好但体验，4个步骤如下：
 
-1. 初始标记（CMS initial mark）
+1. 初始标记（CMS initial mark）需要:"Stop The World"
+
+这个过程从垃圾回收的"根对象"开始，只扫描到能够和"根对象"直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。
+
 2. 并发标记（CMS concurrent mark）
-3. 重新标记（CMS remark）
+
+这个阶段紧随初始标记阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。
+
+3. 重新标记（CMS remark）需要:"Stop The World"
+
+这个阶段会暂停虚拟机，收集器线程扫描在CMS堆中剩余的对象。扫描从"根对象"开始向下追溯，并处理对象关联。
+
 4. 并发清除（CMS concurrent sweep）
 
-1,3两个步骤仍需要"Stop The World"
+清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行
 
 * 缺点
 
-1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做对事情就是在并发标记和并发清除的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
+1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做对事情就是在并发标记和并发清除的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
 
-2. CMS处理器无法处理浮动垃圾（Floating Garbage）。由于CMS在并发清理阶段有用户线程还在运行这，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法再当次手机中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"，因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
+2. CMS处理器无法处理浮动垃圾（Floating Garbage）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"，因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
 
-3. CMS是基于"标记--清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发 full gc。
+3. CMS是基于(`mark-sweep`)"标记--清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发`full gc`。
 
 为了解决这个问题，CMS提供了一个开关参数（`-XX: UseCMSCompactAtFullCollection`），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(`-XX: CMSFullGCsBeforeCompaction`)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）
 
@@ -303,6 +340,23 @@ no, i am dead
 参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document</a>
 
 参考学习3: <a target='_blank' href='https://blogs.oracle.com/poonam/understanding-g1-gc-logs'>g1 log</a>
+
+### G1设计理念
+
+* Can operate concurrently with applications threads like the CMS collector.
+（能够像CMS收集器一样跟应用线程并发的去执行。【CMS本身就是一个并发的收集器，也就是GC线程与应用线程可以同时间执行】）
+
+* Compact free space without lengthy GC induced pause times.
+（可以压缩可用的空间，而不会让GC引起暂停时间过长。）
+
+* Need more predictable GC pause durations.
+（需要更多的可预测的GC暂停的间隔。【也就是说GC暂停的时间会尽量往我们设置的暂时时间来靠】）
+
+* Do not want to sacrifice a lot of throughput performance.
+（不想牺牲大量吞吐性能。）
+
+* Do not require a much larger Java heap.
+（不想需要大量Java的堆空间。）
 
 ### G1 内存区域分布图和概念介绍
 
@@ -361,23 +415,23 @@ Phase | Description
 (5) Cleanup(Stop the World Event and Concurrent) | * Performs accounting on live objects and completely free regions. (Stop the world); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)
 (*) Copying | (Stop the World Event) These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].
 
-##### Initial Marking Phase
+##### Initial Marking Phase(初始标记，stop the world)
 
 Initial marking of live object is piggybacked on a young generation garbage collection.(标记存活对象)
 
 gc log: `(young) (initial-mark)`
 
-##### Concurrent Marking Phase
+##### Concurrent Marking Phase（并发标记，与用户线程并发执行）
 
 If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.
 （空区域会立刻被标记，这个阶段会计算存活对象）
 
-##### Remark Phase
+##### Remark Phase（最终标记，stop the world, CPU停顿处理垃圾）
 
 Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）
 
-##### Copying/Cleanup Phase
+##### Copying/Cleanup Phase（清理一些内存块，stop the world，根据用户期望的GC停顿时间回收）
 
 G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.
 
@@ -407,6 +461,14 @@ gc log: `GC pause (mixed)`
 3. Copying/Cleanup Phase
     * Young generation and old generation are reclaimed at the same time.（年轻代和老年代会同时被回收）
     * Old generation regions are selected based on their liveness.
+
+### G1的优势（为什么能够设置一个停留时间）
+
+G1的另一个显著特点他能够让用户设置应用的暂停时间，为什么G1能做到这一点呢？也许你已经注意到了，G1是**选择一些内存块，而不是整个代的内存来回收**，这是G1跟其它GC非常不同的一点，其它GC每次回收都会回收整个Generation的内存(Eden, Old), 而回收内存所需的时间就取决于内存的大小，以及实际垃圾的多少，所以垃圾回收时间是不可控的；而G1每次并不会回收整代内存，到底回收多少内存就看用户配置的暂停时间，配置的时间短就少回收点，配置的时间长就多回收点，伸缩自如。
+
+由于内存被分成了很多小块，又带来了另外好处，由于内存块比较小，进行内存压缩整理的代价都比较小，相比其它GC算法，可以有效的规避内存碎片的问题。
+
+G1的思想，感觉有点像Java`CocurrentHashMap`，将一个大的分成若干个Region，然后再处理
 
 ## 内存分配与回收策略(理论基础)
 
@@ -550,10 +612,6 @@ JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhi
 * （5）由Eden区、From Space区向To Space区复制时，对象大小大于To Space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小
 
 ## G1 和 CMS
-
-参考1: http://www.woowen.com/java/2016/12/10/G1%20CMS%E5%8C%BA%E5%88%AB/
-
-参考2: https://www.jianshu.com/p/35cd012eeb8c
 
 1. G1 和 CMS 堆空间分配不同
 
@@ -766,4 +824,268 @@ CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:Max
   region size 1024K, 2 young (2048K), 1 survivors (1024K)
  Metaspace       used 3342K, capacity 4500K, committed 4864K, reserved 1056768K
   class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
+```
+
+# 堆外内存
+
+## 问题
+
+`metaspace`没有限制，堆内存使用正常(没有`full gc`)，然后遇到`OOMKilled(程序因为内存使用超过限额被 kill -9 杀掉)`
+
+## 概念
+
+除了堆内存，Java 还可以使用堆外内存，也称直接内存（Direct Memory）。
+
+例如：在通信中，将存在于堆内存中的数据 flush 到远程时，需要首先将堆内存中的数据拷贝到堆外内存中，然后再写入 Socket 中；如果直接将数据存到堆外内存中就可以避免上述拷贝操作，提升性能。类似的例子还有读写文件。
+
+很多 NIO 框架 （如 netty，rpc） 会采用 Java 的 DirectByteBuffer 类来操作堆外内存，DirectByteBuffer 类对象本身位于 Java 内存模型的堆中，由 JVM 直接管控、操纵。DirectByteBuffer 中用于分配堆外内存的方法 unsafe.allocateMemory(size) 是个 native 方法，本质上是用 C 的 malloc 来进行分配的。
+
+**堆外内存并不直接控制于JVM，因此只能等到full GC的时候才能垃圾回收！**（direct buffer归属的的JAVA对象是在堆上且能够被GC回收的，一旦它被回收，JVM将释放direct buffer的堆外空间。前提是没有关闭DisableExplicitGC）。堆外内存包含线程栈，应用程序代码，NIO缓存，JNI调用等.例如`ByteBuffer bb = ByteBuffer.allocateDirect(1024)`，这段代码的执行会在堆外占用`1k`的内存，Java堆内只会占用一个对象的指针引用的大小，堆外的这1k的空间只有当bb对象被回收时，才会被回收，这里会发现一个明显的不对称现象，就是堆外可能占用了很多，而堆内没占用多少，导致还没触发GC，那就很容易出现**Direct Memory造成物理内存耗光**
+
+### 堆外内存溢出
+
+1. 最大的堆外内存设置的太小了
+2. 没有full gc， 堆外内存没有及时被清理掉
+
+### 堆外内存更适合
+
+* 存储生命周期长的对象
+* 可以在进程间可以共享，减少 JVM 间的对象复制，使得 JVM 的分割部署更容易实现
+* 本地缓存，减少磁盘缓存或者分布式缓存的响应时间
+
+# java 内存区域和内存溢出异常演练测试
+
+## OutOfMemoryError
+
+java vm参数
+
+* -Xms20M
+
+表示设置`堆容量的最小值`为20M，必须以M为单位
+
+* -Xmx20M
+
+表示设置堆容量的最大值为20M，必须以M为单位。将-Xmx和-Xms设置为一样可以避免堆自动扩展。
+
+```java
+package java7;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 参数设置：-verbose:gc -Xms20M -Xmx20M -XX:+HeapDumpOnOutOfMemoryError
+ * @Author mubi
+ * @Date 2019/2/20 11:05 PM
+ */
+public class HeapOOM {
+    static class OOMObject{
+
+    }
+    public static void main(String[] args) {
+        List<OOMObject> list = new ArrayList<>(16);
+        while (true){
+            list.add(new OOMObject());
+        }
+    }
+}
+```
+
+* output
+
+```java
+[GC 5499K->3757K(20480K), 0.0069130 secs]
+[GC 9901K->8805K(20480K), 0.0089900 secs]
+[Full GC 18460K->13805K(20480K), 0.1417260 secs]
+[Full GC 17849K->17803K(20480K), 0.1140610 secs]
+[Full GC 17803K->17791K(20480K), 0.0981060 secs]
+java.lang.OutOfMemoryError: Java heap space
+Dumping heap to java_pid42185.hprof ...
+Heap dump file created [30470683 bytes in 0.161 secs]
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at java.util.Arrays.copyOf(Arrays.java:2245)
+	at java.util.Arrays.copyOf(Arrays.java:2219)
+	at java.util.ArrayList.grow(ArrayList.java:242)
+	at java.util.ArrayList.ensureExplicitCapacity(ArrayList.java:216)
+	at java.util.ArrayList.ensureCapacityInternal(ArrayList.java:208)
+	at java.util.ArrayList.add(ArrayList.java:440)
+	at java7.HeapOOM.main(HeapOOM.java:17)
+```
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/stream_operate.png)
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/oom_analyse.png)
+
+* Shallow heap是一个对象消费的内存数量。每个对象的引用需要32（或者64 bits，基于CPU架构）。
+
+* Retained Heap显示的是那些当垃圾回收时候会清理的所有对象的Shallow Heap的总和。
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/histogram.png)
+
+* 参考
+
+1. 《Java 虚拟机》（第二版）
+
+2. https://www.cnblogs.com/cnmenglang/p/6261435.html
+
+3. https://www.jianshu.com/p/759e02c1feee
+
+## 虚拟机栈和本地方法栈溢出
+
+* Java程序中，每个线程都有自己的Stack Space(堆栈)。
+
+* -Xss128k：
+
+设置每个线程的堆栈大小。JDK5.0以后每个线程堆 栈大小为1M，以前每个线程堆栈大小为256K。根据应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右
+
+Stack Space用来做方法的递归调用时压入Stack Frame(栈帧)。所以当递归调用太深的时候，就有可能耗尽Stack Space，爆出StackOverflow的错误。
+
+* code
+
+```java
+package java7;
+
+/**
+ * 参数设置：-Xss160k
+ * @Author mubi
+ * @Date 2019/2/20 11:05 PM
+ */
+public class JavaVMStackSOF {
+    private int stackLength = 1;
+    public void stackLeak(){
+        stackLength ++;
+        stackLeak();
+    }
+    public static void main(String[] args) {
+       JavaVMStackSOF javaVMStackSOF = new JavaVMStackSOF();
+       try{
+           javaVMStackSOF.stackLeak();
+       }catch (Throwable e){
+           System.out.println("stackLength:" + javaVMStackSOF.stackLength);
+           throw e;
+       }
+    }
+}
+```
+
+output
+
+```java
+stackLength:774
+Exception in thread "main" java.lang.StackOverflowError
+	at java7.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:10)
+	at java7.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:11)
+	at java7.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:11)
+	at java7.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:11)
+	at java7.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:11)
+	at java7.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:11)
+```
+
+参考：
+
+1. https://blog.csdn.net/z69183787/article/details/79228215
+
+## 方法区和运行时常量池溢出
+
+方法区用于存放Class的相关信息，如：类名，访问修饰符，常量池，字符描述，方法描述等。对于这个区域的测试，基本思路是运行时产生大量的类去填满方法区，直到溢出。
+
+* Java7中
+
+* Java7 永久代仍存在；对比java6，其中：符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。
+
+### Java7 常量池 仍是`java.lang.OutOfMemoryError: Java heap space`
+
+```java
+package java7;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * VM args: -XX:PermSize=10M -XX:MaxPermSize=10M
+ *
+ */
+public class JavaMethodAreaOOM {
+	/**
+	 * 在JDK1.6中，intern()方法会把首次遇到的字符串复制到永久代中，
+	 * 返回的也是永久代中这个字符串的引用，
+	 * 而由StringBuilder创建的字符串实例在Java堆中，所以必然不是同一个引用，将返回false。
+	 * 
+	 * 而JDK1.7(以及部分其他虚拟机，例如JRockit)的intern()实现不会再复制实例，而是在常量池中记录首次出现的实例引用，
+	 * 因此intern()返回的引用和由StringBuilder创建的那个字符串是同一个。
+	 */
+	static void testStringIntern() {
+		String str1 = new StringBuilder("计算机").append("软件").toString();
+        System.out.println(str1.intern() == str1); // true
+
+        String str2 = new StringBuilder("ja").append("va").toString();
+        System.out.println(str2.intern() == str2); // false
+	}
+
+	static String  base = "string";
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<String>();
+        // 不断生成字符串常量
+        for (int i=0;i< Integer.MAX_VALUE;i++){
+            String str = base + base;
+            base = str;
+            list.add(str.intern());
+        }
+    }
+}
+```
+
+* output
+
+```java
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at java.util.Arrays.copyOf(Arrays.java:2367)
+	at java.lang.AbstractStringBuilder.expandCapacity(AbstractStringBuilder.java:130)
+	at java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:114)
+	at java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:415)
+	at java.lang.StringBuilder.append(StringBuilder.java:132)
+	at java7.JavaMethodAreaOOM.main(JavaMethodAreaOOM.java:31
+```
+
+参考：
+
+1. https://blog.csdn.net/tlk20071/article/details/77841841
+
+## 直接内存溢出
+
+NIO的Buffer提供了一个可以不经过JVM内存直接访问系统物理内存的类——DirectBuffer。DirectBuffer类继承自ByteBuffer，但和普通的ByteBuffer不同，普通的ByteBuffer仍在JVM堆上分配内存，其最大内存受到最大堆内存的限制；而DirectBuffer直接分配在物理内存中，并不占用堆空间，其可申请的最大内存受操作系统限制。
+
+直接内存的读写操作比普通Buffer快，但它的创建、销毁比普通Buffer慢。
+
+因此直接内存使用于需要大内存空间且频繁访问的场合，不适用于频繁申请释放内存的场合。
+
+* `-XX:MaxDirectMemorySize`，该值是有上限的，默认是64M，最大为`sun.misc.VM.maxDirectMemory()`，此参数的含义是当Direct ByteBuffer分配的堆外内存到达指定大小后，即触发Full GC
+
+```java
+package java7;
+
+import java.nio.ByteBuffer;
+
+/**
+ * 参数设置：-verbose:-Xmx20M -XX:MaxDirectMemorySize=10M
+ * @Author mubi
+ * @Date 2019/2/20 11:05 PM
+ */
+public class DirectMemoryOOM {
+	 public static final int _1MB = 1024 * 1024;
+
+	public static void main(String[] args) throws Exception{
+		ByteBuffer.allocateDirect(11 * _1MB);
+	}
+}
+```
+
+* output
+
+```java
+Exception in thread "main" java.lang.OutOfMemoryError: Direct buffer memory
+	at java.nio.Bits.reserveMemory(Bits.java:658)
+	at java.nio.DirectByteBuffer.<init>(DirectByteBuffer.java:123)
+	at java.nio.ByteBuffer.allocateDirect(ByteBuffer.java:306)
+	at java7.DirectMemoryOOM.main(DirectMemoryOOM.java:14)
 ```

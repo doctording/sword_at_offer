@@ -148,7 +148,7 @@ private void init(ThreadGroup g, Runnable target, String name,
 }
 ```
 
-### Thread 的 start() & run()
+### Thread 的 `start()` & run()
 
 * run()
 

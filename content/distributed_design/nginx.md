@@ -1,0 +1,259 @@
+---
+title: "nginx基础"
+layout: page
+date: 2019-06-07 00:00
+---
+
+[TOC]
+
+# nginx reverse proxy（反向代理）
+
+<a href="https://www.nginx.com/resources/glossary/reverse-proxy-server/" target="_blank">nginx reverse proxy docs</a>
+
+## What Is a Reverse Proxy Server?
+
+A proxy server is a go‑between or intermediary server that forwards requests for content from multiple clients to different servers across the Internet. A **reverse proxy server** is a type of proxy server that typically sits behind the firewall in a private network and directs client requests to the appropriate backend server. A reverse proxy provides an additional level of abstraction and control to ensure the smooth flow of network traffic between clients and servers.
+
+单词短语 | 解释
+- | -
+intermediary | adj.中间人的； 调解的； 居间的； 媒介的; n. 中间人； 媒介； 调解人； 中间阶段
+go‑between | 中间人
+firewall | n.防火墙；vt.用作防火墙；
+backend server | 后端服务器
+smooth | adj.光滑的； 流畅的； 柔软的； 温和的，安详的;vt.使平滑； 排除，消除； 安抚，平息； 使优雅;vi.变平和，变缓和；;n.平地，平面；
+forwards | adv.向前方，继续向前；v.促进( forward的第三人称单数 )； （按新地址）转寄； 发送； 助长；
+
+Common uses for a reverse proxy server include:
+
+* **Load balancing** – A reverse proxy server can act as a “traffic cop”, sitting in front of your backend servers and distributing client requests across a group of servers in a manner that maximizes speed and capacity utilization while ensuring no one server is overloaded, which can degrade performance. If a server goes down, the load balancer redirects traffic to the remaining online servers.
+
+* **Web acceleration** – Reverse  proxies can compress inbound and outbound data, as well as cache commonly requested content, both of which speed up the flow of traffic between clients and servers. They can also perform additional tasks such as SSL encryption to take load off of your web servers, thereby boosting their performance.
+
+* **Security and anonymity** – By intercepting requests headed for your backend servers, a reverse proxy server protects their identities and acts as an additional defense against security attacks. It also ensures that multiple servers can be accessed from a single record locator or URL regardless of the structure of your local area network.
+
+单词短语 | 解释
+- | -
+Load balancing | 负载均衡
+Web acceleration | 网络加速
+Security and anonymity | 安全和匿名
+degrade | vt.降低，贬低； 使降级； 降低…身份； 使丢脸;vt.& vi.（使）退化，降解，分解； 降解； 撤职，免职； 降低品格[身价，价值（等）]
+traffic cop | n.<美口>交通警察；
+inbound | adj.回内地的； 归本国的； 到达的； 入境的
+outbound | adj.开往外地的，开往外国的；
+take load off | 卸下包袱
+boost | vt.促进，提高； 增加； 吹捧； 向上推起;vi.宣扬； [美国俚语]（尤指在商店）行窃，偷窃；n.提高，增加； 帮助； 吹捧； 加速[助推]器
+
+# High-Performance Load Balancing （负载均衡）
+
+* multiple copies of the same system
+* horizontal scaling(水平扩展)
+
+## HTTP load balance
+
+### Problem
+
+You need to distribute load between two or more HTTP servers.
+
+(需要解决的是：将用户请求分发到 2 台以上 HTTP 服务器)
+
+### Solution(解决方案)
+
+* 将后端请求路由到2个服务器，并配置权重
+
+```java
+upstream backend {
+    server 10.10.12.45:80 weight=1;
+    server app.example.com:80 weight=2;
+}
+server {
+    location / {
+        proxy_pass http://backend;
+    }
+}
+```
+
+单词短语 | 解释
+- | -
+upstream | adj.向上游的； 逆流而上的； （石油工业等）上游的；adv.向上游； 逆流地；n.上游部门；
+
+* 如下，默认使用`Round Robin`使用两台服务器
+
+```java
+http {
+    upstream backend {
+        server backend1.example.com;
+        server backend2.example.com;
+        server 192.0.0.1 backup;
+    }
+    server {
+        location / {
+            proxy_pass http://backend;
+        }
+    }
+}
+```
+
+### 负载均衡算法
+
+#### Round Robin（轮询）
+
+This is the default load-balancing method, which distributes requests in the order of the list of servers in the upstream pool.You can also take weight into consideration for a weighted round robin, which you can use if the capacity of the upstream servers varies. The higher the integer value for the weight, the more favored the server will be in the round robin. The algorithm behind weight is simply statistical probability of a weighted average.
+
+将请求按顺序轮流分配到后台服务器上，均衡的对待每一台服务器，而不关心服务器实际的连接数和当前的系统负载。也可以考虑假如权重。
+
+##### Weight Round Robin
+
+#### Least connections（最小连接数）
+
+This method balances load by proxying the current request to the upstream server with the least number of open connections.Least connections, like round robin, also takes weights into account when deciding to which server to send the connection. The directive name is least_conn.
+
+由于后台服务器的配置不尽相同，对请求的处理有快有慢，它正是根据后端服务器当前的连接情况，动态的选取其中当前积压连接数最少的一台服务器来处理当前请求，尽可能的提高后台服务器利用率，将负载合理的分流到每一台服务器。
+
+#### Least time(最短响应时间负载均衡算法)
+
+Available only in NGINX Plus, least time is akin to least connections in that it proxies to the upstream server with the least number of current connections but favors the servers with the lowest average response times. This method is one of the most sophisticated load-balancing algorithms and fits the needs of highly performant web applications. This algorithm is a valueadd over least connections because a small number of connections does not necessarily mean the quickest response. A parameter of header or last_byte must be specified for this directive. When header is specified, the time to receive the response header is used. When last_byte is specified, the time to receive the full response is used. The directive name is least_time.
+
+将请求 分发给平均响应时间更短的应用服务器。它是负载均衡算法最复杂的算法 之一，能够适用于需要高性能的 Web 服务器负载均衡的业务场景。该算法 是对最少连接数负载均衡算法的优化实现，因为最少的访问连接并非意味着 更快的响应。该指令的配置名称是 least_time。
+
+#### Generic hash(哈希)
+
+The administrator defines a hash with the given text, variables of the request or runtime, or both. NGINX distributes the load among the servers by producing a hash for the current request and placing it against the upstream servers. This method is very useful when you need more control over where requests are sent or for determining which upstream server most likely will have the data cached. Note that when a server is added or removed from the pool, the hashed requests will be redistributed. This algorithm has an optional parameter, consistent, to minimize the effect of redistribution. The directive name is hash.
+
+缓存使用，一致性哈希问题
+
+#### Random
+
+This method is used to instruct NGINX to select a random server from the group, taking server weights into consideration. The optional two [method] parameter directs NGINX to randomly select two servers and then use the provided loadbalancing method to balance between those two. By default the least_conn method is used if two is passed without a method. The directive name for random load balancing is random.
+
+#### IP hash
+
+This method works only for HTTP. IP hash uses the client IP address as the hash. Slightly different from using the remote variable in a generic hash, this algorithm uses the first three octets of an IPv4 address or the entire IPv6 address. This method ensures that clients are proxied to the same upstream server as long as that server is available, which is extremely helpful when the session state is of concern and not handled by shared memory of the application. This method also takes the weight parameter into consideration when distributing the hash. The directive name is ip_hash.
+
+* 通过客户端请求ip进行hash，再通过hash值选择后端server
+
+当你服务端的一个特定url路径会被同一个用户连续访问时，如果负载均衡策略还是轮询的话，那该用户的多次访问会被打到各台服务器上，这显然并不高效（会建立多次http链接等问题）。甚至考虑一种极端情况，用户需要分片上传文件到服务器下，然后再由服务器将分片合并，这时如果用户的请求到达了不同的服务器，那么分片将存储于不同的服务器目录中，导致无法将分片合并。所以，此类场景可以考虑采用nginx提供的ip_hash策略。既能满足每个用户请求到同一台服务器，又能满足不同用户之间负载均衡。
+
+#### URL hash
+
+一般来讲，要用到url hash，是要配合缓存命中来使用。举一个我遇到的实例：有一个服务器集群A，需要对外提供文件下载，由于文件上传量巨大，没法存储到服务器磁盘中，所以用到了第三方云存储来做文件存储。服务器集群A收到客户端请求之后，需要从云存储中下载文件然后返回，为了省去不必要的网络带宽和下载耗时，在服务器集群A上做了一层临时缓存（缓存一个月）。由于是服务器集群，所以同一个资源多次请求，可能会到达不同的服务器上，导致不必要的多次下载，缓存命中率不高，以及一些资源时间的浪费。在此类场景下，为了使得缓存命中率提高，很适合使用url_hash策略，同一个url（也就是同一个资源请求）会到达同一台机器，一旦缓存住了资源，再此收到请求，就可以从缓存中读取，既减少了带宽，也减少的下载时间。
+
+## TCP/UDP load balance
+
+Load balancing refers to efficiently distributing network traffic across multiple backend servers.
+
+In NGINX Plus Release 5 and later, NGINX Plus can proxy and load balance Transmission Control Protocol) (TCP) traffic. TCP is the protocol for many popular applications and services, such as LDAP, MySQL, and RTMP.
+
+In NGINX Plus Release 9 and later, NGINX Plus can proxy and load balance UDP traffic. UDP (User Datagram Protocol) is the protocol for many popular non-transactional applications, such as DNS, syslog, and RADIUS.
+
+## cookie & session（http 知识复习）
+
+### http无连接概念介绍
+
+HTTP的设计者有意利用这种特点将协议设计为请求时建连接、请求完释放连接，以尽快将资源释放出来服务其他客户端。随着时间的推移，网页变得越来越复杂，里面可能嵌入了很多图片，这时候每次访问图片都需要建立一次 TCP 连接就显得很低效。后来，Keep-Alive 被提出用来解决这效率低的问题。
+
+我们知道HTTP协议采用“请求-应答”模式，当使用非KeepAlive模式时，每个请求/应答客户和服务器都要新建一个连接，完成之后立即断开连接；当使用Keep-Alive模式时，Keep-Alive功能使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。
+
+http 1.0中默认是关闭的，需要在http头加入”Connection: Keep-Alive”，才能启用Keep-Alive；
+
+http 1.1中默认启用Keep-Alive，如果加入”Connection: close“，才关闭，目前大部分浏览器都是用http1.1协议，也就是说默认都会发起Keep-Alive的连接请求了。Keep-Alive不会永久保持连接，它有一个保持时间。
+
+### Session
+
+A session creates a file in a temporary directory on the server where registered session variables and their values are stored. This data will be available to all pages on the site during that visit.
+
+A session ends when the user closes the browser or after leaving the site, the server will terminate the session after a predetermined period of time, commonly 30 minutes duration.
+
+### Cookie
+
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">mozilla doc of cookie</a>
+
+An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to the user's web browser. The browser may store it and send it back with the next request to the same server. Typically, it's used to tell if two requests came from the same browser — keeping a user logged-in, for example. It remembers stateful information for the **stateless** HTTP protocol.
+
+Cookies are mainly used for three purposes:
+
+* Session management
+
+Logins, shopping carts, game scores, or anything else the server should remember
+
+* Personalization
+
+User preferences, themes, and other settings
+
+* Tracking
+
+Recording and analyzing user behavior
+
+#### how to create cookie
+
+When receiving an HTTP request, a server can send a `Set-Cookie header` with the response. The cookie is usually stored by the browser, and then the cookie is sent with requests made to the same server inside a `Cookie HTTP header`. An expiration date or duration can be specified, after which the cookie is no longer sent. Additionally, restrictions to a specific domain and path can be set, limiting where the cookie is sent.
+
+## HTTP Health Checks（HTTP健康检查）
+
+### Server Slow Start（服务慢开始）
+
+A recently recovered server can be easily overwhelmed by connections, which may cause the server to be marked as unavailable again. Slow start allows an upstream server to gradually recover its weight from zero to its nominal value after it has been recovered or became available. This can be done with the slow_start parameter of the the upstream server directive:
+
+```java
+upstream backend {
+    server backend1.example.com slow_start=30s;
+    server backend2.example.com;
+    server 192.0.0.1 backup;
+}
+```
+
+Note that if there is only a single server in a group, the slow_start parameter is ignored and the server is never marked unavailable. Slow start is exclusive to NGINX Plus.
+
+### Passive Health Checks
+
+For passive health checks, NGINX and NGINX Plus monitor transactions as they happen, and try to resume failed connections. If the transaction still cannot be resumed, NGINX Open Source and NGINX Plus mark the server as unavailable and temporarily stop sending requests to it until it is marked active again.
+
+### Active Health Checks
+
+NGINX Plus can periodically check the health of upstream servers by sending special health‑check requests to each server and verifying the correct response.
+
+## TCP Health Checks（TCP健康检查）
+
+NGINX and NGINX Plus can continually test your TCP upstream servers, avoid the servers that have failed, and gracefully add the recovered servers into the load‑balanced group.
+
+### Passive TCP Health Checks(被动的TCP健康检查)
+
+If an attempt to connect to an upstream server times out or results in an error, NGINX Open Source or NGINX Plus can mark the server as unavailable and stop sending requests to it for a defined amount of time. To define the conditions under which NGINX considers an upstream server unavailable, include the following parameters to the server directive
+
+1. `fail_timeout` – The amount of time within which a specified number of connection attempts must fail for the server to be considered unavailable. Also, the amount of time that NGINX considers the server unavailable after marking it so.
+
+2. `max_fails` – The number of failed attempts that happen during the specified time for NGINX to consider the server unavailable.
+
+### Active TCP Health Checks(主动的TCP健康检查)
+
+NGINX Plus sends special health check requests to each upstream server and checks for a response that satisfies certain conditions. If a connection to the server cannot be established, the health check fails, and the server is considered unhealthy. NGINX Plus does not proxy client connections to unhealthy servers. If several health checks are configured for an upstream group, the failure of any check is enough to consider the corresponding server unhealthy.
+
+### Fine-Tuning TCP Health Checks
+
+单词短语 | 解释
+- | -
+fine-tuning | v.调整，使有规则( fine-tune的现在分词 )；
+
+By default, NGINX Plus tries to connect to each server in an upstream server group every 5 seconds. If the connection cannot be established, NGINX Plus considers the health check failed, marks the server as unhealthy, and stops forwarding client connections to the server.
+
+* `interval` – How often (in seconds) NGINX Plus sends health check requests (default is 5 seconds)
+
+* `passes` – Number of consecutive health checks the server must respond to to be considered healthy (default is 1)
+
+* `fails` – Number of consecutive health checks the server must fail to respond to to be considered unhealthy (default is 1)
+
+# Massively Scalable Content Caching
+
+单词短语 | 解释
+- | -
+massive | adj.大的，重的； 大块的，大量的； 魁伟的，结实的； 大规模的
+
+Caching accelerates content serving by storing request responses to be served again in the future. Content caching reduces load to upstream servers, caching the full response rather than running computations and queries again for the same request. Caching increases performance and reduces load, meaning you can served faster with fewer resources. Scaling and distributing caching servers in strategic locations can have a dramatic effect on user experience. It’s optimal to host content close to the consumer for the best performance. You can also cache your content close to your users. This is the pattern of content delivery networks, or CDNs. With NGINX you’re able to cache your content wherever you can place an NGINX server, effectively enabling you to create your own CDN. With NGINX caching, you’re also able to passively cache and serve cached responses in the event of an upstream failure.
+
+通过对请求的响应结果进行缓存，能够为后续相同请求提供加速服务。对相同请求 响应内容进行内容缓存(Content Caching)，相比每次请求都重新计算和查询被代理 服务器，能有效降低被代理服务器负载。内容缓存能提升服务性能，降低服务器负载压力，同时意味着能够使用更少的资源提供更快的服务。可伸缩的缓存服务从架构 层面来讲，能够显著提升用户体验，因为响应内容经过更少的转发就能够发送给用户，同时能提升服务器性能。
+
+Web缓存类型 | 描述
+- | -
+数据库缓存 | 当web应用关系复杂，数据表蹭蹭蹭往上涨时，可以将查询后的数据放到内存中进行缓存，下次再查询时，就直接从内存缓存中获取，从而提高响应速度。
+CDN缓存 | 当我们发送一个web请求时，CDN会帮我们计算去哪得到这些内容的路径短且快。这个是网站管理员部署的，所以他们也可以将大家经常访问的内容放在CDN里，从而加快响应。
+代理服务器缓存 | 代理服务器缓存，跟浏览器缓存性质类似，但是代理服务器缓存面向的群体更广，规模更大。它不只为一个用户服务，一般为大量用户提供服务，同一个副本会被重用多次,因此在减少响应时间和带宽使用方面很有效。
+浏览器缓存 | 每个浏览器都实现了 HTTP 缓存，我们通过浏览器使用HTTP协议与服务器交互的时候，浏览器就会根据一套与服务器约定的规则进行缓存工作。当我们在浏览器中点击前进和后退 按钮时，利用的便是浏览器的缓存机制。

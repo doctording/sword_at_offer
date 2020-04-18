@@ -207,4 +207,4 @@ main end
 
 4. wait()方法会释放持有的锁，不然其它线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁，所以释放锁，可以执行其他线程，也可以唤醒自己，只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；
 
-5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用notify()来唤醒；而sleep()能在任何地方调用；
+5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用`notify()`来唤醒；而sleep()能在任何地方调用；
