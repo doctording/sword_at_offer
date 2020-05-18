@@ -49,7 +49,7 @@ date: 2019-03-09 00:00
 
 * `synchronized` 严格准守`Java happends-before`规则，一个`monitor exit`指令之前必定要有一个`monitor enter`
 
-### 反编译查看
+### 反编译查看(字节码层级的实现)
 
 ```java
 public class SynchronizedDemo {
@@ -101,6 +101,10 @@ public class SynchronizedDemo {
 ```
 
 参考：<a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14" target="_blank">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14</a>
+
+### JVM层级(Hotspot实现)的实现
+
+// TODO
 
 ## 基本用法
 

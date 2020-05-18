@@ -18,13 +18,13 @@ Class文件是一组以8位字节为基础单位的`二进制流`，任何一个
 
 1. 字面量：如文本字符串，声明为final的常量值
 
-2. 符号引用： 类和接口的全限定名，字段的名称和描述符，方法的名称和描述符
+2. 符号引用：类和接口的全限定名，字段的名称和描述符，方法的名称和描述符
 
-Class文件中不会保存各个方法，字段的最终内存布局信息，因此这些字段，方法的符号引用不经过运行期转换的话，无法得到真正的内存入口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析，翻译到具体的内存地址之中。
+Class文件中不会保存各个方法，字段的最终内存布局信息；因此这些字段，方法的符号引用不经过运行期转换的话，无法得到真正的内存入口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析，翻译到具体的内存地址之中。
 
 ## 访问标志
 
-用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义为public类型；是否定义为abstrac类型；如果是类的话，是否被声明为final等。
+用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义为public类型；是否定义为abstract类型；如果是类的话，是否被声明为final等。
 
 ## 类索引，父类索引，接口索引
 
@@ -42,6 +42,19 @@ Class文件中不会保存各个方法，字段的最终内存布局信息，因
 
 上述Class文件，字段表，方法表都可以携带自己的属性表集合
 
+# hotSpot对象存储
+
+* 对象在内存中存储的布局可以分为3块区域：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/hotspot_obj.png)
+
+<a href="http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html" target="_blank">hotspot 相关术语表</a>
+
+术语 | 英文说明 | 中文解释
+-|-|-
+mark word | The first word of every object header. Usually a set of bitfields including synchronization state and identity hash code. May also be a pointer (with characteristic low bit encoding) to synchronization related information. During GC, may contain GC state bits. | 用于存储对象自身的运行时数据， 如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等等
+klass pointer | The second word of every object header. Points to another object (a metaobject) which describes the layout and behavior of the original object. For Java objects, the "klass" contains a C++ style "vtable". | 是对象指向它的类的元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。并不是所有的虚拟机实现都必须在对象数据上保留类型指针，换句话说查找对象的元数据信息并不一定要经过对象本身。
+
 # 程序编译和代码优化
 
 * 词法，语法分析
@@ -57,9 +70,10 @@ Class文件中不会保存各个方法，字段的最终内存布局信息，因
 ## 类加载
 
 ```js
-连接( 验证 =》 准备 =》 解析)
-    => 初始化
-        => 使用
+装载
+  =>连接( 验证 =》 准备 =》 解析)
+     => 初始化
+         => 使用
             => 卸载
 ```
 
@@ -109,7 +123,7 @@ public static final int value = 123;
 6. 被标明为启动类的类（即包含`main()方法`的类）要初始化；
 7. 当使用JDK1.7的动态语言支持时，如果一个`java.invoke.MethodHandle`实例最后的解析结果REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行过初始化，则需要先触发其初始化。
 
-以上情况称为对一个类进行主动引用，且有且只要以上几种情况需要对类进行初始化：
+以上情况称为对一个类进行主动引用，且有且只要以上几种情况是需要对类进行初始化：
 
 * 所有类变量初始化语句和静态代码块都会在编译时被前端编译器放在收集器里头，存放到一个特殊的方法中，这个方法就是`<clinit>`方法，即类/接口初始化方法，该方法只能在类加载的过程中由JVM调用；
 
@@ -117,7 +131,7 @@ public static final int value = 123;
 
 * 如果超类还没有被初始化，那么优先对超类初始化，但在`<clinit>`方法内部不会显示调用超类的`<clinit>`方法，由JVM负责保证一个类的`<clinit>`方法执行之前，它的超类`<clinit>`方法已经被执行。
 
-* JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，仅仅只能允许其中一个线程对其执行初始化操作，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其他线程。(所以可以利用静态内部类实现线程安全的单例模式)
+* JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，**仅仅只能允许其中一个线程对其执行初始化操作**，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其他线程。(所以可以利用静态内部类实现线程安全的单例模式)
 
 * 如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类`<clinit>`方法；
 
@@ -203,6 +217,10 @@ class Singleton{
 }
 
 class Singleton2{
+    static{
+        System.out.println(String.format("after Singleton2 constructor: v1:%d, v2:%d, v3:%d",
+                v1,v2,v3));
+    }
     public static int v1;
     public static int v2 = 0;
     public static int v3 = 10;
@@ -217,7 +235,7 @@ class Singleton2{
         v1++;
         v2++;
         v3++;
-        System.out.println(String.format("before Singleton2 constructor: v1:%d, v2:%d, v3:%d",
+        System.out.println(String.format("after Singleton2 constructor: v1:%d, v2:%d, v3:%d",
                 v1,v2,v3));
     }
 
@@ -263,7 +281,7 @@ Singleton1 value2:0
 Singleton1 value3:10
 static block
 before Singleton2 constructor: v1:0, v2:0, v3:10
-before Singleton2 constructor: v1:1, v2:1, v3:11
+after Singleton2 constructor: v1:1, v2:1, v3:11
 Singleton2 v1:1
 Singleton2 v2:1
 Singleton2 v3:11
@@ -286,7 +304,7 @@ Singleton2 v3:11
 
 2. 访问了静态方法`访问静态方法`, 开始加载类`Singleton`
 
-3. 随后，类的验证，准备
+3. 随后：类的连接( 验证 =》 准备 =》 解析)
 
 这里会将为singleton(引用类型)设置为null,value1,value2,value3（基本数据类型）设置默认值0 ）
 
@@ -344,7 +362,7 @@ private static Singleton2 singleton2 = new Singleton2();
 ```java
 static block
 before Singleton2 constructor: v1:0, v2:0, v3:10
-before Singleton2 constructor: v1:1, v2:1, v3:11
+after Singleton2 constructor: v1:1, v2:1, v3:11
 Singleton2 v1:1
 Singleton2 v2:1
 Singleton2 v3:11

@@ -33,9 +33,9 @@ In most Internet applications:
 
 ## 缓存穿透
 
-### 什么是缓存穿透
+### 什么是缓存穿透（cache penetration）
 
-缓存穿透是说收到一个请求，但是该请求在缓存中不存在，只能去数据库中查询，然后会放进缓存。但当有好多请求同时访问同一个数据时，业务系统把这些请求全发到了数据库；或者恶意构造一个逻辑上不存在的数据，然后大量发送这个请求，这样每次都会被发送到数据库，最总导致数据库挂掉。
+缓存穿透是说：收到一个请求，但是该请求在缓存中不存在，只能去数据库中查询，然后再放进缓存。但当有好多请求同时访问同一个数据时，业务系统把这些请求全发到了数据库；或者恶意构造一个逻辑上不存在的数据，然后大量发送这个请求，这样每次都会被发送到数据库去处理，最终导致数据库挂掉。
 
 即：请求的数据在缓存大量不命中，导致请求都走数据库。缓存穿透如果发生了，也可能把我们的数据库搞垮，导致整个服务瘫痪！
 
@@ -69,27 +69,35 @@ collapse | vi.折叠； 倒塌； 崩溃； （尤指工作劳累后）坐下; v
 
 ### 如何解决缓存穿透
 
-* 由于请求的参数是不合法的(每次都请求不存在的参数)，于是我们可以使用布隆过滤器(BloomFilter)或者压缩filter提前拦截，不合法就不让这个请求到数据库层！
+1. 当我们从数据库找不到的时候，我们也将这个空对象设置到缓存里边去。下次再请求的时候，就可以从缓存里边获取了。一般会将空对象设置一个较短的过期时间。
 
-* 当我们从数据库找不到的时候，我们也将这个空对象设置到缓存里边去。下次再请求的时候，就可以从缓存里边获取了。一般会将空对象设置一个较短的过期时间。
+2. 由于请求的参数是不合法的(每次都请求不存在的参数)，于是我们可以使用布隆过滤器(BloomFilter)或者压缩filter提前拦截，不合法就不让这个请求到数据库层！
 
 ### 解决1:缓存空对象(Cache empty data)（缺点）
 
-* 指标不治本(本身也是有过期时间的)
+* 指标不治本(空数据对象本身缓存也是有过期时间的)
 * 大量空值会占用缓存内存
 
 ### 解决2:BloomFilter
 
 It needs to add a barrier（n.障碍； 屏障； 栅栏； 分界线vt.把…关入栅栏； 用栅栏围住；） before the cache, which ；stores all the keys that exist in the current database.
 
-将数据库中所有的查询条件，放入布隆过滤器中；当一个查询请求过来时，先经过布隆过滤器进行查，如果判断请求查询值存在，则继续查；如果判断请求查询不存在，直接丢弃。
+将数据库中所有的查询条件，放入布隆过滤器中；当一个查询请求过来时，先经过布隆过滤器进行查，如果判断请求查询值存在，则继续查；如果判断请求查询不存在，则直接丢弃。
 
 <a href="https://github.com/doctording/springboot_gradle_demos/tree/master/code/demo">springboot demo项目</a>
 
 * 低并发,定时任务去每天更新bloomFilter,维护每天的一个bloomFilter
 * 初始预热，动态新增
 
-## 缓存雪崩
+### BloomFilter的缺点
+
+* 存在误判(当一个布隆过滤器判断一个数据在集合中存在时，有一定的可能性误判;不存在的则100%正确)。如果bloom filter中存储的是黑名单，那么可以通过建立一个白名单来存储可能会误判的元素
+
+* 删除困难。一个放入容器的元素映射到bit数组的k个位置上是1，删除的时候不能简单的直接置为0，可能会影响其他元素的判断。可以采用`Counting Bloom Filter`
+
+`Counting Bloom Filter`:将标准Bloom Filter位数组的每一位扩展为一个小的计数器（Counter），在插入元素时给对应的k（k为哈希函数个数）个Counter的值分别加1，删除元素时给对应的k个Counter的值分别减1。Counting Bloom Filter通过多占用几倍的存储空间的代价，给Bloom Filter增加了删除操作
+
+## 缓存雪崩（cache avalanche）
 
 ### 缓存雪崩的概念
 
@@ -175,7 +183,7 @@ We can use the lock mechanism that comes with the cache. When the first database
 When a hotspot data fails, only the first database query request is sent to the database, and all other query requests are blocked, thus protecting the database. However, due to the use of a mutex, other requests will block waiting and the throughput of the system will drop. This needs to be combined with actual business considerations to allow this.
 （当出现热点数据失效时，只有第一个请求会发送到数据库，其它的请求都会被阻塞，这样能保护数据库；当然，由于使用了mutex，其它的请求会被阻塞而进行等待，这会降低系统的吞吐率。这需要与实际的业务考虑相结合。）
 
-* 第一个获取到锁，当更新或者从数据库获取完成后再释放锁，其他的请求只需要牺牲一定的等待时间，即可直接从缓存中继续获取数据。
+* 第一个获取到锁，当更新或者从数据库获取完成后再释放锁，**其它的请求只需要牺牲一定的等待时间**，即可直接从缓存中继续获取数据。
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/cache_mutex.png)
 
@@ -226,7 +234,7 @@ eg:一次mget操作，需要从多个缓存实例去获取数据，这包含了�
 方案 | 优点 | 缺点 | 网络IO
 -|-|-|-
 串行mget | 1.编程简单2.少量keys，性能满足要求 | 大量keys请求延迟严重 | O(keys)
-串行IO | 1.编程简单2.少量节点，性能满足要求 | 大量node延迟严重	 | O(nodes)
+串行IO | 1.编程简单2.少量节点，性能满足要求 | 大量node延迟严重 | O(nodes)
 并行IO | 1.利用并行特性2.延迟取决于最慢的节点 | 1.编程复杂2.超时定位较难 | O(max_slow(node))
 hash tags | 性能最高 | 1.tag-key业务维护成本较高2.tag分布容易出现数据倾斜 | O(1)
 

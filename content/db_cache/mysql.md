@@ -96,7 +96,7 @@ date: 2020-03-08 18:00
 
 * CROSS JOIN: 把表A和表B的数据进行一个N*M的组合，即笛卡尔积
 
-### 多表连接的三种方式详解 hash join、merge join、 nested loop
+### 多表连接的三种方式详解 hash join、merge join、nested loop
 
 #### nested loop（嵌套循环）
 
