@@ -34,7 +34,8 @@
 </ul>
 </li>
 <li><a href="#synchronized">synchronized的几个性质</a><ul>
-<li><a href="#_5">反编译查看</a></li>
+<li><a href="#_5">反编译查看(字节码层级的实现)</a></li>
+<li><a href="#jvmhotspot">JVM层级(Hotspot实现)的实现</a></li>
 </ul>
 </li>
 <li><a href="#_6">基本用法</a><ul>
@@ -90,7 +91,7 @@
 <p><code>synchronized</code> 严格准守<code>Java happends-before</code>规则，一个<code>monitor exit</code>指令之前必定要有一个<code>monitor enter</code></p>
 </li>
 </ul>
-<h3 id="_5">反编译查看</h3>
+<h3 id="_5">反编译查看(字节码层级的实现)</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SynchronizedDemo</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">method</span> <span class="o">(){</span>
         <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
@@ -141,6 +142,8 @@
 
 
 <p>参考：<a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14" target="_blank">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-3.html#jvms-3.14</a></p>
+<h3 id="jvmhotspot">JVM层级(Hotspot实现)的实现</h3>
+<p>// TODO</p>
 <h2 id="_6">基本用法</h2>
 <p><code>synchronized</code> 可用于代码块或方法进行修饰，而不能对class以及变量进行修饰, eg:</p>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">sync</span><span class="o">(){}</span>
@@ -683,7 +686,7 @@ monitor_jstack.png)</p>
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-04-18 18:40:38</p>
+        <p>Site Generated 2020-05-18 10:00:44</p>
       </span>
     </div>
 

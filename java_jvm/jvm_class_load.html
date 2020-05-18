@@ -36,6 +36,7 @@
 <li><a href="#_5">属性表</a></li>
 </ul>
 </li>
+<li><a href="#hotspot">hotSpot对象存储</a></li>
 <li><a href="#_6">程序编译和代码优化</a><ul>
 <li><a href="#_7">类加载</a><ul>
 <li><a href="#class_2">验证（class字节流的校验）</a></li>
@@ -85,12 +86,12 @@
 <p>字面量：如文本字符串，声明为final的常量值</p>
 </li>
 <li>
-<p>符号引用： 类和接口的全限定名，字段的名称和描述符，方法的名称和描述符</p>
+<p>符号引用：类和接口的全限定名，字段的名称和描述符，方法的名称和描述符</p>
 </li>
 </ol>
-<p>Class文件中不会保存各个方法，字段的最终内存布局信息，因此这些字段，方法的符号引用不经过运行期转换的话，无法得到真正的内存入口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析，翻译到具体的内存地址之中。</p>
+<p>Class文件中不会保存各个方法，字段的最终内存布局信息；因此这些字段，方法的符号引用不经过运行期转换的话，无法得到真正的内存入口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析，翻译到具体的内存地址之中。</p>
 <h2 id="_2">访问标志</h2>
-<p>用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义为public类型；是否定义为abstrac类型；如果是类的话，是否被声明为final等。</p>
+<p>用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义为public类型；是否定义为abstract类型；如果是类的话，是否被声明为final等。</p>
 <h2 id="_3">类索引，父类索引，接口索引</h2>
 <h2 id="field_info">字段表(field_info)</h2>
 <p>用来描述接口或者类中声明的变量， 可以包括的信息有：</p>
@@ -99,6 +100,33 @@
 <p>方法签名：方法名称，参数顺序，参数类型</p>
 <h2 id="_5">属性表</h2>
 <p>上述Class文件，字段表，方法表都可以携带自己的属性表集合</p>
+<h1 id="hotspot">hotSpot对象存储</h1>
+<ul>
+<li>对象在内存中存储的布局可以分为3块区域：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）</li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/hotspot_obj.png" /></p>
+<p><a href="http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html" target="_blank">hotspot 相关术语表</a></p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>英文说明</th>
+<th>中文解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mark word</td>
+<td>The first word of every object header. Usually a set of bitfields including synchronization state and identity hash code. May also be a pointer (with characteristic low bit encoding) to synchronization related information. During GC, may contain GC state bits.</td>
+<td>用于存储对象自身的运行时数据， 如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等等</td>
+</tr>
+<tr>
+<td>klass pointer</td>
+<td>The second word of every object header. Points to another object (a metaobject) which describes the layout and behavior of the original object. For Java objects, the "klass" contains a C++ style "vtable".</td>
+<td>是对象指向它的类的元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。并不是所有的虚拟机实现都必须在对象数据上保留类型指针，换句话说查找对象的元数据信息并不一定要经过对象本身。</td>
+</tr>
+</tbody>
+</table>
 <h1 id="_6">程序编译和代码优化</h1>
 <ul>
 <li>词法，语法分析</li>
@@ -114,9 +142,10 @@
 </li>
 </ul>
 <h2 id="_7">类加载</h2>
-<div class="hlcode"><pre><span class="err">连接</span><span class="p">(</span> <span class="err">验证</span> <span class="o">=</span><span class="err">》</span> <span class="err">准备</span> <span class="o">=</span><span class="err">》</span> <span class="err">解析</span><span class="p">)</span>
-    <span class="o">=&gt;</span> <span class="err">初始化</span>
-        <span class="o">=&gt;</span> <span class="err">使用</span>
+<div class="hlcode"><pre><span class="err">装载</span>
+  <span class="o">=&gt;</span><span class="err">连接</span><span class="p">(</span> <span class="err">验证</span> <span class="o">=</span><span class="err">》</span> <span class="err">准备</span> <span class="o">=</span><span class="err">》</span> <span class="err">解析</span><span class="p">)</span>
+     <span class="o">=&gt;</span> <span class="err">初始化</span>
+         <span class="o">=&gt;</span> <span class="err">使用</span>
             <span class="o">=&gt;</span> <span class="err">卸载</span>
 </pre></div>
 
@@ -153,7 +182,7 @@
 <li>被标明为启动类的类（即包含<code>main()方法</code>的类）要初始化；</li>
 <li>当使用JDK1.7的动态语言支持时，如果一个<code>java.invoke.MethodHandle</code>实例最后的解析结果REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行过初始化，则需要先触发其初始化。</li>
 </ol>
-<p>以上情况称为对一个类进行主动引用，且有且只要以上几种情况需要对类进行初始化：</p>
+<p>以上情况称为对一个类进行主动引用，且有且只要以上几种情况是需要对类进行初始化：</p>
 <ul>
 <li>
 <p>所有类变量初始化语句和静态代码块都会在编译时被前端编译器放在收集器里头，存放到一个特殊的方法中，这个方法就是<code>&lt;clinit&gt;</code>方法，即类/接口初始化方法，该方法只能在类加载的过程中由JVM调用；</p>
@@ -165,7 +194,7 @@
 <p>如果超类还没有被初始化，那么优先对超类初始化，但在<code>&lt;clinit&gt;</code>方法内部不会显示调用超类的<code>&lt;clinit&gt;</code>方法，由JVM负责保证一个类的<code>&lt;clinit&gt;</code>方法执行之前，它的超类<code>&lt;clinit&gt;</code>方法已经被执行。</p>
 </li>
 <li>
-<p>JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，仅仅只能允许其中一个线程对其执行初始化操作，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其他线程。(所以可以利用静态内部类实现线程安全的单例模式)</p>
+<p>JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，<strong>仅仅只能允许其中一个线程对其执行初始化操作</strong>，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其他线程。(所以可以利用静态内部类实现线程安全的单例模式)</p>
 </li>
 <li>
 <p>如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类<code>&lt;clinit&gt;</code>方法；</p>
@@ -243,6 +272,10 @@
 <span class="o">}</span>
 
 <span class="kd">class</span> <span class="nc">Singleton2</span><span class="o">{</span>
+    <span class="kd">static</span><span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;after Singleton2 constructor: v1:%d, v2:%d, v3:%d&quot;</span><span class="o">,</span>
+                <span class="n">v1</span><span class="o">,</span><span class="n">v2</span><span class="o">,</span><span class="n">v3</span><span class="o">));</span>
+    <span class="o">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v1</span><span class="o">;</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">v3</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
@@ -257,7 +290,7 @@
         <span class="n">v1</span><span class="o">++;</span>
         <span class="n">v2</span><span class="o">++;</span>
         <span class="n">v3</span><span class="o">++;</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;before Singleton2 constructor: v1:%d, v2:%d, v3:%d&quot;</span><span class="o">,</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;after Singleton2 constructor: v1:%d, v2:%d, v3:%d&quot;</span><span class="o">,</span>
                 <span class="n">v1</span><span class="o">,</span><span class="n">v2</span><span class="o">,</span><span class="n">v3</span><span class="o">));</span>
     <span class="o">}</span>
 
@@ -302,7 +335,7 @@
 <span class="nx">Singleton1</span> <span class="nx">value3</span><span class="o">:</span><span class="mi">10</span>
 <span class="kr">static</span> <span class="nx">block</span>
 <span class="nx">before</span> <span class="nx">Singleton2</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">v1</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">v2</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">v3</span><span class="o">:</span><span class="mi">10</span>
-<span class="nx">before</span> <span class="nx">Singleton2</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">v1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">v2</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">v3</span><span class="o">:</span><span class="mi">11</span>
+<span class="nx">after</span> <span class="nx">Singleton2</span> <span class="nx">constructor</span><span class="o">:</span> <span class="nx">v1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">v2</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">v3</span><span class="o">:</span><span class="mi">11</span>
 <span class="nx">Singleton2</span> <span class="nx">v1</span><span class="o">:</span><span class="mi">1</span>
 <span class="nx">Singleton2</span> <span class="nx">v2</span><span class="o">:</span><span class="mi">1</span>
 <span class="nx">Singleton2</span> <span class="nx">v3</span><span class="o">:</span><span class="mi">11</span>
@@ -330,7 +363,7 @@
 <p>访问了静态方法<code>访问静态方法</code>, 开始加载类<code>Singleton</code></p>
 </li>
 <li>
-<p>随后，类的验证，准备</p>
+<p>随后：类的连接( 验证 =》 准备 =》 解析)</p>
 </li>
 </ol>
 <p>这里会将为singleton(引用类型)设置为null,value1,value2,value3（基本数据类型）设置默认值0 ）</p>
@@ -384,7 +417,7 @@
 </ul>
 <div class="hlcode"><pre><span class="kd">static</span> <span class="n">block</span>
 <span class="n">before</span> <span class="n">Singleton2</span> <span class="nl">constructor:</span> <span class="nl">v1:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">v2:</span><span class="mi">0</span><span class="o">,</span> <span class="nl">v3:</span><span class="mi">10</span>
-<span class="n">before</span> <span class="n">Singleton2</span> <span class="nl">constructor:</span> <span class="nl">v1:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v2:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v3:</span><span class="mi">11</span>
+<span class="n">after</span> <span class="n">Singleton2</span> <span class="nl">constructor:</span> <span class="nl">v1:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v2:</span><span class="mi">1</span><span class="o">,</span> <span class="nl">v3:</span><span class="mi">11</span>
 <span class="n">Singleton2</span> <span class="nl">v1:</span><span class="mi">1</span>
 <span class="n">Singleton2</span> <span class="nl">v2:</span><span class="mi">1</span>
 <span class="n">Singleton2</span> <span class="nl">v3:</span><span class="mi">11</span>
@@ -665,7 +698,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-04-18 18:40:38</p>
+        <p>Site Generated 2020-05-18 10:00:44</p>
       </span>
     </div>
 
