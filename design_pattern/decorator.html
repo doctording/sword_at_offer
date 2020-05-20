@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>装饰器模式 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#design_pattern">design_pattern</a>&nbsp;&#187;&nbsp;装饰器模式
+    <span class="updated">Page Updated&nbsp;
+      2019-03-20 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">装饰器模式</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">装饰器模式</a></li>
+</ul>
+</div>
+<h1 id="_1">装饰器模式</h1>
+<ul>
+<li>
+<p>意图：动态地给一个对象添加一些额外的职责。就增加功能来说，装饰器模式相比生成子类更为灵活。</p>
+</li>
+<li>
+<p>主要解决：一般的，我们为了扩展一个类经常使用继承方式实现，由于继承为类引入静态特征，并且随着扩展功能的增多，子类会很膨胀。</p>
+</li>
+<li>
+<p>何时使用：在不想增加很多子类的情况下扩展类。</p>
+</li>
+<li>
+<p>如何解决：将具体功能职责划分，同时继承装饰者模式。</p>
+</li>
+</ul>
+<p>eg:</p>
+<ul>
+<li>Shape 可以 draw</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Shape</span> <span class="o">{</span>
+   <span class="kt">void</span> <span class="nf">draw</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>继承方式，给draw加一个红色边框处理修饰</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RedShapeDecorator</span> <span class="kd">extends</span> <span class="n">ShapeDecorator</span> <span class="o">{</span>
+
+   <span class="kd">public</span> <span class="nf">RedShapeDecorator</span><span class="o">(</span><span class="n">Shape</span> <span class="n">decoratedShape</span><span class="o">)</span> <span class="o">{</span>
+      <span class="kd">super</span><span class="o">(</span><span class="n">decoratedShape</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">decoratedShape</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span>
+      <span class="n">setRedBorder</span><span class="o">(</span><span class="n">decoratedShape</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kt">void</span> <span class="nf">setRedBorder</span><span class="o">(</span><span class="n">Shape</span> <span class="n">decoratedShape</span><span class="o">){</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Border Color: Red&quot;</span><span class="o">);</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-05-20 22:31:08</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
