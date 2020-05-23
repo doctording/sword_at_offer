@@ -1,5 +1,5 @@
 ---
-title: "CAS(Conmpare And Swap) & unsafe"
+title: "CAS(Conmpare And Swap/Exchange) & unsafe"
 layout: page
 date: 2019-03-24 00:00
 ---
@@ -10,7 +10,23 @@ date: 2019-03-24 00:00
 
 * 用于实现`多线程同步`的`原子指令`，非阻塞算法，是由CPU硬件实现（**比较并交换**）
 
-CAS通过调用JNI(java native interface)的代码来操作底层指令来实现，以Intel x86处理器来说，底层具体是`cmpxchg`一个原子指令。多核情况下，会给"总线"加锁，只有一个线程会对总线加锁成功，然后进行CAS操作。
+CAS通过调用JNI(java native interface)的代码来操作底层指令来实现。
+
+* Unsafe
+
+`public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);`
+
+* jdk8u: unsafe.cpp
+
+`cmpxchg = compare and exchange`
+
+* jdk8u atomic_linux_x86.inline.hpp
+
+`is_MP = Multi Processor`
+
+多CPU情况下会加上`Lock`（Lock是确保原子性的）
+
+结论：cmpxchg = cas修改变量值， lock cmpxchg 指令；硬件层面：lcok指令在执行后面指令的时候会锁定一个北桥芯片（确保只有一个CPU访问内存）
 
 * 乐观锁
 

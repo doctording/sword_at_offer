@@ -1,5 +1,5 @@
 ---
-title: "Java 类加载机制和类加载器"
+title: "Java 类加载机制,类加载器,内存布局"
 layout: page
 date: 2019-02-15 00:00
 ---
@@ -54,6 +54,103 @@ Class文件中不会保存各个方法，字段的最终内存布局信息；因
 -|-|-
 mark word | The first word of every object header. Usually a set of bitfields including synchronization state and identity hash code. May also be a pointer (with characteristic low bit encoding) to synchronization related information. During GC, may contain GC state bits. | 用于存储对象自身的运行时数据， 如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等等
 klass pointer | The second word of every object header. Points to another object (a metaobject) which describes the layout and behavior of the original object. For Java objects, the "klass" contains a C++ style "vtable". | 是对象指向它的类的元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。并不是所有的虚拟机实现都必须在对象数据上保留类型指针，换句话说查找对象的元数据信息并不一定要经过对象本身。
+
+## 对象布局
+
+```java
+// https://mvnrepository.com/artifact/org.openjdk.jol/jol-core
+compile group: 'org.openjdk.jol', name: 'jol-core', version: '0.10'
+```
+
+### `new Object()` 占用多少字节？
+
+```java
+java -XX:+PrintCommandLineFlags -version
+
+-XX:InitialHeapSize=268435456 -XX:MaxHeapSize=4294967296 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC
+java version "1.8.0_171"
+Java(TM) SE Runtime Environment (build 1.8.0_171-b11)
+Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)
+```
+
+* +UseCompressedClassPointers：64bit机器，一个指针8个字节，使用压缩会只有4个字节
+* -XX:+UseCompressedOops： 普通对象指针，压缩也是4个字节
+
+```java
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        Object o = new Object();
+        System.out.println(ClassLayout.parseInstance(o).toPrintable());
+    }
+}
+/*
+java.lang.Object object internals:
+ OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
+      0     4        (object header)                           01 00 00 00 (00000001 00000000 00000000 00000000) (1)
+      4     4        (object header)                           00 00 00 00 (00000000 00000000 00000000 00000000) (0)
+      8     4        (object header)                           e5 01 00 f8 (11100101 00000001 00000000 11111000) (-134217243)
+     12     4        (loss due to the next object alignment)
+Instance size: 16 bytes
+Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
+
+markword:8个字节
+_kclass:4个字节
+没有成员变量：instance data:0字节
+对其使用4个字节,进阶着上4个字节，凑成8个字节
+
+即共16个字节
+*/
+```
+
+### 对象头
+
+markword 8个字节，64bit
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/hotspot_markword.png)
+
+* 无锁例子
+
+```java
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        Object o = new Object();
+        int hashCode = o.hashCode();
+        int b = hashCode % 2;
+        System.out.println(hashCode + " " + Integer.toBinaryString(hashCode) + " " + b);
+        System.out.println(ClassLayout.parseInstance(o).toPrintable());
+    }
+}
+/*
+
+2007328737 1110111101001010110011111100001 1
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+java.lang.Object object internals:
+ OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
+      0     4        (object header)                           01 e1 67 a5 (00000001 11100001 01100111 10100101) (-1519918847)
+      4     4        (object header)                           77 00 00 00 (01110111 00000000 00000000 00000000) (119)
+      8     4        (object header)                           e5 01 00 f8 (11100101 00000001 00000000 11111000) (-134217243)
+     12     4        (loss due to the next object alignment)
+Instance size: 16 bytes
+Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
+
+markword 64bit，如下
+
+00000000 000000 00000000 01110111 10100101 01100111 11100001 00000001
+
+根据无锁(new)，64bit 具体如下
+
+      unused:25bit         ｜     identity hashcode:31bit        ｜unused | age  | biased_lock  | lock
+00000000 000000 00000000 0 ｜ 1110111 10100101 01100111 11100001 ｜ 0     | 0000 |     0        |   01
+                           ｜                                    ｜       |      |              |
+*/
+```
+
+#### 锁升级过程
+
+无锁态(new) ； 偏向锁 ； 轻量级锁，自旋锁，无锁 ；重量级锁
 
 # 程序编译和代码优化
 

@@ -550,7 +550,7 @@ public class Main {
 
 当有多个线程读写文件时，`读操作和写操作`，`写操作和写操作`会发生冲突现象，但是`读操作和读操作`不会发生冲突现象。如果采用`synchronized`关键字来实现同步的话，就会导致一个问题：
 
-* 当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用`synchronized`，一个线程占用了monitor,其它线程只能等)
+* 当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用`synchronized`，一个线程占用了monitor,其它线程就只能等)
 
 参考：<a href="https://www.cnblogs.com/dolphin0520/p/3923167.html" target="_blank">lock</a>
 
@@ -657,3 +657,53 @@ Exception in thread "Thread-0" java.lang.IllegalMonitorStateException
 ```
 
 参考：<a href="https://blog.csdn.net/xad707348125/article/details/46956911" target="_blank">synchronized锁分析</a>
+
+## synchronized 锁升级
+
+JDK早期`synchronized`直接重量级锁(操作系统层面)
+
+JDK1.6对`synchronized`做了优化，`synchronized`锁有一个升级的过程，升级到最后才会变成重量级锁！
+
+```java
+                【偏向锁】
+                /      \
+对象new出来(无锁)         \
+                \        \
+                  \       \
+                    \      \
+                      \     \
+                      【轻量级锁】
+                         \
+                          \
+                           \
+                           【重量级锁】
+```
+
+偏向锁默认启动，会延迟启动(普通对象，有了偏向锁就是个匿名偏向)
+
+### 为什么会有偏向锁？
+
+实践中发现：多数`sychronized方法`，在很多情况下，只有一个线程在运行，例如
+
+* StringBUffer中的一些sync方法
+* Vector中的一些sync方法
+
+重量级锁没必要，不需要操作系统，直接用户态搞定
+
+### 多线程竞争，抢锁（CAS完成）
+
+轻量级锁/自旋锁，Java对象头markword记录：指向线程栈中的`Lock Record`的指针（不需要操作系统）
+
+(**乐观锁**，**忙等待**)
+
+### 偏向锁 什么时候升级为 轻量级锁？
+
+只要有线程竞争
+
+### 轻量级锁 什么时候升级为 重量级锁？
+
+JDK1.6之前：自旋次数10次；或者多个线程等待(超过CPU核心树1/2) 就会发生升级;目前是JVM自适应自旋的升级
+
+* <font color="red">轻量级锁:消耗CPU（用户态，不经过操作系统）</font>
+
+* <font color="red">重量级锁:不消耗CPU，有一个等待队列（阻塞）; 涉及到用户态/内核态切换</font>
