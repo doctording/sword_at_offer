@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>CAS(Conmpare And Swap) & unsafe - 剑指Offer</title>
+    <title>CAS(Conmpare And Swap/Exchange) & unsafe - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;CAS(Conmpare And Swap) & unsafe
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;CAS(Conmpare And Swap/Exchange) & unsafe
     <span class="updated">Page Updated&nbsp;
       2019-03-24 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">CAS(Conmpare And Swap) & unsafe</div>
+<div class="page_title">CAS(Conmpare And Swap/Exchange) & unsafe</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#cas">CAS</a><ul>
@@ -57,7 +57,21 @@
 <ul>
 <li>用于实现<code>多线程同步</code>的<code>原子指令</code>，非阻塞算法，是由CPU硬件实现（<strong>比较并交换</strong>）</li>
 </ul>
-<p>CAS通过调用JNI(java native interface)的代码来操作底层指令来实现，以Intel x86处理器来说，底层具体是<code>cmpxchg</code>一个原子指令。多核情况下，会给"总线"加锁，只有一个线程会对总线加锁成功，然后进行CAS操作。</p>
+<p>CAS通过调用JNI(java native interface)的代码来操作底层指令来实现。</p>
+<ul>
+<li>Unsafe</li>
+</ul>
+<p><code>public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);</code></p>
+<ul>
+<li>jdk8u: unsafe.cpp</li>
+</ul>
+<p><code>cmpxchg = compare and exchange</code></p>
+<ul>
+<li>jdk8u atomic_linux_x86.inline.hpp</li>
+</ul>
+<p><code>is_MP = Multi Processor</code></p>
+<p>多CPU情况下会加上<code>Lock</code>（Lock是确保原子性的）</p>
+<p>结论：cmpxchg = cas修改变量值， lock cmpxchg 指令；硬件层面：lcok指令在执行后面指令的时候会锁定一个北桥芯片（确保只有一个CPU访问内存）</p>
 <ul>
 <li>乐观锁</li>
 </ul>
@@ -489,7 +503,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-20 22:31:08</p>
+        <p>Site Generated 2020-05-23 14:49:36</p>
       </span>
     </div>
 

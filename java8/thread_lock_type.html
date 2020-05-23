@@ -27,46 +27,47 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#_1">常见的各种锁</a><ul>
+<li><a href="#_2">线程同步概念</a></li>
 <li><a href="#cas">CAS 原子操作</a></li>
-<li><a href="#_2">乐观锁&amp;悲观锁</a><ul>
-<li><a href="#_3">乐观锁</a></li>
-<li><a href="#_4">悲观锁</a></li>
+<li><a href="#_3">乐观锁&amp;悲观锁</a><ul>
+<li><a href="#_4">乐观锁</a></li>
+<li><a href="#_5">悲观锁</a></li>
 </ul>
 </li>
-<li><a href="#_5">自旋锁</a><ul>
-<li><a href="#_6">自旋锁存在的意义与使用场景</a></li>
+<li><a href="#_6">自旋锁</a><ul>
+<li><a href="#_7">自旋锁存在的意义与使用场景</a></li>
 <li><a href="#atomicreference">AtomicReference实现一个公平的自旋锁</a></li>
-<li><a href="#_7">适应性自旋锁</a></li>
+<li><a href="#_8">适应性自旋锁</a></li>
 </ul>
 </li>
 <li><a href="#reentrantlock">ReentrantLock (可重入锁，递归锁)</a><ul>
-<li><a href="#_8">公平锁</a></li>
-<li><a href="#_9">非公平锁</a><ul>
+<li><a href="#_9">公平锁</a></li>
+<li><a href="#_10">非公平锁</a><ul>
 <li><a href="#synchronized-reentrantlock">对比synchronized, ReentrantLock的一些高级功能</a></li>
 </ul>
 </li>
-<li><a href="#_10">锁申请等待限时实际例子</a></li>
+<li><a href="#_11">锁申请等待限时实际例子</a></li>
 </ul>
 </li>
-<li><a href="#_11">读写锁</a><ul>
-<li><a href="#_12">伪代码</a></li>
-<li><a href="#_13">实际例子</a></li>
+<li><a href="#_12">读写锁</a><ul>
+<li><a href="#_13">伪代码</a></li>
+<li><a href="#_14">实际例子</a></li>
 </ul>
 </li>
-<li><a href="#_14">分布式锁</a><ul>
-<li><a href="#_15">什么是分布式锁</a></li>
-<li><a href="#_16">分布式锁的实现方式</a></li>
+<li><a href="#_15">分布式锁</a><ul>
+<li><a href="#_16">什么是分布式锁</a></li>
+<li><a href="#_17">分布式锁的实现方式</a></li>
 </ul>
 </li>
-<li><a href="#_17">共享锁(读锁) 和 排它锁(写锁)</a><ul>
+<li><a href="#_18">共享锁(读锁) 和 排它锁(写锁)</a><ul>
 <li><a href="#exclusive-locks">Exclusive locks</a></li>
 <li><a href="#shared-locks">Shared locks</a></li>
 </ul>
 </li>
 <li><a href="#biased-locking">偏向锁（Biased Locking）</a></li>
-<li><a href="#_18">轻量级锁</a></li>
-<li><a href="#_19">重量级锁</a><ul>
-<li><a href="#_20">为什么说重量级锁开销大呢</a></li>
+<li><a href="#_19">轻量级锁</a></li>
+<li><a href="#_20">重量级锁（内核控制）</a><ul>
+<li><a href="#_21">为什么说重量级锁开销大呢？</a></li>
 </ul>
 </li>
 <li><a href="#aqs">AQS</a></li>
@@ -75,6 +76,9 @@
 </ul>
 </div>
 <h1 id="_1">常见的各种锁</h1>
+<h2 id="_2">线程同步概念</h2>
+<p>多线程对共享资源的操作按照一定次序，避免出现不可预知的结局</p>
+<p><a href="https://en.wikipedia.org/wiki/Synchronization_(computer_science)">Synchronization_(computer_science)</a></p>
 <h2 id="cas">CAS 原子操作</h2>
 <p>既然用锁或<code>synchronized</code>关键字可以实现原子操作，那么为什么还要用<code>CAS</code>呢，因为加锁或使用<code>synchronized</code>关键字带来的性能损耗较大，而用<code>CAS</code>可以实现乐观锁，它实际上是直接利用了<code>CPU</code>层面的指令(由现代CPU在硬件级实现的原子指令，允许进行无阻塞，多线程的数据操作同时兼顾了安全性以及效率)，所以性能稍高。</p>
 <p><code>synchronized</code>关键字会让没有得到锁资源的线程进入<code>BLOCKED</code>状态，而后在争夺到锁资源后恢复为<code>RUNNABLE</code>状态，这个过程中涉及到操作系统用户模式和内核模式的转换，代价比较高。</p>
@@ -82,15 +86,15 @@
 <li><code>synchronized</code>属于<strong>悲观锁</strong>，悲观地认为程序中的并发情况严重，所以严防死守</li>
 <li><code>CAS</code>属于乐观锁，乐观地认为程序中的并发情况不那么严重，所以让线程不断去尝试更新</li>
 </ul>
-<h2 id="_2">乐观锁&amp;悲观锁</h2>
-<h3 id="_3">乐观锁</h3>
+<h2 id="_3">乐观锁&amp;悲观锁</h2>
+<h3 id="_4">乐观锁</h3>
 <p>乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去拿数据的时候都认为别人不会修改，所以<strong>不会上锁</strong>，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。eg: CAS</p>
-<h3 id="_4">悲观锁</h3>
+<h3 id="_5">悲观锁</h3>
 <p>悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性高，每次去拿数据的时候都认为别人会修改，所以每次在读写数据的时候<strong>都会上锁</strong>，这样别人想读写这个数据就会Block直到拿到锁。Java中的悲观锁就是Synchronized,AQS框架下的锁则是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁，如偏向锁(RetreenLock)。</p>
-<h2 id="_5">自旋锁</h2>
+<h2 id="_6">自旋锁</h2>
 <p><a href="https://en.wikipedia.org/wiki/Spinlock" target="_blank">Spinlock WikiPedia</a></p>
 <p>自旋锁是采用让当前线程不停地的在循环体内执行实现的，只有当循环的条件被其它线程改变时，才能进入临界区；否则一直自旋</p>
-<h3 id="_6">自旋锁存在的意义与使用场景</h3>
+<h3 id="_7">自旋锁存在的意义与使用场景</h3>
 <p>阻塞与唤醒线程需要操作系统切换CPU状态，需要消耗一定时间；自旋只是当前线程自己循环，没有线程状态的改变，稍快</p>
 <h3 id="atomicreference">AtomicReference实现一个公平的自旋锁</h3>
 <div class="hlcode"><pre><span class="cm">/**</span>
@@ -164,7 +168,7 @@
 <li>线程状态不变，不导致上线文切换，适合短时间自旋</li>
 <li>长时间会耗CPU，影响其它线程的调度</li>
 </ul>
-<h3 id="_7">适应性自旋锁</h3>
+<h3 id="_8">适应性自旋锁</h3>
 <p>自旋锁的目的是为了占着CPU的资源不释放，等到获取到锁立即进行处理。但是如何去选择自旋的执行时间呢？如果自旋执行时间太长，会有大量的线程处于自旋状态占用CPU资源，进而会影响整体系统的性能。</p>
 <p>自旋的时间不在是固定的了，而是由前一次在同一个锁上的自旋时间以及锁的拥有者的状态来决定，基本认为一个线程上下文切换的时间是最佳的一个时间，同时JVM还针对当前CPU的负荷情况做了较多的优化:</p>
 <ul>
@@ -302,7 +306,7 @@
 </pre></div>
 
 
-<h3 id="_8">公平锁</h3>
+<h3 id="_9">公平锁</h3>
 <p>表示线程获取锁的顺序是按照线程申请锁的顺序来分配的，即<code>FIFO</code>, 队列结构</p>
 <div class="hlcode"><pre> <span class="cm">/**</span>
 <span class="cm">    * Sync object for fair locks</span>
@@ -349,7 +353,7 @@
 <p>公平锁为了保证时间上的绝对顺序，需要<strong>频繁的上下文切换</strong>；而非公平锁会降低了一定的上下文切换，降低性能开销。</p>
 </li>
 </ul>
-<h3 id="_9">非公平锁</h3>
+<h3 id="_10">非公平锁</h3>
 <p>就是一种获取锁的<code>抢占</code>机制，是随机获得锁的，和公平锁不一样的就是先来的不一定先得到锁，这个方式可能造成某些线程一直拿不到锁，结果也就是不公平。尝试抢占失败，就再采用公平锁的那种方式，<code>吞吐量</code>大于公平锁</p>
 <h4 id="synchronized-reentrantlock">对比<code>synchronized</code>, <code>ReentrantLock</code>的一些高级功能</h4>
 <ul>
@@ -365,7 +369,7 @@
 <li>锁绑定多个条件</li>
 </ul>
 <p>一个<code>ReentrantLock</code>对象可以同时绑定对个对象。</p>
-<h3 id="_10">锁申请等待限时实际例子</h3>
+<h3 id="_11">锁申请等待限时实际例子</h3>
 <p>申请锁，一定时间内获取不到，选择放弃</p>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
@@ -432,10 +436,10 @@
 </pre></div>
 
 
-<h2 id="_11">读写锁</h2>
+<h2 id="_12">读写锁</h2>
 <p>读写锁实际是一种特殊的自旋锁，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。</p>
 <p>一次只有一个线程可以占有<code>写模式</code>的读写锁, 但是可以有多个线程同时占有<code>读模式</code>的读写锁.</p>
-<h3 id="_12">伪代码</h3>
+<h3 id="_13">伪代码</h3>
 <div class="hlcode"><pre><span class="n">count_mutex</span> <span class="o">=</span> <span class="n">mutex_init</span><span class="p">();</span>
 <span class="n">write_mutex</span> <span class="o">=</span> <span class="n">mutex_init</span><span class="p">();</span>
 <span class="n">read_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -469,7 +473,7 @@
 
 
 <p>参考：<a href="https://www.cnblogs.com/xiehongfeng100/p/4782135.html" target="_blank">https://www.cnblogs.com/xiehongfeng100/p/4782135.html</a></p>
-<h3 id="_13">实际例子</h3>
+<h3 id="_14">实际例子</h3>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
@@ -559,14 +563,14 @@
 </pre></div>
 
 
-<h2 id="_14">分布式锁</h2>
+<h2 id="_15">分布式锁</h2>
 <p>很多时候我们需要保证一个方法在同一时间内只能被同一个线程执行。在单机环境中，通过 Java 提供的并发 API 我们可以解决，分布式环境下</p>
 <ol>
 <li>分布式与单机情况下最大的不同在于其不是多线程而是<strong>多进程</strong></li>
 <li><code>多线程</code>由于可以<code>共享堆内存</code>，因此可以简单的采取内存作为标记存储位置。而进程之间甚至可能都不在同一台物理机上，因此需要将<code>标记</code>存储在一个<code>所有进程</code>都能看到的地方</li>
 </ol>
 <p><a target='_blank' href='https://www.cnblogs.com/seesun2012/p/9214653.html'>参考</a></p>
-<h3 id="_15">什么是分布式锁</h3>
+<h3 id="_16">什么是分布式锁</h3>
 <p>在分布式的部署环境下，通过锁机制来让多客户端互斥的对共享资源进行访问</p>
 <ul>
 <li>
@@ -579,7 +583,7 @@
 <p>高可用：获取或释放锁的机制必须高可用且性能佳</p>
 </li>
 </ul>
-<h3 id="_16">分布式锁的实现方式</h3>
+<h3 id="_17">分布式锁的实现方式</h3>
 <ol>
 <li>
 <p>基于数据库实现</p>
@@ -591,7 +595,7 @@
 <p>基于ZooKeeper实现</p>
 </li>
 </ol>
-<h2 id="_17">共享锁(读锁) 和 排它锁(写锁)</h2>
+<h2 id="_18">共享锁(读锁) 和 排它锁(写锁)</h2>
 <h3 id="exclusive-locks">Exclusive locks</h3>
 <p>Exclusive locks protect updates to file resources, both recoverable and non-recoverable. They can be owned by only one transaction at a time. Any transaction that requires an exclusive lock must wait if another task currently owns an exclusive lock or a shared lock against the requested resource.</p>
 <p>独占锁保护文件资源(包括可恢复和不可恢复的文件资源)的更新。它们一次只能由一个事务拥有。如果另一个任务当前拥有对所请求资源的独占锁或共享锁，则任何需要对该资源申请独占锁的事务都必须等待。</p>
@@ -613,24 +617,24 @@
 <li>如果另一个任务正在等待已经具有共享锁的资源的独占锁，则对共享锁的新请求必须等待。</li>
 </ul>
 <h2 id="biased-locking">偏向锁（Biased Locking）</h2>
-<p>锁的实现机制与Java对象头息息相关，<strong>锁的所有信息，都记录在Java的对象头中</strong>。用2字（32位JVM中1字=32bit=4baye）存储对象头，如果是数组类型使用3字存储（还需存储数组长度）。对象头中记录了hash值、GC年龄、锁的状态、线程拥有者、类元数据的指针。</p>
-<p>大多数情况下，锁不仅<strong>不存在多线程竞争</strong>，而且总是由同一线程多次获得，这个线程就是锁的偏向线程。</p>
-<p>为了让线程获得锁的代价更低而引入偏向锁。那么只需要<strong>在锁第一次被拥有的时候，记录下偏向线程ID。这样偏向线程就一直持有着锁，直到竞争发生才释放锁</strong>。以后每次同步，检查锁的偏向线程ID与当前线程ID是否一致，如果一致直接进入同步/退出同步,也<strong>无需每次加锁解锁</strong>都去CAS更新对象头；如果不一致意味着发生了竞争，锁已经不是总是偏向于同一个线程了，这时候需要锁膨胀为轻量级锁，才能保证线程间公平竞争锁。</p>
-<h2 id="_18">轻量级锁</h2>
-<p>轻量级锁是由偏向锁升级来的，偏向锁运行在一个线程进入同步块的情况下，当第二个线程加入锁竞争的时候，偏向锁就会升级为轻量级锁</p>
+<p>锁的实现机制与Java对象头息息相关，<strong>锁的所有信息，都记录在Java的对象头中</strong>。</p>
+<p>大多数情况下，锁不仅<strong>不存在多线程竞争</strong>，而且<strong>总是由同一线程多次获得</strong>，这个线程就是锁的偏向线程。</p>
+<p>为了让线程获得锁的代价更低而引入偏向锁。那么只需要<strong>在锁第一次被拥有的时候，记录下偏向线程ID。这样偏向线程就一直持有着锁，直到竞争发生才释放锁</strong>。以后每次同步，检查锁的偏向线程ID与当前线程ID是否一致，如果一致则直接进入同步/退出同步,也<strong>无需每次加锁/解锁</strong>都去CAS更新对象头；如果不一致意味着发生了竞争，锁已经不是总是偏向于同一个线程了，这时候需要锁膨胀为轻量级锁，才能保证线程间公平竞争锁。</p>
+<h2 id="_19">轻量级锁</h2>
+<p>轻量级锁是由偏向锁升级来的，偏向锁运行在一个线程进入同步块的情况下，当第二个线程加入锁竞争的时候，偏向锁就会升级为轻量级锁。（轻量级锁是用户态的，通常会自旋占用CPU）</p>
 <p>轻量锁与偏向锁不同的是：</p>
 <ol>
 <li>轻量级锁每次退出同步块都需要释放锁，而偏向锁是在竞争发生时才释放锁</li>
-<li>每次进入退出同步块都需要CAS更新对象头</li>
+<li>每次进入/退出同步块都需要CAS更新对象头</li>
 <li>争夺轻量级锁失败时，自旋尝试抢占锁</li>
 </ol>
 <p>可以看到轻量锁适合在竞争情况下使用，其自旋锁可以保证响应速度快，但自旋操作会占用CPU，所以一些计算时间长的操作不适合使用轻量级锁。</p>
 <p>当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。</p>
-<h2 id="_19">重量级锁</h2>
+<h2 id="_20">重量级锁（内核控制）</h2>
 <p>当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。</p>
-<p>重量级锁是依赖对象内部的monitor锁来实现的，而monitor又依赖<strong>操作系统的MutexLock(互斥锁)</strong>来实现的，所以重量级锁也被成为互斥锁。</p>
-<h3 id="_20">为什么说重量级锁开销大呢</h3>
-<p>主要是，当系统检查到锁是重量级锁之后，会把等待想要获得锁的线程进行阻塞，被阻塞的线程不会消耗cup。但是阻塞或者唤醒一个线程时，都需要操作系统来帮忙，这就需要从<strong>用户态</strong>转换到<strong>内核态</strong>，而转换状态是需要消耗很多时间的，有可能比用户执行代码的时间还要长。这就是说为什么重量级线程开销很大的。</p>
+<p>重量级锁是依赖对象内部的monitor锁来实现的，而monitor又依赖<strong>操作系统的MutexLock(互斥锁)</strong>来实现的，所以重量级锁也被成为互斥锁。（带wait队列，把没有获取锁的线程放队列，冷冻着，不占用CPU；内核让执行了，用户态/内核态切换，然后执行）</p>
+<h3 id="_21">为什么说重量级锁开销大呢？</h3>
+<p>主要是：当系统检查到锁是重量级锁之后，会把等待想要获得锁的线程进行阻塞，被<strong>阻塞的线程不会消耗cpu</strong>。但是阻塞或者唤醒一个线程时，都需要操作系统来帮忙，这需要把线程从<strong>用户态</strong>转换到<strong>内核态</strong>，而转换状态是需要消耗很多时间的，有可能比用户执行代码的时间还要长。这就是说为什么重量级线程开销很大的。</p>
 <h2 id="aqs">AQS</h2>
 <p><code>AbstractQuenedSynchronizer</code>抽象的队列式同步器,是除了java自带的<code>synchronized</code>关键字之外的锁机制</p>
 <div class="hlcode"><pre><span class="o">/**</span>
@@ -706,7 +710,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-20 22:31:08</p>
+        <p>Site Generated 2020-05-23 14:49:36</p>
       </span>
     </div>
 
