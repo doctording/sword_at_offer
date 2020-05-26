@@ -28,7 +28,7 @@ Java的每条线程有自己的工作线程（Working Memory, 可类比处理器
 
 主内存与工作内存之间的具体交互协议，虚拟机保证如下的每一种操作都是原子的，不可再分的（对于double,long类型的变量有例外，商用JVM基本优化了这个问题）
 
-* lock: 作用于主内存的变量，它把一个变量标识为一条线程独占的状态
+* lock: 作用于主内存的变量，它把一个变量标识为一个线程独占的状态
 
 * unlock：作用于主内存的变量， 解锁
 
@@ -96,7 +96,7 @@ volatile变量读操作的性能消耗与普通变量几乎没有什么差别，
 
 * 原子性
 
-lock, unlock 对应 Java指令的`monitorenter`和`monitorexit`,`synchronized`关键字隐含了这两个指令，所以`synchronized`块之间的操作也具备了原子性
+lock, unlock 对应 Java指令的`monitorenter`和`monitorexit`；`synchronized`关键字隐含了这两个指令，所以`synchronized`块之间的操作也具备了原子性
 
 * 可见性
 
@@ -114,6 +114,6 @@ lock, unlock 对应 Java指令的`monitorenter`和`monitorexit`,`synchronized`�
 
 ## 并行（parallellism） 和 并发（concurrency）
 
-并发当有多个线程在操作时,如果系统只有一个CPU,则它根本不可能真正同时进行一个以上的线程，它只能把CPU运行时间划分成若干个时间段,再将时间 段分配给各个线程执行，在一个时间段的线程代码运行时，其它线程处于挂起状。.这种方式我们称之为并发(Concurrent)。
+并发：当有多个线程在操作时,如果系统只有一个CPU,则它根本不可能真正同时进行一个以上的线程；它只能把CPU运行时间划分成若干个时间段,再将时间片分配给各个线程执行，在一个时间段的线程代码运行时，其它线程处于挂起状。这种方式我们称之为并发(Concurrent)。
 
 并行：当系统有一个以上CPU时,则线程的操作有可能非并发。当一个CPU执行一个线程时，另一个CPU可以执行另一个线程，两个线程互不抢占CPU资源，可以同时进行，这种方式我们称之为并行(Parallel)。

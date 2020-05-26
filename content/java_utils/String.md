@@ -346,3 +346,17 @@ static void testStringBuilderAdd(){
     System.out.println("cost:" + (end - start));
 }
 ```
+
+## Java String类为什么是final的？
+
+1. 为了实现字符串池
+
+字符串池的实现可以在运行时节约很多heap空间，因为不同的字符串变量都指向池中的同一个字符串。但如果字符串是可变的，那么String intern将不能实现，因为这样的话，如果变量改变了它的值，那么其它指向这个值的变量的值也会一起改变
+
+2. 为了安全 & 线程安全
+
+final不可变,安全
+
+3. 为了实现String可以创建HashCode不可变性，提高效率
+
+因为字符串是不可变的，所以在它创建的时候HashCode就被缓存了，不需要重新计算。这就使得字符串很适合作为Map中的键，字符串的处理速度要快过其它的键对象。这就是HashMap中的键往往都使用字符串。

@@ -114,7 +114,7 @@ Class metadata, interned Strings and class static variables will be moved from t
 
 参考学习：
 
-<a href='https://blog.csdn.net/qq_26437925/article/details/53728388'>几种垃圾回收算法</a>
+<a href='https://blog.csdn.net/qq_26437925/article/details/53728388' target="_blank">几种垃圾回收算法</a>
 
 # 垃圾收集器
 
@@ -149,11 +149,11 @@ Class metadata, interned Strings and class static variables will be moved from t
 Object o = new Object();
 ```
 
-* 软引用是用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会吧这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。`SoftReference`
+* 软引用是用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。`SoftReference`
 
 ```java
-String str=new String("abc");                                     // 强引用
-SoftReference<String> softRef=new SoftReference<String>(str);     // 软引用
+String str = new String("abc");                                     // 强引用
+SoftReference<String> softRef = new SoftReference<String>(str);     // 软引用
 ```
 
 * 弱引用也是用来描述非必需对象的。但是它的强度比弱引用更弱一些，被弱引用关联的对象只能生成到下一次垃圾收集之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。`WeakReference`
@@ -248,7 +248,7 @@ no, i am dead
 
 堆中，新生代进行一次垃圾收集一般可以回收70%-95%的空间，而永久代的垃圾收集效率远低于此。
 
-永久代主要回收两部分内容： 废弃常量和无用的类， 判断"无用的类"：
+永久代主要回收两部分内容：废弃常量和无用的类， 判断"无用的类"：
 
 1. 该类所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例
 2. 加载该类的ClassLoader已经被回收
@@ -270,7 +270,7 @@ no, i am dead
 
 实际上，HotSpot没有为每条指令都生成`oopMap`, 安全点(`Sagepoint`) GC， 选举以"是否具有让程序长时间执行的特征"为标准进行选定，如方法调用，循环跳转，异常跳转等，这些功能的指令会产生安全点
 
-### stop the world
+### Stop The World
 
 <a href="https://www.cubrid.org/blog/understanding-java-garbage-collection" target="_blank">参考文章</a>
 
@@ -278,13 +278,86 @@ no, i am dead
 There is a term that you should know before learning about GC. The term is "stop-the-world." Stop-the-world will occur no matter which GC algorithm you choose. Stop-the-world means that the JVM is stopping the application from running to execute a GC. When stop-the-world occurs, every thread except for the threads needed for the GC will stop their tasks. The interrupted tasks will resume only after the GC task has completed. GC tuning often means reducing this stop-the-world time.
 ```
 
+只有GC线程工作，其它线程都停止；当GC线程工作完成，其它线程恢复
+
 # 收集器
 
 垃圾收集器，并发&并行
 
-* 并行(Parallel)： 指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态
+* 并行(Parallel)：指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态
 
 * 并发(Concurrent): 只用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上
+
+## GC收集器及其发展
+
+### (一) Serial （STW,单线程收集器）
+
+* 是一个单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其他所有的工作线程，直到收集结束**即`Stop The World`
+
+* 标记，清除
+
+### (二) Parallel Scavenge（STW,多线程收集器）
+
+使用复制算法的**并行多线程收集器**。Parallel Scavenge是Java1.8默认的收集器，特点是并行的多线程回收，以吞吐量（CPU用于运行用户代码的时间与CPU总消耗时间的比值，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)）优先
+
+停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验，而高吞吐量则可以高效率地利用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务
+
+### (三) CMS收集器
+
+CMS收集器在Minor GC时会暂停所有的应用线程，并以多线程的方式进行垃圾回收。在Full GC时不再暂停应用线程，而是使用若干个后台线程定期的对老年代空间进行扫描，及时回收其中不再使用的对象
+
+### (四) G1
+
+G1收集器（或者垃圾优先收集器）的设计初衷是为了尽量缩短处理超大堆（大于4GB）时产生的停顿。相对于CMS的优势而言是内存碎片的产生率大大降低
+
+```java
+Java HotSpot(TM) 64-Bit Server VM (25.171-b11) for bsd-amd64 JRE (1.8.0_171-b11), built on Mar 28 2018 12:50:57 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
+Memory: 4k page, physical 16777216k(1978920k free)
+
+/proc/meminfo:
+
+CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:NewSize=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC
+0.196: [GC pause (G1 Humongous Allocation) (young) (initial-mark), 0.0022978 secs]
+   [Parallel Time: 2.0 ms, GC Workers: 4]
+      [GC Worker Start (ms): Min: 196.2, Avg: 196.2, Max: 196.3, Diff: 0.0]
+      [Ext Root Scanning (ms): Min: 0.6, Avg: 0.6, Max: 0.6, Diff: 0.0, Sum: 2.4]
+      [Update RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+         [Processed Buffers: Min: 0, Avg: 0.0, Max: 0, Diff: 0, Sum: 0]
+      [Scan RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Code Root Scanning (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Object Copy (ms): Min: 0.8, Avg: 1.1, Max: 1.3, Diff: 0.5, Sum: 4.3]
+      [Termination (ms): Min: 0.0, Avg: 0.3, Max: 0.5, Diff: 0.5, Sum: 1.1]
+         [Termination Attempts: Min: 1, Avg: 1.2, Max: 2, Diff: 1, Sum: 5]
+      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [GC Worker Total (ms): Min: 1.9, Avg: 2.0, Max: 2.0, Diff: 0.0, Sum: 7.8]
+      [GC Worker End (ms): Min: 198.2, Avg: 198.2, Max: 198.2, Diff: 0.0]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.0 ms]
+   [Other: 0.2 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.1 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.0 ms]
+      [Humongous Register: 0.0 ms]
+      [Humongous Reclaim: 0.0 ms]
+      [Free CSet: 0.0 ms]
+   [Eden: 3072.0K(10.0M)->0.0B(9216.0K) Survivors: 0.0B->1024.0K Heap: 8629.0K(20.0M)->6823.5K(20.0M)]
+ [Times: user=0.00 sys=0.00, real=0.01 secs] 
+0.199: [GC concurrent-root-region-scan-start]
+0.199: [GC concurrent-root-region-scan-end, 0.0005314 secs]
+0.199: [GC concurrent-mark-start]
+0.199: [GC concurrent-mark-end, 0.0000251 secs]
+0.202: [GC remark 0.202: [Finalize Marking, 0.0000621 secs] 0.202: [GC ref-proc, 0.0000215 secs] 0.202: [Unloading, 0.0003779 secs], 0.0005651 secs]
+ [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.203: [GC cleanup 13M->13M(20M), 0.0001664 secs]
+ [Times: user=0.00 sys=0.00, real=0.00 secs] 
+ Heap
+ garbage-first heap   total 20480K, used 12967K [0x00000007bec00000, 0x00000007bed000a0, 0x00000007c0000000)
+  region size 1024K, 2 young (2048K), 1 survivors (1024K)
+ Metaspace       used 3342K, capacity 4500K, committed 4864K, reserved 1056768K
+  class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
+```
 
 ## 几中常见的垃圾回收方式
 
@@ -295,13 +368,13 @@ Java垃圾回收的依据/假设
 * Most objects soon become unreachable.
 * References from old objects to young objects only exist in small numbers.
 
-## CMS(Concurrent Mark Sweep)
+## CMS(Concurrent Mark Sweep)垃圾回收器
 
 <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html">参考文档地址</a>
 
 The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses and that can afford to share processor resources with the garbage collector while the application is running.
 
-* 并发收集，低停顿
+### cms流程
 
 一种以获取**最短回收停顿时间为目标**的收集器(以牺牲了吞吐量为代价)：希望系统停顿时间最短，给用户带来较好但体验，4个步骤如下：
 
@@ -309,29 +382,49 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 这个过程从垃圾回收的"根对象"开始，只扫描到能够和"根对象"直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。
 
-2. 并发标记（CMS concurrent mark）
+2. 并发标记（CMS concurrent mark）(会逻辑标记？)
 
-这个阶段紧随初始标记阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。
+这个阶段紧随`初始标记`阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。
 
-3. 重新标记（CMS remark）需要:"Stop The World"
+3. 重新标记（CMS remark）需要Stop The World（正确标记）
 
 这个阶段会暂停虚拟机，收集器线程扫描在CMS堆中剩余的对象。扫描从"根对象"开始向下追溯，并处理对象关联。
 
 4. 并发清除（CMS concurrent sweep）
 
-清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行
+清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行；会产生浮动垃圾
 
-* 缺点
+### 缺点
 
 1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做对事情就是在并发标记和并发清除的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
 
-2. CMS处理器无法处理浮动垃圾（Floating Garbage）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"，因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
+2. CMS处理器无法处理浮动垃圾（`Floating Garbage`）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"，因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
 
-3. CMS是基于(`mark-sweep`)"标记--清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发`full gc`。
+3. CMS是基于(`mark-sweep`)"标记-清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发`full gc`。
 
 为了解决这个问题，CMS提供了一个开关参数（`-XX: UseCMSCompactAtFullCollection`），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(`-XX: CMSFullGCsBeforeCompaction`)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）
 
-## G1(Garbage First)
+### 三色标记
+
+* 白色：还没有搜索过的对象（白色对象会被当成垃圾对象）
+* 灰色：正在搜索的对象
+* 黑色：搜索完成的对象（不会当成垃圾对象，不会被GC）
+
+黑色下一轮不会被标记了，这样不是垃圾的，可能会被当成垃圾（漏标记了）【一定会有漏标记，这是严重的问题】
+
+* CMS解决办法(Incremental Update)
+
+黑色到白色的时候，把黑色的变成灰色的； 但是并发标记还是会产生漏标
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/cms_color.png)
+
+所以CMS有`remark`
+
+* G1解决方法(Snapshot At the begining)
+
+块(RSet) 配合 SATB 解决（引用中转到GC的堆栈中）
+
+## G1(Garbage First)垃圾回收器
 
 ### 参考学习文档
 
@@ -366,6 +459,72 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 When performing garbage collections, G1 operates in a manner similar to the CMS collector. G1 performs a concurrent global marking phase to determine the liveness of objects throughout the heap. After the mark phase completes, G1 knows which regions are mostly empty. It collects in these regions first, which usually yields a large amount of free space. This is why this method of garbage collection is called Garbage-First.
 
+### Remember Set & Collection Set
+
+* headpRegion.cpp 部分实现
+
+```java
+// Minimum region size; we won't go lower than that.
+// We might want to decrease this in the future, to deal with small
+// heaps a bit more efficiently.
+#define MIN_REGION_SIZE  (      1024 * 1024 )
+
+// Maximum region size; we don't go higher than that. There's a good
+// reason for having an upper bound. We don't want regions to get too
+// large, otherwise cleanup's effectiveness would decrease as there
+// will be fewer opportunities to find totally empty regions after
+// marking.
+#define MAX_REGION_SIZE  ( 32 * 1024 * 1024 )
+
+// The automatic region size calculation will try to have around this
+// many regions in the heap (based on the min heap size).
+#define TARGET_REGION_NUMBER          2048
+
+size_t HeapRegion::max_region_size() {
+  return (size_t)MAX_REGION_SIZE;
+}
+
+// 这个方法是计算region的核心实现
+void HeapRegion::setup_heap_region_size(size_t initial_heap_size, size_t max_heap_size) {
+  uintx region_size = G1HeapRegionSize;
+  // 是否设置了G1HeapRegionSize参数，如果没有配置，那么按照下面的方法计算；如果设置了G1HeapRegionSize就按照设置的值计算
+  if (FLAG_IS_DEFAULT(G1HeapRegionSize)) {
+    // average_heap_size即平均堆的大小，(初始化堆的大小即Xms+最大堆的大小即Xmx)/2
+    size_t average_heap_size = (initial_heap_size + max_heap_size) / 2;
+    // average_heap_size除以期望的REGION数量得到每个REGION的SIZE，与MIN_REGION_SIZE取两者中的更大值就是实际的REGION_SIZE；从这个计算公式可知，默认情况下如果JVM堆在2G（TARGET_REGION_NUMBER*MIN_REGION_SIZE）以下，那么每个REGION_SIZE都是1M；
+    region_size = MAX2(average_heap_size / TARGET_REGION_NUMBER, (uintx) MIN_REGION_SIZE);
+  }
+
+  // region_size的对数值
+  int region_size_log = log2_long((jlong) region_size);
+  // 重新计算region_size，确保它是最大的小于或等于region_size的2的N次方的数值，例如重新计算前region_size=33，那么重新计算后region_size=32；重新计算前region_size=16，那么重新计算后region_size=16；
+  // Recalculate the region size to make sure it's a power of
+  // 2. This means that region_size is the largest power of 2 that's
+  // <= what we've calculated so far.
+  region_size = ((uintx)1 << region_size_log);
+
+  // 确保计算出来的region_size不能比MIN_REGION_SIZE更小，也不能比MAX_REGION_SIZE更大
+  // Now make sure that we don't go over or under our limits.
+  if (region_size < MIN_REGION_SIZE) {
+    region_size = MIN_REGION_SIZE;
+  } else if (region_size > MAX_REGION_SIZE) {
+    region_size = MAX_REGION_SIZE;
+  }
+
+  // 与MIN_REGION_SIZE和MAX_REGION_SIZE比较后，再次重新计算region_size
+  // And recalculate the log.
+  region_size_log = log2_long((jlong) region_size);
+
+  ... ...
+}
+```
+
+G1的每个`region`都有一个`Remember Set(Rset)`，用来保存别的region的对象对该region的对象的引用，通过`Remember Set`我们可以找到哪些对象引用了当前`region`的对象
+
+This allows the GC to avoid collecting the entire heap at once, and instead approach the problem incrementally: only a subset of the regions, called the collection set will be considered at a time.（避免一次对整个堆的垃圾进行回收，而是一次回收称为`collection set`的部分，`collection set`就是垃圾比较多的那些region）
+
+* 被回收的region可以复制到空的region,或者复制到survivor区域，同时可以进行压缩（复制效率高，并且减少了碎片）
+
 ### G1 常用参数
 
 参数 | 含义
@@ -376,7 +535,7 @@ When performing garbage collections, G1 operates in a manner similar to the CMS 
 -XX:G1MaxNewSizePercent | 新生代最大值，默认值60%
 -XX:ParallelGCThreads | STW期间，并行GC线程数
 -XX:ConcGCThreads=n | 并发标记阶段，并行执行的线程数
--XX:InitiatingHeapOccupancyPercent | 设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous
+-XX:InitiatingHeapOccupancyPercent | 设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的Java堆占比指的是non_young_capacity_bytes，包括old+humongous
 
 * 如下一个线上配置(机器`2C4G`)例子：
 
@@ -386,9 +545,7 @@ When performing garbage collections, G1 operates in a manner similar to the CMS 
 -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 -XX:InitiatingHeapOccupancyPercent=70 -XX:MaxMetaspaceSize=500m -XX:+PrintGCDetails
 ```
 
-### G1的gc运作
-
-G1不提供`Full GC`,G1的GC包括`young gc`和`mixed GC`
+### G1的GC
 
 **Note:** G1 has both concurrent (runs along with application threads, e.g., refinement, marking, cleanup) and parallel (multi-threaded, e.g., stop the world) phases. Full garbage collections are still single threaded, but if tuned properly your applications should avoid full GCs.
 
@@ -404,7 +561,7 @@ This approach makes it very easy to resize regions, making them bigger or smalle
 
 （这是一个stop the world的停顿,`eden`和`survivor`区域会重新计算分配，停顿时间是要考虑到的）
 
-#### 对老年代的GC
+#### 对老年代的GC（Mixed GC）
 
 Phase | Description
 -|-
@@ -415,23 +572,41 @@ Phase | Description
 (5) Cleanup(Stop the World Event and Concurrent) | * Performs accounting on live objects and completely free regions. (Stop the world); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)
 (*) Copying | (Stop the World Event) These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].
 
-##### Initial Marking Phase(初始标记，stop the world)
+##### Initial Marking Phase(初始标记，STW)
 
 Initial marking of live object is piggybacked on a young generation garbage collection.(标记存活对象)
 
 gc log: `(young) (initial-mark)`
 
-##### Concurrent Marking Phase（并发标记，与用户线程并发执行）
+##### Concurrent Marking Phase（并发标记：三色标记，与用户线程并发执行）
 
 If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.
 （空区域会立刻被标记，这个阶段会计算存活对象）
 
-##### Remark Phase（最终标记，stop the world, CPU停顿处理垃圾）
+###### 三色标记
+
+困难点：在标记对象的过程中，引用关系也正发生着变化
+
+1. <font color='white'>白色</font>： 没有被标记的对象
+2. <font color='gray'>灰色</font>： 自身被标记，成员未被标记
+3. <font color='black'>黑色</font>： 自身被和成员都被标记完成了
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/three_color.png)
+
+从左边变成右边的状态,两个变化
+1. B->D 引用消失
+2. A->D 引用新增
+
+这样下次扫描的时候，由于A是黑色，则A的引用不会理会；B,C发现没有任何引用了；这样导致D漏标了，即D被当成垃圾了
+
+G1 snapshot at the begining,关注引用的删除：当B->D消失时，要把这种引用保存到GC栈，保证下次D要被扫描到(配合`Remember Set`)
+
+##### Remark Phase（最终标记，STW, CPU停顿处理垃圾）
 
 Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）
 
-##### Copying/Cleanup Phase（清理一些内存块，stop the world，根据用户期望的GC停顿时间回收）
+##### Copying/Cleanup Phase（清理一些内存块:筛选回收，STW，根据用户期望的GC停顿时间回收）
 
 G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.
 
@@ -751,81 +926,6 @@ gc 类型 | 方式
 yong gc | Parallel Scavenge（PSYoungGen）
 full gc | Parallel Old（ParOldGen）
 
-## GC收集器及其发展
-
-### (一) Serial 收集器
-
-* 是一个单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其他所有的工作线程，直到收集结束**即`Stop The World`
-
-* 标记，清除
-
-### (二) Parallel Scavenge 收集器
-
-使用复制算法的**并行多线程收集器**。Parallel Scavenge是Java1.8默认的收集器，特点是并行的多线程回收，以吞吐量（CPU用于运行用户代码的时间与CPU总消耗时间的比值，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)）优先
-
-停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验，而高吞吐量则可以高效率地利用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务
-
-### (二) ParNew 收集器
-
-是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余与Serial收集器完全一样
-
-### (三) CMS收集器
-
-CMS收集器在Minor GC时会暂停所有的应用线程，并以多线程的方式进行垃圾回收。在Full GC时不再暂停应用线程，而是使用若干个后台线程定期的对老年代空间进行扫描，及时回收其中不再使用的对象
-
-### (四) G1
-
-G1收集器（或者垃圾优先收集器）的设计初衷是为了尽量缩短处理超大堆（大于4GB）时产生的停顿。相对于CMS的优势而言是内存碎片的产生率大大降低
-
-```java
-Java HotSpot(TM) 64-Bit Server VM (25.171-b11) for bsd-amd64 JRE (1.8.0_171-b11), built on Mar 28 2018 12:50:57 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
-Memory: 4k page, physical 16777216k(1978920k free)
-
-/proc/meminfo:
-
-CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:NewSize=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC
-0.196: [GC pause (G1 Humongous Allocation) (young) (initial-mark), 0.0022978 secs]
-   [Parallel Time: 2.0 ms, GC Workers: 4]
-      [GC Worker Start (ms): Min: 196.2, Avg: 196.2, Max: 196.3, Diff: 0.0]
-      [Ext Root Scanning (ms): Min: 0.6, Avg: 0.6, Max: 0.6, Diff: 0.0, Sum: 2.4]
-      [Update RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
-         [Processed Buffers: Min: 0, Avg: 0.0, Max: 0, Diff: 0, Sum: 0]
-      [Scan RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
-      [Code Root Scanning (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
-      [Object Copy (ms): Min: 0.8, Avg: 1.1, Max: 1.3, Diff: 0.5, Sum: 4.3]
-      [Termination (ms): Min: 0.0, Avg: 0.3, Max: 0.5, Diff: 0.5, Sum: 1.1]
-         [Termination Attempts: Min: 1, Avg: 1.2, Max: 2, Diff: 1, Sum: 5]
-      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
-      [GC Worker Total (ms): Min: 1.9, Avg: 2.0, Max: 2.0, Diff: 0.0, Sum: 7.8]
-      [GC Worker End (ms): Min: 198.2, Avg: 198.2, Max: 198.2, Diff: 0.0]
-   [Code Root Fixup: 0.0 ms]
-   [Code Root Purge: 0.0 ms]
-   [Clear CT: 0.0 ms]
-   [Other: 0.2 ms]
-      [Choose CSet: 0.0 ms]
-      [Ref Proc: 0.1 ms]
-      [Ref Enq: 0.0 ms]
-      [Redirty Cards: 0.0 ms]
-      [Humongous Register: 0.0 ms]
-      [Humongous Reclaim: 0.0 ms]
-      [Free CSet: 0.0 ms]
-   [Eden: 3072.0K(10.0M)->0.0B(9216.0K) Survivors: 0.0B->1024.0K Heap: 8629.0K(20.0M)->6823.5K(20.0M)]
- [Times: user=0.00 sys=0.00, real=0.01 secs] 
-0.199: [GC concurrent-root-region-scan-start]
-0.199: [GC concurrent-root-region-scan-end, 0.0005314 secs]
-0.199: [GC concurrent-mark-start]
-0.199: [GC concurrent-mark-end, 0.0000251 secs]
-0.202: [GC remark 0.202: [Finalize Marking, 0.0000621 secs] 0.202: [GC ref-proc, 0.0000215 secs] 0.202: [Unloading, 0.0003779 secs], 0.0005651 secs]
- [Times: user=0.00 sys=0.00, real=0.00 secs] 
-0.203: [GC cleanup 13M->13M(20M), 0.0001664 secs]
- [Times: user=0.00 sys=0.00, real=0.00 secs] 
- Heap
- garbage-first heap   total 20480K, used 12967K [0x00000007bec00000, 0x00000007bed000a0, 0x00000007c0000000)
-  region size 1024K, 2 young (2048K), 1 survivors (1024K)
- Metaspace       used 3342K, capacity 4500K, committed 4864K, reserved 1056768K
-  class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
-```
-
 # 堆外内存
 
 ## 问题
@@ -853,7 +953,7 @@ CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:Max
 * 可以在进程间可以共享，减少 JVM 间的对象复制，使得 JVM 的分割部署更容易实现
 * 本地缓存，减少磁盘缓存或者分布式缓存的响应时间
 
-# java 内存区域和内存溢出异常演练测试
+# Java 内存区域和内存溢出异常演练测试
 
 ## OutOfMemoryError
 
