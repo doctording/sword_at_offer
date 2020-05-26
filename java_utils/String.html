@@ -38,6 +38,7 @@
 <li><a href="#append-string">append字符串 对比 string +</a></li>
 </ul>
 </li>
+<li><a href="#java-stringfinal">Java String类为什么是final的？</a></li>
 </ul>
 </li>
 </ul>
@@ -374,12 +375,27 @@
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;cost:&quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">));</span>
 <span class="o">}</span>
 </pre></div>
+
+
+<h2 id="java-stringfinal">Java String类为什么是final的？</h2>
+<ol>
+<li>为了实现字符串池</li>
+</ol>
+<p>字符串池的实现可以在运行时节约很多heap空间，因为不同的字符串变量都指向池中的同一个字符串。但如果字符串是可变的，那么String intern将不能实现，因为这样的话，如果变量改变了它的值，那么其它指向这个值的变量的值也会一起改变</p>
+<ol>
+<li>为了安全 &amp; 线程安全</li>
+</ol>
+<p>final不可变,安全</p>
+<ol>
+<li>为了实现String可以创建HashCode不可变性，提高效率</li>
+</ol>
+<p>因为字符串是不可变的，所以在它创建的时候HashCode就被缓存了，不需要重新计算。这就使得字符串很适合作为Map中的键，字符串的处理速度要快过其它的键对象。这就是HashMap中的键往往都使用字符串。</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-23 20:24:37</p>
+        <p>Site Generated 2020-05-26 09:32:49</p>
       </span>
     </div>
 
