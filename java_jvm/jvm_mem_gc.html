@@ -51,16 +51,22 @@
 <li><a href="#javagc-roots">Java中可作为GC Roots的对象包括</a></li>
 </ul>
 </li>
-<li><a href="#reference">引用Reference</a></li>
-<li><a href="#_7">对象是生存还是死亡的？(两次标记)</a></li>
-<li><a href="#_8">回收方法区</a></li>
+<li><a href="#reference">引用Reference</a><ul>
+<li><a href="#_7">强引用</a></li>
+<li><a href="#_8">弱引用</a></li>
+<li><a href="#_9">软引用</a></li>
+<li><a href="#_10">虚引用</a></li>
+</ul>
+</li>
+<li><a href="#_11">对象是生存还是死亡的？(两次标记)</a></li>
+<li><a href="#_12">回收方法区</a></li>
 <li><a href="#hotspot">HotSpot 算法实现</a><ul>
 <li><a href="#stop-the-world">Stop The World</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_9">收集器</a><ul>
+<li><a href="#_13">收集器</a><ul>
 <li><a href="#gc">GC收集器及其发展</a><ul>
 <li><a href="#serial-stw">(一) Serial （STW,单线程收集器）</a></li>
 <li><a href="#parallel-scavengestw">(二) Parallel Scavenge（STW,多线程收集器）</a></li>
@@ -68,15 +74,15 @@
 <li><a href="#g1">(四) G1</a></li>
 </ul>
 </li>
-<li><a href="#_10">几中常见的垃圾回收方式</a></li>
+<li><a href="#_14">几中常见的垃圾回收方式</a></li>
 <li><a href="#cmsconcurrent-mark-sweep">CMS(Concurrent Mark Sweep)垃圾回收器</a><ul>
 <li><a href="#cms_1">cms流程</a></li>
-<li><a href="#_11">缺点</a></li>
-<li><a href="#_12">三色标记</a></li>
+<li><a href="#_15">缺点</a></li>
+<li><a href="#_16">三色标记</a></li>
 </ul>
 </li>
 <li><a href="#g1garbage-first">G1(Garbage First)垃圾回收器</a><ul>
-<li><a href="#_13">参考学习文档</a></li>
+<li><a href="#_17">参考学习文档</a></li>
 <li><a href="#g1_1">G1设计理念</a></li>
 <li><a href="#g1_2">G1 内存区域分布图和概念介绍</a></li>
 <li><a href="#remember-set-collection-set">Remember Set &amp; Collection Set</a></li>
@@ -86,7 +92,7 @@
 <li><a href="#gcmixed-gc">对老年代的GC（Mixed GC）</a><ul>
 <li><a href="#initial-marking-phasestw">Initial Marking Phase(初始标记，STW)</a></li>
 <li><a href="#concurrent-marking-phase">Concurrent Marking Phase（并发标记：三色标记，与用户线程并发执行）</a><ul>
-<li><a href="#_14">三色标记</a></li>
+<li><a href="#_18">三色标记</a></li>
 </ul>
 </li>
 <li><a href="#remark-phasestw-cpu">Remark Phase（最终标记，STW, CPU停顿处理垃圾）</a></li>
@@ -99,7 +105,7 @@
 <li><a href="#g1_4">G1的优势（为什么能够设置一个停留时间）</a></li>
 </ul>
 </li>
-<li><a href="#_15">内存分配与回收策略(理论基础)</a><ul>
+<li><a href="#_19">内存分配与回收策略(理论基础)</a><ul>
 <li><a href="#eden">对象优先在Eden分配</a><ul>
 <li><a href="#minor-gcyong-gc">minor gc(yong gc)</a></li>
 <li><a href="#major-gc-full-gc">major gc/ full gc</a></li>
@@ -107,13 +113,13 @@
 <li><a href="#gc_2">对应GC日志</a></li>
 </ul>
 </li>
-<li><a href="#_16">参考</a></li>
+<li><a href="#_20">参考</a></li>
 </ul>
 </li>
-<li><a href="#_17">大对象直接进入老年代</a></li>
-<li><a href="#_18">长期存活的对象将进入老年代</a></li>
-<li><a href="#_19">动态对象的年龄判定</a></li>
-<li><a href="#_20">空间分配担保</a></li>
+<li><a href="#_21">大对象直接进入老年代</a></li>
+<li><a href="#_22">长期存活的对象将进入老年代</a></li>
+<li><a href="#_23">动态对象的年龄判定</a></li>
+<li><a href="#_24">空间分配担保</a></li>
 <li><a href="#gc_3">触发gc的条件</a><ul>
 <li><a href="#minor-gc">Minor GC触发条件</a></li>
 <li><a href="#full-gc">Full GC触发条件</a></li>
@@ -128,23 +134,23 @@
 </li>
 </ul>
 </li>
-<li><a href="#_21">堆外内存</a><ul>
-<li><a href="#_22">问题</a></li>
-<li><a href="#_23">概念</a><ul>
-<li><a href="#_24">堆外内存溢出</a></li>
-<li><a href="#_25">堆外内存更适合</a></li>
+<li><a href="#_25">堆外内存</a><ul>
+<li><a href="#_26">问题</a></li>
+<li><a href="#_27">概念</a><ul>
+<li><a href="#_28">堆外内存溢出</a></li>
+<li><a href="#_29">堆外内存更适合</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a href="#java_1">Java 内存区域和内存溢出异常演练测试</a><ul>
 <li><a href="#outofmemoryerror">OutOfMemoryError</a></li>
-<li><a href="#_26">虚拟机栈和本地方法栈溢出</a></li>
-<li><a href="#_27">方法区和运行时常量池溢出</a><ul>
+<li><a href="#_30">虚拟机栈和本地方法栈溢出</a></li>
+<li><a href="#_31">方法区和运行时常量池溢出</a><ul>
 <li><a href="#java7-javalangoutofmemoryerror-java-heap-space">Java7 常量池 仍是java.lang.OutOfMemoryError: Java heap space</a></li>
 </ul>
 </li>
-<li><a href="#_28">直接内存溢出</a></li>
+<li><a href="#_32">直接内存溢出</a></li>
 </ul>
 </li>
 </ul>
@@ -264,37 +270,100 @@
 <li>方法区中常量引用的对象</li>
 <li>本地方法栈中JNI(即一般说的Native方法)引用的对象</li>
 </ul>
+<p>which instances are roots?(JVM规范中)</p>
+<p>JVM stack, native method stack, run-tinem constant pool, static references in method area, Clazz</p>
 <h2 id="reference">引用<code>Reference</code></h2>
-<p>强引用(Strong)，软引用(Soft)，弱引用(Weak)，虚引用(Phantom)；引用强度依次减弱</p>
-<ul>
-<li>强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。如</li>
-</ul>
-<div class="hlcode"><pre><span class="n">Object</span> <span class="n">o</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+<p>参考：<a href="https://www.geeksforgeeks.org/types-references-java/">https://www.geeksforgeeks.org/types-references-java/</a></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/reference.png" /></p>
+<h3 id="_7">强引用</h3>
+<p>使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。如</p>
+<div class="hlcode"><pre><span class="c1">//Strong Reference - by default</span>
+<span class="n">Gfg</span> <span class="n">g</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Gfg</span><span class="o">();</span>
+
+<span class="c1">//Now, object to which &#39;g&#39; was pointing earlier is  </span>
+<span class="c1">//eligible for garbage collection.</span>
+<span class="n">g</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>  
+</pre></div>
+
+
+<h3 id="_8">弱引用</h3>
+<div class="hlcode"><pre><span class="c1">// Strong Reference</span>
+<span class="n">Gfg</span> <span class="n">g</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Gfg</span><span class="o">();</span>
+<span class="n">g</span><span class="o">.</span><span class="na">x</span><span class="o">();</span>
+
+<span class="c1">// Creating Weak Reference to Gfg-type object to which &#39;g&#39;  </span>
+<span class="c1">// is also pointing.</span>
+<span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">Gfg</span><span class="o">&gt;</span> <span class="n">weakref</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">Gfg</span><span class="o">&gt;(</span><span class="n">g</span><span class="o">);</span>
+
+<span class="c1">//Now, Gfg-type object to which &#39;g&#39; was pointing earlier</span>
+<span class="c1">//is available for garbage collection.</span>
+<span class="c1">//But, it will be garbage collected only when JVM needs memory.</span>
+<span class="n">g</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>  
+
+<span class="c1">// You can retrieve back the object which</span>
+<span class="c1">// has been weakly referenced.</span>
+<span class="c1">// It successfully calls the method.</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>  
+
+<span class="n">g</span><span class="o">.</span><span class="na">x</span><span class="o">();</span>
 </pre></div>
 
 
 <ul>
-<li>软引用是用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。<code>SoftReference</code></li>
+<li>This type of reference is used in WeakHashMap to reference the entry objects .</li>
+<li>If JVM detects an object with only weak references (i.e. no strong or soft references linked to any object object), this object will be marked for garbage collection.</li>
+<li>To create such references java.lang.ref.WeakReference class is used.</li>
+<li>These references are used in real time applications while establishing a DBConnection which might be cleaned up by Garbage Collector when the application using the database gets closed.</li>
 </ul>
-<div class="hlcode"><pre><span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>                                     <span class="c1">// 强引用</span>
-<span class="n">SoftReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">softRef</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SoftReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="n">str</span><span class="o">);</span>     <span class="c1">// 软引用</span>
+<h3 id="_9">软引用</h3>
+<p>In Soft reference, even if the object is free for garbage collection then also its not garbage collected, until JVM is in need of memory badly.The objects gets cleared from the memory when JVM runs out of memory.To create such references java.lang.ref.SoftReference class is used.(<font color='red'>JVM 内存紧张的时候会回收软引用对象</font>)</p>
+<p>用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。<code>SoftReference</code></p>
+<div class="hlcode"><pre><span class="c1">//Code to illustrate Soft reference</span>
+<span class="kn">import</span> <span class="nn">java.lang.ref.SoftReference</span><span class="o">;</span>
+<span class="kd">class</span> <span class="nc">Gfg</span>
+<span class="o">{</span>
+    <span class="c1">//code..</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">x</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;GeeksforGeeks&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Example</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="c1">// Strong Reference</span>
+        <span class="n">Gfg</span> <span class="n">g</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Gfg</span><span class="o">();</span>
+        <span class="n">g</span><span class="o">.</span><span class="na">x</span><span class="o">();</span>
+
+        <span class="c1">// Creating Soft Reference to Gfg-type object to which &#39;g&#39;</span>
+        <span class="c1">// is also pointing.</span>
+        <span class="n">SoftReference</span><span class="o">&lt;</span><span class="n">Gfg</span><span class="o">&gt;</span> <span class="n">softref</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SoftReference</span><span class="o">&lt;</span><span class="n">Gfg</span><span class="o">&gt;(</span><span class="n">g</span><span class="o">);</span>
+
+        <span class="c1">// Now, Gfg-type object to which &#39;g&#39; was pointing</span>
+        <span class="c1">// earlier is available for garbage collection.</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>  
+
+        <span class="c1">// You can retrieve back the object which</span>
+        <span class="c1">// has been weakly referenced.</span>
+        <span class="c1">// It successfully calls the method.</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">softref</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>  
+
+        <span class="n">g</span><span class="o">.</span><span class="na">x</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
+<h3 id="_10">虚引用</h3>
+<p>The objects which are being referenced by phantom references are eligible for garbage collection. But, before removing them from the memory, JVM puts them in a queue called ‘reference queue’ . They are put in a reference queue after calling finalize() method on them.To create such references java.lang.ref.PhantomReference class is used.</p>
+<p>也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。<code>PhantomReference</code></p>
 <ul>
-<li>弱引用也是用来描述非必需对象的。但是它的强度比弱引用更弱一些，被弱引用关联的对象只能生成到下一次垃圾收集之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。<code>WeakReference</code></li>
+<li>它的get()方法写死了，返回null（也就是跟前面不一样，不能通过get()方法获取被包装的对象）</li>
+<li>Java中虚幻引用作用：管理直接内存</li>
 </ul>
-<div class="hlcode"><pre><span class="n">String</span> <span class="n">str</span><span class="o">=</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>
-<span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">abcWeakRef</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="n">str</span><span class="o">);</span>
-<span class="n">str</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
-</pre></div>
-
-
-<ul>
-<li>虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。<code>PhantomReference</code></li>
-</ul>
-<p>参考：<a href="https://www.cnblogs.com/gudi/p/6403953.html" target="_blank">https://www.cnblogs.com/gudi/p/6403953.html</a></p>
-<h2 id="_7">对象是生存还是死亡的？(两次标记)</h2>
+<h2 id="_11">对象是生存还是死亡的？(两次标记)</h2>
 <p>对对象进行可达性分析 ？<br />
 =》没有GC Roots的引用链 =》 判断对象是否有必要执行<code>finalize()</code>方法</p>
 <ol>
@@ -371,7 +440,7 @@ no, i am dead
 <ul>
 <li>最后，不推荐使用<code>finalize()</code></li>
 </ul>
-<h2 id="_8">回收方法区</h2>
+<h2 id="_12">回收方法区</h2>
 <p>堆中，新生代进行一次垃圾收集一般可以回收70%-95%的空间，而永久代的垃圾收集效率远低于此。</p>
 <p>永久代主要回收两部分内容：废弃常量和无用的类， 判断"无用的类"：</p>
 <ol>
@@ -396,7 +465,7 @@ no, i am dead
 
 
 <p>只有GC线程工作，其它线程都停止；当GC线程工作完成，其它线程恢复</p>
-<h1 id="_9">收集器</h1>
+<h1 id="_13">收集器</h1>
 <p>垃圾收集器，并发&amp;并行</p>
 <ul>
 <li>
@@ -472,7 +541,7 @@ no, i am dead
 </pre></div>
 
 
-<h2 id="_10">几中常见的垃圾回收方式</h2>
+<h2 id="_14">几中常见的垃圾回收方式</h2>
 <p><a href="https://blog.csdn.net/qq_26437925/article/details/53728388" target="_blank">https://blog.csdn.net/qq_26437925/article/details/53728388</a></p>
 <p>Java垃圾回收的依据/假设</p>
 <ul>
@@ -500,7 +569,7 @@ no, i am dead
 <li>并发清除（CMS concurrent sweep）</li>
 </ol>
 <p>清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行；会产生浮动垃圾</p>
-<h3 id="_11">缺点</h3>
+<h3 id="_15">缺点</h3>
 <ol>
 <li>
 <p>CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做对事情就是在并发标记和并发清除的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）</p>
@@ -513,7 +582,7 @@ no, i am dead
 </li>
 </ol>
 <p>为了解决这个问题，CMS提供了一个开关参数（<code>-XX: UseCMSCompactAtFullCollection</code>），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(<code>-XX: CMSFullGCsBeforeCompaction</code>)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）</p>
-<h3 id="_12">三色标记</h3>
+<h3 id="_16">三色标记</h3>
 <ul>
 <li>白色：还没有搜索过的对象（白色对象会被当成垃圾对象）</li>
 <li>灰色：正在搜索的对象</li>
@@ -531,7 +600,7 @@ no, i am dead
 </ul>
 <p>块(RSet) 配合 SATB 解决（引用中转到GC的堆栈中）</p>
 <h2 id="g1garbage-first">G1(Garbage First)垃圾回收器</h2>
-<h3 id="_13">参考学习文档</h3>
+<h3 id="_17">参考学习文档</h3>
 <p>参考学习1: <a target='_blank' href='https://tech.meituan.com/2016/09/23/g1.html'>美团技术文章</a></p>
 <p>参考学习2: <a target='_blank' href='https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html'>oracle g1 document</a></p>
 <p>参考学习3: <a target='_blank' href='https://blogs.oracle.com/poonam/understanding-g1-gc-logs'>g1 log</a></p>
@@ -726,7 +795,7 @@ no, i am dead
 <h5 id="concurrent-marking-phase">Concurrent Marking Phase（并发标记：三色标记，与用户线程并发执行）</h5>
 <p>If empty regions are found (as denoted by the "X"), they are removed immediately in the Remark phase. Also, "accounting" information that determines liveness is calculated.<br />
 （空区域会立刻被标记，这个阶段会计算存活对象）</p>
-<h6 id="_14">三色标记</h6>
+<h6 id="_18">三色标记</h6>
 <p>困难点：在标记对象的过程中，引用关系也正发生着变化</p>
 <ol>
 <li><font color='white'>白色</font>： 没有被标记的对象</li>
@@ -785,7 +854,7 @@ no, i am dead
 <p>G1的另一个显著特点他能够让用户设置应用的暂停时间，为什么G1能做到这一点呢？也许你已经注意到了，G1是<strong>选择一些内存块，而不是整个代的内存来回收</strong>，这是G1跟其它GC非常不同的一点，其它GC每次回收都会回收整个Generation的内存(Eden, Old), 而回收内存所需的时间就取决于内存的大小，以及实际垃圾的多少，所以垃圾回收时间是不可控的；而G1每次并不会回收整代内存，到底回收多少内存就看用户配置的暂停时间，配置的时间短就少回收点，配置的时间长就多回收点，伸缩自如。</p>
 <p>由于内存被分成了很多小块，又带来了另外好处，由于内存块比较小，进行内存压缩整理的代价都比较小，相比其它GC算法，可以有效的规避内存碎片的问题。</p>
 <p>G1的思想，感觉有点像Java<code>CocurrentHashMap</code>，将一个大的分成若干个Region，然后再处理</p>
-<h2 id="_15">内存分配与回收策略(理论基础)</h2>
+<h2 id="_19">内存分配与回收策略(理论基础)</h2>
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
 <h4 id="minor-gcyong-gc">minor gc(yong gc)</h4>
@@ -914,7 +983,7 @@ Heap
 </tr>
 </tbody>
 </table>
-<h4 id="_16">参考</h4>
+<h4 id="_20">参考</h4>
 <p>JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhiyizu1120/p/6237510.html'>参考博文链接</a></p>
 <ul>
 <li>[PSYoungGen: 7698K-&gt;448K(9216K)]<ol>
@@ -927,15 +996,15 @@ Heap
 </ol>
 </li>
 </ul>
-<h3 id="_17">大对象直接进入老年代</h3>
+<h3 id="_21">大对象直接进入老年代</h3>
 <p>这里所谓的大对象是指，需要大量连续内存空间的Java对象，，最典型的大对象就是那种很长的字符串以及数组。大对象对虚拟机的内存分配来说就是一个坏消息。（更坏的：一群"朝生夕灭"的"短命大对象"），经常出现大对象容易导致内存还有不少空间时就提前触发垃圾收集以获取足够的连续空间来"安置"它们</p>
 <p><code>-XX:PretenureSizeThreshold</code>参数，另大于这个设置值的对象直接在老年代分配。这样做的目的是避免在Eden区以及两个Survivor区之间发生大量的内存复制(复习一下：新生代采用复制算法收集内存)</p>
-<h3 id="_18">长期存活的对象将进入老年代</h3>
+<h3 id="_22">长期存活的对象将进入老年代</h3>
 <p>内存回收时，必须识别哪些对象应该在新生代，哪些对象应放到老年代。</p>
 <p>虚拟机给每个对象定义了一个对象年龄(<code>Age</code>)计数器。如果对象在<code>Eden</code>出生并经历过第一次<code>Minor GC</code>后仍然存活，并且能被<code>Survivor</code>容纳的话，将被移动到<code>Survivor</code>空间,并且对象的年龄为1.对象在<code>Survivor</code>区中每"熬过"一次<code>Minor GC</code>，年龄就增加1岁，当他的年龄增加到一定程度（默认15岁），就将会被晋升到老年代中。对象晋升老年代的年龄阈值，可以通过参数<code>-XX:MaxTenuringThreshold</code>设置</p>
-<h3 id="_19">动态对象的年龄判定</h3>
+<h3 id="_23">动态对象的年龄判定</h3>
 <p>为了更好地适应不同程序的内存状况，虚拟机并不是永远地要求对象的年龄必须达到了<code>MaxTenuringThreshold</code>才能晋升老年代，如果在<code>Survivor</code>空间中相同年龄所有对象大小的总和大于<code>Survivor</code>空间的一半，年龄大于或等于该年龄对象就可以直接进入老年代，无须等到<code>MaxTenuringThreshold</code>要求的年龄。</p>
-<h3 id="_20">空间分配担保</h3>
+<h3 id="_24">空间分配担保</h3>
 <p>老年代最大可用的连续空间 &gt; 新生代所有对象总空间, 这样能确保<code>Minor GC</code>是安全的。</p>
 <p>如果不成立，虚拟机会查看<code>HandlerPromotionFailure</code>设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</p>
 <p>如果大于，将尝试着进行一次<code>Minor GC</code>,尽管这次的<code>Minor GC</code>是有风险的</p>
@@ -1157,20 +1226,20 @@ Heap
 </tr>
 </tbody>
 </table>
-<h1 id="_21">堆外内存</h1>
-<h2 id="_22">问题</h2>
+<h1 id="_25">堆外内存</h1>
+<h2 id="_26">问题</h2>
 <p><code>metaspace</code>没有限制，堆内存使用正常(没有<code>full gc</code>)，然后遇到<code>OOMKilled(程序因为内存使用超过限额被 kill -9 杀掉)</code></p>
-<h2 id="_23">概念</h2>
+<h2 id="_27">概念</h2>
 <p>除了堆内存，Java 还可以使用堆外内存，也称直接内存（Direct Memory）。</p>
 <p>例如：在通信中，将存在于堆内存中的数据 flush 到远程时，需要首先将堆内存中的数据拷贝到堆外内存中，然后再写入 Socket 中；如果直接将数据存到堆外内存中就可以避免上述拷贝操作，提升性能。类似的例子还有读写文件。</p>
 <p>很多 NIO 框架 （如 netty，rpc） 会采用 Java 的 DirectByteBuffer 类来操作堆外内存，DirectByteBuffer 类对象本身位于 Java 内存模型的堆中，由 JVM 直接管控、操纵。DirectByteBuffer 中用于分配堆外内存的方法 unsafe.allocateMemory(size) 是个 native 方法，本质上是用 C 的 malloc 来进行分配的。</p>
 <p><strong>堆外内存并不直接控制于JVM，因此只能等到full GC的时候才能垃圾回收！</strong>（direct buffer归属的的JAVA对象是在堆上且能够被GC回收的，一旦它被回收，JVM将释放direct buffer的堆外空间。前提是没有关闭DisableExplicitGC）。堆外内存包含线程栈，应用程序代码，NIO缓存，JNI调用等.例如<code>ByteBuffer bb = ByteBuffer.allocateDirect(1024)</code>，这段代码的执行会在堆外占用<code>1k</code>的内存，Java堆内只会占用一个对象的指针引用的大小，堆外的这1k的空间只有当bb对象被回收时，才会被回收，这里会发现一个明显的不对称现象，就是堆外可能占用了很多，而堆内没占用多少，导致还没触发GC，那就很容易出现<strong>Direct Memory造成物理内存耗光</strong></p>
-<h3 id="_24">堆外内存溢出</h3>
+<h3 id="_28">堆外内存溢出</h3>
 <ol>
 <li>最大的堆外内存设置的太小了</li>
 <li>没有full gc， 堆外内存没有及时被清理掉</li>
 </ol>
-<h3 id="_25">堆外内存更适合</h3>
+<h3 id="_29">堆外内存更适合</h3>
 <ul>
 <li>存储生命周期长的对象</li>
 <li>可以在进程间可以共享，减少 JVM 间的对象复制，使得 JVM 的分割部署更容易实现</li>
@@ -1258,7 +1327,7 @@ Heap
 <p>https://www.jianshu.com/p/759e02c1feee</p>
 </li>
 </ul>
-<h2 id="_26">虚拟机栈和本地方法栈溢出</h2>
+<h2 id="_30">虚拟机栈和本地方法栈溢出</h2>
 <ul>
 <li>
 <p>Java程序中，每个线程都有自己的Stack Space(堆栈)。</p>
@@ -1314,7 +1383,7 @@ Heap
 <ol>
 <li>https://blog.csdn.net/z69183787/article/details/79228215</li>
 </ol>
-<h2 id="_27">方法区和运行时常量池溢出</h2>
+<h2 id="_31">方法区和运行时常量池溢出</h2>
 <p>方法区用于存放Class的相关信息，如：类名，访问修饰符，常量池，字符描述，方法描述等。对于这个区域的测试，基本思路是运行时产生大量的类去填满方法区，直到溢出。</p>
 <ul>
 <li>
@@ -1382,7 +1451,7 @@ Heap
 <ol>
 <li>https://blog.csdn.net/tlk20071/article/details/77841841</li>
 </ol>
-<h2 id="_28">直接内存溢出</h2>
+<h2 id="_32">直接内存溢出</h2>
 <p>NIO的Buffer提供了一个可以不经过JVM内存直接访问系统物理内存的类——DirectBuffer。DirectBuffer类继承自ByteBuffer，但和普通的ByteBuffer不同，普通的ByteBuffer仍在JVM堆上分配内存，其最大内存受到最大堆内存的限制；而DirectBuffer直接分配在物理内存中，并不占用堆空间，其可申请的最大内存受操作系统限制。</p>
 <p>直接内存的读写操作比普通Buffer快，但它的创建、销毁比普通Buffer慢。</p>
 <p>因此直接内存使用于需要大内存空间且频繁访问的场合，不适用于频繁申请释放内存的场合。</p>
@@ -1422,7 +1491,7 @@ Heap
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-26 09:32:49</p>
+        <p>Site Generated 2020-05-27 22:33:00</p>
       </span>
     </div>
 
