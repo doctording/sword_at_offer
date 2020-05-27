@@ -139,34 +139,110 @@ Class metadata, interned Strings and class static variables will be moved from t
 * 方法区中常量引用的对象
 * 本地方法栈中JNI(即一般说的Native方法)引用的对象
 
+which instances are roots?(JVM规范中)
+
+JVM stack, native method stack, run-tinem constant pool, static references in method area, Clazz
+
 ## 引用`Reference`
 
-强引用(Strong)，软引用(Soft)，弱引用(Weak)，虚引用(Phantom)；引用强度依次减弱
+参考：<a href="https://www.geeksforgeeks.org/types-references-java/">https://www.geeksforgeeks.org/types-references-java/</a>
 
-* 强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。如
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/reference.png)
 
-```java
-Object o = new Object();
-```
+### 强引用
 
-* 软引用是用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。`SoftReference`
+使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。如
 
 ```java
-String str = new String("abc");                                     // 强引用
-SoftReference<String> softRef = new SoftReference<String>(str);     // 软引用
+//Strong Reference - by default
+Gfg g = new Gfg();
+
+//Now, object to which 'g' was pointing earlier is  
+//eligible for garbage collection.
+g = null;  
 ```
 
-* 弱引用也是用来描述非必需对象的。但是它的强度比弱引用更弱一些，被弱引用关联的对象只能生成到下一次垃圾收集之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。`WeakReference`
+### 弱引用
 
 ```java
-String str=new String("abc");
-WeakReference<String> abcWeakRef = new WeakReference<String>(str);
-str=null;
+// Strong Reference
+Gfg g = new Gfg();
+g.x();
+
+// Creating Weak Reference to Gfg-type object to which 'g'  
+// is also pointing.
+WeakReference<Gfg> weakref = new WeakReference<Gfg>(g);
+
+//Now, Gfg-type object to which 'g' was pointing earlier
+//is available for garbage collection.
+//But, it will be garbage collected only when JVM needs memory.
+g = null;  
+
+// You can retrieve back the object which
+// has been weakly referenced.
+// It successfully calls the method.
+g = weakref.get();  
+
+g.x();
 ```
 
-* 虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。`PhantomReference`
+* This type of reference is used in WeakHashMap to reference the entry objects .
+* If JVM detects an object with only weak references (i.e. no strong or soft references linked to any object object), this object will be marked for garbage collection.
+* To create such references java.lang.ref.WeakReference class is used.
+* These references are used in real time applications while establishing a DBConnection which might be cleaned up by Garbage Collector when the application using the database gets closed.
 
-参考：<a href="https://www.cnblogs.com/gudi/p/6403953.html" target="_blank">https://www.cnblogs.com/gudi/p/6403953.html</a>
+### 软引用
+
+In Soft reference, even if the object is free for garbage collection then also its not garbage collected, until JVM is in need of memory badly.The objects gets cleared from the memory when JVM runs out of memory.To create such references java.lang.ref.SoftReference class is used.(<font color='red'>JVM 内存紧张的时候会回收软引用对象</font>)
+
+用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。`SoftReference`
+
+```java
+//Code to illustrate Soft reference
+import java.lang.ref.SoftReference;
+class Gfg
+{
+    //code..
+    public void x()
+    {
+        System.out.println("GeeksforGeeks");
+    }
+}
+  
+public class Example
+{
+    public static void main(String[] args)
+    {
+        // Strong Reference
+        Gfg g = new Gfg();
+        g.x();
+
+        // Creating Soft Reference to Gfg-type object to which 'g'
+        // is also pointing.
+        SoftReference<Gfg> softref = new SoftReference<Gfg>(g);
+
+        // Now, Gfg-type object to which 'g' was pointing
+        // earlier is available for garbage collection.
+        g = null;  
+
+        // You can retrieve back the object which
+        // has been weakly referenced.
+        // It successfully calls the method.
+        g = softref.get();  
+
+        g.x();
+    }
+}
+```
+
+### 虚引用
+
+The objects which are being referenced by phantom references are eligible for garbage collection. But, before removing them from the memory, JVM puts them in a queue called ‘reference queue’ . They are put in a reference queue after calling finalize() method on them.To create such references java.lang.ref.PhantomReference class is used.
+
+也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。`PhantomReference`
+
+* 它的get()方法写死了，返回null（也就是跟前面不一样，不能通过get()方法获取被包装的对象）
+* Java中虚幻引用作用：管理直接内存
 
 ## 对象是生存还是死亡的？(两次标记)
 
