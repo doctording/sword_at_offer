@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>LRU - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#db_cache">db_cache</a>&nbsp;&#187;&nbsp;LRU
+    <span class="updated">Page Updated&nbsp;
+      2020-03-08 18:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">LRU</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#lfu">LFU</a></li>
+</ul>
+</div>
+<h1 id="lfu">LFU</h1>
+<p>Least Frequently Used ,最近最少使用算法</p>
+<p>这个缓存算法使用一个计数器来记录条目被访问的频率。通过使用LFU缓存算法，最低访问数的条目首先被移除。这个方法并不经常使用，因为它无法对一个拥有最初高访问率之后长时间没有被访问的条目缓存负责。</p>
+<p><img alt="" src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcwMjIxMTA0NjU3NjM1?x-oss-process=image/format,png" /></p>
+<ul>
+<li>leetcode java (460题)</li>
+</ul>
+<p><font color='red'>注意capacity=0的特殊情况，以及get,put 频率改变的情况</font></p>
+<div class="hlcode"><pre><span class="c1">// 普通双向链表,有一个初始的dummyNode</span>
+<span class="kd">class</span> <span class="nc">DoubleList</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">DoubleNode</span> <span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">;</span> <span class="c1">// 头尾虚节点</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">size</span><span class="o">;</span> <span class="c1">// 链表当前size</span>
+
+    <span class="kd">public</span> <span class="nf">DoubleList</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DoubleNode</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DoubleNode</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="n">head</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">tail</span><span class="o">;</span>
+        <span class="n">tail</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// O(1)</span>
+    <span class="c1">// 头插</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addFirst</span><span class="o">(</span><span class="n">DoubleNode</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">x</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="n">x</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+        <span class="n">head</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+        <span class="n">size</span><span class="o">++;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// O(1)</span>
+    <span class="c1">// 删除链表中的 x 节点（x 一定存在）</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="n">DoubleNode</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">x</span><span class="o">.</span><span class="na">prev</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="n">x</span><span class="o">.</span><span class="na">next</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">prev</span><span class="o">;</span>
+        <span class="n">size</span><span class="o">--;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// O(1)</span>
+    <span class="c1">// 删除链表中最后一个节点，并返回该节点</span>
+    <span class="kd">public</span> <span class="n">DoubleNode</span> <span class="nf">removeLast</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">tail</span><span class="o">.</span><span class="na">prev</span> <span class="o">==</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">DoubleNode</span> <span class="n">last</span> <span class="o">=</span> <span class="n">tail</span><span class="o">.</span><span class="na">prev</span><span class="o">;</span>
+        <span class="n">remove</span><span class="o">(</span><span class="n">last</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">last</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">DoubleNode</span> <span class="nf">getFirst</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">tail</span><span class="o">.</span><span class="na">prev</span> <span class="o">==</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">public</span> <span class="n">DoubleNode</span> <span class="nf">putFirst</span><span class="o">(</span><span class="n">DoubleNode</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">remove</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="n">addFirst</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="c1">// 返回链表长度</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">size</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 双向链表的节点</span>
+    <span class="kd">class</span> <span class="nc">DoubleNode</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="n">DoubleNode</span> <span class="n">next</span><span class="o">,</span> <span class="n">prev</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="nf">DoubleNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">,</span> <span class="kt">int</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">key</span> <span class="o">=</span> <span class="n">k</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">v</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">LFUCache</span> <span class="o">{</span>
+
+    <span class="c1">// 频率对应的双向链表</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">DoubleList</span><span class="o">&gt;</span> <span class="n">freDoubleListMap</span><span class="o">;</span>
+    <span class="c1">// key 对应的 频率</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">keyFreMap</span><span class="o">;</span>
+    <span class="c1">// key 对应 在链表中的位置</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">DoubleList</span><span class="o">.</span><span class="na">DoubleNode</span><span class="o">&gt;</span> <span class="n">keyNodeMap</span><span class="o">;</span>
+
+    <span class="kt">int</span> <span class="n">cap</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">minFre</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">LFUCache</span><span class="o">(</span><span class="kt">int</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cap</span> <span class="o">=</span> <span class="n">capacity</span><span class="o">;</span>
+        <span class="n">freDoubleListMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">keyFreMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">keyNodeMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">minFre</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">get</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">cap</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">keyFreMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+            <span class="c1">// 频率加1, 删除老的，添加新的</span>
+            <span class="n">DoubleList</span><span class="o">.</span><span class="na">DoubleNode</span> <span class="n">node</span> <span class="o">=</span> <span class="n">keyNodeMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">oldFre</span> <span class="o">=</span> <span class="n">keyFreMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">oldFre</span><span class="o">).</span><span class="na">remove</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+
+            <span class="c1">// 最小频率不会骤然增加, 如下情况最小频率要加1，否则还保持最小频率</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">minFre</span> <span class="o">==</span> <span class="n">oldFre</span> <span class="o">&amp;&amp;</span> <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">oldFre</span><span class="o">).</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">minFre</span> <span class="o">++;</span>
+            <span class="o">}</span>
+
+            <span class="kt">int</span> <span class="n">newFre</span> <span class="o">=</span> <span class="n">oldFre</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">newFre</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">newFre</span><span class="o">).</span><span class="na">addFirst</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// 新的双向链表</span>
+                <span class="n">DoubleList</span> <span class="n">doubleList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DoubleList</span><span class="o">();</span>
+                <span class="n">doubleList</span><span class="o">.</span><span class="na">addFirst</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+                <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">newFre</span><span class="o">,</span> <span class="n">doubleList</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">keyNodeMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">newFre</span><span class="o">).</span><span class="na">getFirst</span><span class="o">());</span>
+            <span class="n">keyFreMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">newFre</span><span class="o">);</span>
+
+            <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">cap</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">keyFreMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+            <span class="c1">// 频率加1, 删除老的，添加新的</span>
+            <span class="n">DoubleList</span><span class="o">.</span><span class="na">DoubleNode</span> <span class="n">node</span> <span class="o">=</span> <span class="n">keyNodeMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">oldFre</span> <span class="o">=</span> <span class="n">keyFreMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">oldFre</span><span class="o">).</span><span class="na">remove</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+
+            <span class="c1">// 最小频率不会骤然增加, 如下情况最小频率要加1，否则还保持最小频率</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">minFre</span> <span class="o">==</span> <span class="n">oldFre</span> <span class="o">&amp;&amp;</span> <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">oldFre</span><span class="o">).</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">minFre</span> <span class="o">++;</span>
+            <span class="o">}</span>
+
+            <span class="n">node</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">newFre</span> <span class="o">=</span> <span class="n">oldFre</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">newFre</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">newFre</span><span class="o">).</span><span class="na">addFirst</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// 新的双向链表</span>
+                <span class="n">DoubleList</span> <span class="n">doubleList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DoubleList</span><span class="o">();</span>
+                <span class="n">doubleList</span><span class="o">.</span><span class="na">addFirst</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+                <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">newFre</span><span class="o">,</span> <span class="n">doubleList</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">keyNodeMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">newFre</span><span class="o">).</span><span class="na">getFirst</span><span class="o">());</span>
+            <span class="n">keyFreMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">newFre</span><span class="o">);</span>
+
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="c1">// 容量满了，删除最小频率，最后访问的那个节点</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">keyFreMap</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="n">cap</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">DoubleList</span><span class="o">.</span><span class="na">DoubleNode</span> <span class="n">rmNode</span> <span class="o">=</span> <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">minFre</span><span class="o">).</span><span class="na">removeLast</span><span class="o">();</span>
+                <span class="n">keyNodeMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">rmNode</span><span class="o">.</span><span class="na">key</span><span class="o">);</span>
+                <span class="n">keyFreMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">rmNode</span><span class="o">.</span><span class="na">key</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">minFre</span><span class="o">).</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">minFre</span> <span class="o">++;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="n">DoubleList</span> <span class="n">doubleList</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="mi">1</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">doubleList</span> <span class="o">=</span> <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// new doubleList</span>
+                <span class="n">doubleList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DoubleList</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="c1">// new node</span>
+            <span class="n">DoubleList</span><span class="o">.</span><span class="na">DoubleNode</span> <span class="n">newNode</span> <span class="o">=</span> <span class="n">doubleList</span><span class="o">.</span><span class="na">new</span> <span class="n">DoubleNode</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+            <span class="n">doubleList</span><span class="o">.</span><span class="na">addFirst</span><span class="o">(</span><span class="n">newNode</span><span class="o">);</span>
+
+            <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">doubleList</span><span class="o">);</span>
+            <span class="n">keyNodeMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">freDoubleListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">getFirst</span><span class="o">());</span>
+            <span class="n">keyFreMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">minFre</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

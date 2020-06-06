@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>LockSupport Park & Unpark - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;LockSupport Park & Unpark
+    <span class="updated">Page Updated&nbsp;
+      2020-05-31 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">LockSupport Park & Unpark</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#locksupport">LockSupport</a><ul>
+<li><a href="#_1">例子</a><ul>
+<li><a href="#2parkwait">例子2，park使得线程wait</a></li>
+</ul>
+</li>
+<li><a href="#_2">进一步原理</a><ul>
+<li><a href="#park-unpark">先 park 再 unpark</a></li>
+<li><a href="#unpark-park">先 unpark 再 park</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="locksupport">LockSupport</h1>
+<p>底层是native方法</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">park</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">isAbsolute</span><span class="o">,</span> <span class="kt">long</span> <span class="n">time</span><span class="o">);</span>
+
+<span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">unpark</span><span class="o">(</span><span class="n">Object</span> <span class="n">thread</span><span class="o">);</span>
+</pre></div>
+
+
+<ul>
+<li>Park</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">park</span><span class="o">(</span><span class="n">Object</span> <span class="n">blocker</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 获取当前运行线程</span>
+    <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
+    <span class="c1">// 设置t中的parkBlockerOffset的值为blocker，即设置锁遍历</span>
+    <span class="n">setBlocker</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">blocker</span><span class="o">);</span>
+    <span class="c1">// 阻塞线程</span>
+    <span class="n">UNSAFE</span><span class="o">.</span><span class="na">park</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="mi">0L</span><span class="o">);</span>
+    <span class="c1">// 线程被释放，则将parkBlockerOffset设为null</span>
+    <span class="n">setBlocker</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setBlocker</span><span class="o">(</span><span class="n">Thread</span> <span class="n">t</span><span class="o">,</span> <span class="n">Object</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Even though volatile, hotspot doesn&#39;t need a write barrier here.</span>
+    <span class="n">UNSAFE</span><span class="o">.</span><span class="na">putObject</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">parkBlockerOffset</span><span class="o">,</span> <span class="n">arg</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>Unpark</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">unpark</span><span class="o">(</span><span class="n">Thread</span> <span class="n">thread</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">thread</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+        <span class="n">UNSAFE</span><span class="o">.</span><span class="na">unpark</span><span class="o">(</span><span class="n">thread</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p><a href="http://hg.openjdk.java.net/jdk8u/jdk8u40/hotspot/file/68577993c7db/src/share/vm/runtime/park.hpp">Java8 park.hpp定义</a></p>
+<p><a href="http://hg.openjdk.java.net/jdk8u/jdk8u40/hotspot/file/95e9083cf4a7/src/os/solaris/vm/os_solaris.cpp">Java8 park的hpp实现</a></p>
+<h2 id="_1">例子</h2>
+<ul>
+<li>先park，后unpack</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kt">void</span> <span class="nf">testLockSupport</span><span class="o">(){</span>
+    <span class="n">Thread</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t1 start&quot;</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t1 park&quot;</span><span class="o">);</span>
+        <span class="n">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t2 after park&quot;</span><span class="o">);</span>
+    <span class="o">},</span><span class="s">&quot;t1&quot;</span><span class="o">);</span>
+
+
+    <span class="n">t1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+    <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+    <span class="o">}</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main unpark&quot;</span><span class="o">);</span>
+    <span class="n">LockSupport</span><span class="o">.</span><span class="na">unpark</span><span class="o">(</span><span class="n">t1</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>线程执行park后，属于wait状态</p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/park_unpark.png" /></p>
+<ul>
+<li>unpark 在 park 之前</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kt">void</span> <span class="nf">testLockSupport</span><span class="o">(){</span>
+    <span class="n">Thread</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t1 start&quot;</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t1 park&quot;</span><span class="o">);</span>
+        <span class="n">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t2 after park&quot;</span><span class="o">);</span>
+    <span class="o">},</span><span class="s">&quot;t1&quot;</span><span class="o">);</span>
+
+
+    <span class="n">t1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+    <span class="o">}</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main unpark&quot;</span><span class="o">);</span>
+    <span class="n">LockSupport</span><span class="o">.</span><span class="na">unpark</span><span class="o">(</span><span class="n">t1</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>输出如下:（park自己恢复了）</p>
+<div class="hlcode"><pre><span class="n">t1</span> <span class="n">start</span>
+<span class="n">main</span> <span class="n">unpark</span>
+<span class="n">t1</span> <span class="n">park</span>
+<span class="n">t2</span> <span class="n">after</span> <span class="n">park</span>
+</pre></div>
+
+
+<p>简单特点</p>
+<ol>
+<li>park unpark 不需要对象的monitor锁</li>
+<li>以线程为单位【阻塞】或者【唤醒】线程，notify是随意唤醒，notifyAll是唤醒所有等待线程</li>
+<li>park之前就可以unpark; 而wait之前不能notify</li>
+</ol>
+<h3 id="2parkwait">例子2，park使得线程wait</h3>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kt">void</span> <span class="nf">testLockSupport</span><span class="o">(){</span>
+    <span class="n">Thread</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t1 start&quot;</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t1 park&quot;</span><span class="o">);</span>
+        <span class="n">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;t2 after park&quot;</span><span class="o">);</span>
+    <span class="o">},</span><span class="s">&quot;t1&quot;</span><span class="o">);</span>
+
+
+    <span class="n">t1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+    <span class="o">}</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;main unpark&quot;</span><span class="o">);</span>
+<span class="c1">//        LockSupport.unpark(t1);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>jstack 分析, 线程<code>waiting on condition</code></li>
+</ul>
+<div class="hlcode"><pre><span class="s">&quot;t1&quot;</span> <span class="err">#</span><span class="mi">10</span> <span class="n">prio</span><span class="o">=</span><span class="mi">5</span> <span class="n">os_prio</span><span class="o">=</span><span class="mi">31</span> <span class="n">tid</span><span class="o">=</span><span class="mh">0x00007fbf7e290800</span> <span class="n">nid</span><span class="o">=</span><span class="mh">0x4103</span> <span class="n">waiting</span> <span class="n">on</span> <span class="n">condition</span> <span class="o">[</span><span class="mh">0x000070000c06f000</span><span class="o">]</span>
+   <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">State</span><span class="o">:</span> <span class="n">WAITING</span> <span class="o">(</span><span class="n">parking</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">misc</span><span class="o">.</span><span class="na">Unsafe</span><span class="o">.</span><span class="na">park</span><span class="o">(</span><span class="n">Native</span> <span class="n">Method</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">locks</span><span class="o">.</span><span class="na">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">(</span><span class="n">LockSupport</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">304</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">Main</span><span class="o">.</span><span class="na">lambda</span><span class="n">$testLockSupport$3</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">193</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">Main$$Lambda$1</span><span class="o">/</span><span class="mi">1651191114</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Unknown</span> <span class="n">Source</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">748</span><span class="o">)</span>
+
+   <span class="n">Locked</span> <span class="n">ownable</span> <span class="nl">synchronizers:</span>
+    <span class="o">-</span> <span class="n">None</span>
+</pre></div>
+
+
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_park.png" /></p>
+<h2 id="_2">进一步原理</h2>
+<p>每个线程有一个Parker对象，三部分组成<code>_counter</code>,<code>_cond</code>(条件变量,等待队列),<code>_mutex</code>,见：<a href="http://hg.openjdk.java.net/jdk8u/jdk8u40/hotspot/file/95e9083cf4a7/src/os/solaris/vm/os_solaris.cpp" target="_blank">Java8 park的hpp实现</a></p>
+<p>Park decrements _counter if &gt; 0, else does a condvar wait. Unpark sets count to 1 and signals condvar. Only one thread ever waits on the condvar. Contention seen when trying to park implies that someone is unparking you, so don't wait. And spurious returns are fine, so there is no need to track notifications.</p>
+<ul>
+<li>如果<code>_counter &gt; 0</code>，那么<code>park</code>操作会对_counter减1操作，否则条件等待（使得线程阻塞）</li>
+<li><code>unpark</code>操作会对_counter加1操作，并且唤醒条件变量（唤醒阻塞线程）</li>
+</ul>
+<hr />
+<h3 id="park-unpark">先 park 再 unpark</h3>
+<ul>
+<li>
+<p>park</p>
+</li>
+<li>
+<p>当前线程调用<code>park</code>方法</p>
+</li>
+<li>检查_counter为0，则，获取_mutex互斥锁</li>
+<li>线程进入_cond条件变量阻塞</li>
+<li>
+<p>_counter仍然是0</p>
+</li>
+<li>
+<p>unpark</p>
+</li>
+<li>
+<p>其它线程调用<code>unpark</code>方法</p>
+</li>
+<li>设置_counter为1</li>
+<li>把_cond条件变量中阻塞队列中的线程唤醒</li>
+<li>唤醒的线程执行起来，_counter会减1</li>
+</ul>
+<h3 id="unpark-park">先 unpark 再 park</h3>
+<ol>
+<li><code>unpark</code>设置_counter为1</li>
+<li><code>park</code>操作发现_counter&gt;0,减少1，不阻塞，接着执行</li>
+<li>最后_counter变成0</li>
+</ol>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

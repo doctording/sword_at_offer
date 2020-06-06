@@ -24,6 +24,12 @@
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
+              <a href="./db_cache/LRU.html">LRU</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./db_cache/LFU.html">LRU</a>
+          </li>  
+          <li class="pagelist item_arrow">
               <a href="./db_cache/consistent_hash.html">一致性Hash</a>
           </li>  
           <li class="pagelist item_arrow">
@@ -52,6 +58,12 @@
           </li>  
           <li class="pagelist item_arrow">
               <a href="./design_pattern/factory.html">工厂模式</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./design_pattern/template.html">模板方法</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./design_pattern/strategy.html">策略模式</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./design_pattern/decorator.html">装饰器模式</a>
@@ -90,22 +102,13 @@
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
-              <a href="./java8/aqs.html">AQS</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/thread_cas.html">CAS(Conmpare And Swap/Exchange) & unsafe</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/countdownlatch_cyclicBarrier.html">CountDownLatch & CyclicBarrier</a>
-          </li>  
-          <li class="pagelist item_arrow">
               <a href="./java8/java8_completableFuture.html">Java8 CompletableFuture</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java8/java8_future.html">Java8 Future</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./java8/interface_default.html">Java8 interface deafaul static</a>
+              <a href="./java8/interface_default.html">Java8 interface defalt static</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java8/java8_mem.html">Java8 jvm内存结构</a>
@@ -124,27 +127,6 @@
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java8/streams_parallel.html">Java8 并行数据处理与性能</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/thread_lock_type.html">Java中的各种锁概念</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/semaphore.html">Semaphore</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/synchronized.html">synchronized 关键字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/thread_lock.html">Thread Lock</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/thread_signal_condition.html">Thread Signal & Condition</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/thread_deadlock.html">Thread 死锁</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/volatile.html">volatile 关键字</a>
           </li>
         </ul>
       </div> <!-- end category_pages -->
@@ -195,7 +177,7 @@
               <a href="./java_io_net/http_tcp.html">Java http & tcp</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./java_io_net/io_basic.html">Java io基础</a>
+              <a href="./java_io_net/io_basic.html">Java IO基础</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_io_net/nio_basic.html">Java nio</a>
@@ -259,18 +241,63 @@
     </div> <!-- end category -->
     <div class="clearfix"></div>  
     <div class="category">
-      <h2 id="java_thread">Java_thread
+      <h2 id="java_thread_concurrent">Java_thread_concurrent
       </h2>
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
-              <a href="./java_thread/thread_pool.html">Thread 线程池</a>
+              <a href="./java_thread_concurrent/aqs.html">AQS</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./java_thread/threadLocal.html">ThreadLocal</a>
+              <a href="./java_thread_concurrent/cas.html">CAS(Conmpare And Swap/Exchange) & unsafe</a>
           </li>  
           <li class="pagelist item_arrow">
-              <a href="./java_thread/thread_basic.html">线程</a>
+              <a href="./java_thread_concurrent/countdownlatch_cyclicBarrier.html">CountDownLatch & CyclicBarrier</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/cpu_cache.html">CPU,缓存</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/thread_lock_type.html">Java中的各种锁概念</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/lock_support.html">LockSupport Park & Unpark</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/longAdder.html">LongAdder</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/semaphore.html">Semaphore</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/synchronized.html">synchronized 关键字</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/thread_lock.html">Thread Lock</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/thread_signal_condition.html">Thread Signal & Condition</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/thread_deadlock.html">Thread 死锁</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/thread_pool.html">Thread 线程池</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/threadLocal.html">ThreadLocal</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/volatile.html">volatile 关键字</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/concurrency_problems.html">常见的多线程题目</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/thread_basic.html">线程</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./java_thread_concurrent/thread_pool_self.html">自定义线程池</a>
           </li>
         </ul>
       </div> <!-- end category_pages -->
@@ -307,12 +334,6 @@
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_utils/call_back.html">回调 & 事件机制</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/wait_notify.html">对象的wait和notify方法</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/concurrency_problems.html">常见的线程题目</a>
           </li>  
           <li class="pagelist item_arrow">
               <a href="./java_utils/quick_sort.html">快排(没事手写写)</a>
@@ -705,7 +726,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-27 22:33:00</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
       </span>
     </div>
 

@@ -16,7 +16,7 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;volatile 关键字
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;volatile 关键字
     <span class="updated">Page Updated&nbsp;
       2019-03-09 00:00
     </span></div>
@@ -100,7 +100,7 @@
 <li>共享变量更新后的值没有在工作内存与主内存之间及时更新</li>
 </ol>
 <p><code>volatile</code> 通过<strong>加入内存屏障</strong>,<strong>禁止指令重排优化</strong>来实现可见性</p>
-<p>即被volatile关键字修饰的变量，在每个写操作之后，都会加入一条store内存屏障命令，此命令强制工作内存将此变量的最新值保存至主内存；在每个读操作之前，都会加入一条load内存屏障命令，此命令强制工作内存从主内存中加载此变量的最新值至工作内存。</p>
+<p>即被<code>volatile</code>关键字修饰的变量，在每个写操作之后，都会加入一条<code>store</code>内存屏障命令，此命令强制工作内存将此变量的最新值保存至主内存；在每个读操作之前，都会加入一条<code>load</code>内存屏障命令，此命令强制工作内存从主内存中加载此变量的最新值至工作内存。</p>
 <p><code>synchronized</code> monitor enter exit 确保可见性</p>
 <h3 id="_5">有序性</h3>
 <p>程序执行的顺序按照代码的先后顺序执行，<strong>内存屏障</strong>（JVM规范要求）</p>
@@ -225,7 +225,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-27 22:33:00</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
       </span>
     </div>
 

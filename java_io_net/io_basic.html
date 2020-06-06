@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java io基础 - 剑指Offer</title>
+    <title>Java IO基础 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io_net">java_io_net</a>&nbsp;&#187;&nbsp;Java io基础
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io_net">java_io_net</a>&nbsp;&#187;&nbsp;Java IO基础
     <span class="updated">Page Updated&nbsp;
       2019-03-18 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java io基础</div>
+<div class="page_title">Java IO基础</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java-io">Java IO 基础</a></li>
@@ -33,7 +33,7 @@
 <li><a href="#_3">用户空间,内核空间,磁盘</a></li>
 <li><a href="#io">文件IO</a><ul>
 <li><a href="#_4">系统调用和文件读写</a></li>
-<li><a href="#io_1">用户i/o缓冲区的类型</a></li>
+<li><a href="#io_1">用户I/O缓冲区的类型</a></li>
 <li><a href="#_5">用户空间 &amp; 内核空间</a><ul>
 <li><a href="#_6">为什么不直接 让磁盘控制器把数据送到用户空间的缓冲区呢?</a></li>
 <li><a href="#vfs">vfs(虚拟文件系统)</a></li>
@@ -47,38 +47,42 @@
 </li>
 </ul>
 </li>
-<li><a href="#io_2">IO模型</a><ul>
-<li><a href="#_7">阻塞与非阻塞</a></li>
-<li><a href="#_8">同步与异步</a></li>
-<li><a href="#io_3">常见网络IO模型</a><ul>
-<li><a href="#_9">同步阻塞</a></li>
-<li><a href="#_10">同步非阻塞</a></li>
-<li><a href="#io_4">IO复用</a><ul>
+<li><a href="#io_2">IO模型：同步/阻塞概念</a><ul>
+<li><a href="#io_3">阻塞与非阻塞(等待IO时的状态)</a></li>
+<li><a href="#_7">同步与异步（用户线程与内核的消息交互方式）</a></li>
+<li><a href="#_8">人用水壶烧水处理例子说明</a></li>
+<li><a href="#io_4">网络IO模型演进</a><ul>
+<li><a href="#bioblocking-io-io">传统的BIO(Blocking I/O 阻塞IO)</a><ul>
+<li><a href="#selectornio-single-thread">selector(NIO Single Thread 模型)</a></li>
+</ul>
+</li>
+<li><a href="#nio-reactor">NIO reactor模式（多线程轮询）</a></li>
+<li><a href="#aioio">AIO（异步IO）</a></li>
+</ul>
+</li>
+<li><a href="#io_5">IO复用</a><ul>
 <li><a href="#select">select</a></li>
 <li><a href="#poll">poll</a></li>
 <li><a href="#epoll">epoll</a></li>
 </ul>
 </li>
-<li><a href="#iosignal-blocking-io">信号驱动IO（signal blocking I/O）</a></li>
+<li><a href="#_9">虚拟内存</a><ul>
+<li><a href="#_10">同时将多个进程保存在内存中以便允许多道程序设计？（最初的目标）</a><ul>
+<li><a href="#_11">一次性</a></li>
+<li><a href="#_12">驻留性</a></li>
 </ul>
 </li>
-<li><a href="#_11">虚拟内存</a><ul>
-<li><a href="#_12">同时将多个进程保存在内存中以便允许多道程序设计？（最初的目标）</a><ul>
-<li><a href="#_13">一次性</a></li>
-<li><a href="#_14">驻留性</a></li>
+<li><a href="#_13">局部性原理(虚拟内存技术实现的条件)</a><ul>
+<li><a href="#_14">时间局部性</a></li>
+<li><a href="#_15">空间局部性</a></li>
 </ul>
 </li>
-<li><a href="#_15">局部性原理(虚拟内存技术实现的条件)</a><ul>
-<li><a href="#_16">时间局部性</a></li>
-<li><a href="#_17">空间局部性</a></li>
-</ul>
-</li>
-<li><a href="#_18">局部性原理=&gt;虚拟存储器</a></li>
-<li><a href="#_19">虚拟内存技术的实现 和 面临的实现问题</a></li>
-<li><a href="#_20">几个常见的动态分区分配</a></li>
-<li><a href="#_21">内存碎片</a></li>
-<li><a href="#_22">=&gt; 非连续内存分配机制</a></li>
-<li><a href="#io_5">采用分页技术的操作系统执行IO的全过程</a></li>
+<li><a href="#_16">局部性原理=&gt;虚拟存储器</a></li>
+<li><a href="#_17">虚拟内存技术的实现 和 面临的实现问题</a></li>
+<li><a href="#_18">几个常见的动态分区分配</a></li>
+<li><a href="#_19">内存碎片</a></li>
+<li><a href="#_20">=&gt; 非连续内存分配机制</a></li>
+<li><a href="#io_6">采用分页技术的操作系统执行IO的全过程</a></li>
 </ul>
 </li>
 </ul>
@@ -101,14 +105,14 @@
 <h2 id="_2">缓冲流</h2>
 <p>在读写数据时，让数据在缓冲区能减少系统实际对原始数据来源的存取次数，因为一次能做多个数据单位的操作，相较而言，对于从文件读取数据或将数据写入文件，比起缓冲区的读写要慢多了。所以使用有缓冲区的流，一般都会比没有缓冲区的流效率更高，拥有缓冲区的流别称为缓冲流，包括BufferedInputStream、BufferedOutputStream类和BufferedReader、BufferedWriter类。缓冲流把数据从原始流成块读入或把数据积累到一个大数据块后再成批写出，通过减少通过资源的读写次数来加快程序的执行</p>
 <h2 id="_3">用户空间,内核空间,磁盘</h2>
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/io_buffer.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer.png" /></p>
 <p>在磁盘空间和用户空间中加一个内核空间的缓存区的原因有两个：</p>
 <ol>
 <li>一个是用户空间的程序不能直接去磁盘空间中读取数据，必须由经由内核空间通过DMA来获取;</li>
 <li>另一个原因是一般用户空间的内存分页与磁盘空间不会对齐，因此需要由内核空间在中间做一层处理。</li>
 </ol>
 <p>目前的操作系统，用户空间和内核空间的区分一般采用虚拟内存来实现，因此用户空间和内存空间都是在虚拟内存中。使用虚拟内存无非是因为其两大优势：一是它可以使多个虚拟内存地址指向同一个物理内存;二是虚拟内存的空间可以大于物理内存的空间。</p>
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/io_buffer_virtual.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer_virtual.png" /></p>
 <p><small>参考： https://blog.csdn.net/u012129558/article/details/82878994</small></p>
 <ul>
 <li>
@@ -134,8 +138,8 @@
 </pre></div>
 
 
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/fill_call.png" /></p>
-<h3 id="io_1">用户i/o缓冲区的类型</h3>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/fill_call.png" /></p>
+<h3 id="io_1">用户I/O缓冲区的类型</h3>
 <ul>
 <li>全缓冲</li>
 </ul>
@@ -150,7 +154,7 @@
 <p>没有缓冲区。直接调用文件 IO 进入内核态操作。标准错误流默认就是无缓冲的。</p>
 <h3 id="_5">用户空间 &amp; 内核空间</h3>
 <p>用户空间是常规进程所在区域。<code>JVM</code>就是常规进程，驻守于用户空间。用户空间是非特权区域:比如，在该区域执行的代码就不能直接访问硬件设备。内核空间是操作系统所在区域。内核代码有特别的权力:它能与设备控制器通讯，控制着用户区域 进程的运行状态，等等。最重要的是，所有<code>I/O</code>都直接或间接通过内核空间。</p>
-<p>当进程请求<code>I/O</code>操作的时候，它执行一个系统调用(有时称为陷阱)将控制权移交给内核。 C/C++程序员所熟知的底层函数 open( )、read( )、write( )和 close( )要做的无非就是建立和执行适当的<code>系统调用</code>。当内核以这种方式被调用，它随即采取任何必要步骤，找到进程所需数据，并把数据 传送到用户空间内的指定缓冲区。内核试图对数据进行高速缓存或预读取，因此进程所需数据可能 已经在内核空间里了。如果是这样，该数据只需简单地拷贝出来即可。如果数据不在内核空间，则 进程被挂起，内核要把数据读进内存。</p>
+<p>当进程请求<code>I/O</code>操作的时候，它执行一个系统调用(有时称为陷阱)将控制权移交给内核。C/C++程序员所熟知的底层函数<code>open()</code>、<code>read()</code>、<code>write()</code>和<code>close()</code>要做的无非就是建立和执行适当的<code>系统调用</code>。当内核以这种方式被调用，它随即采取任何必要步骤，找到进程所需数据，并把数据 传送到用户空间内的指定缓冲区。内核试图对数据进行高速缓存或预读取，因此进程所需数据可能 已经在内核空间里了。如果是这样，该数据只需简单地拷贝出来即可。如果数据不在内核空间，则 进程被挂起，内核要把数据读进内存。</p>
 <p><strong>内核缓冲区</strong>的主要思想就是：一次读入大量的数据放在缓冲区，需要的时候从缓冲区取得数据。</p>
 <h4 id="_6">为什么不直接 让磁盘控制器把数据送到用户空间的缓冲区呢?</h4>
 <ul>
@@ -159,13 +163,13 @@
 </ul>
 <h4 id="vfs">vfs(虚拟文件系统)</h4>
 <p>虚拟文件系统(VFS)是由Sun microsystems公司在定义网络文件系统(NFS)时创造的。它是一种用于网络环境的分布式文件系统，是允许和操作系统使用不同的文件系统实现的接口。虚拟文件系统（VFS）是物理文件系统与服务之间的一个接口层，它对Linux的每个文件系统的所有细节进行抽象，使得不同的文件系统在Linux核心以及系统中运行的其他进程看来，都是相同的。严格说来，VFS并不是一种实际的文件系统。它只存在于内存中，不存在于任何外存空间。VFS在系统启动时建立，在系统关闭时消亡。</p>
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/vfs.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/vfs.png" /></p>
 <h3 id="mmap">mmap</h3>
 <p>mmap将一个文件或者其它对象映射进内存。文件被映射到多个页上，如果文件的大小不是所有页的大小之和，最后一个页不被使用的空间将会清零</p>
 <h4 id="memory-mapped-file">内存映射文件(memory-mapped file，用户内存到文件系统页的映射)</h4>
 <p>由一个文件到一块内存的映射；文件的数据就是这块区域内存中对应的数据，读写文件中的数据，即直接对这块内存区域的地址操作，减少了内存复制的环节。</p>
 <p>使用内存映射文件处理存储于磁盘上的文件时，将不必再对文件执行I/O操作，这意味着在对文件进行处理时将不必再为文件申请并分配缓存，所有的文件缓存操作均由系统直接管理，由于取消了将文件数据加载到内存、数据从内存到文件的回写以及释放内存块等步骤，使得内存映射文件在处理大数据量的文件时能起到相当重要的作用。</p>
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/mem_file.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/mem_file.png" /></p>
 <p>好处：</p>
 <ul>
 <li>
@@ -187,29 +191,230 @@
 <p>映射文件区域的能力取决于于内存寻址的大小。在32位机器中，你不能访问超过4GB或2 ^ 32（以上的文件）。</p>
 </li>
 </ul>
-<h1 id="io_2">IO模型</h1>
-<h2 id="_7">阻塞与非阻塞</h2>
+<h1 id="io_2">IO模型：同步/阻塞概念</h1>
+<h2 id="io_3">阻塞与非阻塞(等待IO时的状态)</h2>
 <p>函数或方法（用户线程调用内核IO操作）的实现方式：</p>
 <ul>
 <li>阻塞是指IO操作需要彻底完成后才返回到用户空间</li>
 <li>非阻塞是指IO操作被调用后立即返回给用户一个状态值，无需等到IO操作彻底完成。</li>
 </ul>
-<h2 id="_8">同步与异步</h2>
-<p>用户线程与内核的交互方式，</p>
+<h2 id="_7">同步与异步（用户线程与内核的消息交互方式）</h2>
 <ul>
 <li>
 <p>同步指用户线程发起IO请求后需要等待或者轮询内核IO操作完成后才能继续执行；同步有阻塞，非阻塞</p>
 </li>
 <li>
-<p>异步是指用户线程发起IO请求后仍然继续执行，当内核IO操作完成后会通知用户线程，或者调用用户线程注册的回调函数。异步一定是非阻塞的</p>
+<p>异步是指用户线程发起IO请求后仍然继续执行，当<strong>内核IO操作完成后会通知用户线程</strong>，或者调用用户线程注册的回调函数。异步一定是非阻塞的（内核会通过函数回调或者信号机制通知用户进程；类似观察者模式）</p>
 </li>
 </ul>
-<h2 id="io_3">常见网络IO模型</h2>
-<h3 id="_9">同步阻塞</h3>
+<h2 id="_8">人用水壶烧水处理例子说明</h2>
+<ul>
+<li>
+<p>同步阻塞</p>
+</li>
+<li>
+<p>点火(发消息)</p>
+</li>
+<li>搬个小板凳盯着水壶(傻等，眼睛不动)，不等到水壶烧开水，坚决不去做别的事情（阻塞）</li>
+</ul>
 <p>用户线程的IO处理过程需要等待，中间不能做任何事情，对CPU利用率很低</p>
-<h3 id="_10">同步非阻塞</h3>
-<p>用户线程每次IO请求都能立刻返回，需要通过轮询去判断数据是否返回，会无谓地消耗大量的CPU</p>
-<h3 id="io_4">IO复用</h3>
+<ul>
+<li>
+<p>同步非阻塞</p>
+</li>
+<li>
+<p>点火(发消息)</p>
+</li>
+<li>去看会儿电视，时不时过来(轮询)看水壶烧开水没有（非阻塞);水开后接着处理</li>
+</ul>
+<p>用户线程每次IO请求都能立刻返回，但需要通过轮询去判断数据是否返回，会无谓地消耗大量的CPU</p>
+<ul>
+<li>
+<p>异步阻塞（很少发生）</p>
+</li>
+<li>
+<p>点火(发消息)</p>
+</li>
+<li>水壶有个响铃，自动绑定了开水之后的处理程序，这样响铃之后自动处理(异步)</li>
+<li>
+<p>但是还是可以轮询去看水壶开了没有</p>
+</li>
+<li>
+<p>异步非阻塞</p>
+</li>
+<li>
+<p>点火(发消息), 写好水壶烧开水之后的处理程序</p>
+</li>
+<li>水壶有个响铃，自动绑定了开水之后的处理程序，这样响铃之后自动处理</li>
+<li>人该干嘛干嘛去，不用管了（不用傻等，不用轮询）</li>
+</ul>
+<h2 id="io_4">网络IO模型演进</h2>
+<h3 id="bioblocking-io-io">传统的<code>BIO</code>(Blocking I/O 阻塞IO)</h3>
+<ul>
+<li>server</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">ServerSocket</span> <span class="n">ss</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">();</span>
+        <span class="n">ss</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="k">new</span> <span class="n">InetSocketAddress</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8888</span><span class="o">));</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Socket</span> <span class="n">s</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span> <span class="c1">//阻塞方法</span>
+
+            <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="n">handle</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+            <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">Socket</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
+            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">().</span><span class="na">read</span><span class="o">(</span><span class="n">bytes</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">bytes</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">len</span><span class="o">));</span>
+
+            <span class="n">s</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">().</span><span class="na">write</span><span class="o">(</span><span class="n">bytes</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>
+            <span class="n">s</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">().</span><span class="na">flush</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>client</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">Socket</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8888</span><span class="o">);</span>
+        <span class="n">s</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">().</span><span class="na">write</span><span class="o">(</span><span class="s">&quot;HelloServer&quot;</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+        <span class="n">s</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">().</span><span class="na">flush</span><span class="o">();</span>
+        <span class="c1">//s.getOutputStream().close();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;write over, waiting for msg back...&quot;</span><span class="o">);</span>
+        <span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">().</span><span class="na">read</span><span class="o">(</span><span class="n">bytes</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">bytes</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">len</span><span class="o">));</span>
+        <span class="n">s</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>Server端的<code>accept</code>方法是阻塞的，等待客户端来连接</li>
+<li>用一个线程建立连接后，输入/输出流的读写过程是阻塞的</li>
+</ul>
+<p><font color='red'>效率低，并发不高，线程开销大</font></p>
+<h4 id="selectornio-single-thread">selector(NIO Single Thread 模型)</h4>
+<p><font color='red'>不同的事情(有客户端来连接，有输入/输出的读写事件)进行轮训监听，该线程负责所有的这些工作</font></p>
+<ul>
+<li>Server</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">ServerSocketChannel</span> <span class="n">ssc</span> <span class="o">=</span> <span class="n">ServerSocketChannel</span><span class="o">.</span><span class="na">open</span><span class="o">();</span>
+        <span class="n">ssc</span><span class="o">.</span><span class="na">socket</span><span class="o">().</span><span class="na">bind</span><span class="o">(</span><span class="k">new</span> <span class="n">InetSocketAddress</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8888</span><span class="o">));</span>
+        <span class="n">ssc</span><span class="o">.</span><span class="na">configureBlocking</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;server started, listening on :&quot;</span> <span class="o">+</span> <span class="n">ssc</span><span class="o">.</span><span class="na">getLocalAddress</span><span class="o">());</span>
+        <span class="n">Selector</span> <span class="n">selector</span> <span class="o">=</span> <span class="n">Selector</span><span class="o">.</span><span class="na">open</span><span class="o">();</span>
+        <span class="c1">// selector 注册感兴趣的事情：连接时间</span>
+        <span class="n">ssc</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">selector</span><span class="o">,</span> <span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_ACCEPT</span><span class="o">);</span>
+
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 阻塞</span>
+            <span class="n">selector</span><span class="o">.</span><span class="na">select</span><span class="o">();</span>
+            <span class="n">Set</span><span class="o">&lt;</span><span class="n">SelectionKey</span><span class="o">&gt;</span> <span class="n">keys</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="na">selectedKeys</span><span class="o">();</span>
+            <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">SelectionKey</span><span class="o">&gt;</span> <span class="n">it</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">it</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">SelectionKey</span> <span class="n">key</span> <span class="o">=</span> <span class="n">it</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+                <span class="n">it</span><span class="o">.</span><span class="na">remove</span><span class="o">();</span>
+                <span class="c1">// 处理这个事件</span>
+                <span class="n">handle</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="n">SelectionKey</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">key</span><span class="o">.</span><span class="na">isAcceptable</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">ServerSocketChannel</span> <span class="n">ssc</span> <span class="o">=</span> <span class="o">(</span><span class="n">ServerSocketChannel</span><span class="o">)</span> <span class="n">key</span><span class="o">.</span><span class="na">channel</span><span class="o">();</span>
+                <span class="n">SocketChannel</span> <span class="n">sc</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
+                <span class="n">sc</span><span class="o">.</span><span class="na">configureBlocking</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+                <span class="c1">//new Client</span>
+                <span class="c1">//</span>
+                <span class="c1">//String hostIP = ((InetSocketAddress)sc.getRemoteAddress()).getHostString();</span>
+
+            <span class="cm">/*</span>
+<span class="cm">            log.info(&quot;client &quot; + hostIP + &quot; trying  to connect&quot;);</span>
+<span class="cm">            for(int i=0; i&lt;clients.size(); i++) {</span>
+<span class="cm">                String clientHostIP = clients.get(i).clientAddress.getHostString();</span>
+<span class="cm">                if(hostIP.equals(clientHostIP)) {</span>
+<span class="cm">                    log.info(&quot;this client has already connected! is he alvie &quot; + clients.get(i).live);</span>
+<span class="cm">                    sc.close();</span>
+<span class="cm">                    return;</span>
+<span class="cm">                }</span>
+<span class="cm">            }*/</span>
+
+                <span class="n">sc</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">key</span><span class="o">.</span><span class="na">selector</span><span class="o">(),</span> <span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_READ</span> <span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">key</span><span class="o">.</span><span class="na">isReadable</span><span class="o">())</span> <span class="o">{</span> <span class="c1">//flip</span>
+            <span class="n">SocketChannel</span> <span class="n">sc</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">sc</span> <span class="o">=</span> <span class="o">(</span><span class="n">SocketChannel</span><span class="o">)</span><span class="n">key</span><span class="o">.</span><span class="na">channel</span><span class="o">();</span>
+                <span class="n">ByteBuffer</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="mi">512</span><span class="o">);</span>
+                <span class="n">buffer</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+                <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">);</span>
+
+                <span class="k">if</span><span class="o">(</span><span class="n">len</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="na">array</span><span class="o">(),</span> <span class="mi">0</span><span class="o">,</span> <span class="n">len</span><span class="o">));</span>
+                <span class="o">}</span>
+
+                <span class="n">ByteBuffer</span> <span class="n">bufferToWrite</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="s">&quot;HelloClient&quot;</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+                <span class="n">sc</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">bufferToWrite</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">sc</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">sc</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="nio-reactor">NIO reactor模式（多线程轮询）</h3>
+<p>The reactor design pattern is an event handling pattern for handling service requests delivered concurrently to a service handler by one or more inputs. The service handler then demultiplexes the incoming requests and dispatches them synchronously to the associated request handlers.</p>
+<p>(基于事件驱动，有一个Service Handler，处理一个或多个并发输入源，同步的分发给不同的Request Handlers)</p>
+<ol>
+<li>基于事件驱动-&gt; selector（支持对多个socketChannel的监听）</li>
+<li>统一的事件分派中心-&gt; dispatch</li>
+<li>事件处理服务-&gt; read &amp; write</li>
+</ol>
+<h3 id="aioio">AIO（异步IO）</h3>
+<ul>
+<li>
+<p>NIO是同步的非阻塞,AIO是异步非阻塞的；</p>
+</li>
+<li>
+<p>事件通知，而不是轮询</p>
+</li>
+</ul>
+<p>但是AIO,NIO在linux下都是基于<code>epoll</code>（轮询）的, 所以netty对nio封装，但是API更像是AIO</p>
+<h2 id="io_5">IO复用</h2>
 <ol>
 <li>
 <p>等待数据准备好（waiting for data to be ready）。对于一个套接口上的操作，这一步骤关系到数据从网络到达，并将其复制到内核的某个缓冲区。</p>
@@ -219,16 +424,96 @@
 </li>
 </ol>
 <p><strong>IO多路复用</strong>是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。I</p>
-<h4 id="select">select</h4>
+<h3 id="select">select</h3>
 <p>Select是通过将需要监听的文件描述符加入相应的文件描述符集合(readset、writeset，exceptset)，由内核负责监视相应的文件描述符是否就绪。</p>
 <p>目前几乎在所有的平台上支持，其良好跨平台支持也是它的一个优点，但select有如下的一些局限</p>
 <ul>
 <li>select监控的文件描述符有上限</li>
 <li>每次调用都需要手动的设置文件描述符集合，使用非常不便</li>
 <li>每次调用都要把文件描述符从用户态拷贝到内核态，开销比较大</li>
-<li>当就绪的文件描述符好后，需要循环遍历来进行判断，效率不好</li>
+<li>当就绪的文件描述符好后，需要<strong>循环遍历</strong>来进行判断，效率不高</li>
 </ul>
-<h4 id="poll">poll</h4>
+<p><code>linux select</code>服务端例子代码</p>
+<div class="hlcode"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">server_sockfd</span><span class="p">,</span> <span class="n">client_sockfd</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">server_len</span><span class="p">,</span> <span class="n">client_len</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">server_address</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">client_address</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span>
+    <span class="n">fd_set</span> <span class="n">readfds</span><span class="p">,</span> <span class="n">testfds</span><span class="p">;</span>
+    <span class="n">server_sockfd</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span><span class="c1">//建立服务器端socket</span>
+    <span class="n">server_address</span><span class="p">.</span><span class="n">sin_family</span> <span class="o">=</span> <span class="n">AF_INET</span><span class="p">;</span>
+    <span class="n">server_address</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">.</span><span class="n">s_addr</span> <span class="o">=</span> <span class="n">htonl</span><span class="p">(</span><span class="n">INADDR_ANY</span><span class="p">);</span>
+    <span class="n">server_address</span><span class="p">.</span><span class="n">sin_port</span> <span class="o">=</span> <span class="n">htons</span><span class="p">(</span><span class="mi">8888</span><span class="p">);</span>
+    <span class="n">server_len</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">server_address</span><span class="p">);</span>
+    <span class="n">bind</span><span class="p">(</span><span class="n">server_sockfd</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">server_address</span><span class="p">,</span> <span class="n">server_len</span><span class="p">);</span>
+    <span class="n">listen</span><span class="p">(</span><span class="n">server_sockfd</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span> <span class="c1">//监听队列最多容纳5个</span>
+    <span class="n">FD_ZERO</span><span class="p">(</span><span class="o">&amp;</span><span class="n">readfds</span><span class="p">);</span>
+    <span class="n">FD_SET</span><span class="p">(</span><span class="n">server_sockfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">readfds</span><span class="p">);</span><span class="c1">//将服务器端socket加入到集合中</span>
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">char</span> <span class="n">ch</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">nread</span><span class="p">;</span>
+        <span class="n">testfds</span> <span class="o">=</span> <span class="n">readfds</span><span class="p">;</span><span class="c1">//将需要监视的描述符集copy到select查询队列中，select会对其修改，所以一定要分开使用变量</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;server waiting</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+        <span class="cm">/*无限期阻塞，并测试文件描述符变动 */</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">FD_SETSIZE</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">testfds</span><span class="p">,</span> <span class="p">(</span><span class="n">fd_set</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">,(</span><span class="n">fd_set</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">timeval</span> <span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">//FD_SETSIZE：系统默认的最大文件描述符</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">result</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">perror</span><span class="p">(</span><span class="s">&quot;server5&quot;</span><span class="p">);</span>
+            <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="cm">/*扫描所有的文件描述符*/</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">fd</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">fd</span> <span class="o">&lt;</span> <span class="n">FD_SETSIZE</span><span class="p">;</span> <span class="n">fd</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="cm">/*找到相关文件描述符*/</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">FD_ISSET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="o">&amp;</span><span class="n">testfds</span><span class="p">))</span>
+            <span class="p">{</span>
+              <span class="cm">/*判断是否为服务器套接字，是则表示为客户请求连接。*/</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">fd</span> <span class="o">==</span> <span class="n">server_sockfd</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">client_len</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">client_address</span><span class="p">);</span>
+                    <span class="n">client_sockfd</span> <span class="o">=</span> <span class="n">accept</span><span class="p">(</span><span class="n">server_sockfd</span><span class="p">,</span>
+                    <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">client_address</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">client_len</span><span class="p">);</span>
+                    <span class="n">FD_SET</span><span class="p">(</span><span class="n">client_sockfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">readfds</span><span class="p">);</span><span class="c1">//将客户端socket加入到集合中</span>
+                    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;adding client on fd %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">client_sockfd</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="cm">/*客户端socket中有数据请求时*/</span>
+                <span class="k">else</span>
+                <span class="p">{</span>
+                    <span class="n">ioctl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">FIONREAD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nread</span><span class="p">);</span><span class="c1">//取得数据量交给nread</span>
+
+                    <span class="cm">/*客户数据请求完毕，关闭套接字，从集合中清除相应描述符 */</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">nread</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+                        <span class="n">FD_CLR</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">readfds</span><span class="p">);</span> <span class="c1">//去掉关闭的fd</span>
+                        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;removing client on fd %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">fd</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    <span class="cm">/*处理客户数据请求*/</span>
+                    <span class="k">else</span>
+                    <span class="p">{</span>
+                        <span class="n">read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+                        <span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+                        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;serving client on fd %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">fd</span><span class="p">);</span>
+                        <span class="n">ch</span><span class="o">++</span><span class="p">;</span>
+                        <span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="poll">poll</h3>
 <p>poll() 的机制与 select() 类似，与 select() 在本质上没有多大差别，管理多个描述符也是进行轮询，根据描述符的状态进行处理。</p>
 <ul>
 <li>
@@ -251,38 +536,127 @@
 <li>与select一样，poll返回后，需要轮询pollfd来获取就绪的描述符，这样会使性能下降</li>
 <li>同时连接的大量客户端在一时刻可能只有很少的就绪状态，因此随着监视的描述符数量的增长，其效率也会线性下降</li>
 </ul>
-<h4 id="epoll">epoll</h4>
+<h3 id="epoll">epoll</h3>
 <p>https://github.com/doctording/linux_epoll</p>
-<h3 id="iosignal-blocking-io">信号驱动IO（signal blocking I/O）</h3>
-<p>当数据报准备好的时候，内核给应用程序发送一个信号，对SIGIO信号进行捕捉，并且调用应用程序的信号处理函数来获取数据报。</p>
-<h2 id="_11">虚拟内存</h2>
+<ol>
+<li>epoll是一个I/O管理组件</li>
+<li>select 和 poll 的升级版本</li>
+<li>怎么用，用在什么地方</li>
+</ol>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png" /></p>
+<p><code>linux epoll 服务端</code>例子</p>
+<div class="hlcode"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="c1">//服务器IP + port</span>
+    <span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">serverAddr</span><span class="p">;</span>
+    <span class="n">serverAddr</span><span class="p">.</span><span class="n">sin_family</span> <span class="o">=</span> <span class="n">PF_INET</span><span class="p">;</span>
+    <span class="n">serverAddr</span><span class="p">.</span><span class="n">sin_port</span> <span class="o">=</span> <span class="n">htons</span><span class="p">(</span><span class="n">SERVER_PORT</span><span class="p">);</span>
+    <span class="n">serverAddr</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">.</span><span class="n">s_addr</span> <span class="o">=</span> <span class="n">inet_addr</span><span class="p">(</span><span class="n">SERVER_IP</span><span class="p">);</span>
+    <span class="c1">//创建监听socket</span>
+    <span class="kt">int</span> <span class="n">listener</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">PF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">listener</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">perror</span><span class="p">(</span><span class="s">&quot;listener&quot;</span><span class="p">);</span> <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;listen socket created </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="c1">//绑定地址</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">bind</span><span class="p">(</span><span class="n">listener</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">serverAddr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">serverAddr</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;bind error&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">//监听</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">listen</span><span class="p">(</span><span class="n">listener</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">perror</span><span class="p">(</span><span class="s">&quot;listen error&quot;</span><span class="p">);</span> <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Start to listen: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">SERVER_IP</span><span class="p">);</span>
+    <span class="c1">//在内核中创建事件表</span>
+    <span class="kt">int</span> <span class="n">epfd</span> <span class="o">=</span> <span class="n">epoll_create</span><span class="p">(</span><span class="n">EPOLL_SIZE</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">epfd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">perror</span><span class="p">(</span><span class="s">&quot;epfd error&quot;</span><span class="p">);</span> <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;epoll created, epollfd = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">epfd</span><span class="p">);</span>
+    <span class="k">static</span> <span class="k">struct</span> <span class="n">epoll_event</span> <span class="n">events</span><span class="p">[</span><span class="n">EPOLL_SIZE</span><span class="p">];</span>
+    <span class="c1">//往内核事件表里添加事件</span>
+    <span class="n">addfd</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="c1">//主循环</span>
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//epoll_events_count表示就绪事件的数目</span>
+        <span class="kt">int</span> <span class="n">epoll_events_count</span> <span class="o">=</span> <span class="n">epoll_wait</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">EPOLL_SIZE</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">epoll_events_count</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">perror</span><span class="p">(</span><span class="s">&quot;epoll failure&quot;</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;epoll_events_count = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">epoll_events_count</span><span class="p">);</span>
+        <span class="c1">//处理这epoll_events_count个就绪事件</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">epoll_events_count</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">sockfd</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">.</span><span class="n">fd</span><span class="p">;</span>
+            <span class="c1">//新用户连接</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">sockfd</span> <span class="o">==</span> <span class="n">listener</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">client_address</span><span class="p">;</span>
+                <span class="kt">socklen_t</span> <span class="n">client_addrLength</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr_in</span><span class="p">);</span>
+                <span class="kt">int</span> <span class="n">clientfd</span> <span class="o">=</span> <span class="n">accept</span><span class="p">(</span> <span class="n">listener</span><span class="p">,</span> <span class="p">(</span> <span class="k">struct</span> <span class="n">sockaddr</span><span class="o">*</span> <span class="p">)</span><span class="o">&amp;</span><span class="n">client_address</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">client_addrLength</span> <span class="p">);</span>
+
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;client connection from: %s : % d(IP : port), clientfd = %d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                <span class="n">inet_ntoa</span><span class="p">(</span><span class="n">client_address</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">),</span>
+                <span class="n">ntohs</span><span class="p">(</span><span class="n">client_address</span><span class="p">.</span><span class="n">sin_port</span><span class="p">),</span>
+                <span class="n">clientfd</span><span class="p">);</span>
+
+                <span class="n">addfd</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span> <span class="n">clientfd</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+                <span class="c1">// 服务端用list保存用户连接</span>
+                <span class="n">clients_list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">clientfd</span><span class="p">);</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Add new clientfd = %d to epoll</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">clientfd</span><span class="p">);</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Now there are %d clients int the chat room</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">clients_list</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+                <span class="c1">// 服务端发送欢迎信息  </span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;welcome message</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>                
+                <span class="kt">char</span> <span class="n">message</span><span class="p">[</span><span class="n">BUF_SIZE</span><span class="p">];</span>
+                <span class="n">bzero</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">BUF_SIZE</span><span class="p">);</span>
+                <span class="n">sprintf</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">SERVER_WELCOME</span><span class="p">,</span> <span class="n">clientfd</span><span class="p">);</span>
+                <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">send</span><span class="p">(</span><span class="n">clientfd</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">BUF_SIZE</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">perror</span><span class="p">(</span><span class="s">&quot;send error&quot;</span><span class="p">);</span> <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="c1">//处理用户发来的消息，并广播，使其他用户收到信息</span>
+            <span class="k">else</span> 
+            <span class="p">{</span>   
+                <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">sendBroadcastmessage</span><span class="p">(</span><span class="n">sockfd</span><span class="p">);</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">perror</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">);</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">listener</span><span class="p">);</span> <span class="c1">//关闭socket</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">epfd</span><span class="p">);</span>    <span class="c1">//关闭内核</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="_9">虚拟内存</h2>
 <p>虚拟内存是计算机系统内存管理的一种技术。</p>
 <p>它使得应用程序认为它拥有连续的可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要时进行数据交换。目前，大多数操作系统都使用了虚拟内存，如Windows家族的“虚拟内存”；Linux的“交换空间”等。</p>
 <p>所有程序均需经由内存执行，若执行的程序占用内存很大或很多，则会导致内存消耗殆尽。运用了虚拟内存技术，即匀出一部分硬盘空间来充当内存使用，来解决该问题</p>
-<h3 id="_12">同时将多个进程保存在内存中以便允许多道程序设计？（最初的目标）</h3>
-<h4 id="_13">一次性</h4>
+<h3 id="_10">同时将多个进程保存在内存中以便允许多道程序设计？（最初的目标）</h3>
+<h4 id="_11">一次性</h4>
 <p>作业必须一次性全部装入内存后，方能开始运行。这会导致两种情况发生：<br />
 当作业很大，不能全部被装入内存时，将使该作业无法运行；<br />
 当大量作业要求运行时，由于内存不足以容纳所有作业，只能使少数作业先运行，导致多道程序度的下降。</p>
-<h4 id="_14">驻留性</h4>
+<h4 id="_12">驻留性</h4>
 <p>作业被装入内存后，就一直驻留在内存中，其任何部分都不会被换出，直至作业运行结束。运行中的进程，会因等待I/O而被阻塞，可能处于长期等待状态。</p>
 <p>由以上分析可知，许多在程序运行中不用或暂时不用的程序（数据）占据了大量的内存空间，而一些需要运行的作业又无法装入运行，显然浪费了宝贵的内存资源。</p>
-<h3 id="_15">局部性原理(虚拟内存技术实现的条件)</h3>
-<h4 id="_16">时间局部性</h4>
+<h3 id="_13">局部性原理(虚拟内存技术实现的条件)</h3>
+<h4 id="_14">时间局部性</h4>
 <p>如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。</p>
-<h4 id="_17">空间局部性</h4>
+<h4 id="_15">空间局部性</h4>
 <p>一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。</p>
 <p>时间局部性是通过将近来使用的指令和数据保存到高速缓存存储器中，并使用高速缓存的层次结构实现。空间局部性通常是使用较大的高速缓存，并将预取机制集成到高速缓存控制逻辑中实现。虚拟内存技术实际上就是建立了 “内存一外存”的两级存储器的结构，利用局部性原理实现髙速缓存。</p>
-<h3 id="_18">局部性原理=&gt;虚拟存储器</h3>
+<h3 id="_16">局部性原理=&gt;虚拟存储器</h3>
 <p>基于局部性原理，在程序<strong>装入时</strong>，可以将程序的一部分装入内存，而将其余部分留在外存，就可以启动程序执行。在程序<strong>执行过程中</strong>，当所访问的信息不在内存时，由操作系统将所需要的部分调入内存,然后继续执行程序。另一方面，操作系统将内存中暂时不使用的内容换出到外存上，从而腾出空间存放将要调入内存的信息。这样，系统好像为用户提供了一个比实际内存大得多的存储器，称为虚拟存储器。</p>
 <ul>
 <li>多次性，是指无需在作业运行时一次性地全部装入内存，而是允许被分成多次调入内存运行。</li>
 <li>对换性，是指无需在作业运行时一直常驻内存，而是允许在作业的运行过程中，进行换进和换出。</li>
 <li>虚拟性，是指从逻辑上扩充内存的容量，使用户所看到的内存容量，远大于实际的内存容量。</li>
 </ul>
-<h3 id="_19">虚拟内存技术的实现 和 面临的实现问题</h3>
+<h3 id="_17">虚拟内存技术的实现 和 面临的实现问题</h3>
 <p>虚拟内存中，允许将一个作业分多次调入内存。操作系统如何分配内存？逻辑地址与物理地址的映射?</p>
-<h3 id="_20">几个常见的动态分区分配</h3>
+<h3 id="_18">几个常见的动态分区分配</h3>
 <ul>
 <li>最先匹配(First-fit)</li>
 </ul>
@@ -298,11 +672,11 @@
 </ul>
 <p>优势：假如分配时中等尺寸效果最好、避免出现太多的小碎片<br />
 劣势：重分配慢、外部碎片、易于破碎大的空闲块以致大分区无法被分配</p>
-<h3 id="_21">内存碎片</h3>
+<h3 id="_19">内存碎片</h3>
 <p>内存中无法被利用的存储空间称为碎片。</p>
 <p>内部碎片：指分配给作业的存储空间中未被利用的部分，如固定分区中存在的碎片。</p>
 <p>外部碎片：指系统中无法利用的小的空闲分区。如分区与分区之间存在的碎片。这些不连续的区间就是外部碎片。</p>
-<h3 id="_22">=&gt; 非连续内存分配机制</h3>
+<h3 id="_20">=&gt; 非连续内存分配机制</h3>
 <ul>
 <li>请求<code>分页</code>存储管理</li>
 <li>请求<code>分段</code>存储管理</li>
@@ -315,7 +689,7 @@
 <li>中断机构，当用户程序要访问的部分尚未调入内存，则产生中断。</li>
 <li>地址变换机构，逻辑地址到物理地址的变换。</li>
 </ul>
-<h3 id="io_5">采用分页技术的操作系统执行IO的全过程</h3>
+<h3 id="io_6">采用分页技术的操作系统执行IO的全过程</h3>
 <ul>
 <li>
 <p>确定请求的数据分布在文件系统的哪些页(磁盘扇区组)。磁盘上的文件内容和元数 据可能跨越多个文件系统页，而且这些页可能也不连续。</p>
@@ -341,7 +715,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-27 22:33:00</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
       </span>
     </div>
 

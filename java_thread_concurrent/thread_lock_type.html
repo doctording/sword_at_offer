@@ -16,7 +16,7 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;Java中的各种锁概念
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;Java中的各种锁概念
     <span class="updated">Page Updated&nbsp;
       2019-03-15 00:00
     </span></div>
@@ -37,6 +37,9 @@
 <li><a href="#_6">自旋锁</a><ul>
 <li><a href="#_7">自旋锁存在的意义与使用场景</a></li>
 <li><a href="#atomicreference">AtomicReference实现一个公平的自旋锁</a></li>
+<li><a href="#cpu">得不到锁的线程让出CPU</a></li>
+<li><a href="#sleep">得不到锁，线程sleep, 睡眠时间不确定？</a></li>
+<li><a href="#locksupportpark-unpark">LockSupport.park() &amp; unpark()</a></li>
 <li><a href="#_8">适应性自旋锁</a></li>
 </ul>
 </li>
@@ -138,7 +141,6 @@
         <span class="n">spinLock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
     <span class="o">}</span>
 
-
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
         <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">20</span><span class="o">;</span>
         <span class="n">List</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">threadList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">n</span><span class="o">);</span>
@@ -168,6 +170,90 @@
 <li>线程状态不变，不导致上线文切换，适合短时间自旋</li>
 <li>长时间会耗CPU，影响其它线程的调度</li>
 </ul>
+<h3 id="cpu">得不到锁的线程让出CPU</h3>
+<p>竞争锁失败的线程让出CPU(可以使用yield()让出CPU,这是CPU控制的)，可能出现每次都是某一个线程让出CPU，得不到执行</p>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">SpinLock</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sign</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;(</span><span class="mi">0</span><span class="o">);</span>
+
+    <span class="kt">void</span> <span class="nf">lock</span><span class="o">(){</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">sign</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)){</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">unlock</span><span class="o">(){</span>
+        <span class="c1">// 解锁就是设置为</span>
+        <span class="n">sign</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="sleep">得不到锁，线程sleep, 睡眠时间不确定？</h3>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">SpinLock</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sign</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;(</span><span class="mi">0</span><span class="o">);</span>
+
+    <span class="kt">void</span> <span class="nf">lock</span><span class="o">(){</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">sign</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)){</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">unlock</span><span class="o">(){</span>
+        <span class="c1">// 解锁就是设置为</span>
+        <span class="n">sign</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="locksupportpark-unpark">LockSupport.park() &amp; unpark()</h3>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">SpinLock</span><span class="o">{</span>
+
+    <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">parkQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">private</span> <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">sign</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicReference</span><span class="o">&lt;&gt;(</span><span class="kc">null</span><span class="o">);</span>
+
+    <span class="kt">void</span> <span class="nf">lock</span><span class="o">(){</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">sign</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">())){</span>
+            <span class="n">park</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">unlock</span><span class="o">(){</span>
+        <span class="n">sign</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+        <span class="c1">// 同时唤醒其它线程</span>
+        <span class="n">lockNotify</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">park</span><span class="o">(){</span>
+<span class="c1">//        System.out.println(&quot;park thread:&quot; + Thread.currentThread().getName());</span>
+        <span class="n">parkQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">());</span>
+        <span class="n">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">lockNotify</span><span class="o">(){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">parkQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 先进先出</span>
+        <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="n">parkQueue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+<span class="c1">//        System.out.println(&quot;unpark thread:&quot; + t.getName());</span>
+        <span class="n">unpark</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">unpark</span><span class="o">(</span><span class="n">Thread</span> <span class="n">t</span><span class="o">){</span>
+        <span class="n">LockSupport</span><span class="o">.</span><span class="na">unpark</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
 <h3 id="_8">适应性自旋锁</h3>
 <p>自旋锁的目的是为了占着CPU的资源不释放，等到获取到锁立即进行处理。但是如何去选择自旋的执行时间呢？如果自旋执行时间太长，会有大量的线程处于自旋状态占用CPU资源，进而会影响整体系统的性能。</p>
 <p>自旋的时间不在是固定的了，而是由前一次在同一个锁上的自旋时间以及锁的拥有者的状态来决定，基本认为一个线程上下文切换的时间是最佳的一个时间，同时JVM还针对当前CPU的负荷情况做了较多的优化:</p>
@@ -710,7 +796,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-27 22:33:00</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
       </span>
     </div>
 

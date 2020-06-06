@@ -16,7 +16,7 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java8">java8</a>&nbsp;&#187;&nbsp;synchronized 关键字
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;synchronized 关键字
     <span class="updated">Page Updated&nbsp;
       2019-03-09 00:00
     </span></div>
@@ -26,7 +26,7 @@
 <div class="page_title">synchronized 关键字</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#synchronized-monitor">Synchronized &amp; monitor</a><ul>
+<li><a href="#synchronized-monitor">Synchronized &amp; monitor指令</a><ul>
 <li><a href="#_1">回顾并发的三大性质</a><ul>
 <li><a href="#_2">原子性</a></li>
 <li><a href="#_3">可见性</a></li>
@@ -46,12 +46,13 @@
 <li><a href="#_8">多个锁的交叉导致的死锁</a></li>
 <li><a href="#this-monitor">this monitor</a></li>
 <li><a href="#class-monitor">class monitor</a></li>
-<li><a href="#synchronized_1">synchronized 的缺陷</a><ul>
+<li><a href="#synchronized_1">synchronized 的缺陷? 为什么有其它的各种锁?</a><ul>
 <li><a href="#synchronized_2">synchronized 缺陷例子</a></li>
 </ul>
 </li>
 <li><a href="#synchronized_3">synchronized使用原则</a></li>
-<li><a href="#synchronized_4">synchronized 锁升级</a><ul>
+<li><a href="#synchronized_4">synchronized 可重入吗？</a></li>
+<li><a href="#synchronized_5">synchronized 锁升级</a><ul>
 <li><a href="#_9">为什么会有偏向锁？</a></li>
 <li><a href="#cas">多线程竞争，抢锁（CAS完成）</a></li>
 <li><a href="#_10">偏向锁 什么时候升级为 轻量级锁？</a></li>
@@ -62,7 +63,7 @@
 </li>
 </ul>
 </div>
-<h1 id="synchronized-monitor">Synchronized &amp; monitor</h1>
+<h1 id="synchronized-monitor">Synchronized &amp; monitor指令</h1>
 <h2 id="_1">回顾并发的三大性质</h2>
 <h3 id="_2">原子性</h3>
 <p>一个操作或者多个操作，要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。即使是在多个线程一起执行的时候，一个操作一旦开始，就不会被其它线程干扰.</p>
@@ -499,7 +500,7 @@ monitor_jstack.png)</p>
 </pre></div>
 
 
-<h2 id="synchronized_1">synchronized 的缺陷</h2>
+<h2 id="synchronized_1">synchronized 的缺陷? 为什么有其它的各种锁?</h2>
 <ul>
 <li>无法控制阻塞时长</li>
 <li>阻塞不可被中断</li>
@@ -688,7 +689,9 @@ monitor_jstack.png)</p>
 
 
 <p>参考：<a href="https://blog.csdn.net/xad707348125/article/details/46956911" target="_blank">synchronized锁分析</a></p>
-<h2 id="synchronized_4">synchronized 锁升级</h2>
+<h2 id="synchronized_4">synchronized 可重入吗？</h2>
+<p><code>synchronized</code>具有重入性。每个对象拥有一个计数器，当线程获取该对象monitor锁后，计数器就会加一，释放锁后就会将计数器减一。</p>
+<h2 id="synchronized_5">synchronized 锁升级</h2>
 <p>JDK早期<code>synchronized</code>直接重量级锁(操作系统层面)</p>
 <p>JDK1.6对<code>synchronized</code>做了优化，<code>synchronized</code>锁有一个升级的过程，升级到最后才会变成重量级锁！</p>
 <div class="hlcode"><pre>                <span class="err">【偏向锁】</span>
@@ -734,7 +737,7 @@ monitor_jstack.png)</p>
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-27 22:33:00</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
       </span>
     </div>
 

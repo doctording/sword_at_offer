@@ -52,10 +52,22 @@
 </ul>
 </li>
 <li><a href="#reference">引用Reference</a><ul>
-<li><a href="#_7">强引用</a></li>
-<li><a href="#_8">弱引用</a></li>
-<li><a href="#_9">软引用</a></li>
-<li><a href="#_10">虚引用</a></li>
+<li><a href="#_7">强引用</a><ul>
+<li><a href="#gc">强引用于GC</a></li>
+</ul>
+</li>
+<li><a href="#_8">弱引用</a><ul>
+<li><a href="#gc_1">弱引用与GC</a></li>
+</ul>
+</li>
+<li><a href="#_9">软引用</a><ul>
+<li><a href="#gc_2">软引用与GC</a></li>
+</ul>
+</li>
+<li><a href="#_10">虚引用</a><ul>
+<li><a href="#gc_3">虚引用与GC</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_11">对象是生存还是死亡的？(两次标记)</a></li>
@@ -67,7 +79,7 @@
 </ul>
 </li>
 <li><a href="#_13">收集器</a><ul>
-<li><a href="#gc">GC收集器及其发展</a><ul>
+<li><a href="#gc_4">GC收集器及其发展</a><ul>
 <li><a href="#serial-stw">(一) Serial （STW,单线程收集器）</a></li>
 <li><a href="#parallel-scavengestw">(二) Parallel Scavenge（STW,多线程收集器）</a></li>
 <li><a href="#cms">(三) CMS收集器</a></li>
@@ -99,7 +111,7 @@
 <li><a href="#copyingcleanup-phasestwgc">Copying/Cleanup Phase（清理一些内存块:筛选回收，STW，根据用户期望的GC停顿时间回收）</a></li>
 </ul>
 </li>
-<li><a href="#gc_1">对年轻代和老年代GC的总结</a></li>
+<li><a href="#gc_5">对年轻代和老年代GC的总结</a></li>
 </ul>
 </li>
 <li><a href="#g1_4">G1的优势（为什么能够设置一个停留时间）</a></li>
@@ -110,7 +122,7 @@
 <li><a href="#minor-gcyong-gc">minor gc(yong gc)</a></li>
 <li><a href="#major-gc-full-gc">major gc/ full gc</a></li>
 <li><a href="#java-gc-java7-cms">Java GC测试程序 和 初始堆情况(Java7 CMS)</a><ul>
-<li><a href="#gc_2">对应GC日志</a></li>
+<li><a href="#gc_6">对应GC日志</a></li>
 </ul>
 </li>
 <li><a href="#_20">参考</a></li>
@@ -120,7 +132,7 @@
 <li><a href="#_22">长期存活的对象将进入老年代</a></li>
 <li><a href="#_23">动态对象的年龄判定</a></li>
 <li><a href="#_24">空间分配担保</a></li>
-<li><a href="#gc_3">触发gc的条件</a><ul>
+<li><a href="#gc_7">触发gc的条件</a><ul>
 <li><a href="#minor-gc">Minor GC触发条件</a></li>
 <li><a href="#full-gc">Full GC触发条件</a></li>
 </ul>
@@ -266,12 +278,13 @@
 <h3 id="javagc-roots">Java中可作为<code>GC Roots</code>的对象包括</h3>
 <ul>
 <li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
-<li>方法区中类静态属性引用的对象</li>
-<li>方法区中常量引用的对象</li>
 <li>本地方法栈中JNI(即一般说的Native方法)引用的对象</li>
+<li>运行方法区中常量池引用的对象</li>
+<li>方法区中中的类静态属性引用的对象</li>
+<li>load的Clazz</li>
 </ul>
 <p>which instances are roots?(JVM规范中)</p>
-<p>JVM stack, native method stack, run-tinem constant pool, static references in method area, Clazz</p>
+<p>JVM stack, native method stack, run-time constant pool, static references in method area, Clazz</p>
 <h2 id="reference">引用<code>Reference</code></h2>
 <p>参考：<a href="https://www.geeksforgeeks.org/types-references-java/">https://www.geeksforgeeks.org/types-references-java/</a></p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/reference.png" /></p>
@@ -283,6 +296,31 @@
 <span class="c1">//Now, object to which &#39;g&#39; was pointing earlier is  </span>
 <span class="c1">//eligible for garbage collection.</span>
 <span class="n">g</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>  
+</pre></div>
+
+
+<h4 id="gc">强引用于GC</h4>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kd">class</span> <span class="nc">M</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">finalize</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;finalize&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/**</span>
+<span class="cm">* 强引用，强制gc</span>
+<span class="cm">* 输出如下</span>
+<span class="cm">* Main$M@736e9adb</span>
+<span class="cm">* null</span>
+<span class="cm">* finalize</span>
+<span class="cm">*/</span>
+<span class="kd">static</span> <span class="kt">void</span> <span class="nf">testM</span><span class="o">(){</span>
+    <span class="n">M</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">M</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+<span class="o">}</span>
 </pre></div>
 
 
@@ -315,6 +353,23 @@
 <li>To create such references java.lang.ref.WeakReference class is used.</li>
 <li>These references are used in real time applications while establishing a DBConnection which might be cleaned up by Garbage Collector when the application using the database gets closed.</li>
 </ul>
+<h4 id="gc_1">弱引用与GC</h4>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * 只要有垃圾回收线程执行，弱引用直接会被回收</span>
+<span class="cm">    * 输出如下：</span>
+<span class="cm">    * Main$M@736e9adb</span>
+<span class="cm">    * null</span>
+<span class="cm">    * finalize</span>
+<span class="cm">    */</span>
+<span class="kd">static</span> <span class="kt">void</span> <span class="nf">testWeakReference</span><span class="o">(){</span>
+    <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">M</span><span class="o">&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="o">&lt;&gt;(</span><span class="k">new</span> <span class="n">M</span><span class="o">());</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+<span class="o">}</span>
+</pre></div>
+
+
 <h3 id="_9">软引用</h3>
 <p>In Soft reference, even if the object is free for garbage collection then also its not garbage collected, until JVM is in need of memory badly.The objects gets cleared from the memory when JVM runs out of memory.To create such references java.lang.ref.SoftReference class is used.(<font color='red'>JVM 内存紧张的时候会回收软引用对象</font>)</p>
 <p>用来描述一些还有用但并非必需的对象，对于软引用关联者的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。<code>SoftReference</code></p>
@@ -356,6 +411,34 @@
 </pre></div>
 
 
+<h4 id="gc_2">软引用与GC</h4>
+<div class="hlcode"><pre> <span class="cm">/**</span>
+<span class="cm">    * 内存不够用了，软引用才被回收</span>
+<span class="cm">    * 输出如下</span>
+<span class="cm">    * [B@736e9adb</span>
+<span class="cm">    * [B@736e9adb</span>
+<span class="cm">    * [B@6d21714c</span>
+<span class="cm">    * null</span>
+<span class="cm">    */</span>
+<span class="kd">static</span> <span class="kt">void</span> <span class="nf">testSoftReference</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+    <span class="n">SoftReference</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span> <span class="n">mSoft</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SoftReference</span><span class="o">&lt;&gt;(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="o">]);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mSoft</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+    <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+
+    <span class="c1">// gc没有回收软引用</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mSoft</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+
+    <span class="kt">byte</span><span class="o">[]</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">11</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="o">];</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
+
+    <span class="c1">// 由于强引用申请空间不够，必须要清除软引用了</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mSoft</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+<span class="o">}</span>
+</pre></div>
+
+
 <h3 id="_10">虚引用</h3>
 <p>The objects which are being referenced by phantom references are eligible for garbage collection. But, before removing them from the memory, JVM puts them in a queue called ‘reference queue’ . They are put in a reference queue after calling finalize() method on them.To create such references java.lang.ref.PhantomReference class is used.</p>
 <p>也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能够在这个对象被收集器回收时收到一个系统通知。<code>PhantomReference</code></p>
@@ -363,6 +446,47 @@
 <li>它的get()方法写死了，返回null（也就是跟前面不一样，不能通过get()方法获取被包装的对象）</li>
 <li>Java中虚幻引用作用：管理直接内存</li>
 </ul>
+<h4 id="gc_3">虚引用与GC</h4>
+<ul>
+<li>虚引用get不到</li>
+<li>虚引用在队列中，不断的从队列中取出来，看回收</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">LIST</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="kd">static</span> <span class="kd">final</span> <span class="n">ReferenceQueue</span><span class="o">&lt;</span><span class="n">M</span><span class="o">&gt;</span> <span class="n">QUEUE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReferenceQueue</span><span class="o">&lt;&gt;();</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+
+    <span class="n">PhantomReference</span><span class="o">&lt;</span><span class="n">M</span><span class="o">&gt;</span> <span class="n">phantomReference</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PhantomReference</span><span class="o">&lt;&gt;(</span><span class="k">new</span> <span class="n">M</span><span class="o">(),</span> <span class="n">QUEUE</span><span class="o">);</span>
+
+    <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()-&gt;{</span>
+        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="n">LIST</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="o">]);</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+            <span class="o">}</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">phantomReference</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+
+    <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()-&gt;{</span>
+        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="n">Reference</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">M</span><span class="o">&gt;</span> <span class="n">poll</span> <span class="o">=</span> <span class="n">QUEUE</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">poll</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;PhantomReference 被 jvm 回收了:&quot;</span> <span class="o">+</span> <span class="n">poll</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+
+    <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>管理堆外内存：</p>
+<p>1.jvm对象用虚引用，指向堆外内存<br />
+2.jvm 堆 里面把引用回收掉，然后堆外也回收掉</p>
 <h2 id="_11">对象是生存还是死亡的？(两次标记)</h2>
 <p>对对象进行可达性分析 ？<br />
 =》没有GC Roots的引用链 =》 判断对象是否有必要执行<code>finalize()</code>方法</p>
@@ -475,7 +599,7 @@ no, i am dead
 <p>并发(Concurrent): 只用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上</p>
 </li>
 </ul>
-<h2 id="gc">GC收集器及其发展</h2>
+<h2 id="gc_4">GC收集器及其发展</h2>
 <h3 id="serial-stw">(一) Serial （STW,单线程收集器）</h3>
 <ul>
 <li>
@@ -816,7 +940,7 @@ no, i am dead
 <p>（the lowest "liveness"有限被清理调）</p>
 <p>（<code>yong gc</code>和<code>mixed gc</code>会同时进行）</p>
 <p>gc log: <code>GC pause (mixed)</code></p>
-<h4 id="gc_1">对年轻代和老年代GC的总结</h4>
+<h4 id="gc_5">对年轻代和老年代GC的总结</h4>
 <ul>
 <li>
 <p>对年轻代的GC</p>
@@ -917,7 +1041,7 @@ no, i am dead
 </tr>
 </tbody>
 </table>
-<h5 id="gc_2">对应GC日志</h5>
+<h5 id="gc_6">对应GC日志</h5>
 <div class="hlcode"><pre><span class="p">[</span>GC <span class="p">[</span>PSYoungGen<span class="o">:</span> <span class="m">7534</span>K<span class="o">-&gt;</span><span class="m">416</span>K<span class="p">(</span><span class="m">9216</span>K<span class="p">)]</span> <span class="m">7534</span>K<span class="o">-&gt;</span><span class="m">6560</span>K<span class="p">(</span><span class="m">19456</span>K<span class="p">),</span> <span class="m">0.0049590</span> secs<span class="p">]</span> <span class="p">[</span>Times<span class="o">:</span> user<span class="o">=</span><span class="m">0.01</span> sys<span class="o">=</span><span class="m">0.00</span><span class="p">,</span> real<span class="o">=</span><span class="m">0.01</span> secs<span class="p">]</span>
 <span class="p">[</span>Full GC <span class="p">[</span>PSYoungGen<span class="o">:</span> <span class="m">416</span>K<span class="o">-&gt;</span><span class="m">0</span>K<span class="p">(</span><span class="m">9216</span>K<span class="p">)]</span> <span class="p">[</span>ParOldGen<span class="o">:</span> <span class="m">6144</span>K<span class="o">-&gt;</span><span class="m">6466</span>K<span class="p">(</span><span class="m">10240</span>K<span class="p">)]</span> <span class="m">6560</span>K<span class="o">-&gt;</span><span class="m">6466</span>K<span class="p">(</span><span class="m">19456</span>K<span class="p">)</span> <span class="p">[</span>PSPermGen<span class="o">:</span> <span class="m">3121</span>K<span class="o">-&gt;</span><span class="m">3120</span>K<span class="p">(</span><span class="m">21504</span>K<span class="p">)],</span> <span class="m">0.0103590</span> secs<span class="p">]</span> <span class="p">[</span>Times<span class="o">:</span> user<span class="o">=</span><span class="m">0.02</span> sys<span class="o">=</span><span class="m">0.00</span><span class="p">,</span> real<span class="o">=</span><span class="m">0.01</span> secs<span class="p">]</span>
 Heap
@@ -1009,7 +1133,7 @@ Heap
 <p>如果不成立，虚拟机会查看<code>HandlerPromotionFailure</code>设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</p>
 <p>如果大于，将尝试着进行一次<code>Minor GC</code>,尽管这次的<code>Minor GC</code>是有风险的</p>
 <p>如果小于，或者<code>HandlerPromotionFailure</code>设置值不允许担保失败，这时改为进行一次<code>Full GC</code></p>
-<h3 id="gc_3">触发gc的条件</h3>
+<h3 id="gc_7">触发gc的条件</h3>
 <p>“什么时候”即就是GC触发的条件。GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。</p>
 <h4 id="minor-gc">Minor GC触发条件</h4>
 <ul>
@@ -1491,7 +1615,7 @@ Heap
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-05-27 22:33:00</p>
+        <p>Site Generated 2020-06-06 15:35:58</p>
       </span>
     </div>
 
