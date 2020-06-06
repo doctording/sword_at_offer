@@ -6,7 +6,7 @@ date: 2019-03-09 00:00
 
 [TOC]
 
-# Synchronized & monitor
+# Synchronized & monitor指令
 
 ## 回顾并发的三大性质
 
@@ -471,7 +471,7 @@ T1 enter to method 1
 
 ```
 
-## synchronized 的缺陷
+## synchronized 的缺陷? 为什么有其它的各种锁?
 
 * 无法控制阻塞时长
 * 阻塞不可被中断
@@ -657,6 +657,10 @@ Exception in thread "Thread-0" java.lang.IllegalMonitorStateException
 ```
 
 参考：<a href="https://blog.csdn.net/xad707348125/article/details/46956911" target="_blank">synchronized锁分析</a>
+
+## synchronized 可重入吗？
+
+`synchronized`具有重入性。每个对象拥有一个计数器，当线程获取该对象monitor锁后，计数器就会加一，释放锁后就会将计数器减一。
 
 ## synchronized 锁升级
 

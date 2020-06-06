@@ -135,13 +135,14 @@ Class metadata, interned Strings and class static variables will be moved from t
 ### Java中可作为`GC Roots`的对象包括
 
 * 虚拟机栈（栈帧中的本地变量表）中引用的对象
-* 方法区中类静态属性引用的对象
-* 方法区中常量引用的对象
 * 本地方法栈中JNI(即一般说的Native方法)引用的对象
+* 运行方法区中常量池引用的对象
+* 方法区中中的类静态属性引用的对象
+* load的Clazz
 
 which instances are roots?(JVM规范中)
 
-JVM stack, native method stack, run-tinem constant pool, static references in method area, Clazz
+JVM stack, native method stack, run-time constant pool, static references in method area, Clazz
 
 ## 引用`Reference`
 
@@ -160,6 +161,32 @@ Gfg g = new Gfg();
 //Now, object to which 'g' was pointing earlier is  
 //eligible for garbage collection.
 g = null;  
+```
+
+#### 强引用于GC
+
+```java
+static class M{
+    @Override
+    protected void finalize() {
+        System.out.println("finalize");
+    }
+}
+
+/**
+* 强引用，强制gc
+* 输出如下
+* Main$M@736e9adb
+* null
+* finalize
+*/
+static void testM(){
+    M m = new M();
+    System.out.println(m);
+    m = null;
+    System.gc();
+    System.out.println(m);
+}
 ```
 
 ### 弱引用
@@ -190,6 +217,24 @@ g.x();
 * If JVM detects an object with only weak references (i.e. no strong or soft references linked to any object object), this object will be marked for garbage collection.
 * To create such references java.lang.ref.WeakReference class is used.
 * These references are used in real time applications while establishing a DBConnection which might be cleaned up by Garbage Collector when the application using the database gets closed.
+
+#### 弱引用与GC
+
+```java
+/**
+    * 只要有垃圾回收线程执行，弱引用直接会被回收
+    * 输出如下：
+    * Main$M@736e9adb
+    * null
+    * finalize
+    */
+static void testWeakReference(){
+    WeakReference<M> m = new WeakReference<>(new M());
+    System.out.println(m.get());
+    System.gc();
+    System.out.println(m.get());
+}
+```
 
 ### 软引用
 
@@ -235,6 +280,35 @@ public class Example
 }
 ```
 
+#### 软引用与GC
+
+```java
+ /**
+    * 内存不够用了，软引用才被回收
+    * 输出如下
+    * [B@736e9adb
+    * [B@736e9adb
+    * [B@6d21714c
+    * null
+    */
+static void testSoftReference() throws Exception{
+    SoftReference<byte[]> mSoft = new SoftReference<>(new byte[10 * 1024 * 1024]);
+    System.out.println(mSoft.get());
+
+    System.gc();
+    TimeUnit.SECONDS.sleep(1);
+
+    // gc没有回收软引用
+    System.out.println(mSoft.get());
+
+    byte[] b = new byte[11 * 1024 * 1024];
+    System.out.println(b);
+
+    // 由于强引用申请空间不够，必须要清除软引用了
+    System.out.println(mSoft.get());
+}
+```
+
 ### 虚引用
 
 The objects which are being referenced by phantom references are eligible for garbage collection. But, before removing them from the memory, JVM puts them in a queue called ‘reference queue’ . They are put in a reference queue after calling finalize() method on them.To create such references java.lang.ref.PhantomReference class is used.
@@ -243,6 +317,49 @@ The objects which are being referenced by phantom references are eligible for ga
 
 * 它的get()方法写死了，返回null（也就是跟前面不一样，不能通过get()方法获取被包装的对象）
 * Java中虚幻引用作用：管理直接内存
+
+#### 虚引用与GC
+
+* 虚引用get不到
+* 虚引用在队列中，不断的从队列中取出来，看回收
+
+```java
+static final List<Object> LIST = new LinkedList<>();
+static final ReferenceQueue<M> QUEUE = new ReferenceQueue<>();
+
+public static void main(String[] args) throws Exception{
+
+    PhantomReference<M> phantomReference = new PhantomReference<>(new M(), QUEUE);
+
+    new Thread(()->{
+        while (true){
+            LIST.add(new byte[3 * 1024 * 1024]);
+            try{
+                TimeUnit.SECONDS.sleep(1);
+            }catch (Exception e){
+
+            }
+            System.out.println(phantomReference.get());
+        }
+    }).start();
+
+    new Thread(()->{
+        while (true){
+            Reference<? extends M> poll = QUEUE.poll();
+            if(poll != null) {
+                System.out.println("PhantomReference 被 jvm 回收了:" + poll.get());
+            }
+        }
+    }).start();
+
+    TimeUnit.SECONDS.sleep(2);
+}
+```
+
+管理堆外内存：
+
+1.jvm对象用虚引用，指向堆外内存
+2.jvm 堆 里面把引用回收掉，然后堆外也回收掉
 
 ## 对象是生存还是死亡的？(两次标记)
 

@@ -1,5 +1,5 @@
 ---
-title: "Java io基础"
+title: "Java IO基础"
 layout: page
 date: 2019-03-18 00:00
 ---
@@ -30,7 +30,7 @@ date: 2019-03-18 00:00
 
 ## 用户空间,内核空间,磁盘
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/io_buffer.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer.png)
 
 在磁盘空间和用户空间中加一个内核空间的缓存区的原因有两个：
 
@@ -39,7 +39,7 @@ date: 2019-03-18 00:00
 
 目前的操作系统，用户空间和内核空间的区分一般采用虚拟内存来实现，因此用户空间和内存空间都是在虚拟内存中。使用虚拟内存无非是因为其两大优势：一是它可以使多个虚拟内存地址指向同一个物理内存;二是虚拟内存的空间可以大于物理内存的空间。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/io_buffer_virtual.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer_virtual.png)
 
 <small>参考： https://blog.csdn.net/u012129558/article/details/82878994</small>
 
@@ -67,9 +67,9 @@ date: 2019-03-18 00:00
     用户态IO缓冲区   <-  内核缓冲区域
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/fill_call.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/fill_call.png)
 
-### 用户i/o缓冲区的类型
+### 用户I/O缓冲区的类型
 
 * 全缓冲
 
@@ -87,7 +87,7 @@ date: 2019-03-18 00:00
 
 用户空间是常规进程所在区域。`JVM`就是常规进程，驻守于用户空间。用户空间是非特权区域:比如，在该区域执行的代码就不能直接访问硬件设备。内核空间是操作系统所在区域。内核代码有特别的权力:它能与设备控制器通讯，控制着用户区域 进程的运行状态，等等。最重要的是，所有`I/O`都直接或间接通过内核空间。
 
-当进程请求`I/O`操作的时候，它执行一个系统调用(有时称为陷阱)将控制权移交给内核。 C/C++程序员所熟知的底层函数 open( )、read( )、write( )和 close( )要做的无非就是建立和执行适当的`系统调用`。当内核以这种方式被调用，它随即采取任何必要步骤，找到进程所需数据，并把数据 传送到用户空间内的指定缓冲区。内核试图对数据进行高速缓存或预读取，因此进程所需数据可能 已经在内核空间里了。如果是这样，该数据只需简单地拷贝出来即可。如果数据不在内核空间，则 进程被挂起，内核要把数据读进内存。
+当进程请求`I/O`操作的时候，它执行一个系统调用(有时称为陷阱)将控制权移交给内核。C/C++程序员所熟知的底层函数`open()`、`read()`、`write()`和`close()`要做的无非就是建立和执行适当的`系统调用`。当内核以这种方式被调用，它随即采取任何必要步骤，找到进程所需数据，并把数据 传送到用户空间内的指定缓冲区。内核试图对数据进行高速缓存或预读取，因此进程所需数据可能 已经在内核空间里了。如果是这样，该数据只需简单地拷贝出来即可。如果数据不在内核空间，则 进程被挂起，内核要把数据读进内存。
 
 **内核缓冲区**的主要思想就是：一次读入大量的数据放在缓冲区，需要的时候从缓冲区取得数据。
 
@@ -100,7 +100,7 @@ date: 2019-03-18 00:00
 
 虚拟文件系统(VFS)是由Sun microsystems公司在定义网络文件系统(NFS)时创造的。它是一种用于网络环境的分布式文件系统，是允许和操作系统使用不同的文件系统实现的接口。虚拟文件系统（VFS）是物理文件系统与服务之间的一个接口层，它对Linux的每个文件系统的所有细节进行抽象，使得不同的文件系统在Linux核心以及系统中运行的其他进程看来，都是相同的。严格说来，VFS并不是一种实际的文件系统。它只存在于内存中，不存在于任何外存空间。VFS在系统启动时建立，在系统关闭时消亡。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/vfs.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/vfs.png)
 
 ### mmap
 
@@ -112,7 +112,7 @@ mmap将一个文件或者其它对象映射进内存。文件被映射到多个�
 
 使用内存映射文件处理存储于磁盘上的文件时，将不必再对文件执行I/O操作，这意味着在对文件进行处理时将不必再为文件申请并分配缓存，所有的文件缓存操作均由系统直接管理，由于取消了将文件数据加载到内存、数据从内存到文件的回写以及释放内存块等步骤，使得内存映射文件在处理大数据量的文件时能起到相当重要的作用。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/mem_file.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/mem_file.png)
 
 好处：
 
@@ -128,34 +128,217 @@ mmap将一个文件或者其它对象映射进内存。文件被映射到多个�
 
 * 映射文件区域的能力取决于于内存寻址的大小。在32位机器中，你不能访问超过4GB或2 ^ 32（以上的文件）。
 
-# IO模型
+# IO模型：同步/阻塞概念
 
-## 阻塞与非阻塞
+## 阻塞与非阻塞(等待IO时的状态)
 
 函数或方法（用户线程调用内核IO操作）的实现方式：
 
 * 阻塞是指IO操作需要彻底完成后才返回到用户空间
 * 非阻塞是指IO操作被调用后立即返回给用户一个状态值，无需等到IO操作彻底完成。
 
-## 同步与异步
-
-用户线程与内核的交互方式，
+## 同步与异步（用户线程与内核的消息交互方式）
 
 * 同步指用户线程发起IO请求后需要等待或者轮询内核IO操作完成后才能继续执行；同步有阻塞，非阻塞
 
-* 异步是指用户线程发起IO请求后仍然继续执行，当内核IO操作完成后会通知用户线程，或者调用用户线程注册的回调函数。异步一定是非阻塞的
+* 异步是指用户线程发起IO请求后仍然继续执行，当**内核IO操作完成后会通知用户线程**，或者调用用户线程注册的回调函数。异步一定是非阻塞的（内核会通过函数回调或者信号机制通知用户进程；类似观察者模式）
 
-## 常见网络IO模型
+## 人用水壶烧水处理例子说明
 
-### 同步阻塞
+* 同步阻塞
+
+1. 点火(发消息)
+2. 搬个小板凳盯着水壶(傻等，眼睛不动)，不等到水壶烧开水，坚决不去做别的事情（阻塞）
 
 用户线程的IO处理过程需要等待，中间不能做任何事情，对CPU利用率很低
 
-### 同步非阻塞
+* 同步非阻塞
 
-用户线程每次IO请求都能立刻返回，需要通过轮询去判断数据是否返回，会无谓地消耗大量的CPU
+1. 点火(发消息)
+2. 去看会儿电视，时不时过来(轮询)看水壶烧开水没有（非阻塞);水开后接着处理
 
-### IO复用
+用户线程每次IO请求都能立刻返回，但需要通过轮询去判断数据是否返回，会无谓地消耗大量的CPU
+
+* 异步阻塞（很少发生）
+
+1. 点火(发消息)
+2. 水壶有个响铃，自动绑定了开水之后的处理程序，这样响铃之后自动处理(异步)
+3. 但是还是可以轮询去看水壶开了没有
+
+* 异步非阻塞
+
+1. 点火(发消息), 写好水壶烧开水之后的处理程序
+2. 水壶有个响铃，自动绑定了开水之后的处理程序，这样响铃之后自动处理
+3. 人该干嘛干嘛去，不用管了（不用傻等，不用轮询）
+
+## 网络IO模型演进
+
+### 传统的`BIO`(Blocking I/O 阻塞IO)
+
+* server
+
+```java
+public class Server {
+    public static void main(String[] args) throws IOException {
+        ServerSocket ss = new ServerSocket();
+        ss.bind(new InetSocketAddress("127.0.0.1", 8888));
+        while(true) {
+            Socket s = ss.accept(); //阻塞方法
+
+            new Thread(() -> {
+                handle(s);
+            }).start();
+        }
+
+    }
+
+    static void handle(Socket s) {
+        try {
+            byte[] bytes = new byte[1024];
+            int len = s.getInputStream().read(bytes);
+            System.out.println(new String(bytes, 0, len));
+
+            s.getOutputStream().write(bytes, 0, len);
+            s.getOutputStream().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+}
+```
+
+* client
+
+```java
+public class Client {
+    public static void main(String[] args) throws IOException {
+        Socket s = new Socket("127.0.0.1", 8888);
+        s.getOutputStream().write("HelloServer".getBytes());
+        s.getOutputStream().flush();
+        //s.getOutputStream().close();
+        System.out.println("write over, waiting for msg back...");
+        byte[] bytes = new byte[1024];
+        int len = s.getInputStream().read(bytes);
+        System.out.println(new String(bytes, 0, len));
+        s.close();
+    }
+}
+```
+
+* Server端的`accept`方法是阻塞的，等待客户端来连接
+* 用一个线程建立连接后，输入/输出流的读写过程是阻塞的
+
+<font color='red'>效率低，并发不高，线程开销大</font>
+
+#### selector(NIO Single Thread 模型)
+
+<font color='red'>不同的事情(有客户端来连接，有输入/输出的读写事件)进行轮训监听，该线程负责所有的这些工作</font>
+
+* Server
+
+```java
+public class Server {
+    public static void main(String[] args) throws IOException {
+        ServerSocketChannel ssc = ServerSocketChannel.open();
+        ssc.socket().bind(new InetSocketAddress("127.0.0.1", 8888));
+        ssc.configureBlocking(false);
+
+        System.out.println("server started, listening on :" + ssc.getLocalAddress());
+        Selector selector = Selector.open();
+        // selector 注册感兴趣的事情：连接时间
+        ssc.register(selector, SelectionKey.OP_ACCEPT);
+
+        while(true) {
+            // 阻塞
+            selector.select();
+            Set<SelectionKey> keys = selector.selectedKeys();
+            Iterator<SelectionKey> it = keys.iterator();
+            while(it.hasNext()) {
+                SelectionKey key = it.next();
+                it.remove();
+                // 处理这个事件
+                handle(key);
+            }
+        }
+
+    }
+
+    private static void handle(SelectionKey key) {
+        if(key.isAcceptable()) {
+            try {
+                ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+                SocketChannel sc = ssc.accept();
+                sc.configureBlocking(false);
+                //new Client
+                //
+                //String hostIP = ((InetSocketAddress)sc.getRemoteAddress()).getHostString();
+
+			/*
+			log.info("client " + hostIP + " trying  to connect");
+			for(int i=0; i<clients.size(); i++) {
+				String clientHostIP = clients.get(i).clientAddress.getHostString();
+				if(hostIP.equals(clientHostIP)) {
+					log.info("this client has already connected! is he alvie " + clients.get(i).live);
+					sc.close();
+					return;
+				}
+			}*/
+
+                sc.register(key.selector(), SelectionKey.OP_READ );
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+            }
+        } else if (key.isReadable()) { //flip
+            SocketChannel sc = null;
+            try {
+                sc = (SocketChannel)key.channel();
+                ByteBuffer buffer = ByteBuffer.allocate(512);
+                buffer.clear();
+                int len = sc.read(buffer);
+
+                if(len != -1) {
+                    System.out.println(new String(buffer.array(), 0, len));
+                }
+
+                ByteBuffer bufferToWrite = ByteBuffer.wrap("HelloClient".getBytes());
+                sc.write(bufferToWrite);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if(sc != null) {
+                    try {
+                        sc.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+### NIO reactor模式（多线程轮询）
+
+The reactor design pattern is an event handling pattern for handling service requests delivered concurrently to a service handler by one or more inputs. The service handler then demultiplexes the incoming requests and dispatches them synchronously to the associated request handlers.
+
+(基于事件驱动，有一个Service Handler，处理一个或多个并发输入源，同步的分发给不同的Request Handlers)
+
+1. 基于事件驱动-> selector（支持对多个socketChannel的监听）
+2. 统一的事件分派中心-> dispatch
+3. 事件处理服务-> read & write
+
+### AIO（异步IO）
+
+* NIO是同步的非阻塞,AIO是异步非阻塞的；
+
+* 事件通知，而不是轮询
+
+但是AIO,NIO在linux下都是基于`epoll`（轮询）的, 所以netty对nio封装，但是API更像是AIO
+
+## IO复用
 
 1. 等待数据准备好（waiting for data to be ready）。对于一个套接口上的操作，这一步骤关系到数据从网络到达，并将其复制到内核的某个缓冲区。
 
@@ -163,7 +346,7 @@ mmap将一个文件或者其它对象映射进内存。文件被映射到多个�
 
 **IO多路复用**是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。I
 
-#### select
+### select
 
 Select是通过将需要监听的文件描述符加入相应的文件描述符集合(readset、writeset，exceptset)，由内核负责监视相应的文件描述符是否就绪。
 
@@ -172,9 +355,90 @@ Select是通过将需要监听的文件描述符加入相应的文件描述符�
 * select监控的文件描述符有上限
 * 每次调用都需要手动的设置文件描述符集合，使用非常不便
 * 每次调用都要把文件描述符从用户态拷贝到内核态，开销比较大
-* 当就绪的文件描述符好后，需要循环遍历来进行判断，效率不好
+* 当就绪的文件描述符好后，需要**循环遍历**来进行判断，效率不高
 
-#### poll
+`linux select`服务端例子代码
+
+```cpp
+int main()
+{
+    int server_sockfd, client_sockfd;
+    int server_len, client_len;
+    struct sockaddr_in server_address;
+    struct sockaddr_in client_address;
+    int result;
+    fd_set readfds, testfds;
+    server_sockfd = socket(AF_INET, SOCK_STREAM, 0);//建立服务器端socket
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+    server_address.sin_port = htons(8888);
+    server_len = sizeof(server_address);
+    bind(server_sockfd, (struct sockaddr *)&server_address, server_len);
+    listen(server_sockfd, 5); //监听队列最多容纳5个
+    FD_ZERO(&readfds);
+    FD_SET(server_sockfd, &readfds);//将服务器端socket加入到集合中
+    while(1)
+    {
+        char ch;
+        int fd;
+        int nread;
+        testfds = readfds;//将需要监视的描述符集copy到select查询队列中，select会对其修改，所以一定要分开使用变量
+        printf("server waiting\n");
+
+        /*无限期阻塞，并测试文件描述符变动 */
+        result = select(FD_SETSIZE, &testfds, (fd_set *)0,(fd_set *)0, (struct timeval *) 0); //FD_SETSIZE：系统默认的最大文件描述符
+        if(result < 1)
+        {
+            perror("server5");
+            exit(1);
+        }
+
+        /*扫描所有的文件描述符*/
+        for(fd = 0; fd < FD_SETSIZE; fd++)
+        {
+            /*找到相关文件描述符*/
+            if(FD_ISSET(fd,&testfds))
+            {
+              /*判断是否为服务器套接字，是则表示为客户请求连接。*/
+                if(fd == server_sockfd)
+                {
+                    client_len = sizeof(client_address);
+                    client_sockfd = accept(server_sockfd,
+                    (struct sockaddr *)&client_address, &client_len);
+                    FD_SET(client_sockfd, &readfds);//将客户端socket加入到集合中
+                    printf("adding client on fd %d\n", client_sockfd);
+                }
+                /*客户端socket中有数据请求时*/
+                else
+                {
+                    ioctl(fd, FIONREAD, &nread);//取得数据量交给nread
+
+                    /*客户数据请求完毕，关闭套接字，从集合中清除相应描述符 */
+                    if(nread == 0)
+                    {
+                        close(fd);
+                        FD_CLR(fd, &readfds); //去掉关闭的fd
+                        printf("removing client on fd %d\n", fd);
+                    }
+                    /*处理客户数据请求*/
+                    else
+                    {
+                        read(fd, &ch, 1);
+                        sleep(5);
+                        printf("serving client on fd %d\n", fd);
+                        ch++;
+                        write(fd, &ch, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+```
+
+### poll
 
 poll() 的机制与 select() 类似，与 select() 在本质上没有多大差别，管理多个描述符也是进行轮询，根据描述符的状态进行处理。
 
@@ -191,13 +455,102 @@ poll() 的机制与 select() 类似，与 select() 在本质上没有多大差�
 2. 与select一样，poll返回后，需要轮询pollfd来获取就绪的描述符，这样会使性能下降
 3. 同时连接的大量客户端在一时刻可能只有很少的就绪状态，因此随着监视的描述符数量的增长，其效率也会线性下降
 
-#### epoll
+### epoll
 
 https://github.com/doctording/linux_epoll
 
-### 信号驱动IO（signal blocking I/O）
+1. epoll是一个I/O管理组件
+2. select 和 poll 的升级版本
+3. 怎么用，用在什么地方
 
-当数据报准备好的时候，内核给应用程序发送一个信号，对SIGIO信号进行捕捉，并且调用应用程序的信号处理函数来获取数据报。
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png)
+
+
+`linux epoll 服务端`例子
+
+```cpp
+int main(int argc, char *argv[])
+{
+    //服务器IP + port
+    struct sockaddr_in serverAddr;
+    serverAddr.sin_family = PF_INET;
+    serverAddr.sin_port = htons(SERVER_PORT);
+    serverAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
+    //创建监听socket
+    int listener = socket(PF_INET, SOCK_STREAM, 0);
+    if(listener < 0) { perror("listener"); exit(-1);}
+    printf("listen socket created \n");
+    //绑定地址
+    if( bind(listener, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
+        perror("bind error");
+        exit(-1);
+    }
+    //监听
+    int ret = listen(listener, 5);
+    if(ret < 0) { perror("listen error"); exit(-1);}
+    printf("Start to listen: %s\n", SERVER_IP);
+    //在内核中创建事件表
+    int epfd = epoll_create(EPOLL_SIZE);
+    if(epfd < 0) { perror("epfd error"); exit(-1);}
+    printf("epoll created, epollfd = %d\n", epfd);
+    static struct epoll_event events[EPOLL_SIZE];
+    //往内核事件表里添加事件
+    addfd(epfd, listener, true);
+    //主循环
+    while(1)
+    {
+        //epoll_events_count表示就绪事件的数目
+        int epoll_events_count = epoll_wait(epfd, events, EPOLL_SIZE, -1);
+        if(epoll_events_count < 0) {
+            perror("epoll failure");
+            break;
+        }
+
+        printf("epoll_events_count = %d\n", epoll_events_count);
+        //处理这epoll_events_count个就绪事件
+        for(int i = 0; i < epoll_events_count; ++i)
+        {
+            int sockfd = events[i].data.fd;
+            //新用户连接
+            if(sockfd == listener)
+            {
+                struct sockaddr_in client_address;
+                socklen_t client_addrLength = sizeof(struct sockaddr_in);
+                int clientfd = accept( listener, ( struct sockaddr* )&client_address, &client_addrLength );
+
+                printf("client connection from: %s : % d(IP : port), clientfd = %d \n",
+                inet_ntoa(client_address.sin_addr),
+                ntohs(client_address.sin_port),
+                clientfd);
+
+                addfd(epfd, clientfd, true);
+
+                // 服务端用list保存用户连接
+                clients_list.push_back(clientfd);
+                printf("Add new clientfd = %d to epoll\n", clientfd);
+                printf("Now there are %d clients int the chat room\n", (int)clients_list.size());
+
+                // 服务端发送欢迎信息  
+                printf("welcome message\n");                
+                char message[BUF_SIZE];
+                bzero(message, BUF_SIZE);
+                sprintf(message, SERVER_WELCOME, clientfd);
+                int ret = send(clientfd, message, BUF_SIZE, 0);
+                if(ret < 0) { perror("send error"); exit(-1); }
+            }
+            //处理用户发来的消息，并广播，使其他用户收到信息
+            else 
+            {   
+                int ret = sendBroadcastmessage(sockfd);
+                if(ret < 0) { perror("error");exit(-1); }
+            }
+        }
+    }
+    close(listener); //关闭socket
+    close(epfd);    //关闭内核
+    return 0;
+}
+```
 
 ## 虚拟内存
 

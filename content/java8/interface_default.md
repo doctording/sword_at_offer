@@ -1,5 +1,5 @@
 ---
-title: "Java8 interface deafaul static"
+title: "Java8 interface defalt static"
 layout: page
 date: 2019-03-21 13:00
 ---

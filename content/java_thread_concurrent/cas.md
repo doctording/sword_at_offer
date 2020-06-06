@@ -12,7 +12,7 @@ date: 2019-03-24 00:00
 
 CAS通过调用JNI(java native interface)的代码来操作底层指令来实现。
 
-* Unsafe
+* Unsafe: compareAndSwap
 
 `public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);`
 

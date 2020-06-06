@@ -10,6 +10,9 @@ date: 2019-02-15 00:00
 
 * 为什么需要线程池 ？ 线程池的应用范围 ？
 
+1. 线程的创建销毁是个消耗系统的操作
+2. 线程资源的复用
+
 * 线程池应该具备哪些功能 ？
 
 * 线程池的实现需要注意哪些细节 ？
@@ -35,26 +38,6 @@ public interface Executor {
      */
     void execute(Runnable command);
 }
-```
-
-### interface Future<V>
-
-```java
-/**
- * A {@code Future} represents the result of an asynchronous
- * computation.  Methods are provided to check if the computation is
- * complete, to wait for its completion, and to retrieve the result of
- * the computation.  The result can only be retrieved using method
- * {@code get} when the computation has completed, blocking if
- * necessary until it is ready.  Cancellation is performed by the
- * {@code cancel} method.  Additional methods are provided to
- * determine if the task completed normally or was cancelled. Once a
- * computation has completed, the computation cannot be cancelled.
- * If you would like to use a {@code Future} for the sake
- * of cancellability but not provide a usable result, you can
- * declare types of the form {@code Future<?>} and
- * return {@code null} as a result of the underlying task.
- *
 ```
 
 ### interface ExecutorService extends Executor

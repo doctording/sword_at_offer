@@ -203,14 +203,19 @@ private native void start0();
 
 #### 需要注意的点
 
-1. start方法用synchronized修饰，为同步方法；
+1. start方法用synchronized修饰，为同步方法；真正执行线程
 2. 虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被多次start会抛出异常；threadStatus的状态由JVM控制。
 3. 使用Runnable时，主线程无法捕获子线程中的异常状态。线程的异常，应在线程内部解决。
 
-作者：徐志毅
-链接：https://www.jianshu.com/p/8c16aeea7e1a
-来源：简书
-简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
+区别：start()是开启新线程，并执行其中的run方法；run()是在当前线程执行其run方法.
+
+* when program calls start() method, a new thread is created and code inside run() is executed in new thread.Thread.start() calls the run() method asynchronousl（异步的）,which changes the state of new Thread to Runnable.
+
+* call run() method directly no new thread will be created and code inside run() will execute in the current thread directly.
+
+native方法`start0()`
+
+start0(); method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.
 
 ## stackSize
 
@@ -230,6 +235,15 @@ private long stackSize;
 JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系
 
 # 线程的状态
+
+## Java线程的6种状态
+
+1. NEW
+2. RUNNABLE(可运行状态，运行状态，阻塞状态)
+3. BLOCKED
+4. WAITING
+5. TIMED WAITING
+6. TERMINATED
 
 * Thread类源码
 
@@ -334,13 +348,129 @@ JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关�
     }
 ```
 
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_state.png)
+
+* 阻塞(block)：阻塞状态是指线程因为某种原因放弃了cpu 使用权，也即让出了cpu timeslice，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu timeslice 转到运行(running)状态。阻塞的情况分三种：
+
+1. 等待阻塞：运行(running)的线程执行o.wait()方法，JVM会把该线程放入等待队列(waitting queue)中。
+
+2. 同步阻塞：运行(running)的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入锁池(lock pool)中。
+
+3. 其他阻塞：运行(running)的线程执行Thread.sleep(long ms)或t.join()方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时、join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入可运行(runnable)状态。
+
+### 验证6种状态
+
+```java
+public class Main {
+
+    public static void main(String[] args) throws Exception{
+        Thread t1 = new Thread(()->{
+            System.out.println("t1 running");
+        },"t1");
+
+        Thread t2 = new Thread(()->{
+            while (true){
+
+            }
+        },"t2");
+        t2.start();
+
+        Thread t3 = new Thread(()->{
+            // do sth
+//            System.out.println("t3 running");
+        }, "t3");
+        t3.start();
+
+        Thread t4 = new Thread(()->{
+            synchronized (Main.class){
+                try{
+                    // 有时间的等待
+                    TimeUnit.SECONDS.sleep(100); // TIMED_WAITING
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }, "t4");
+        t4.start();
+
+        Thread t5 = new Thread(()->{
+            try{
+                // 无时间的等待
+                t2.join(); // WAITING
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }, "t5");
+        t5.start();
+
+        Thread t6 = new Thread(()->{
+            synchronized (Main.class){ // 竞争锁，竞争不到
+                try{
+                    TimeUnit.SECONDS.sleep(100);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }, "t6");
+        t6.start();
+
+        TimeUnit.SECONDS.sleep(1);
+
+        System.out.println("t1 status:" + t1.getState());
+        System.out.println("t2 status:" + t2.getState());
+        System.out.println("t3 status:" + t3.getState());
+        System.out.println("t4 status:" + t4.getState());
+        System.out.println("t5 status:" + t5.getState());
+        System.out.println("t6 status:" + t6.getState());
+    }
+
+}
+```
+
+* 输出
+
+```java
+t1 status:NEW
+t2 status:RUNNABLE
+t3 status:TERMINATED
+t4 status:TIMED_WAITING
+t5 status:WAITING
+t6 status:BLOCKED
+```
+
+#### `jvisualvm`的线程状态
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/vm_thread_state.png)
+
+## 操作系统的5种状态
+
+1. 初始状态（new）
+2. 可运行状态/就绪状态（与操作系统关联，有了CPU时间片就可以运行起来，准备就绪中）
+3. 运行状态（有了CPU时间片，在运行中;CPU时间片用完会变成[可运行状态]）
+4. 阻塞状态（等待/阻塞/睡眠，操作系统不考虑给这种状态线程分配CPU时间片，唤醒后变成[可运行状态]）
+5. 终止状态（结束）
+
+## 线程的上下文切换（Thread Context Switch）
+
+由于某些原因CPU不执行当前线程，转而去执行其它线程
+
+1. 当前线程的CPU时间片用完
+2. 垃圾回收（STW）
+3. 有比该线程更高优先级的线程需要运行
+4. 线程调用了sleep,yield,wait,join,park,synchronized,lock等方法导致等待/阻塞等
+
+当`Context Switch`发生时，需要有操作系统保存当前线程的状态，并恢复另一个线程的状态，Javazh中有程序计数器（Program Counter Register）,它的作用是记住下一条JVM指令的地址，PC计数器是线程独有的
+
+1. 状态包括程序计数器，虚拟机栈中每个线程栈帧的信息，如局部变量，操作数栈，返回地址等
+2. Context Switch频繁发生会影响性能
+
 # Monitor
 
 <a href="https://www.programcreek.com/2011/12/monitors-java-synchronization-mechanism/" target="_blank">Monitors – The Basic Idea of Java Synchronization</a>
 
 # 对象的wait,notify方法
 
-* wait: 在其他线程调用此对象的`notify()`方法或`notifyAll()`方法前，导致当前线程等待
+* wait: 在其它线程调用此对象的`notify()`方法或`notifyAll()`方法前，导致当前线程等待
 * notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。
 * `sleep`方法没有释放锁，而`wait`方法释放了锁，使得其他线程可以使用同步控制块或方法
 
@@ -404,6 +534,26 @@ main continue
 */
 ```
 
+## `wait` 和 `sleep` 的区别
+
+1. wait()方法属于Object类,sleep()属于Thread类；
+
+2. wait()方法释放cpu给其它线程，自己让出资源进入等待池等待；sleep继续占用cpu，不让出资源；
+
+3. sleep()必须指定时间，wait()可以指定时间也可以不指定；sleep()时间到，线程处于阻塞或可运行状态；
+
+4. wait()方法会释放持有的锁，不然其它线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁，所以释放锁，可以执行其他线程，也可以唤醒自己，只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；
+
+5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用`notify()`来唤醒；而sleep()能在任何地方调用；
+
+## wait原理
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/cache_3.png)
+
+* `waiting`进入`wait_set`等待中，是阻塞状态，不会占用CPU
+* `waiting`被唤醒后，不是直接执行，而是进入`EntryList`，去竞争`monitor`已获得机会去执行
+* `EntryList`是没有获取到锁的Blocking状态，要竞争锁
+
 # `ThreadGroup`线程组
 
 ## 线程组认识
@@ -466,7 +616,7 @@ System.out.println(tg_parent);
 java.lang.ThreadGroup[name=main,maxpri=10]
 ```
 
-## 线程组源码
+## ThreadGroup源码
 
 ```java
 /**
@@ -820,21 +970,11 @@ public class Main {
 }
 ```
 
-## Join
+## Join(线程的join方法)
 
-与`sleep`一样也是一个可中断的方法
+与`sleep`一样也是一个可中断的方法，底层是对象的`wait`方法
 
-join某个线程A，会使得当前线程B进入等待，直到线程A结束生命周期，或者到达给定的时间，那么在此期间B线程是处于`Blocked`的。
-
-* 其中一次 output，但是"thread2 end"一定在thread结束后打印
-
-```java
-main end
-thread2 start
-thread start
-thread end
-thread2 end
-```
+线程B`join`线程A，会使得`当前线程B进入等待`，直到线程A结束生命周期，或者到达给定的时间，在此期间B线程是处于`Blocked`的
 
 ### join源码分析
 

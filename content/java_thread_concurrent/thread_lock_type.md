@@ -88,7 +88,6 @@ public class Solution {
         spinLock.unlock();
     }
 
-
     public static void main(String[] args){
         int n = 20;
         List<Thread> threadList = new ArrayList<>(n);
@@ -118,6 +117,94 @@ Because they avoid overhead from operating system process rescheduling or contex
 
 * 线程状态不变，不导致上线文切换，适合短时间自旋
 * 长时间会耗CPU，影响其它线程的调度
+
+### 得不到锁的线程让出CPU
+
+竞争锁失败的线程让出CPU(可以使用yield()让出CPU,这是CPU控制的)，可能出现每次都是某一个线程让出CPU，得不到执行
+
+```java
+class SpinLock{
+    private AtomicReference<Integer> sign = new AtomicReference<>(0);
+
+    void lock(){
+        while (!sign.compareAndSet(0, 1)){
+            Thread.yield();
+        }
+    }
+
+    void unlock(){
+        // 解锁就是设置为
+        sign.set(0);
+    }
+}
+```
+
+### 得不到锁，线程sleep, 睡眠时间不确定？
+
+```java
+class SpinLock{
+    private AtomicReference<Integer> sign = new AtomicReference<>(0);
+
+    void lock(){
+        while (!sign.compareAndSet(0, 1)){
+            try{
+                TimeUnit.MILLISECONDS.sleep(10);
+            }catch (Exception e){
+
+            }
+        }
+    }
+
+    void unlock(){
+        // 解锁就是设置为
+        sign.set(0);
+    }
+}
+```
+
+### LockSupport.park() & unpark()
+
+```java
+class SpinLock{
+
+    Queue<Thread> parkQueue = new LinkedList<>();
+
+    private AtomicReference<Thread> sign = new AtomicReference<>(null);
+
+    void lock(){
+        while (!sign.compareAndSet(null, Thread.currentThread())){
+            park();
+        }
+    }
+
+    void unlock(){
+        sign.set(null);
+        // 同时唤醒其它线程
+        lockNotify();
+    }
+
+    void park(){
+//        System.out.println("park thread:" + Thread.currentThread().getName());
+        parkQueue.add(Thread.currentThread());
+        LockSupport.park();
+    }
+
+    void lockNotify(){
+        if(parkQueue.isEmpty()){
+            return;
+        }
+        // 先进先出
+        Thread t = parkQueue.poll();
+//        System.out.println("unpark thread:" + t.getName());
+        unpark(t);
+    }
+
+    void unpark(Thread t){
+        LockSupport.unpark(t);
+    }
+
+}
+```
 
 ### 适应性自旋锁
 

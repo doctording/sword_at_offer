@@ -8,7 +8,7 @@ date: 2019-04-07 00:00
 
 # NIO
 
-https://howtodoinjava.com/java-nio-tutorials/
+参考: <a href='https://howtodoinjava.com/java-nio-tutorials/'>java-nio-tutorials</a>
 
 Java NIO的非阻塞模式，使一个线程从某通道发送请求读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用时，就什么都不会获取。而不是保持线程阻塞，所以直至数据变的可以读取之前，该线程可以继续做其他的事情。 非阻塞写也是如此。一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。 线程通常将非阻塞IO的空闲时间用于在其它通道上执行IO操作，所以一个单独的线程现在可以管理多个输入和输出通道（channel）。
 
@@ -36,11 +36,11 @@ Java NIO的非阻塞模式，使一个线程从某通道发送请求读取数据
 
 Channel是一个对象，可以通过它读取和写入数据。拿 NIO 与原来的 I/O 做个比较，通道就像是流，而且他们面向缓冲区的。
 
-通道与流的不同之处在于通道是双向的。而流只是在一个方向上移动(一个流必须是 InputStream 或者 OutputStream 的子类)， 而 通道 可以用于读、写或者同时用于读写。
+通道与流的不同之处在于`通道是双向`的。而流只是在一个方向上移动(一个流必须是 InputStream 或者 OutputStream 的子类)， 而 通道 可以用于读、写或者同时用于读写。
 
 通道可以以阻塞(blocking)或非阻塞(nonblocking)模式运行。非阻塞模式的通道永远不会让调用的线程休眠。请求的操作要么立即完成,要么返回一个结果表明未进行任何操作。只有面向流的(stream-oriented)的通道,如 sockets 和 pipes 才能使用非阻塞模式。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/buffer_channel.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/buffer_channel.png)
 
 ### Selector
 
@@ -101,5 +101,3 @@ scatter/gather指的在多个缓冲区上实现一个简单的I/O操作，比如
 直接字节缓冲区还可以通过`FileChannel`的`map()`方法,将文件区域直接映射到内存中来创建。该方法返回`MappedByteBuffer`。Java 平台的实现有助于通过JNI从本机代码创建直接字节缓冲区。如果以上这些缓冲区中的某个缓冲区实例指的是不可访问的内存区域，则试图访问该区域不会更改该缓冲区的内容，并且将会在访问期间或稍后的某个时间导致抛出不确定的异常。
 
 * 非直接缓冲区： 通过`allocate()`方法分配缓冲区，将缓冲区建立在 JVM 的内存中
-
-参考: https://howtodoinjava.com/java-nio-tutorials/

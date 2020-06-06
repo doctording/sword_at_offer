@@ -152,7 +152,7 @@ _kclass:4个字节
 */
 ```
 
-### 对象头
+### 对象头 & markword
 
 markword 8个字节，64bit
 
