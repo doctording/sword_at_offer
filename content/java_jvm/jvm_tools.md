@@ -14,7 +14,7 @@ jps | JVM Process Status Tool, 显示指定系统内所有的HotSpot虚拟机进
 jstat | JVM Statistics Monitoring Tool, 用于收集HotSpot虚拟机各方面的运行数据
 jinfo | Configuration Info for Java, 显示虚拟机配置信息
 jmap | Memory Map for Java, 生成虚拟机的内存转储快照(heapdump文件)
-jhat | JVM Heap Dump Brower, 用于分心heapdump文件，它会建立一个HTTP/HTML服务器, 让用户可以在浏览器上查看分析结果
+jhat | JVM Heap Dump Brower, 用于分析heapdump文件，它会建立一个HTTP/HTML服务器, 让用户可以在浏览器上查看分析结果
 jstack | Stack Trace for Java, 显示虚拟机的线程快照
 jcmd | 可以用它来查看Java进程，导出堆、线程信息、执行GC，还可以进行采样分析的一个多功能工具
 
@@ -162,6 +162,30 @@ jstat -gcutil 8207 1000 5
 
 ```java
 jmap -dump:format=b,file=xx.hprof <pid>
+```
+
+### jmap -histo <pid> 查看加载的对象实例
+
+* 所有对象：jmap -histo <pid>|more
+* 活跃对象：jmap -histo:live <pid>|more
+
+eg:
+
+```java
+jmap -histo 23387
+
+ num     #instances         #bytes  class name
+----------------------------------------------
+   1:         79631       39402720  [B
+   2:          7755        8347472  [I
+   3:         57423        8173936  [C
+   4:         34560        1658880  java.nio.HeapByteBuffer
+   5:         18982        1366704  org.apache.zookeeper.server.Request
+   6:         51326        1231824  java.lang.String
+   7:         34971        1119072  java.util.HashMap$Node
+   8:         19887         954576  java.util.HashMap
+   9:         21705         847632  [Ljava.lang.Object;
+  10:         13935         668880  org.apache.zookeeper.txn.TxnHeader
 ```
 
 ## jstack
