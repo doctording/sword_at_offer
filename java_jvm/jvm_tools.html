@@ -36,6 +36,7 @@
 </li>
 <li><a href="#jmap">jmap</a><ul>
 <li><a href="#dump-jvm">dump jvm堆内存信息</a></li>
+<li><a href="#jmap-histo">jmap -histo <pid> 查看加载的对象实例</a></li>
 </ul>
 </li>
 <li><a href="#jstack">jstack</a><ul>
@@ -80,7 +81,7 @@
 </tr>
 <tr>
 <td>jhat</td>
-<td>JVM Heap Dump Brower, 用于分心heapdump文件，它会建立一个HTTP/HTML服务器, 让用户可以在浏览器上查看分析结果</td>
+<td>JVM Heap Dump Brower, 用于分析heapdump文件，它会建立一个HTTP/HTML服务器, 让用户可以在浏览器上查看分析结果</td>
 </tr>
 <tr>
 <td>jstack</td>
@@ -225,6 +226,29 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
 <h2 id="jmap">jmap</h2>
 <h3 id="dump-jvm">dump jvm堆内存信息</h3>
 <div class="hlcode"><pre><span class="n">jmap</span> <span class="o">-</span><span class="nl">dump:</span><span class="n">format</span><span class="o">=</span><span class="n">b</span><span class="o">,</span><span class="n">file</span><span class="o">=</span><span class="n">xx</span><span class="o">.</span><span class="na">hprof</span> <span class="o">&lt;</span><span class="n">pid</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<h3 id="jmap-histo">jmap -histo <pid> 查看加载的对象实例</h3>
+<ul>
+<li>所有对象：jmap -histo <pid>|more</li>
+<li>活跃对象：jmap -histo:live <pid>|more</li>
+</ul>
+<p>eg:</p>
+<div class="hlcode"><pre><span class="n">jmap</span> <span class="o">-</span><span class="n">histo</span> <span class="mi">23387</span>
+
+ <span class="n">num</span>     <span class="err">#</span><span class="n">instances</span>         <span class="err">#</span><span class="n">bytes</span>  <span class="kd">class</span> <span class="nc">name</span>
+<span class="o">----------------------------------------------</span>
+   <span class="mi">1</span><span class="o">:</span>         <span class="mi">79631</span>       <span class="mi">39402720</span>  <span class="o">[</span><span class="n">B</span>
+   <span class="mi">2</span><span class="o">:</span>          <span class="mi">7755</span>        <span class="mi">8347472</span>  <span class="o">[</span><span class="n">I</span>
+   <span class="mi">3</span><span class="o">:</span>         <span class="mi">57423</span>        <span class="mi">8173936</span>  <span class="o">[</span><span class="n">C</span>
+   <span class="mi">4</span><span class="o">:</span>         <span class="mi">34560</span>        <span class="mi">1658880</span>  <span class="n">java</span><span class="o">.</span><span class="na">nio</span><span class="o">.</span><span class="na">HeapByteBuffer</span>
+   <span class="mi">5</span><span class="o">:</span>         <span class="mi">18982</span>        <span class="mi">1366704</span>  <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">zookeeper</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">Request</span>
+   <span class="mi">6</span><span class="o">:</span>         <span class="mi">51326</span>        <span class="mi">1231824</span>  <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span>
+   <span class="mi">7</span><span class="o">:</span>         <span class="mi">34971</span>        <span class="mi">1119072</span>  <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">HashMap</span><span class="n">$Node</span>
+   <span class="mi">8</span><span class="o">:</span>         <span class="mi">19887</span>         <span class="mi">954576</span>  <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">HashMap</span>
+   <span class="mi">9</span><span class="o">:</span>         <span class="mi">21705</span>         <span class="mi">847632</span>  <span class="o">[</span><span class="n">Ljava</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">;</span>
+  <span class="mi">10</span><span class="o">:</span>         <span class="mi">13935</span>         <span class="mi">668880</span>  <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">zookeeper</span><span class="o">.</span><span class="na">txn</span><span class="o">.</span><span class="na">TxnHeader</span>
 </pre></div>
 
 
@@ -446,7 +470,7 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-06 15:35:58</p>
+        <p>Site Generated 2020-06-08 22:16:06</p>
       </span>
     </div>
 
