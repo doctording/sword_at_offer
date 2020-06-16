@@ -6,7 +6,7 @@ date: 2019-11-02 13:00
 
 [TOC]
 
-# Future在规定时间内获取结果
+# `Future`在规定时间内获取结果
 
 ```java
 import java.text.SimpleDateFormat;
@@ -82,7 +82,7 @@ Caused by: java.util.concurrent.TimeoutException
 Process finished with exit code 1
 ```
 
-## future 规定时间未获取到,中断处理
+## `Future`规定时间未获取到,中断处理
 
 ```java
 import com.google.common.util.concurrent.MoreExecutors;
@@ -156,3 +156,7 @@ public class Main {
 
 }
 ```
+
+## `FutureTask`类
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/FutureTaskUML.png)

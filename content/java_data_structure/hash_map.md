@@ -380,3 +380,37 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 ## 被 transient 所修饰 table 变量
 
 HashMap 的桶数组 table 被申明为`transient`。`transient`表示易变的意思，在 Java 中，被该关键字修饰的变量不会被默认的序列化机制序列化，而是通过实现`readObject/writeObject`两个方法自定义了序列化的内容
+
+## LinkedHashMap(HashMap + 双向链表)
+
+```java
+public class LinkedHashMap<K,V>
+    extends HashMap<K,V>
+    implements Map<K,V>
+{
+```
+
+对比普通的`HashMap.Node`，其增加了`before`和`after`,用来顺序连接
+
+```java
+/**
+* HashMap.Node subclass for normal LinkedHashMap entries.
+*/
+static class Entry<K,V> extends HashMap.Node<K,V> {
+    Entry<K,V> before, after;
+    Entry(int hash, K key, V value, Node<K,V> next) {
+        super(hash, key, value, next);
+    }
+}
+```
+
+## TreeMap（红黑树）
+
+```java
+public class TreeMap<K,V>
+    extends AbstractMap<K,V>
+    implements NavigableMap<K,V>, Cloneable, java.io.Serializable
+{
+```
+
+TreeMap 为大多数操作提供平均`logN`的性能，如add（），remove（）和contains（）

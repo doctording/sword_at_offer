@@ -63,6 +63,8 @@ System.out.println(s3.equals(s4));
 
 * 诸如`String`、`Date`等类对`equals`方法进行了`override`的话，比较的是所指向的对象的内容
 
+* equals默认实现是`==`, 不过大部分是要重写的
+
 ## 对象的hashcode方法
 
 ```java
@@ -112,7 +114,7 @@ System.out.println(s3.equals(s4));
 
 * 如果两个对象的hashcode值相等，则equals方法得到的**结果未知**。
 
-设计hashCode()时最重要的因素就是：无论何时，对同一个对象调用hashCode()都应该产生同样的值。如果在讲一个对象用put()添加进HashMap时产生一个hashCdoe值，而用get()取出时却产生了另一个hashCode值，那么就无法获取该对象了。所以如果你的hashCode方法依赖于对象中易变的数据，用户就要当心了，因为此数据发生变化时，hashCode()方法就会生成一个不同的散列码
+设计`hashCode()`时最重要的因素就是：无论何时，对同一个对象调用`hashCode()`都应该产生同样的值。如果在将一个对象用put()添加进HashMap时产生一个hashCdoe值，而用get()取出时却产生了另一个hashCode值，那么就无法获取该对象了。所以如果你的hashCode方法依赖于对象中易变的数据，用户就要当心了，因为此数据发生变化时，hashCode()方法就会生成一个不同的散列码
 
 ### 例子，需要重写 hashcode 方法
 
@@ -158,5 +160,17 @@ public static void main(String[] args) throws Exception {
 }
 ```
 
-参考：
-* https://www.cnblogs.com/dolphin0520/p/3681042.html
+### hash函数
+
+特点
+
+1. 单向函数，反向运算无法完成
+2. 任务一长度输入，得到 固定长度输出
+3. 输入不变，输出就不会变（Whenever it is invoked on the same object more than once during an execution of a Java application, the {@code hashCode} method must consistently return the same integer）
+
+常见的有数百种hash函数，eg: MD5加密 + salt
+
+### Java 对象 hashcode的作用
+
+1. 记录在markword中
+2. 与hash table密切相关

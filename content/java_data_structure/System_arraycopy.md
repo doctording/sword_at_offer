@@ -12,13 +12,13 @@ date: 2018-11-24 00:00
 
 ```java
 /*
-* @param      src      the source array.
-* @param      srcPos   starting position in the source array.
-* @param      dest     the destination array.
-* @param      destPos  starting position in the destination data.
-* @param      length   the number of array elements to be copied.
+* @param      src      the source array. 源数组
+* @param      srcPos   starting position in the source array. 源数组要复制的起始位置
+* @param      dest     the destination array. 目标数组
+* @param      destPos  starting position in the destination data. 目标数组放置的起始位置；
+* @param      length   the number of array elements to be copied. 要复制的长度
 * @exception  IndexOutOfBoundsException  if copying would cause
-*               access of data outside array bounds.
+*               access of data outside array bounds. dest数组大小比src数组大小小会报IndexOutOfBoundsException
 * @exception  ArrayStoreException  if an element in the <code>src</code>
 *               array could not be stored into the <code>dest</code> array
 *               because of a type mismatch.
@@ -51,8 +51,8 @@ public static void testArraycopy(){
     Obj obj2 = new Obj(2, "b");
     Obj obj3 = new Obj(3, "c");
 
-    Obj[] st  = {obj1, obj2, obj3};
-    Obj[] dt  = new Obj[N];
+    Obj[] st = {obj1, obj2, obj3};
+    Obj[] dt = new Obj[N];
     System.arraycopy(st, 0, dt, 0, N);
 
     // false
@@ -161,7 +161,6 @@ public class ArrayCopyThreadSafe {
                     arrayCopyThreadSafe.copy();
                 }
             });
-
 
             threadModify.start();
             Thread.sleep(2);

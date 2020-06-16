@@ -6,7 +6,7 @@ date: 2019-02-17 13:00
 
 [TOC]
 
-# 用option取代null
+# 用optional取代null
 
 ## 经典的`java.lang.NullPointerException`问题
 
@@ -82,11 +82,11 @@ public static String getCarInsuranceName(Person person) {
 
 * 它是错误之源
 
-NullPointerException是目前Java程序开发中最典型的异常
+`NullPointerException`是目前Java程序开发中最典型的异常
 
 * 它会使你的代码膨胀
 
-它让你的代码充斥着深度嵌套的null检查，代码的可读性糟糕透顶
+它让你的代码充斥着`深度嵌套的null检查`，代码的可读性糟糕透顶
 
 * 它自身是毫无意义的
 
@@ -94,9 +94,9 @@ null自身没有任何的语义，尤其是，它代表的是在静态类型语�
 
 * 它破坏了Java的哲学
 
-Java一直试图避免让程序员意识到指针的存在，唯一的例外是:null指针。
+Java一直试图避免让程序员意识到指针的存在，唯一的例外是null指针。
 
-* 它在Java的类型系统上开了个口子。
+* 它在Java的类型系统上开了个口子
 
 null并不属于任何类型，这意味着它可以被赋值给任意引用类型的变量。这会导致问题，原因是当这个变量被传递到系统中的另一个部分后，你将无法获知这个null变量最初的赋值到底是什么类型
 
@@ -106,7 +106,7 @@ null并不属于任何类型，这意味着它可以被赋值给任意引用类�
 public final class Optional<T> {
 ```
 
-变量存在时，Optional类只是对类简单封装。变量不存在时，缺失的值会被建模成一个"空"的Optional对象，由方法`Optional.empty()`返回。`Optional.empty()`方法是一个静态工厂方法，它返回Optional类的特定单一实例。
+变量存在时，Optional类只是对类简单封装。变量不存在时，缺失的值会被建模成一个"空"的`Optional`对象，由方法`Optional.empty()`返回。`Optional.empty()`方法是一个静态工厂方法，它返回Optional类的特定单一实例。
 
 使用Optional而不是null的一个非常重要而又实际的语义区别是，我们在声明变量时使用的是`Optional<Car>`类型，而不是`Car`类型，这句声明非常清楚地表明了这里发生变量缺失是允许的。与此相反，使用Car这样的类型，可能将变量赋值为null，这意味着你需要独立面对这些，你只能依赖你对业务模型的理解，判断一个null是否属于该变量的有效范畴。
 
@@ -193,7 +193,6 @@ public class MainTest {
                 .flatMap(Car::getInsurance)
                 .map(Insurance::getName)
                 .orElse("Unknown");
-
     }
 
     public static void main(String[] args) {

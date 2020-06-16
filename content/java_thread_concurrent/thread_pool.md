@@ -268,7 +268,7 @@ A pool that is no longer referenced in a program and has no remaining threads wi
 
 如果程序中不再持有线程池的引用，并且线程池中没有线程时，线程池将会自动关闭。
 
-注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡。然而我们常用的FixedThreadPool的核心线程没有超时策略，所以并不会自动关闭。</small>
+注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡。然而我们常用的`FixedThreadPool`的核心线程没有超时策略，所以并不会自动关闭。</small>
 
 ---
 
@@ -641,5 +641,126 @@ public class ThreadPoolTest {
         System.out.println("end main()");
     }
 
+}
+```
+
+## ForkJoinPool(java.util.concurrent;)
+
+```java
+@sun.misc.Contended
+public class ForkJoinPool extends AbstractExecutorService
+```
+
+ForkJoin思想：把一个任务拆分成多个“小任务”，把多个“小任务”放到多个处理器核心上并行执行；当多个“小任务”执行完成之后，再将这些执行结果合并起来即可
+
+* fork
+
+n. 餐叉; 叉(挖掘用的园艺工具); (道路、河流等的) 分岔处，分流处，岔口，岔路;
+v. 分岔; 岔开两条分支; 走岔路中的一条; 叉运; 叉掘;
+
+* join
+
+v. 连接; 接合; 联结; 结合; 联合; 汇合; 成为…的一员; 参加; 加入;
+n. 结合; 连接; 接合点;
+
+### new ForkJoinPool()
+
+```java
+public ForkJoinPool() {
+        this(Math.min(MAX_CAP, Runtime.getRuntime().availableProcessors()),
+             defaultForkJoinWorkerThreadFactory, null, false);
+    }
+```
+
+```java
+/**
+    * Creates a {@code ForkJoinPool} with the given parameters, without
+    * any security checks or parameter validation.  Invoked directly by
+    * makeCommonPool.
+    */
+private ForkJoinPool(int parallelism,
+                        ForkJoinWorkerThreadFactory factory,
+                        UncaughtExceptionHandler handler,
+                        int mode,
+                        String workerNamePrefix) {
+    this.workerNamePrefix = workerNamePrefix;
+    this.factory = factory;
+    this.ueh = handler;
+    this.config = (parallelism & SMASK) | mode;
+    long np = (long)(-parallelism); // offset ctl counts
+    this.ctl = ((np << AC_SHIFT) & AC_MASK) | ((np << TC_SHIFT) & TC_MASK);
+}
+```
+
+默认线程数量是：`Runtime.getRuntime().availableProcessors()`(1个cpu，2核，超线程数2，返回4)
+
+### ForkJoinTask
+
+```java
+public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
+```
+
+Abstract base class for tasks that run within a `ForkJoinPool`. A `ForkJoinTask` is a thread-like entity that is much lighter weight than a normal thread. Huge numbers of tasks and subtasks may be hosted by a small number of actual threads in a ForkJoinPool, at the price of some usage limitations.
+
+### 使用例子
+
+```java
+public class ForkJoinTaskExample extends RecursiveTask<Integer> {
+
+    public static final int threshold = 2;
+    private int start;
+    private int end;
+
+    public ForkJoinTaskExample(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    @Override
+    protected Integer compute() {
+        int sum = 0;
+
+        boolean canCompute = (end - start) <= threshold;
+        if (canCompute) {
+            for (int i = start; i <= end; i++) {
+                sum += i;
+            }
+        } else {
+            // 如果任务大于阈值，就分裂成两个子任务计算
+            int middle = (start + end) / 2;
+            ForkJoinTaskExample leftTask = new ForkJoinTaskExample(start, middle);
+            ForkJoinTaskExample rightTask = new ForkJoinTaskExample(middle + 1, end);
+
+            // 执行子任务
+            leftTask.fork();
+            rightTask.fork();
+            // invokeAll(leftTask, rightTask);
+
+            // 等待任务执行结束合并其结果
+            int leftResult = leftTask.join();
+            int rightResult = rightTask.join();
+
+            // 合并子任务
+            sum = leftResult + rightResult;
+        }
+        return sum;
+    }
+
+    static void testForkJoinPool() throws Exception{
+        ForkJoinPool forkjoinPool = new ForkJoinPool();
+        int sta = 1;
+        int end = 100;
+        //生成一个计算任务，计算连续区间范围的和
+        ForkJoinTaskExample task = new ForkJoinTaskExample(sta, end);
+        //执行一个任务
+        Future<Integer> result = forkjoinPool.submit(task);
+        System.out.println("result:" + result.get());
+    }
+
+    public static void main(String[] args) throws Exception{
+        testForkJoinPool();
+
+        TimeUnit.SECONDS.sleep(1);
+    }
 }
 ```

@@ -1,5 +1,5 @@
 ---
-title: "Java8 concurrent"
+title: "Java8 concurrent数据结构"
 layout: page
 date: 2019-05-25 00:00
 ---
@@ -206,9 +206,7 @@ sizeCtl ：默认为0，用来控制table的初始化和扩容操作，具体应
 * 参考
 
 作者：葬月魔帝
-
 来源：CSDN
-
 原文：<a href="https://blog.csdn.net/u010454030/article/details/82458413" target="_blank">理解Java7和8里面HashMap+ConcurrentHashMap的扩容策略
 </a>
 
@@ -229,7 +227,10 @@ public class CopyOnWriteArrayList<E>
     implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
 ```
 
-* 线程安全的`ArrayList`, 读方法不加锁，写方法加锁
+* CopyOnWriteArrayList是线程安全的`ArrayList`, 读方法不加锁，写方法加锁
+* 读写分离，写时复制出一个新的数组，完成插入、修改或者移除操作后将新数组赋值给array
+* 如果读的时候有多个线程正在向CopyOnWriteArrayList添加数据，读还是会读到旧的数据，因为写的时候不会锁住旧的
+* volatile 修饰的成员变量在每次被线程访问时，都强迫从共享内存中重读该成员变量的值。而且，当成员变量发生变 化时，强迫线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。
 
 ### add方法使用`ReentrantLock`
 
@@ -250,7 +251,17 @@ public boolean add(E e) {
 }
 ```
 
-## CopyOnWriteArraySet(class 基于CopyOnWriteArrayList)
+### 缺点
+
+* 内存占用问题
+
+因为CopyOnWrite的写时复制机制，所以在进行写操作的时候，内存里会同时驻扎两个对象的内存，旧的对象和新写入的对象（注意:在复制的时候只是复制容器里的引用，只是在写的时候会创建新对象添加到新容器里，而旧容器的对象还在使用，所以有两份对象内存）。如果这些对象占用的内存比较大，比如说200M左右，那么再写入100M数据进去，内存就会占用300M，那么这个时候很有可能造成频繁的Yong GC和Full GC。之前我们系统中使用了一个服务由于每晚使用CopyOnWrite机制更新大对象，造成了每晚15秒的Full GC，应用响应时间也随之变长。针对内存占用问题，可以通过压缩容器中的元素的方法来减少大对象的内存消耗，比如，如果元素全是10进制的数字，可以考虑把它压缩成36进制或64进制。或者不使用CopyOnWrite容器，而使用其他的并发容器，如ConcurrentHashMap。
+
+* 数据一致性问题(只保证`最终一致性`)
+
+CopyOnWrite容器只能保证数据的`最终一致性`，不能保证数据的实时一致性。所以如果你希望写入的的数据，马上能读到，请不要使用CopyOnWrite容器。
+
+## CopyOnWriteArraySet(class 基于 CopyOnWriteArrayList)
 
 ```java
 public class CopyOnWriteArraySet<E> extends AbstractSet<E>

@@ -53,7 +53,7 @@ false
 
 ## 源码分析（Java 8）
 
-## `valueOf(int i)` 源码
+## `valueOf(int i)` 源码（享元模式）
 
 ```java
 /**
@@ -111,6 +111,30 @@ public static Integer valueOf(int i) {
 
 对于`-128`到`127`之间的数，会进行缓存，`Integer i = 127`时，会将`127`进行缓存，下次再写`Integer j = 127`时，就会直接从缓存中取，就不会`new`了
 
+eg:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+
+        Integer i1 = 100;
+        Integer i2 = 100;
+        Integer i3 = 200;
+        Integer i4 = 200;
+
+        System.out.println(i1==i2);
+        System.out.println(i3==i4);
+    }
+}
+```
+
+输出：
+
+```java
+true
+false
+```
+
 ## `equals(Object obj)`源码
 
 ```java
@@ -122,13 +146,13 @@ public boolean equals(Object obj) {
 }
 ```
 
-## 自动装箱,拆箱
+## 自动装箱 & 拆箱
 
-* `int`的自动装箱都是通过`Integer.valueOf()`方法来实现的
+* `int`的**自动装箱**都是通过`Integer.valueOf()`方法来实现的
 
-* `Integer`的自动拆箱都是通过`Integer.intValue`来实现的
+* `Integer`的**自动拆箱**都是通过`Integer.intValue`来实现的
 
-## 基本类型与包装类型的异同：
+## 基本类型与包装类型的异同
 
 * 存储方式及位置的不同，基本类型是直接存储变量的值，保存在堆栈中能高效的存取；封装类型需要通过引用指向实例，具体的实例保存在堆中；
 

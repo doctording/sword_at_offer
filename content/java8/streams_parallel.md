@@ -13,7 +13,7 @@ date: 2019-02-16 00:00
 1. 将原始类型转换为对应的引用类型的机制，这个机制叫做`装箱`。
 2. 将引用类型转换为对应的原始类型，叫做`拆箱`。
 
-java中装箱和拆箱是自动完成的, 但这在性能方面是要付出代价的，装箱的本质就是将原始类型包裹起来，并保存在堆里。因此装箱后的值需要更多的内存，并需要额外的内存搜索来获取被包裹的原始值。
+java中装箱和拆箱是自动完成的, 但这在性能方面是要付出代价的，装箱的本质就是**将原始类型包裹起来，并保存在堆里**。因此装箱后的值**需要更多的内存**，并需要额外的内存搜索来获取被包裹的原始值。
 
 ```java
 List<Integer> list = new ArrayList<>();
@@ -40,7 +40,7 @@ public static long parallelSum(long n) {
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/parallel.png)
 
-* 并行流用的线程是从哪来的?有多少个?怎么 自定义这个过程呢?
+* 并行流用的线程是从哪来的?有多少个?怎么自定义这个过程呢?
 
 并行流内部使用了默认的`ForkJoinPool`，它默认的线程数量就是你的`处理器数量`，这个值是由`Runtime.getRuntime().availableProcessors()`得到的。
 但是你可以过系统性 `java.util.concurrent.ForkJoinPool.common. parallelism`来改变线程􏺕大小，如下所示:
@@ -226,7 +226,7 @@ TreeSet | 好
 
 流背后使用的基础架构是java7中引入的分支/合并框架。并行汇总的实例证明了要想正确使用并行流，了解它的内部原理至关重要。
 
-## 分支/合并框架
+## Fork/Join框架
 
 分支/合并框架的目的是以递归方式将可以并行的任务拆分成更小的任务，然后将每个子任务的结果合并起来生成整体结果。它是`ExecutorService`接口的一个实现，它把子任务分配给线程池(称为`ForkJoinPool`)中的工作线程。
 

@@ -275,7 +275,7 @@ Node<E> node(int index) {
 
 ## Vector
 
-* Vector使用同步方法实现, synchronizedList使用同步代码块实现
+* Vector使用同步方法实现(synchronized)
 
 * ArrayList不可以设置扩展的容量, 默认1.5倍; Vector可以设置, 默认2倍
 

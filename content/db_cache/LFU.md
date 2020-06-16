@@ -1,5 +1,5 @@
 ---
-title: "LRU"
+title: "LFU"
 layout: page
 date: 2020-03-08 18:00
 ---

@@ -47,7 +47,7 @@ for(Dish d: lowCaloricDishes){
 }
 ```
 
-在这段代码中，你用了一个"垃圾变量"lowCaloricDishes。它唯一的作用就是作为一次性的中间容器。在Java8中，实现的细节被放在它本该归属的库里了
+在这段代码中，你用了一个"垃圾变量"lowCaloricDishes。它唯一的作用就是作为一次性的中间容器。在Java8中，实现的细节被放在它本该归属的类里了
 
 * java8
 
