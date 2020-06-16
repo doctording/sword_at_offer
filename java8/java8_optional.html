@@ -26,7 +26,7 @@
 <div class="page_title">Java8 Optional</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#optionnull">用option取代null</a><ul>
+<li><a href="#optionalnull">用optional取代null</a><ul>
 <li><a href="#javalangnullpointerexception">经典的java.lang.NullPointerException问题</a></li>
 <li><a href="#nullpointerexception">采用防御式检查减少NullPointerException</a></li>
 <li><a href="#null">null 带来的种种问题</a></li>
@@ -39,7 +39,7 @@
 </li>
 </ul>
 </div>
-<h1 id="optionnull">用option取代null</h1>
+<h1 id="optionalnull">用optional取代null</h1>
 <h2 id="javalangnullpointerexception">经典的<code>java.lang.NullPointerException</code>问题</h2>
 <div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Insurance</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
@@ -114,11 +114,11 @@
 <ul>
 <li>它是错误之源</li>
 </ul>
-<p>NullPointerException是目前Java程序开发中最典型的异常</p>
+<p><code>NullPointerException</code>是目前Java程序开发中最典型的异常</p>
 <ul>
 <li>它会使你的代码膨胀</li>
 </ul>
-<p>它让你的代码充斥着深度嵌套的null检查，代码的可读性糟糕透顶</p>
+<p>它让你的代码充斥着<code>深度嵌套的null检查</code>，代码的可读性糟糕透顶</p>
 <ul>
 <li>它自身是毫无意义的</li>
 </ul>
@@ -126,9 +126,9 @@
 <ul>
 <li>它破坏了Java的哲学</li>
 </ul>
-<p>Java一直试图避免让程序员意识到指针的存在，唯一的例外是:null指针。</p>
+<p>Java一直试图避免让程序员意识到指针的存在，唯一的例外是null指针。</p>
 <ul>
-<li>它在Java的类型系统上开了个口子。</li>
+<li>它在Java的类型系统上开了个口子</li>
 </ul>
 <p>null并不属于任何类型，这意味着它可以被赋值给任意引用类型的变量。这会导致问题，原因是当这个变量被传递到系统中的另一个部分后，你将无法获知这个null变量最初的赋值到底是什么类型</p>
 <h2 id="optional">Optional</h2>
@@ -136,7 +136,7 @@
 </pre></div>
 
 
-<p>变量存在时，Optional类只是对类简单封装。变量不存在时，缺失的值会被建模成一个"空"的Optional对象，由方法<code>Optional.empty()</code>返回。<code>Optional.empty()</code>方法是一个静态工厂方法，它返回Optional类的特定单一实例。</p>
+<p>变量存在时，Optional类只是对类简单封装。变量不存在时，缺失的值会被建模成一个"空"的<code>Optional</code>对象，由方法<code>Optional.empty()</code>返回。<code>Optional.empty()</code>方法是一个静态工厂方法，它返回Optional类的特定单一实例。</p>
 <p>使用Optional而不是null的一个非常重要而又实际的语义区别是，我们在声明变量时使用的是<code>Optional&lt;Car&gt;</code>类型，而不是<code>Car</code>类型，这句声明非常清楚地表明了这里发生变量缺失是允许的。与此相反，使用Car这样的类型，可能将变量赋值为null，这意味着你需要独立面对这些，你只能依赖你对业务模型的理解，判断一个null是否属于该变量的有效范畴。</p>
 <h3 id="optional_1">Optional 对象如何创建</h3>
 <ul>
@@ -217,7 +217,6 @@
                 <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="nl">Car:</span><span class="o">:</span><span class="n">getInsurance</span><span class="o">)</span>
                 <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">Insurance:</span><span class="o">:</span><span class="n">getName</span><span class="o">)</span>
                 <span class="o">.</span><span class="na">orElse</span><span class="o">(</span><span class="s">&quot;Unknown&quot;</span><span class="o">);</span>
-
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
@@ -265,7 +264,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 

@@ -16,7 +16,7 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_utils">java_utils</a>&nbsp;&#187;&nbsp;System.arraycopy, Array.copyOf
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_data_structure">java_data_structure</a>&nbsp;&#187;&nbsp;System.arraycopy, Array.copyOf
     <span class="updated">Page Updated&nbsp;
       2018-11-24 00:00
     </span></div>
@@ -38,13 +38,13 @@
 <h1 id="systemarraycopy">System.arraycopy</h1>
 <p>使用说明：</p>
 <div class="hlcode"><pre><span class="cm">/*</span>
-<span class="cm">* @param      src      the source array.</span>
-<span class="cm">* @param      srcPos   starting position in the source array.</span>
-<span class="cm">* @param      dest     the destination array.</span>
-<span class="cm">* @param      destPos  starting position in the destination data.</span>
-<span class="cm">* @param      length   the number of array elements to be copied.</span>
+<span class="cm">* @param      src      the source array. 源数组</span>
+<span class="cm">* @param      srcPos   starting position in the source array. 源数组要复制的起始位置</span>
+<span class="cm">* @param      dest     the destination array. 目标数组</span>
+<span class="cm">* @param      destPos  starting position in the destination data. 目标数组放置的起始位置；</span>
+<span class="cm">* @param      length   the number of array elements to be copied. 要复制的长度</span>
 <span class="cm">* @exception  IndexOutOfBoundsException  if copying would cause</span>
-<span class="cm">*               access of data outside array bounds.</span>
+<span class="cm">*               access of data outside array bounds. dest数组大小比src数组大小小会报IndexOutOfBoundsException</span>
 <span class="cm">* @exception  ArrayStoreException  if an element in the &lt;code&gt;src&lt;/code&gt;</span>
 <span class="cm">*               array could not be stored into the &lt;code&gt;dest&lt;/code&gt; array</span>
 <span class="cm">*               because of a type mismatch.</span>
@@ -76,8 +76,8 @@
     <span class="n">Obj</span> <span class="n">obj2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">&quot;b&quot;</span><span class="o">);</span>
     <span class="n">Obj</span> <span class="n">obj3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;c&quot;</span><span class="o">);</span>
 
-    <span class="n">Obj</span><span class="o">[]</span> <span class="n">st</span>  <span class="o">=</span> <span class="o">{</span><span class="n">obj1</span><span class="o">,</span> <span class="n">obj2</span><span class="o">,</span> <span class="n">obj3</span><span class="o">};</span>
-    <span class="n">Obj</span><span class="o">[]</span> <span class="n">dt</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+    <span class="n">Obj</span><span class="o">[]</span> <span class="n">st</span> <span class="o">=</span> <span class="o">{</span><span class="n">obj1</span><span class="o">,</span> <span class="n">obj2</span><span class="o">,</span> <span class="n">obj3</span><span class="o">};</span>
+    <span class="n">Obj</span><span class="o">[]</span> <span class="n">dt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Obj</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
     <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">st</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">dt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">N</span><span class="o">);</span>
 
     <span class="c1">// false</span>
@@ -185,7 +185,6 @@
                 <span class="o">}</span>
             <span class="o">});</span>
 
-
             <span class="n">threadModify</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
             <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
             <span class="n">threadCopy</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
@@ -251,7 +250,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 

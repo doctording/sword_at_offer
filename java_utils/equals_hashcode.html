@@ -35,6 +35,8 @@
 <li><a href="#equalsobjectobject">equals方法是基类Object中的方法，因此对于所有的继承于Object的类都会有该方法。</a></li>
 <li><a href="#hashcode">对象的hashcode方法</a><ul>
 <li><a href="#hashcode_1">例子，需要重写 hashcode 方法</a></li>
+<li><a href="#hash">hash函数</a></li>
+<li><a href="#java-hashcode">Java 对象 hashcode的作用</a></li>
 </ul>
 </li>
 </ul>
@@ -127,6 +129,9 @@
 <li>
 <p>诸如<code>String</code>、<code>Date</code>等类对<code>equals</code>方法进行了<code>override</code>的话，比较的是所指向的对象的内容</p>
 </li>
+<li>
+<p>equals默认实现是<code>==</code>, 不过大部分是要重写的</p>
+</li>
 </ul>
 <h2 id="hashcode">对象的hashcode方法</h2>
 <div class="hlcode"><pre> <span class="cm">/**</span>
@@ -180,7 +185,7 @@
 <p>如果两个对象的hashcode值相等，则equals方法得到的<strong>结果未知</strong>。</p>
 </li>
 </ul>
-<p>设计hashCode()时最重要的因素就是：无论何时，对同一个对象调用hashCode()都应该产生同样的值。如果在讲一个对象用put()添加进HashMap时产生一个hashCdoe值，而用get()取出时却产生了另一个hashCode值，那么就无法获取该对象了。所以如果你的hashCode方法依赖于对象中易变的数据，用户就要当心了，因为此数据发生变化时，hashCode()方法就会生成一个不同的散列码</p>
+<p>设计<code>hashCode()</code>时最重要的因素就是：无论何时，对同一个对象调用<code>hashCode()</code>都应该产生同样的值。如果在将一个对象用put()添加进HashMap时产生一个hashCdoe值，而用get()取出时却产生了另一个hashCode值，那么就无法获取该对象了。所以如果你的hashCode方法依赖于对象中易变的数据，用户就要当心了，因为此数据发生变化时，hashCode()方法就会生成一个不同的散列码</p>
 <h3 id="hashcode_1">例子，需要重写 hashcode 方法</h3>
 <div class="hlcode"><pre><span class="kd">class</span> <span class="nc">People</span><span class="o">{</span>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
@@ -224,14 +229,25 @@
 </pre></div>
 
 
-<p>参考：<br />
-* https://www.cnblogs.com/dolphin0520/p/3681042.html</p>
+<h3 id="hash">hash函数</h3>
+<p>特点</p>
+<ol>
+<li>单向函数，反向运算无法完成</li>
+<li>任务一长度输入，得到 固定长度输出</li>
+<li>输入不变，输出就不会变（Whenever it is invoked on the same object more than once during an execution of a Java application, the {@code hashCode} method must consistently return the same integer）</li>
+</ol>
+<p>常见的有数百种hash函数，eg: MD5加密 + salt</p>
+<h3 id="java-hashcode">Java 对象 hashcode的作用</h3>
+<ol>
+<li>记录在markword中</li>
+<li>与hash table密切相关</li>
+</ol>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 

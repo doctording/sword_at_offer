@@ -40,7 +40,7 @@
 <p>接口和内部类为我们提供了一种将接口与实现分离的更加结构化的方法</p>
 <h2 id="_2">抽象方法和抽象类</h2>
 <p>包含<code>抽象方法</code>的类叫做<code>抽象类</code>。如果一个类包含一个或者多个抽象方法，该类必须被限定为<code>抽象的</code></p>
-<p>抽象方法：只有声明，没有方法体, eg:</p>
+<p><strong>抽象方法</strong>：只有声明，没有方法体, eg:</p>
 <div class="hlcode"><pre><span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">f</span><span class="o">();</span>
 </pre></div>
 
@@ -48,7 +48,7 @@
 <p>抽象类和普通类的主要有三点区别：</p>
 <ol>
 <li><strong>抽象方法必须为public或者protected</strong>（因为如果为private，则不能被子类继承，子类便无法实现该方法），缺省情况下默认为public。</li>
-<li>抽象类不能用来创建对像，即<strong>无法实例化</strong></li>
+<li>抽象类不能用来创对象，即<strong>无法实例化</strong></li>
 <li>如果一个类继承于一个抽象类，则<strong>子类必须实现父类的抽象方法</strong>。如果子类没有实现父类的抽象方法，则必须将子类也定义为abstract类</li>
 </ol>
 <h2 id="interface">接口（interface）</h2>
@@ -81,12 +81,9 @@
 <p>抽象类是对一种事物的抽象，即对类抽象，而接口是对行为的抽象。抽象类是对整个类整体进行抽象，包括属性、行为，但是接口却是对类局部（行为）进行抽象</p>
 </li>
 <li>
-<p>设计层面不同，抽象类作为很多子类的父类，它是一种模板式设计。而接口是一种行为规范，它是一种辐射式设计</p>
+<p>设计层面不同，抽象类作为很多子类的父类，它是一种<code>模板式设计</code>。而接口是一种行为规范，它是一种辐射式设计</p>
 </li>
 </ul>
-<p>参考1 ：<br />
-作者：海子<br />
-出处：http://www.cnblogs.com/dolphin0520/</p>
 <h2 id="_3">接口与工厂</h2>
 <p>接口是实现多重继承的途径，而生成遵循某个接口的对象的典型方式就是<code>工厂方法</code>设计模式。这与直接调用构造器不同，我们在工厂对象上调用的是创建方法，而该工厂对象将生成接口的某个实现的对象。理论上，通过这种方式，我们的代码将完全与接口的实现分离</p>
 <div class="hlcode"><pre><span class="kd">interface</span> <span class="nc">Cycle</span> <span class="o">{</span>
@@ -143,8 +140,6 @@
 
 
 <p>如果不用工厂方法，就必须在某处指定将要创建的Cycle的确切类型，以便调用合适的构造器</p>
-<p>参考：<br />
-http://www.runoob.com/design-pattern/factory-pattern.html</p>
 <ol>
 <li>
 <p>您需要一辆汽车，可以直接从工厂里面提货，而不用去管这辆汽车是怎么做出来的，以及这个汽车里面的具体实现</p>
@@ -240,7 +235,7 @@ http://www.runoob.com/design-pattern/factory-pattern.html</p>
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 

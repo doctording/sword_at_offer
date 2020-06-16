@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>多线程设计模式 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;多线程设计模式
+    <span class="updated">Page Updated&nbsp;
+      2020-06-09 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">多线程设计模式</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">多线程设计模式</a><ul>
+<li><a href="#immutable">Immutable 模式</a><ul>
+<li><a href="#synchronized">可以synchronized解决(互斥，效率低)</a></li>
+<li><a href="#datetimeformatterimmutable-and-thread-safe">DateTimeFormatter对象(immutable and thread-safe)</a></li>
+<li><a href="#_2">不可变设计模式</a></li>
+</ul>
+</li>
+<li><a href="#flyweight-pattern">Flyweight pattern(享元模式)</a><ul>
+<li><a href="#integervalueof">Integer.valueOf 例子</a></li>
+</ul>
+</li>
+<li><a href="#single-thread-execution">Single Thread Execution</a></li>
+<li><a href="#future">Future设计模式</a></li>
+<li><a href="#work-stealing">work-stealing算法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="_1">多线程设计模式</h1>
+<h2 id="immutable">Immutable 模式</h2>
+<ul>
+<li>eg: <code>SimpleDateFormat</code>线程不安全问题</li>
+</ul>
+<div class="hlcode"><pre><span class="kt">void</span> <span class="nf">test</span><span class="o">(){</span>
+    <span class="n">SimpleDateFormat</span> <span class="n">dateFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd&quot;</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()-&gt;{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">Date</span> <span class="n">date</span> <span class="o">=</span> <span class="n">dateFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&quot;1999-09-09&quot;</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">date</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>某次运行输出如下，会报错:<code>NumberFormatException</code></li>
+</ul>
+<div class="hlcode"><pre><span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">NumberFormatException</span><span class="o">:</span> <span class="n">For</span> <span class="n">input</span> <span class="nl">string:</span> <span class="s">&quot;.909E.9092E&quot;</span>
+<span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">misc</span><span class="o">.</span><span class="na">FloatingDecimal</span><span class="o">.</span><span class="na">readJavaFormatString</span><span class="o">(</span><span class="n">FloatingDecimal</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">2043</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">misc</span><span class="o">.</span><span class="na">FloatingDecimal</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">FloatingDecimal</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">110</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">Double</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">538</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">DigitList</span><span class="o">.</span><span class="na">getDouble</span><span class="o">(</span><span class="n">DigitList</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">169</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">DecimalFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">DecimalFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">2056</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">SimpleDateFormat</span><span class="o">.</span><span class="na">subParse</span><span class="o">(</span><span class="n">SimpleDateFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">1869</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">SimpleDateFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">SimpleDateFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">1514</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">DateFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">DateFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">364</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">Main</span><span class="o">.</span><span class="na">lambda</span><span class="n">$test$0</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">351</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">748</span><span class="o">)</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">NumberFormatException</span><span class="o">:</span> <span class="n">For</span> <span class="n">input</span> <span class="nl">string:</span> <span class="s">&quot;.909E.9092E2&quot;</span>
+<span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">misc</span><span class="o">.</span><span class="na">FloatingDecimal</span><span class="o">.</span><span class="na">readJavaFormatString</span><span class="o">(</span><span class="n">FloatingDecimal</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">2043</span><span class="o">)</span>
+<span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">misc</span><span class="o">.</span><span class="na">FloatingDecimal</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">FloatingDecimal</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">110</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">Double</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">538</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">DigitList</span><span class="o">.</span><span class="na">getDouble</span><span class="o">(</span><span class="n">DigitList</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">169</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">DecimalFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">DecimalFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">2056</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">SimpleDateFormat</span><span class="o">.</span><span class="na">subParse</span><span class="o">(</span><span class="n">SimpleDateFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">1869</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">SimpleDateFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">SimpleDateFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">1514</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">DateFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">DateFormat</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">364</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">Main</span><span class="o">.</span><span class="na">lambda</span><span class="n">$test$0</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">351</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">748</span><span class="o">)</span>
+<span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+<span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+<span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+<span class="n">Thu</span> <span class="n">Sep</span> <span class="mi">09</span> <span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="n">CST</span> <span class="mi">1999</span>
+</pre></div>
+
+
+<h3 id="synchronized">可以<code>synchronized</code>解决(互斥，效率低)</h3>
+<div class="hlcode"><pre><span class="kt">void</span> <span class="nf">test</span><span class="o">(){</span>
+    <span class="n">SimpleDateFormat</span> <span class="n">dateFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd&quot;</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()-&gt;{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">dateFormat</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">Date</span> <span class="n">date</span> <span class="o">=</span> <span class="n">dateFormat</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&quot;1999-09-09&quot;</span><span class="o">);</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">date</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="datetimeformatterimmutable-and-thread-safe">DateTimeFormatter对象(immutable and thread-safe)</h3>
+<div class="hlcode"><pre><span class="kt">void</span> <span class="nf">test</span><span class="o">(){</span>
+    <span class="n">DateTimeFormatter</span> <span class="n">dateTimeFormatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="o">.</span><span class="na">ofPattern</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd&quot;</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()-&gt;{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">TemporalAccessor</span> <span class="n">date</span> <span class="o">=</span> <span class="n">dateTimeFormatter</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&quot;1999-09-09&quot;</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">date</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="_2">不可变设计模式</h3>
+<ul>
+<li>
+<p>eg: String类是不可变的（final类），<code>char[] value</code>也是final的</p>
+</li>
+<li>
+<p>final 保证 引用不能修改，值是可更改的； String保护性的拷贝(<code>深拷贝</code>)</p>
+</li>
+</ul>
+<p>矛盾： 对象会创建的比较多</p>
+<h2 id="flyweight-pattern">Flyweight pattern(享元模式)</h2>
+<h3 id="integervalueof">Integer.valueOf 例子</h3>
+<p>Integer.valueOf 会有一个缓存，数字在一定范围内不会创建新的对象</p>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm">    * Returns an {@code Integer} instance representing the specified</span>
+<span class="cm">    * {@code int} value.  If a new {@code Integer} instance is not</span>
+<span class="cm">    * required, this method should generally be used in preference to</span>
+<span class="cm">    * the constructor {@link #Integer(int)}, as this method is likely</span>
+<span class="cm">    * to yield significantly better space and time performance by</span>
+<span class="cm">    * caching frequently requested values.</span>
+<span class="cm">    *</span>
+<span class="cm">    * This method will always cache values in the range -128 to 127,</span>
+<span class="cm">    * inclusive, and may cache other values outside of this range.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @param  i an {@code int} value.</span>
+<span class="cm">    * @return an {@code Integer} instance representing {@code i}.</span>
+<span class="cm">    * @since  1.5</span>
+<span class="cm">    */</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Integer</span> <span class="nf">valueOf</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">IntegerCache</span><span class="o">.</span><span class="na">low</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">IntegerCache</span><span class="o">.</span><span class="na">high</span><span class="o">)</span>
+        <span class="k">return</span> <span class="n">IntegerCache</span><span class="o">.</span><span class="na">cache</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="o">(-</span><span class="n">IntegerCache</span><span class="o">.</span><span class="na">low</span><span class="o">)];</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">Integer</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Interger缓存</p>
+<div class="hlcode"><pre><span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">IntegerCache</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">low</span> <span class="o">=</span> <span class="o">-</span><span class="mi">128</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">high</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Integer</span> <span class="n">cache</span><span class="o">[];</span>
+
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="c1">// high value may be configured by property</span>
+        <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">127</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">integerCacheHighPropValue</span> <span class="o">=</span>
+            <span class="n">sun</span><span class="o">.</span><span class="na">misc</span><span class="o">.</span><span class="na">VM</span><span class="o">.</span><span class="na">getSavedProperty</span><span class="o">(</span><span class="s">&quot;java.lang.Integer.IntegerCache.high&quot;</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">integerCacheHighPropValue</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">parseInt</span><span class="o">(</span><span class="n">integerCacheHighPropValue</span><span class="o">);</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="mi">127</span><span class="o">);</span>
+                <span class="c1">// Maximum array size is Integer.MAX_VALUE</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span> <span class="o">-</span> <span class="o">(-</span><span class="n">low</span><span class="o">)</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span><span class="o">(</span> <span class="n">NumberFormatException</span> <span class="n">nfe</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// If the property cannot be parsed into an int, ignore it.</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">h</span><span class="o">;</span>
+
+        <span class="n">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">[(</span><span class="n">high</span> <span class="o">-</span> <span class="n">low</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">low</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">cache</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span>
+            <span class="n">cache</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="n">j</span><span class="o">++);</span>
+
+        <span class="c1">// range [-128, 127] must be interned (JLS7 5.1.7)</span>
+        <span class="k">assert</span> <span class="n">IntegerCache</span><span class="o">.</span><span class="na">high</span> <span class="o">&gt;=</span> <span class="mi">127</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="nf">IntegerCache</span><span class="o">()</span> <span class="o">{}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="single-thread-execution">Single Thread Execution</h2>
+<p>单线程模式：保证在同一时刻只能有一个线程访问共享资源</p>
+<h2 id="future">Future设计模式</h2>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">delay</span><span class="o">(</span><span class="kt">int</span> <span class="n">sec</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">sec</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="nf">getPrice</span><span class="o">(</span><span class="kt">double</span> <span class="n">df</span><span class="o">){</span>
+    <span class="n">ExecutorService</span> <span class="n">executor</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newSingleThreadExecutor</span><span class="o">();</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">Double</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+            <span class="n">delay</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">df</span> <span class="o">*</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">});</span>
+    <span class="n">executor</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+    <span class="k">return</span> <span class="n">future</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">priceTest</span><span class="o">(){</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">futurePrice</span> <span class="o">=</span> <span class="n">getPrice</span><span class="o">(</span><span class="mf">10.0f</span><span class="o">);</span>
+    <span class="n">Double</span> <span class="n">price</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">timeOut</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+        <span class="n">price</span> <span class="o">=</span> <span class="n">futurePrice</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">timeOut</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;cannot get within 1 sec&quot;</span><span class="o">);</span>
+        <span class="n">futurePrice</span><span class="o">.</span><span class="na">cancel</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;get price:&quot;</span> <span class="o">+</span> <span class="n">price</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="work-stealing">work-stealing算法</h2>
+<p>一个大任务分割为若干个互不依赖的子任务，为了减少线程间的竞争，把这些子任务分别放到不同的队列里，并为每个队列创建一个单独的线程来执行队列里的任务，线程和队列一一对应。</p>
+<p>线程1 - 队列1（任务1，任务2，任务3，...）<br />
+线程2 - 队列2（任务1，任务2，任务3，...）</p>
+<p>比如线程1早早的把队列中任务都处理完了有空闲，但是队列2执行任务较慢；这样队列2中任务可以让线程1帮忙执行（即<code>窃取</code>线程1）</p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

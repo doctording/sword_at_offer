@@ -37,7 +37,7 @@
 <li><a href="#_7">高效使用并行流</a></li>
 </ul>
 </li>
-<li><a href="#_8">分支/合并框架</a><ul>
+<li><a href="#forkjoin">Fork/Join框架</a><ul>
 <li><a href="#recursivetask">RecursiveTask的使用</a><ul>
 <li><a href="#work-stealing">工作窃取算法（work stealing）</a></li>
 <li><a href="#spliterator">Spliterator</a></li>
@@ -56,7 +56,7 @@
 <li>将原始类型转换为对应的引用类型的机制，这个机制叫做<code>装箱</code>。</li>
 <li>将引用类型转换为对应的原始类型，叫做<code>拆箱</code>。</li>
 </ol>
-<p>java中装箱和拆箱是自动完成的, 但这在性能方面是要付出代价的，装箱的本质就是将原始类型包裹起来，并保存在堆里。因此装箱后的值需要更多的内存，并需要额外的内存搜索来获取被包裹的原始值。</p>
+<p>java中装箱和拆箱是自动完成的, 但这在性能方面是要付出代价的，装箱的本质就是<strong>将原始类型包裹起来，并保存在堆里</strong>。因此装箱后的值<strong>需要更多的内存</strong>，并需要额外的内存搜索来获取被包裹的原始值。</p>
 <div class="hlcode"><pre><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
 <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="o">;</span><span class="n">i</span><span class="o">++){</span>
     <span class="c1">// int被装箱成Integer</span>
@@ -79,7 +79,7 @@
 
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/parallel.png" /></p>
 <ul>
-<li>并行流用的线程是从哪来的?有多少个?怎么 自定义这个过程呢?</li>
+<li>并行流用的线程是从哪来的?有多少个?怎么自定义这个过程呢?</li>
 </ul>
 <p>并行流内部使用了默认的<code>ForkJoinPool</code>，它默认的线程数量就是你的<code>处理器数量</code>，这个值是由<code>Runtime.getRuntime().availableProcessors()</code>得到的。<br />
 但是你可以过系统性 <code>java.util.concurrent.ForkJoinPool.common. parallelism</code>来改变线程􏺕大小，如下所示:<br />
@@ -285,7 +285,7 @@
 </tbody>
 </table>
 <p>流背后使用的基础架构是java7中引入的分支/合并框架。并行汇总的实例证明了要想正确使用并行流，了解它的内部原理至关重要。</p>
-<h2 id="_8">分支/合并框架</h2>
+<h2 id="forkjoin">Fork/Join框架</h2>
 <p>分支/合并框架的目的是以递归方式将可以并行的任务拆分成更小的任务，然后将每个子任务的结果合并起来生成整体结果。它是<code>ExecutorService</code>接口的一个实现，它把子任务分配给线程池(称为<code>ForkJoinPool</code>)中的工作线程。</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/fork_join.png" /></p>
 <p>伪代码如下</p>
@@ -384,7 +384,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 

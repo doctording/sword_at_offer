@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java8 concurrent - 剑指Offer</title>
+    <title>Java8 concurrent数据结构 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_data_structure">java_data_structure</a>&nbsp;&#187;&nbsp;Java8 concurrent
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_data_structure">java_data_structure</a>&nbsp;&#187;&nbsp;Java8 concurrent数据结构
     <span class="updated">Page Updated&nbsp;
       2019-05-25 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java8 concurrent</div>
+<div class="page_title">Java8 concurrent数据结构</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#concurrent">concurrent数据结构</a><ul>
@@ -42,12 +42,13 @@
 <li><a href="#concurrentlinkedqueueclass">ConcurrentLinkedQueue(class) 无界线程安全</a></li>
 <li><a href="#copyonwritearraylistclass">CopyOnWriteArrayList(class) 适合读多写少的并发场景</a><ul>
 <li><a href="#addreentrantlock">add方法使用ReentrantLock</a></li>
+<li><a href="#_3">缺点</a></li>
 </ul>
 </li>
-<li><a href="#copyonwritearraysetclass-copyonwritearraylist">CopyOnWriteArraySet(class 基于CopyOnWriteArrayList)</a></li>
+<li><a href="#copyonwritearraysetclass-copyonwritearraylist">CopyOnWriteArraySet(class 基于 CopyOnWriteArrayList)</a></li>
 <li><a href="#arrayblockingqueueclass">ArrayBlockingQueue(class) 基于数组的阻塞队列</a></li>
 <li><a href="#linkedblockingdequeclass">LinkedBlockingDeque(class) 基于链表的阻塞队列</a><ul>
-<li><a href="#_3">链表</a></li>
+<li><a href="#_4">链表</a></li>
 <li><a href="#put_1">put方法，添加元素</a></li>
 <li><a href="#offer">offer方法，添加元素</a></li>
 </ul>
@@ -259,9 +260,9 @@
 <ul>
 <li>参考</li>
 </ul>
-<p>作者：葬月魔帝</p>
-<p>来源：CSDN</p>
-<p>原文：<a href="https://blog.csdn.net/u010454030/article/details/82458413" target="_blank">理解Java7和8里面HashMap+ConcurrentHashMap的扩容策略<br />
+<p>作者：葬月魔帝<br />
+来源：CSDN<br />
+原文：<a href="https://blog.csdn.net/u010454030/article/details/82458413" target="_blank">理解Java7和8里面HashMap+ConcurrentHashMap的扩容策略<br />
 </a></p>
 <p>版权声明：本文为博主原创文章，转载请附上博文链接！</p>
 <h2 id="concurrentlinkedqueueclass">ConcurrentLinkedQueue(class) 无界线程安全</h2>
@@ -278,7 +279,10 @@
 
 
 <ul>
-<li>线程安全的<code>ArrayList</code>, 读方法不加锁，写方法加锁</li>
+<li>CopyOnWriteArrayList是线程安全的<code>ArrayList</code>, 读方法不加锁，写方法加锁</li>
+<li>读写分离，写时复制出一个新的数组，完成插入、修改或者移除操作后将新数组赋值给array</li>
+<li>如果读的时候有多个线程正在向CopyOnWriteArrayList添加数据，读还是会读到旧的数据，因为写的时候不会锁住旧的</li>
+<li>volatile 修饰的成员变量在每次被线程访问时，都强迫从共享内存中重读该成员变量的值。而且，当成员变量发生变 化时，强迫线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。</li>
 </ul>
 <h3 id="addreentrantlock">add方法使用<code>ReentrantLock</code></h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">add</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -298,7 +302,16 @@
 </pre></div>
 
 
-<h2 id="copyonwritearraysetclass-copyonwritearraylist">CopyOnWriteArraySet(class 基于CopyOnWriteArrayList)</h2>
+<h3 id="_3">缺点</h3>
+<ul>
+<li>内存占用问题</li>
+</ul>
+<p>因为CopyOnWrite的写时复制机制，所以在进行写操作的时候，内存里会同时驻扎两个对象的内存，旧的对象和新写入的对象（注意:在复制的时候只是复制容器里的引用，只是在写的时候会创建新对象添加到新容器里，而旧容器的对象还在使用，所以有两份对象内存）。如果这些对象占用的内存比较大，比如说200M左右，那么再写入100M数据进去，内存就会占用300M，那么这个时候很有可能造成频繁的Yong GC和Full GC。之前我们系统中使用了一个服务由于每晚使用CopyOnWrite机制更新大对象，造成了每晚15秒的Full GC，应用响应时间也随之变长。针对内存占用问题，可以通过压缩容器中的元素的方法来减少大对象的内存消耗，比如，如果元素全是10进制的数字，可以考虑把它压缩成36进制或64进制。或者不使用CopyOnWrite容器，而使用其他的并发容器，如ConcurrentHashMap。</p>
+<ul>
+<li>数据一致性问题(只保证<code>最终一致性</code>)</li>
+</ul>
+<p>CopyOnWrite容器只能保证数据的<code>最终一致性</code>，不能保证数据的实时一致性。所以如果你希望写入的的数据，马上能读到，请不要使用CopyOnWrite容器。</p>
+<h2 id="copyonwritearraysetclass-copyonwritearraylist">CopyOnWriteArraySet(class 基于 CopyOnWriteArrayList)</h2>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CopyOnWriteArraySet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">AbstractSet</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span>
         <span class="kd">implements</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">5457747651344034263L</span><span class="o">;</span>
@@ -348,7 +361,7 @@
 </pre></div>
 
 
-<h3 id="_3">链表</h3>
+<h3 id="_4">链表</h3>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm">* Linked list node class</span>
 <span class="cm">*/</span>
@@ -591,7 +604,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 

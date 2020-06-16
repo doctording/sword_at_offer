@@ -39,6 +39,12 @@
 </li>
 </ul>
 </li>
+<li><a href="#lambda-jvm">lambda表达式 与 JVM字节码</a><ul>
+<li><a href="#jvm">匿名内部类 jvm字节码</a></li>
+<li><a href="#lambda_3">lambda 字节码</a></li>
+<li><a href="#invokedynamic">invokedynamic 指令</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -252,12 +258,129 @@
 <li>方法引用让你重复使用现有的方法实现并直接传递它们。</li>
 <li><code>Comparator</code>、<code>Predicate</code>和<code>Function</code>等函数式接口都有几个可以用来结合Lambda表达式的默认方法。</li>
 </ul>
+<h2 id="lambda-jvm">lambda表达式 与 JVM字节码</h2>
+<h3 id="jvm">匿名内部类 jvm字节码</h3>
+<ul>
+<li>InnerClass.java</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.function.Function</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">InnerClass</span> <span class="o">{</span>
+    <span class="n">Function</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Function</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">apply</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+        <span class="o">}</span> <span class="o">};</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li><code>javac InnerClass.java</code></li>
+</ul>
+<p>生成</p>
+<div class="hlcode"><pre>InnerClass<span class="nv">$1</span>.class
+InnerClass.class
+</pre></div>
+
+
+<ul>
+<li><code>javap -c -v InnerClass</code> 查看字节码和常量池</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="n">com</span><span class="o">.</span><span class="na">other</span><span class="o">.</span><span class="na">InnerClass</span><span class="o">();</span>
+    <span class="nl">descriptor:</span> <span class="o">()</span><span class="n">V</span>
+    <span class="nl">flags:</span> <span class="n">ACC_PUBLIC</span>
+    <span class="nl">Code:</span>
+      <span class="n">stack</span><span class="o">=</span><span class="mi">4</span><span class="o">,</span> <span class="n">locals</span><span class="o">=</span><span class="mi">1</span><span class="o">,</span> <span class="n">args_size</span><span class="o">=</span><span class="mi">1</span>
+         <span class="mi">0</span><span class="o">:</span> <span class="n">aload_0</span>
+         <span class="mi">1</span><span class="o">:</span> <span class="n">invokespecial</span> <span class="err">#</span><span class="mi">1</span>                  <span class="c1">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span>
+         <span class="mi">4</span><span class="o">:</span> <span class="n">aload_0</span>
+         <span class="mi">5</span><span class="o">:</span> <span class="k">new</span>           <span class="err">#</span><span class="mi">2</span>                  <span class="c1">// class com/other/InnerClass$1</span>
+         <span class="mi">8</span><span class="o">:</span> <span class="n">dup</span>
+         <span class="mi">9</span><span class="o">:</span> <span class="n">aload_0</span>
+        <span class="mi">10</span><span class="o">:</span> <span class="n">invokespecial</span> <span class="err">#</span><span class="mi">3</span>                  <span class="c1">// Method com/other/InnerClass$1.&quot;&lt;init&gt;&quot;:(Lcom/other/InnerClass;)V</span>
+        <span class="mi">13</span><span class="o">:</span> <span class="n">putfield</span>      <span class="err">#</span><span class="mi">4</span>                  <span class="c1">// Field f:Ljava/util/function/Function;</span>
+        <span class="mi">16</span><span class="o">:</span> <span class="k">return</span>
+      <span class="nl">LineNumberTable:</span>
+        <span class="n">line</span> <span class="mi">4</span><span class="o">:</span> <span class="mi">0</span>
+        <span class="n">line</span> <span class="mi">5</span><span class="o">:</span> <span class="mi">4</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>
+<p>通过字节码操作<code>new</code>，一个<code>InnerClass$1</code>类型的对象被实例化了。与此同时，一个指向新创建对象的引用会被压入栈。</p>
+</li>
+<li>
+<p><code>dup</code>操作会复制栈上的引用。</p>
+</li>
+<li>
+<p>接着，这个值会被<code>invokespecial</code>指令处理，该指令会初始化对象。</p>
+</li>
+<li>
+<p>栈顶现在包含了指向对象的引用，该值通过<code>putfield</code>指令保存到了LambdaBytecode类的f1字段</p>
+</li>
+</ul>
+<h3 id="lambda_3">lambda 字节码</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.function.Function</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Lambda</span> <span class="o">{</span>
+    <span class="n">Function</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">obj</span> <span class="o">-&gt;</span> <span class="n">obj</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre> <span class="kd">public</span> <span class="n">com</span><span class="o">.</span><span class="na">other</span><span class="o">.</span><span class="na">Lambda</span><span class="o">();</span>
+    <span class="nl">descriptor:</span> <span class="o">()</span><span class="n">V</span>
+    <span class="nl">flags:</span> <span class="n">ACC_PUBLIC</span>
+    <span class="nl">Code:</span>
+      <span class="n">stack</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">locals</span><span class="o">=</span><span class="mi">1</span><span class="o">,</span> <span class="n">args_size</span><span class="o">=</span><span class="mi">1</span>
+         <span class="mi">0</span><span class="o">:</span> <span class="n">aload_0</span>
+         <span class="mi">1</span><span class="o">:</span> <span class="n">invokespecial</span> <span class="err">#</span><span class="mi">1</span>                  <span class="c1">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span>
+         <span class="mi">4</span><span class="o">:</span> <span class="n">aload_0</span>
+         <span class="mi">5</span><span class="o">:</span> <span class="n">invokedynamic</span> <span class="err">#</span><span class="mi">2</span><span class="o">,</span>  <span class="mi">0</span>              <span class="c1">// InvokeDynamic #0:apply:()Ljava/util/function/Function;</span>
+        <span class="mi">10</span><span class="o">:</span> <span class="n">putfield</span>      <span class="err">#</span><span class="mi">3</span>                  <span class="c1">// Field f:Ljava/util/function/Function;</span>
+        <span class="mi">13</span><span class="o">:</span> <span class="k">return</span>
+      <span class="nl">LineNumberTable:</span>
+        <span class="n">line</span> <span class="mi">5</span><span class="o">:</span> <span class="mi">0</span>
+        <span class="n">line</span> <span class="mi">6</span><span class="o">:</span> <span class="mi">4</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>创建额外的类现在被<code>invokedynamic</code>指令替代了</p>
+<h3 id="invokedynamic">invokedynamic 指令</h3>
+<p>字节码指令<code>invokedynamic</code>最初被JDK7引入，用于支持运行于JVM上的动态类型语言。执行方法调用时，<code>invokedynamic</code>添加了更高层的抽象，使得一部分逻辑可以依据动态语言的特征来决定调用目标。这一指令的典型使用场景如下:</p>
+<p><code>def add(a, b) { a + b }</code></p>
+<p>这里a和b的类型在编译时都未知，有可能随着运行时发生变化。由于这个原因，JVM首次执行<code>invokedynamic</code>调用时，它会查询一个<code>bootstrap</code>方法，该方法实现了依赖语言的逻辑，可以决定选择哪一个方法进行调用。bootstrap方法返回一个链接调用点(linked call site)。很多情况下，如果add方法使用两个int类型的变量，紧接下来的调用也会使用两个int类型的值。所以，每次调用也没有必要都重新选择调用的方法。调用点自身就包含了一定的逻辑，可以判断在什么情况下需要进行重新链接。</p>
+<p><code>invokedynamic</code>指令将实现Lambda表达式的这部分代码的字节码生成推迟到运行时</p>
+<ul>
+<li>
+<p>Lambda表达式的代码块到字节码的转换由高层的策略变成了存粹的实现细节。它现在可以动态地改变，或者在未来版本中得到优化、修改，并且保持了字节码的后向兼容性</p>
+</li>
+<li>
+<p>没有带来额外的开销，没有额外的字段，也不需要进行静态初始化，而这些如果不使用 Lambda，就不会实现。</p>
+</li>
+<li>
+<p>对无状态非捕获型Lambda，我们可以创建一个Lambda对象的实例，对其进行缓存，之后 对同一对象的访问都返回同样的内容。这是一种常见的用例，也是人们在Java 8之前就惯用的方式;比如，以static final变量的方式声明某个比较器实例。</p>
+</li>
+<li>
+<p>没有额外的性能开销，因为这些转换都是必须的，并且结果也进行了链接，仅在Lambda 首次被调用时需要转换。其后所有的调用都能直接跳过这一步，直接调用之前链接的实现</p>
+</li>
+</ul>
+<p>将Lambda表达式的代码体填入到运行时动态创建的静态方法, 类似如下</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Lambda</span> <span class="o">{</span>
+    <span class="n">Function</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="o">[</span><span class="n">dynamic</span> <span class="n">invocation</span> <span class="n">of</span> <span class="n">lambda$1</span><span class="o">]</span>
+    <span class="kd">static</span> <span class="n">String</span> <span class="n">lambda$1</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+<span class="o">}</span> <span class="o">}</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 

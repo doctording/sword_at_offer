@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>反射机制 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_utils">java_utils</a>&nbsp;&#187;&nbsp;反射机制
+    <span class="updated">Page Updated&nbsp;
+      2020-06-14 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">反射机制</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">反射</a><ul>
+<li><a href="#class">获得Class对象的方式</a></li>
+<li><a href="#spring">例子(仿Spring)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="_1">反射</h1>
+<p>Java的反射（<code>reflection</code>）机制是指在程序的运行状态中，可以构造任意一个类的对象，可以了解任意一个对象所属的类，可以了解任意一个类的成员变量和方法，可以调用任意一个对象的属性和方法。这种动态获取程序信息以及动态调用对象的功能称为Java语言的反射机制。</p>
+<p>对于一个字节码文件<code>.class</code>，虽然表面上我们对该字节码文件一无所知，但该文件本身却记录了许多信息。Java在将.class字节码文件载入时，JVM将产生一个<code>java.lang.Class</code>对象代表该.class字节码文件，从该Class对象中可以获得类的许多基本信息，这就是反射机制。</p>
+<h2 id="class">获得Class对象的方式</h2>
+<ul>
+<li>Class.forName(“类的全限定名”)</li>
+<li>实例对象.getClass()</li>
+<li>类名.class （类字面常量）</li>
+</ul>
+<div class="hlcode"><pre><span class="cm">/**</span>
+<span class="cm"> * Instances of the class {@code Class} represent classes and</span>
+<span class="cm"> * interfaces in a running Java application.  An enum is a kind of</span>
+<span class="cm"> * class and an annotation is a kind of interface.  Every array also</span>
+<span class="cm"> * belongs to a class that is reflected as a {@code Class} object</span>
+<span class="cm"> * that is shared by all arrays with the same element type and number</span>
+<span class="cm"> * of dimensions.  The primitive Java types ({@code boolean},</span>
+<span class="cm"> * {@code byte}, {@code char}, {@code short},</span>
+<span class="cm"> * {@code int}, {@code long}, {@code float}, and</span>
+<span class="cm"> * {@code double}), and the keyword {@code void} are also</span>
+<span class="cm"> * represented as {@code Class} objects.</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt; {@code Class} has no public constructor. Instead {@code Class}</span>
+<span class="cm"> * objects are constructed automatically by the Java Virtual Machine as classes</span>
+<span class="cm"> * are loaded and by calls to the {@code defineClass} method in the class</span>
+<span class="cm"> * loader.</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt; The following example uses a {@code Class} object to print the</span>
+<span class="cm"> * class name of an object:</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;blockquote&gt;&lt;pre&gt;</span>
+<span class="cm"> *     void printClassName(Object obj) {</span>
+<span class="cm"> *         System.out.println(&quot;The class of &quot; + obj +</span>
+<span class="cm"> *                            &quot; is &quot; + obj.getClass().getName());</span>
+<span class="cm"> *     }</span>
+<span class="cm"> * &lt;/pre&gt;&lt;/blockquote&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt; It is also possible to get the {@code Class} object for a named</span>
+<span class="cm"> * type (or for void) using a class literal.  See Section 15.8.2 of</span>
+<span class="cm"> * &lt;cite&gt;The Java&amp;trade; Language Specification&lt;/cite&gt;.</span>
+<span class="cm"> * For example:</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;blockquote&gt;</span>
+<span class="cm"> *     {@code System.out.println(&quot;The name of class Foo is: &quot;+Foo.class.getName());}</span>
+<span class="cm"> * &lt;/blockquote&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param &lt;T&gt; the type of the class modeled by this {@code Class}</span>
+<span class="cm"> * object.  For example, the type of {@code String.class} is {@code</span>
+<span class="cm"> * Class&lt;String&gt;}.  Use {@code Class&lt;?&gt;} if the class being modeled is</span>
+<span class="cm"> * unknown.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @author  unascribed</span>
+<span class="cm"> * @see     java.lang.ClassLoader#defineClass(byte[], int, int)</span>
+<span class="cm"> * @since   JDK1.0</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span><span class="o">,</span>
+                              <span class="n">GenericDeclaration</span><span class="o">,</span>
+                              <span class="n">Type</span><span class="o">,</span>
+                              <span class="n">AnnotatedElement</span> <span class="o">{</span>
+</pre></div>
+
+
+<h2 id="spring">例子(仿Spring)</h2>
+<ul>
+<li>UserController</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:43</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserController</span> <span class="o">{</span>
+
+    <span class="nd">@Autoware</span>
+    <span class="kd">private</span> <span class="n">UserService</span> <span class="n">userService</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="n">UserService</span> <span class="nf">getUserService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">userService</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>UserService</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:44</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserService</span> <span class="o">{</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>Autoware</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.lang.annotation.*</span><span class="o">;</span>
+
+<span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="nd">@Target</span><span class="o">({</span><span class="n">ElementType</span><span class="o">.</span><span class="na">FIELD</span><span class="o">})</span>
+<span class="nd">@Documented</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="n">Autoware</span> <span class="o">{</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>测试程序</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:44</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClientTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">UserController</span> <span class="n">userController</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UserController</span><span class="o">();</span>
+
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">userController</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getDeclaredFields</span><span class="o">()).</span><span class="na">forEach</span><span class="o">(</span><span class="n">field</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="c1">// 是否有 @Autoware</span>
+            <span class="n">Autoware</span> <span class="n">autoware</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">Autoware</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">autoware</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">field</span><span class="o">.</span><span class="na">setAccessible</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+                <span class="c1">// 获取 filed 的 类型</span>
+                <span class="n">Class</span> <span class="n">clazzType</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="na">getType</span><span class="o">();</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="c1">// new filed 并注入给 userController</span>
+                    <span class="n">Object</span> <span class="n">o</span> <span class="o">=</span> <span class="n">clazzType</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+                    <span class="n">field</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">userController</span><span class="o">,</span> <span class="n">o</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+        <span class="c1">// userService:reflect.UserService@2aafb23c</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;userService:&quot;</span> <span class="o">+</span> <span class="n">userController</span><span class="o">.</span><span class="na">getUserService</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>userController的<code>userService</code>属性不是自己new出来，而是通过反射注入</p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

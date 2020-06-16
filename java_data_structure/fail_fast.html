@@ -31,7 +31,8 @@
 </ul>
 </div>
 <h1 id="fail-fast">fail-fast（快速失败）</h1>
-<p>fail-fast,即快速失败机制，它是java集合中的一种错误检测机制，当多个线程（当个线程也是可以滴）,在结构上对集合进行改变时，就有可能会产生fail-fast机制。</p>
+<p>fail-fast,即快速失败机制，它是Java集合中的一种错误检测机制，它只能<strong>被用来检测错误</strong>，因为JDK并不保证fail-fast机制一定会发生</p>
+<p>当多个线程在结构上对集合进行改变时，就有可能会产生fail-fast机制。</p>
 <p>如：在使用迭代器对集合对象进行遍历的时候，如果 A 线程正在对集合进行遍历，此时 B 线程对集合进行修改（增加、删除、修改），或者 A 线程在遍历过程中对集合进行修改，都会导致 A 线程抛出 <code>ConcurrentModificationException</code> 异常。</p>
 <ul>
 <li>eg：</li>
@@ -222,7 +223,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-08 22:16:06</p>
+        <p>Site Generated 2020-06-16 19:37:41</p>
       </span>
     </div>
 
