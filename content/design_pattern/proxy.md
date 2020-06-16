@@ -30,8 +30,166 @@ date: 2019-03-20 00:00
 
 ### 动态代理的几种实现方式?
 
+#### JDK原生动态代理(反射机制)
 
+* Service
 
-### JAVA反射
+```java
+package reflect;
 
-JAVA反射机制是指：在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意方法和属性；这种动态获取类信息以及动态调用对象方法的功能称为java语言的反射机制。
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:44
+ */
+public interface PayService {
+    String payUse();
+}
+```
+
+* Service的其中一个实现类
+
+```java
+package reflect;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:43
+ */
+public class AliPayServiceImpl implements PayService {
+
+    @Override
+    public String payUse() {
+        return "AliPayServiceImpl";
+    }
+}
+```
+
+* 代理类
+
+```java
+package reflect;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 21:13
+ */
+public class PayProxy implements InvocationHandler {
+
+    private PayService pay;
+    private PayService proxy;
+
+    public PayProxy(PayService pay) {
+        this.pay = pay;
+        // newProxyInstance方法的三个参数：
+        // 1. 用哪个类加载器去加载代理对象
+        // 2. 动态代理类需要实现的接口
+        // 3. 动态代理方法在执行时，会调用this里面的invoke方法去执行
+        this.proxy = (PayService)Proxy.newProxyInstance(
+                PayService.class.getClassLoader(),
+                new Class<?>[] { PayService.class },
+                this);
+    }
+
+    public PayService getProxy() {
+        return proxy;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        String methodName = method.getName();
+        System.out.println("before methodName:" + methodName);
+        Object rs = method.invoke(pay, args);
+        System.out.println("after methodName:" + methodName);
+        return rs;
+    }
+}
+```
+
+* 测试
+
+```java
+package reflect;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:44
+ */
+public class ClientTest {
+
+    public static void main(String[] args) {
+       PayService pay = new PayProxy(new AliPayServiceImpl()).getProxy();
+       String payStr = pay.payUse();
+       System.out.println(payStr);
+    }
+}
+```
+
+#### CGLIB(Code Generator Library)
+
+CGLIB代理主要通过对字节码的操作，为对象引入间接级别，以控制对象的访问
+
+* 代理类
+
+```java
+package reflect;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 21:13
+ */
+public class PayProxy implements MethodInterceptor {
+
+    public Object createProxyObj(Class<?> clazz) {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(clazz);
+        enhancer.setCallback(this);
+        return enhancer.create();
+    }
+
+    @Override
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        System.out.println("before methodName:" + method.getName());
+        Object rs = methodProxy.invokeSuper(o, objects);
+        System.out.println("after methodName:" + method.getName());
+        return rs;
+    }
+}
+```
+
+* 测试
+
+```java
+package reflect;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:44
+ */
+public class ClientTest {
+
+    public static void main(String[] args) {
+       PayService pay = (PayService) new PayProxy().createProxyObj(AliPayServiceImpl.class);
+       String payStr = pay.payUse();
+       System.out.println(payStr);
+    }
+}
+```
+
+* Enhancer既能够代理普通的class，也能够代理接口。Enhancer创建一个被代理对象的子类并且拦截所有的方法调用（包括从Object中继承的toString和hashCode方法），Enhancer不能够拦截final方法
+
+### Java动态代理和cglib动态代理的区别？
+
+* JDK动态代理只能对实现了接口的类生成代理，而不能针对类
+* CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法
+
+// TODO
