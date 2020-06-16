@@ -381,7 +381,26 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 
 HashMap 的桶数组 table 被申明为`transient`。`transient`表示易变的意思，在 Java 中，被该关键字修饰的变量不会被默认的序列化机制序列化，而是通过实现`readObject/writeObject`两个方法自定义了序列化的内容
 
-## LinkedHashMap(HashMap + 双向链表)
+## 为什么Java中的HashMap默认加载因子是0.75？
+
+```java
+static final float DEFAULT_LOAD_FACTOR = 0.75f;  
+```
+
+加载因子是表示Hash表中元素的填满的程度。
+
+* 加载因子越大,填满的元素越多,空间利用率越高，但冲突的机会加大了。
+* 反之,加载因子越小,填满的元素越少,冲突的机会减小,但空间浪费多了。
+
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html">HashMap docs</a>
+
+As a general rule, the default load factor (.75) offers a good tradeoff between time and space costs. Higher values decrease the space overhead but increase the lookup cost (reflected in most of the operations of the HashMap class, including get and put). The expected number of entries in the map and its load factor should be taken into account when setting its initial capacity, so as to minimize the number of rehash operations. If the initial capacity is greater than the maximum number of entries divided by the load factor, no rehash operations will ever occur.
+
+通常，默认负载因子（0.75）在时间和空间成本之间提供了一个很好的折衷方案。较高的值会减少空间开销，但会增加查找成本（在HashMap类的大多数操作中都得到体现，包括get和put）。设置映射表的初始容量时，应考虑映射中的预期条目数及其负载因子，以最大程度地减少重新哈希操作的数量。如果初始容量大于最大条目数除以负载因子，则将不会进行任何哈希操作。
+
+## 有序?
+
+### LinkedHashMap(HashMap + 双向链表)
 
 ```java
 public class LinkedHashMap<K,V>
@@ -404,7 +423,7 @@ static class Entry<K,V> extends HashMap.Node<K,V> {
 }
 ```
 
-## TreeMap（红黑树）
+### TreeMap（红黑树）
 
 ```java
 public class TreeMap<K,V>

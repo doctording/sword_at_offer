@@ -8,7 +8,7 @@ date: 2020-03-10 10:00
 
 # B Tree(多路搜索树)
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/b_tree.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/b_tree.png)
 
 1. 关键字集合分布在整颗树中
 
@@ -32,7 +32,7 @@ date: 2020-03-10 10:00
 
 # B+ Tree
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/BAddTree.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/BAddTree.png)
 
 1. 红点表示是指向卫星数据的指针，指针指向的是存放实际数据的磁盘页，卫星数据就是数据库中一条数据记录
 

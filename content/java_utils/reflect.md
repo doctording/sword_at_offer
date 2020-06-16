@@ -161,3 +161,82 @@ public class ClientTest {
 ```
 
 userController的`userService`属性不是自己new出来，而是通过反射注入
+
+## `Class.forName()`和`ClassLoader.loadClass()`的区别
+
+* 加载：通过类的全限定名获取二进制字节流，将二进制字节流转换成方法区中的运行时数据结构，在内存中生成`Java.lang.class`对象
+* 链接：执行下面的校验、准备和解析步骤，其中解析步骤是可以选择的；
+    1. 校验：检查导入类或接口的二进制数据的正确性；（文件格式验证，元数据验证，字节码验证，符号引用验证）
+    2. 准备：给类的静态变量分配并初始化存储空间；
+    3. 解析：将常量池中的符号引用转成直接引用；
+* 初始化：激活类的静态变量的初始化Java代码和静态Java代码块，并初始化程序员设置的变量值。
+
+### Class.forName()
+
+```java
+/**
+    * Returns the {@code Class} object associated with the class or
+    * interface with the given string name.  Invoking this method is
+    * equivalent to:
+    *
+    * <blockquote>
+    *  {@code Class.forName(className, true, currentLoader)}
+    * </blockquote>
+    *
+    * where {@code currentLoader} denotes the defining class loader of
+    * the current class.
+    *
+    * <p> For example, the following code fragment returns the
+    * runtime {@code Class} descriptor for the class named
+    * {@code java.lang.Thread}:
+    *
+    * <blockquote>
+    *   {@code Class t = Class.forName("java.lang.Thread")}
+    * </blockquote>
+    * <p>
+    * A call to {@code forName("X")} causes the class named
+    * {@code X} to be initialized.
+    *
+    * @param      className   the fully qualified name of the desired class.
+    * @return     the {@code Class} object for the class with the
+    *             specified name.
+    * @exception LinkageError if the linkage fails
+    * @exception ExceptionInInitializerError if the initialization provoked
+    *            by this method fails
+    * @exception ClassNotFoundException if the class cannot be located
+    */
+@CallerSensitive
+public static Class<?> forName(String className)
+            throws ClassNotFoundException {
+    Class<?> caller = Reflection.getCallerClass();
+    return forName0(className, true, ClassLoader.getClassLoader(caller), caller);
+}
+```
+
+将类的.class文件加载到jvm中之外，还会对类进行解释，执行类中的static块(静态成员初始化，静态代码块)
+
+### ClassLoader.loadClass
+
+```java
+/**
+    * Loads the class with the specified <a href="#name">binary name</a>.
+    * This method searches for classes in the same manner as the {@link
+    * #loadClass(String, boolean)} method.  It is invoked by the Java virtual
+    * machine to resolve class references.  Invoking this method is equivalent
+    * to invoking {@link #loadClass(String, boolean) <tt>loadClass(name,
+    * false)</tt>}.
+    *
+    * @param  name
+    *         The <a href="#name">binary name</a> of the class
+    *
+    * @return  The resulting <tt>Class</tt> object
+    *
+    * @throws  ClassNotFoundException
+    *          If the class was not found
+    */
+public Class<?> loadClass(String name) throws ClassNotFoundException {
+    return loadClass(name, false);
+}
+```
+
+第2个boolean参数，表示目标对象是否进行链接，false表示不进行链接，不进行链接意味着不进行包括初始化等一些列步骤，那么静态块和静态成员就不会得到执行

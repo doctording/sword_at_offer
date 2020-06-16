@@ -121,17 +121,17 @@ class Main {
 
 ```java
 // output
-Bowl(marker:1)
-Bowl(marker:2)
-Table()f1(marker:1)
+Bowl(marker:1) // Main的静态成员Table对象的静态成员`Bowl bowl1`
+Bowl(marker:2) // 同上，与代码位置无关的able对象的静态成员`Bowl bowl2`
+Table()f1(marker:1) // Table的构造函数
 
-Bowl(marker:4)
-Bowl(marker:5)
-Bowl(marker:3)
-Cupboard()
+Bowl(marker:4) // Cupboard对象的静态成员`Bowl bowl4`
+Bowl(marker:5) // Cupboard对象的静态成员`Bowl bowl4`
+Bowl(marker:3) // Cupboard对象的普通成员`Bowl bowl3`
+Cupboard() // Cupboard构造函数
 f1(marker:2)
 
-Creating new Cupboard() in main()
+Creating new Cupboard() in main() // main方法
 Bowl(marker:3)
 Cupboard()
 f1(marker:2)
@@ -145,7 +145,7 @@ f2(marker:1)
 f3(marker:1)
 ```
 
-### 总结一个对象的创建过程(class & class实例 => 对象)
+### 总结一个对象的创建过程(class & class实例 => 对象)（实例化的顺序问题？）
 
 假设有一个名为Dog的类
 
@@ -157,6 +157,12 @@ f3(marker:1)
 6. 执行构造器
 
 `静态数据成员 -> 静态代码块 -> 非静态数据成员 -> 非静态代码块 -> 构造方法`
+
+按照代码中的顺序，所以也可能是：
+
+`静态代码块 -> 静态数据成员 -> 非静态代码块  -> 非静态数据成员 -> 构造方法`
+
+总是先`静态`，再`非静态`，最后`构造方法`
 
 ### 数组的初始化
 

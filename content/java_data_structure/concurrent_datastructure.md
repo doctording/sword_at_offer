@@ -21,7 +21,9 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     implements ConcurrentMap<K,V>, Serializable {
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/concurrent_hashmap.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/concurrent_hashmap.png)
+
+每个桶可能是`链表`结构或者`红黑树`结构，锁针对桶的头节点加，`锁粒度小`
 
 ### 底层:数组+链表/红黑树，CAS + synchronized控制并发
 
@@ -182,9 +184,20 @@ public long mappingCount() {
 
 ### 对比Java7分段锁优劣
 
+### Java7分段锁的实现
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/concurrent_segment.png)
+
+eg, `new ConcurrentHashMap()`:
+
+* Segment 数组长度为 16，不可以扩容
+* Segment[i] 的默认大小为 2，负载因子是 0.75，得出初始阈值为 1.5，也就是以后插入第一个元素不会触发扩容，插入第二个会进行第一次扩容
+* 这里初始化了 segment[0]，其他位置还是 null
+* put操作是，先根据 hash 值很快就能找到相应的 Segment，之后就是 Segment 内部的 put 操作了
+
 #### 锁粒度小
 
-只需要锁住这个链表的head节点，并不会影响其他的table元素的读写，影响更小
+只需要锁住这个链表/红黑树的head节点，并不会影响其他的table元素的读写，影响更小
 
 #### 扩容不足与改进
 
