@@ -33,8 +33,12 @@
 <li><a href="#_3">扩容</a></li>
 <li><a href="#_4">删除</a></li>
 <li><a href="#transient-table">被 transient 所修饰 table 变量</a></li>
+<li><a href="#javahashmap075">为什么Java中的HashMap默认加载因子是0.75？</a></li>
+<li><a href="#_5">有序?</a><ul>
 <li><a href="#linkedhashmaphashmap">LinkedHashMap(HashMap + 双向链表)</a></li>
 <li><a href="#treemap">TreeMap（红黑树）</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -415,7 +419,21 @@
 </ul>
 <h2 id="transient-table">被 transient 所修饰 table 变量</h2>
 <p>HashMap 的桶数组 table 被申明为<code>transient</code>。<code>transient</code>表示易变的意思，在 Java 中，被该关键字修饰的变量不会被默认的序列化机制序列化，而是通过实现<code>readObject/writeObject</code>两个方法自定义了序列化的内容</p>
-<h2 id="linkedhashmaphashmap">LinkedHashMap(HashMap + 双向链表)</h2>
+<h2 id="javahashmap075">为什么Java中的HashMap默认加载因子是0.75？</h2>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kd">final</span> <span class="kt">float</span> <span class="n">DEFAULT_LOAD_FACTOR</span> <span class="o">=</span> <span class="mf">0.75f</span><span class="o">;</span>  
+</pre></div>
+
+
+<p>加载因子是表示Hash表中元素的填满的程度。</p>
+<ul>
+<li>加载因子越大,填满的元素越多,空间利用率越高，但冲突的机会加大了。</li>
+<li>反之,加载因子越小,填满的元素越少,冲突的机会减小,但空间浪费多了。</li>
+</ul>
+<p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html">HashMap docs</a></p>
+<p>As a general rule, the default load factor (.75) offers a good tradeoff between time and space costs. Higher values decrease the space overhead but increase the lookup cost (reflected in most of the operations of the HashMap class, including get and put). The expected number of entries in the map and its load factor should be taken into account when setting its initial capacity, so as to minimize the number of rehash operations. If the initial capacity is greater than the maximum number of entries divided by the load factor, no rehash operations will ever occur.</p>
+<p>通常，默认负载因子（0.75）在时间和空间成本之间提供了一个很好的折衷方案。较高的值会减少空间开销，但会增加查找成本（在HashMap类的大多数操作中都得到体现，包括get和put）。设置映射表的初始容量时，应考虑映射中的预期条目数及其负载因子，以最大程度地减少重新哈希操作的数量。如果初始容量大于最大条目数除以负载因子，则将不会进行任何哈希操作。</p>
+<h2 id="_5">有序?</h2>
+<h3 id="linkedhashmaphashmap">LinkedHashMap(HashMap + 双向链表)</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LinkedHashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">extends</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
@@ -436,7 +454,7 @@
 </pre></div>
 
 
-<h2 id="treemap">TreeMap（红黑树）</h2>
+<h3 id="treemap">TreeMap（红黑树）</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">extends</span> <span class="n">AbstractMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
     <span class="kd">implements</span> <span class="n">NavigableMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">Serializable</span>
@@ -450,7 +468,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-16 19:37:41</p>
+        <p>Site Generated 2020-06-16 20:57:45</p>
       </span>
     </div>
 

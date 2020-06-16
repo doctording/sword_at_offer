@@ -32,7 +32,8 @@
 <li><a href="#cas-synchronized">底层:数组+链表/红黑树，CAS + synchronized控制并发</a></li>
 <li><a href="#put">put方法</a></li>
 <li><a href="#size">获取size</a></li>
-<li><a href="#java7">对比Java7分段锁优劣</a><ul>
+<li><a href="#java7">对比Java7分段锁优劣</a></li>
+<li><a href="#java7_1">Java7分段锁的实现</a><ul>
 <li><a href="#_1">锁粒度小</a></li>
 <li><a href="#_2">扩容不足与改进</a></li>
 </ul>
@@ -74,7 +75,8 @@
 </pre></div>
 
 
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/concurrent_hashmap.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/concurrent_hashmap.png" /></p>
+<p>每个桶可能是<code>链表</code>结构或者<code>红黑树</code>结构，锁针对桶的头节点加，<code>锁粒度小</code></p>
 <h3 id="cas-synchronized">底层:数组+链表/红黑树，CAS + synchronized控制并发</h3>
 <div class="hlcode"><pre> <span class="cm">/* ---------------- Fields -------------- */</span>
 
@@ -236,8 +238,17 @@
 
 <p>一个大概的数值，因为可能在统计的时候有其他线程正在执行插入或删除操作</p>
 <h3 id="java7">对比Java7分段锁优劣</h3>
+<h3 id="java7_1">Java7分段锁的实现</h3>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/concurrent_segment.png" /></p>
+<p>eg, <code>new ConcurrentHashMap()</code>:</p>
+<ul>
+<li>Segment 数组长度为 16，不可以扩容</li>
+<li>Segment[i] 的默认大小为 2，负载因子是 0.75，得出初始阈值为 1.5，也就是以后插入第一个元素不会触发扩容，插入第二个会进行第一次扩容</li>
+<li>这里初始化了 segment[0]，其他位置还是 null</li>
+<li>put操作是，先根据 hash 值很快就能找到相应的 Segment，之后就是 Segment 内部的 put 操作了</li>
+</ul>
 <h4 id="_1">锁粒度小</h4>
-<p>只需要锁住这个链表的head节点，并不会影响其他的table元素的读写，影响更小</p>
+<p>只需要锁住这个链表/红黑树的head节点，并不会影响其他的table元素的读写，影响更小</p>
 <h4 id="_2">扩容不足与改进</h4>
 <ul>
 <li>
@@ -604,7 +615,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-16 19:37:41</p>
+        <p>Site Generated 2020-06-16 20:57:45</p>
       </span>
     </div>
 

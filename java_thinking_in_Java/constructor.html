@@ -36,7 +36,7 @@
 <li><a href="#_6">静态数据与初始化</a></li>
 <li><a href="#_7">初始化顺序（包含构造函数）</a></li>
 <li><a href="#_8">例子代码理解</a></li>
-<li><a href="#class-class">总结一个对象的创建过程(class &amp; class实例 =&gt; 对象)</a></li>
+<li><a href="#class-class">总结一个对象的创建过程(class &amp; class实例 =&gt; 对象)（实例化的顺序问题？）</a></li>
 <li><a href="#_9">数组的初始化</a></li>
 </ul>
 </li>
@@ -145,17 +145,17 @@
 
 
 <div class="hlcode"><pre><span class="c1">// output</span>
-<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">1</span><span class="o">)</span>
-<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">2</span><span class="o">)</span>
-<span class="n">Table</span><span class="o">()</span><span class="n">f1</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">1</span><span class="o">)</span>
+<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">1</span><span class="o">)</span> <span class="c1">// Main的静态成员Table对象的静态成员`Bowl bowl1`</span>
+<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">2</span><span class="o">)</span> <span class="c1">// 同上，与代码位置无关的able对象的静态成员`Bowl bowl2`</span>
+<span class="n">Table</span><span class="o">()</span><span class="n">f1</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">1</span><span class="o">)</span> <span class="c1">// Table的构造函数</span>
 
-<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">4</span><span class="o">)</span>
-<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">5</span><span class="o">)</span>
-<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">3</span><span class="o">)</span>
-<span class="n">Cupboard</span><span class="o">()</span>
+<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">4</span><span class="o">)</span> <span class="c1">// Cupboard对象的静态成员`Bowl bowl4`</span>
+<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">5</span><span class="o">)</span> <span class="c1">// Cupboard对象的静态成员`Bowl bowl4`</span>
+<span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">3</span><span class="o">)</span> <span class="c1">// Cupboard对象的普通成员`Bowl bowl3`</span>
+<span class="n">Cupboard</span><span class="o">()</span> <span class="c1">// Cupboard构造函数</span>
 <span class="n">f1</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">2</span><span class="o">)</span>
 
-<span class="n">Creating</span> <span class="k">new</span> <span class="nf">Cupboard</span><span class="o">()</span> <span class="n">in</span> <span class="n">main</span><span class="o">()</span>
+<span class="n">Creating</span> <span class="k">new</span> <span class="nf">Cupboard</span><span class="o">()</span> <span class="n">in</span> <span class="n">main</span><span class="o">()</span> <span class="c1">// main方法</span>
 <span class="n">Bowl</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">3</span><span class="o">)</span>
 <span class="n">Cupboard</span><span class="o">()</span>
 <span class="n">f1</span><span class="o">(</span><span class="nl">marker:</span><span class="mi">2</span><span class="o">)</span>
@@ -170,7 +170,7 @@
 </pre></div>
 
 
-<h3 id="class-class">总结一个对象的创建过程(class &amp; class实例 =&gt; 对象)</h3>
+<h3 id="class-class">总结一个对象的创建过程(class &amp; class实例 =&gt; 对象)（实例化的顺序问题？）</h3>
 <p>假设有一个名为Dog的类</p>
 <ol>
 <li>即使没有显示地使用static关键字，构造器其实也可以看成静态方法。首次创建Dog类的对象时，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位<code>Dog.class</code>文件</li>
@@ -181,6 +181,9 @@
 <li>执行构造器</li>
 </ol>
 <p><code>静态数据成员 -&gt; 静态代码块 -&gt; 非静态数据成员 -&gt; 非静态代码块 -&gt; 构造方法</code></p>
+<p>按照代码中的顺序，所以也可能是：</p>
+<p><code>静态代码块 -&gt; 静态数据成员 -&gt; 非静态代码块  -&gt; 非静态数据成员 -&gt; 构造方法</code></p>
+<p>总是先<code>静态</code>，再<code>非静态</code>，最后<code>构造方法</code></p>
 <h3 id="_9">数组的初始化</h3>
 <div class="hlcode"><pre><span class="kt">int</span><span class="o">[]</span> <span class="n">a1</span><span class="o">;</span> <span class="c1">// int a1[];</span>
 </pre></div>
@@ -232,7 +235,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-16 19:37:41</p>
+        <p>Site Generated 2020-06-16 20:57:45</p>
       </span>
     </div>
 
