@@ -30,7 +30,12 @@
 <li><a href="#_2">为什么要用代理模式？</a></li>
 <li><a href="#_3">静态代理</a></li>
 <li><a href="#_4">动态代理</a><ul>
-<li><a href="#java">JAVA反射</a></li>
+<li><a href="#_5">动态代理的几种实现方式?</a><ul>
+<li><a href="#jdk">JDK原生动态代理(反射机制)</a></li>
+<li><a href="#cglibcode-generator-library">CGLIB(Code Generator Library)</a></li>
+</ul>
+</li>
+<li><a href="#javacglib">Java动态代理和cglib动态代理的区别？</a></li>
 </ul>
 </li>
 </ul>
@@ -60,14 +65,180 @@
 <ul>
 <li>在程序运行期间由JVM根据反射等机制动态的生成，所以不存在代理类的字节码文件。代理类和委托类的关系是在程序运行时确定的</li>
 </ul>
-<h3 id="java">JAVA反射</h3>
-<p>JAVA反射机制是指：在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意方法和属性；这种动态获取类信息以及动态调用对象方法的功能称为java语言的反射机制。</p>
+<h3 id="_5">动态代理的几种实现方式?</h3>
+<h4 id="jdk">JDK原生动态代理(反射机制)</h4>
+<ul>
+<li>Service</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:44</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PayService</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="nf">payUse</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>Service的其中一个实现类</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:43</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AliPayServiceImpl</span> <span class="kd">implements</span> <span class="n">PayService</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">payUse</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&quot;AliPayServiceImpl&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>代理类</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.lang.reflect.InvocationHandler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Proxy</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 21:13</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PayProxy</span> <span class="kd">implements</span> <span class="n">InvocationHandler</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">PayService</span> <span class="n">pay</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">PayService</span> <span class="n">proxy</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">PayProxy</span><span class="o">(</span><span class="n">PayService</span> <span class="n">pay</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">pay</span> <span class="o">=</span> <span class="n">pay</span><span class="o">;</span>
+        <span class="c1">// newProxyInstance方法的三个参数：</span>
+        <span class="c1">// 1. 用哪个类加载器去加载代理对象</span>
+        <span class="c1">// 2. 动态代理类需要实现的接口</span>
+        <span class="c1">// 3. 动态代理方法在执行时，会调用this里面的invoke方法去执行</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">proxy</span> <span class="o">=</span> <span class="o">(</span><span class="n">PayService</span><span class="o">)</span><span class="n">Proxy</span><span class="o">.</span><span class="na">newProxyInstance</span><span class="o">(</span>
+                <span class="n">PayService</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getClassLoader</span><span class="o">(),</span>
+                <span class="k">new</span> <span class="n">Class</span><span class="o">&lt;?&gt;[]</span> <span class="o">{</span> <span class="n">PayService</span><span class="o">.</span><span class="na">class</span> <span class="o">},</span>
+                <span class="k">this</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">PayService</span> <span class="nf">getProxy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">proxy</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">invoke</span><span class="o">(</span><span class="n">Object</span> <span class="n">proxy</span><span class="o">,</span> <span class="n">Method</span> <span class="n">method</span><span class="o">,</span> <span class="n">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">methodName</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;before methodName:&quot;</span> <span class="o">+</span> <span class="n">methodName</span><span class="o">);</span>
+        <span class="n">Object</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">pay</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;after methodName:&quot;</span> <span class="o">+</span> <span class="n">methodName</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">rs</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>测试</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:44</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClientTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+       <span class="n">PayService</span> <span class="n">pay</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PayProxy</span><span class="o">(</span><span class="k">new</span> <span class="n">AliPayServiceImpl</span><span class="o">()).</span><span class="na">getProxy</span><span class="o">();</span>
+       <span class="n">String</span> <span class="n">payStr</span> <span class="o">=</span> <span class="n">pay</span><span class="o">.</span><span class="na">payUse</span><span class="o">();</span>
+       <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">payStr</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h4 id="cglibcode-generator-library">CGLIB(Code Generator Library)</h4>
+<p>CGLIB代理主要通过对字节码的操作，为对象引入间接级别，以控制对象的访问</p>
+<ul>
+<li>代理类</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">net.sf.cglib.proxy.Enhancer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">net.sf.cglib.proxy.MethodInterceptor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">net.sf.cglib.proxy.MethodProxy</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 21:13</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PayProxy</span> <span class="kd">implements</span> <span class="n">MethodInterceptor</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">createProxyObj</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Enhancer</span> <span class="n">enhancer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Enhancer</span><span class="o">();</span>
+        <span class="n">enhancer</span><span class="o">.</span><span class="na">setSuperclass</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+        <span class="n">enhancer</span><span class="o">.</span><span class="na">setCallback</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">enhancer</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">intercept</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">,</span> <span class="n">Method</span> <span class="n">method</span><span class="o">,</span> <span class="n">Object</span><span class="o">[]</span> <span class="n">objects</span><span class="o">,</span> <span class="n">MethodProxy</span> <span class="n">methodProxy</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;before methodName:&quot;</span> <span class="o">+</span> <span class="n">method</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+        <span class="n">Object</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">methodProxy</span><span class="o">.</span><span class="na">invokeSuper</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">objects</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;after methodName:&quot;</span> <span class="o">+</span> <span class="n">method</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+        <span class="k">return</span> <span class="n">rs</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>测试</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:44</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClientTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+       <span class="n">PayService</span> <span class="n">pay</span> <span class="o">=</span> <span class="o">(</span><span class="n">PayService</span><span class="o">)</span> <span class="k">new</span> <span class="n">PayProxy</span><span class="o">().</span><span class="na">createProxyObj</span><span class="o">(</span><span class="n">AliPayServiceImpl</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+       <span class="n">String</span> <span class="n">payStr</span> <span class="o">=</span> <span class="n">pay</span><span class="o">.</span><span class="na">payUse</span><span class="o">();</span>
+       <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">payStr</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>Enhancer既能够代理普通的class，也能够代理接口。Enhancer创建一个被代理对象的子类并且拦截所有的方法调用（包括从Object中继承的toString和hashCode方法），Enhancer不能够拦截final方法</li>
+</ul>
+<h3 id="javacglib">Java动态代理和cglib动态代理的区别？</h3>
+<ul>
+<li>JDK动态代理只能对实现了接口的类生成代理，而不能针对类</li>
+<li>CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法</li>
+</ul>
+<p>// TODO</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-16 20:57:45</p>
+        <p>Site Generated 2020-06-16 22:23:24</p>
       </span>
     </div>
 
