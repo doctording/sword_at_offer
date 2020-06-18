@@ -47,7 +47,7 @@
 </ul>
 </div>
 <h1 id="_1">缓存一致性</h1>
-<p>计算机架构</p>
+<p>计算机体系架构</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/computer.png" /></p>
 <h2 id="cpu">CPU提速优化</h2>
 <p>CPU优化的两点</p>
@@ -121,21 +121,21 @@
 <p>eg:</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/cache_3.png" /></p>
 <h2 id="mesi">MESI协议</h2>
-<p>多个处理器都涉及同一块主内存区域的更改时，将导致各自的的缓存数据不一致？如何解决？</p>
+<p>多个处理器都涉及同一块主内存区域的更改时，将导致各自的缓存数据不一致？如何解决？</p>
 <p>当某个cpu修改缓存行数据时，其它的cpu通过监听机制获悉共享缓存行的数据被修改，会使其共享缓存行失效。本cpu会将修改后的缓存行写回到主内存中。此时其它的cpu如果需要此缓存行共享数据，则从主内存中重新加载，并放入缓存，以此完成了缓存一致性。</p>
 <p><a href="https://zh.wikipedia.org/wiki/MESI%E5%8D%8F%E8%AE%AE" target="_blanck">mesi wiki</a></p>
 <h2 id="_4">总线锁和缓存锁</h2>
-<p><code>总线锁</code>定把CPU和内存的通信给锁住了，使得在锁定期间，其它处理器不能操作内存的其它数据，这样开销较大</p>
-<p><code>缓存锁</code>不需锁定总线，只需要“锁定”被缓存的共享对象（实际为：缓存行）即可，接受到lock指令，通过缓存一致性协议，维护本处理器内部缓存和其它处理器缓存的一致性。相比总线锁，会提高cpu利用率。</p>
+<p><code>总线锁</code>是把CPU和内存的通信给锁住了；使得在锁定期间，其它处理器不能操作内存的其它数据，这样开销较大</p>
+<p><code>缓存锁</code>不需锁定总线，只需要“锁定”被缓存的共享对象（实际为：缓存行）即可；接受到lock指令，通过缓存一致性协议，维护本处理器内部缓存和其它处理器缓存的一致性。相比总线锁，会提高cpu利用率。</p>
 <h2 id="cache-line">缓存行 cache line</h2>
 <ul>
 <li>
 <p>程序局部性原理（这里解释为：访问内存或缓存但某个位置，顺带但把紧邻的位置一起读取出来）</p>
-</li>
-<li>
-<p>缓存行越大，局部性空间效率越高，但读取时间慢</p>
-</li>
+<ol>
+<li>缓存行越大，局部性空间效率越高，但读取时间慢</li>
 <li>缓存行越小，局部性空间效率越低，但读取时间快</li>
+</ol>
+</li>
 </ul>
 <p>折中取：64字节</p>
 <p>消除伪共享</p>
@@ -262,7 +262,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-17 09:55:30</p>
+        <p>Site Generated 2020-06-18 09:23:40</p>
       </span>
     </div>
 
