@@ -1,5 +1,5 @@
 ---
-title: "线程"
+title: "线程基础"
 layout: page
 date: 2019-02-15 00:00
 ---
@@ -67,7 +67,7 @@ public Thread(ThreadGroup group, String name) {
 
 ### init
 
-1. 一个线程的创建肯定是由另一个线程完成的
+1. 一个线程的创建肯定是由另一个线程完成的(线程的父子关系)
 2. 被创建线程的父线程是创建它的线程
 
 ```java
@@ -203,11 +203,11 @@ private native void start0();
 
 #### 需要注意的点
 
-1. start方法用synchronized修饰，为同步方法；真正执行线程
-2. 虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被多次start会抛出异常；threadStatus的状态由JVM控制。
+1. `start`方法用`synchronized`修饰，为同步方法；表示真正的去执行线程
+2. 虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被**多次start调用会抛出异常**；threadStatus的状态由JVM控制。
 3. 使用Runnable时，主线程无法捕获子线程中的异常状态。线程的异常，应在线程内部解决。
 
-区别：start()是开启新线程，并执行其中的run方法；run()是在当前线程执行其run方法.
+区别：<font color='red'>`start()`是让另一个新线程开启，并执行其中的run方法；`run()`是直接当前线程执行其run方法.run方法一般称为线程的执行单元</font>
 
 * when program calls start() method, a new thread is created and code inside run() is executed in new thread.Thread.start() calls the run() method asynchronousl（异步的）,which changes the state of new Thread to Runnable.
 
@@ -217,7 +217,7 @@ native方法`start0()`
 
 start0(); method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.
 
-## stackSize
+## stackSize(线程所需栈空间)
 
 ```java
 /*
@@ -228,11 +228,11 @@ start0(); method: is responsible for low processing (stack creation for a thread
 private long stackSize;
 ```
 
-操作系统对一个进程的最大内存是有限制的
+* 操作系统对一个进程的最大内存是有限制的
 
-虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存
+* 虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存
 
-JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系
+* JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系；生产上要监控线程数量，可能会由于bug导致线程数异常增多，引发心跳,OutOfMemory告警
 
 # 线程的状态
 
@@ -348,9 +348,9 @@ JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关�
     }
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_state.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_state.jpg)
 
-* 阻塞(block)：阻塞状态是指线程因为某种原因放弃了cpu 使用权，也即让出了cpu timeslice，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu timeslice 转到运行(running)状态。阻塞的情况分三种：
+* 阻塞(blocked)：阻塞状态是指线程因为某种原因放弃了cpu使用权，也即让出了cpu时间片，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu时间片，转到运行(running)状态。阻塞的情况分三种：
 
 1. 等待阻塞：运行(running)的线程执行`o.wait()`方法，JVM会把该线程放入等待队列(waitting queue)中。
 
@@ -384,7 +384,7 @@ public class Main {
         Thread t4 = new Thread(()->{
             synchronized (Main.class){
                 try{
-                    // 有时间的等待
+                    // 有限时间的等待
                     TimeUnit.SECONDS.sleep(100); // TIMED_WAITING
                 }catch (Exception e){
                     e.printStackTrace();
@@ -395,7 +395,7 @@ public class Main {
 
         Thread t5 = new Thread(()->{
             try{
-                // 无时间的等待
+                // 无限时间的等待
                 t2.join(); // WAITING
             }catch (Exception e){
                 e.printStackTrace();
@@ -404,7 +404,7 @@ public class Main {
         t5.start();
 
         Thread t6 = new Thread(()->{
-            synchronized (Main.class){ // 竞争锁，竞争不到
+            synchronized (Main.class){ // 竞争锁，竞争不到，BLOCKED
                 try{
                     TimeUnit.SECONDS.sleep(100);
                 }catch (Exception e){
@@ -468,7 +468,7 @@ t6 status:BLOCKED
 
 <a href="https://www.programcreek.com/2011/12/monitors-java-synchronization-mechanism/" target="_blank">Monitors – The Basic Idea of Java Synchronization</a>
 
-# 对象的wait,notify方法
+# 对象的`wait`,`notify`方法
 
 * wait: 在其它线程调用此对象的`notify()`方法或`notifyAll()`方法前，导致当前线程等待
 * notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。
@@ -477,7 +477,7 @@ t6 status:BLOCKED
 ```java
 参考文档： https://www.baeldung.com/java-wait-notify
 
-Simply put, when we call wait() – this forces the current thread to wait until some other thread invokes notify() or notifyAll() on the same object.
+Simply put, when we call wait() – this forces the current thread to wait until some other thread invokes notify() or notifyAll() on the same object.(当调用wait()后，当前线程将等待其它线程调用notity())
 
 For this, the current thread must own the object's monitor. According to Javadocs, this can happen when:
 
@@ -534,23 +534,24 @@ main continue
 */
 ```
 
+## wait方法的底层原理
+
+* Java中每一个对象都可以成为一个监视器（Monitor）, 该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒调度), 一个入口队列(EntryQueue,要去竞争获取锁).
+* `waiting`进入`_waitSet`等待中，是阻塞状态，不会占用CPU
+* `waiting`被唤醒后，不是直接执行，而是进入`_EntryList`，去竞争`monitor`来获得机会去执行
+* 其中`_EntryList`是没有获取到锁的Blocking状态，要继续竞争锁
+
 ## `wait` 和 `sleep` 的区别？
 
 1. wait()方法属于Object类,sleep()属于Thread类；
 
-2. wait()方法释放cpu给其它线程，自己让出资源进入等待池等待；sleep继续占用cpu，不让出资源；
+2. wait()方法让自己让出锁资源进入等待池等待，让出CPU；sleep是占用锁资源不释放放，处于阻塞状态，让出CPU；
 
 3. sleep()必须指定时间，wait()可以指定时间也可以不指定；sleep()时间到，线程处于阻塞或可运行状态；
 
-4. wait()方法会释放持有的锁，不然其它线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁，所以释放锁，可以执行其他线程，也可以唤醒自己，只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；
+4. wait()方法会释放持有的锁，不然其它线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁；所以释放锁，让其它线程可以进入synchronized同步块，可以执行其它线程，也可以唤醒自己；只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；
 
-5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用`notify()`来唤醒；而sleep()能在任何地方调用；
-
-## wait原理
-
-* `waiting`进入`wait_set`等待中，是阻塞状态，不会占用CPU
-* `waiting`被唤醒后，不是直接执行，而是进入`EntryList`，去竞争`monitor`已获得机会去执行
-* `EntryList`是没有获取到锁的Blocking状态，要竞争锁
+5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用`notify()`来唤醒；而`sleep()`能在任何地方调用；
 
 # `ThreadGroup`线程组
 
@@ -558,7 +559,7 @@ main continue
 
 ```java
 ThreadGroup tg = new ThreadGroup("tg");
-Thread tr = new Thread(tg,"tr");
+Thread tr = new Thread(tg, "tr");
 
 // 不断获取上一级的 线程组
 ThreadGroup tg_parent = tr.getThreadGroup();
@@ -701,7 +702,7 @@ Java的两类`Thread`
 
 1. 用户线程：Java虚拟机在它所有非守护线程已经离开后自动离开
 
-2. 守护线程：守护线程则是用来服务用户线程的，如果没有其他用户线程在运行，那么就没有可服务对象，也就没有理由继续下去
+2. 守护线程：守护线程则是用来服务用户线程的，如果没有其它用户线程在运行，那么就没有可服务对象，也就没有理由继续下去
 
 # Thread API
 
@@ -729,7 +730,7 @@ vi.放弃，屈服; 生利; 退让，退位;
 n.产量，产额; 投资的收益; 屈服，击穿; 产品;
 ```
 
-启发式的方式：提醒调度器愿意放弃当前CPU资源，如果CPU资源不紧张，则会忽略这种提醒
+启发式的方式：提醒调度器**愿意放弃当前CPU资源**，如果CPU资源不紧张，则会忽略这种提醒
 
 ```java
 /**
@@ -785,17 +786,24 @@ public class Main {
             ts[i].start();
         }
     }
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         test();
-       System.out.println("Main thread finished");
+        System.out.println("Main thread finished");
     }
 }
 ```
 
-### sleep 与 yield的区别
+* 输出顺序无规律,如下是其中的一次输出，所以并不总是直接让出CPU
 
-* `yield`会使`RUNNING`状态的 Thread 进入`Runnable`状态（如果CPU调度器没有忽略这个提示的话）
-* `sleep`回使得线程短暂的`Blocked`, 会在给定的时间内释放CPU资源
+```java
+id:0
+id:1
+Main thread finished
+```
+
+### `sleep`与`yield`的区别
+
+* `yield`会使`RUNNING`状态的线程进入`Runnable`状态（如果CPU调度器没有忽略这个提示的话）
 * 一个线程`sleep`,另一个线程调用`interrupt`会捕获到中断信号，而`yield`则不会
 
 ## 线程的优先级
@@ -865,7 +873,7 @@ public class Main {
     }
 ```
 
-### 获取当前线程
+### 获取当前线程(`Thread.currentThread()`)
 
 ```java
 class MyThread extends Thread {
@@ -898,7 +906,7 @@ InterruptibleChannel的io操作
 Selector的wakeup方法
 ```
 
-打断一个线程并不等于该线程的生命周期结束，仅仅是打断当前线程的阻塞状态
+打断一个线程并不等于该线程的生命周期结束，仅仅是**打断当前线程的阻塞状态**
 
 ```java
 public class Main {
@@ -968,7 +976,7 @@ public class Main {
 }
 ```
 
-## Join(线程的join方法)
+## join(线程的join方法)
 
 与`sleep`一样也是一个可中断的方法，底层是对象的`wait`方法
 

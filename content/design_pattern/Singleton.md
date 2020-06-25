@@ -102,9 +102,9 @@ final class Singleton{
 }
 ```
 
-![](./imgs/double_check.png)
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/design_pattern/imgs/double_check.png)
 
-创建一个变量需要：一个是申请一块内存，调用构造方法进行初始化操作，另一个是分配一个指针指向这块内存。这两个操作谁在前谁在后呢？JVM规范并没有规定。那么就存在这么一种情况，JVM是先开辟出一块内存，然后把指针指向这块内存，最后调用构造方法进行初始化。
+创建一个变量需要：一个是申请一块内存，调用构造方法进行初始化操作，另一个是分配一个指针指向这块内存。这两个操作谁在前,谁在后呢？JVM规范并没有规定。那么就存在这么一种情况，JVM是先开辟出一块内存，然后把指针指向这块内存，最后调用构造方法进行初始化。
 
 ## double-check & volatile（懒汉式）
 

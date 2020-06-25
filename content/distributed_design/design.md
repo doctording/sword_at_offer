@@ -10,10 +10,45 @@ date: 2019-06-07 00:00
 
 上下文是贯穿整个系统或阶段生命周期的对象，其中包含了系统全局的一些信息，比如登录后的用户信息、账号信息，以及在程序每一个阶段运行时的数据。设计时要考虑到全局唯一性，还要考虑有些成员只能被初始化一次，比如配置信息加载，以及在多线程环境下，上下文成员的线程安全性。
 
-
 # Reactor 模式
 
-参考：https://www.cnblogs.com/doit8791/p/7461479.html
+* reactor: n. 核反应堆;
+
+基于事件驱动，主程序将事件以及对应事件处理的方法在Reactor上进行注册, 如果相应的事件发生，Reactor将会主动调用事件注册的接口，即 回调函数.
+
+最简单的Reactor模式：注册所有感兴趣的事件处理器，单线程轮询选择就绪事件，执行事件处理器。
+
+```java
+ interface ChannelHandler{
+      void channelReadable(Channel channel);
+      void channelWritable(Channel channel);
+   }
+   class Channel{
+     Socket socket;
+     Event event;//读，写或者连接
+   }
+
+   //IO线程主循环:
+   class IoThread extends Thread{
+   public void run(){
+   Channel channel;
+   while(channel=Selector.select()){//选择就绪的事件和对应的连接
+      if(channel.event==accept){
+         registerNewChannelHandler(channel);//如果是新连接，则注册一个新的读写处理器
+      }
+      if(channel.event==write){
+         getChannelHandler(channel).channelWritable(channel);//如果可以写，则执行写事件
+      }
+      if(channel.event==read){
+          getChannelHandler(channel).channelReadable(channel);//如果可以读，则执行读事件
+      }
+    }
+   }
+   Map<Channel，ChannelHandler> handlerMap;//所有channel的对应事件处理器
+  }
+```
+
+* 单线程处理I/O的效率确实非常高，没有线程切换，只是拼命的读、写、选择事件。但现在的服务器，一般都是多核处理器，如果能够利用多核心进行I/O，无疑对效率会有更大的提高。
 
 ## 传统做法回顾
 
