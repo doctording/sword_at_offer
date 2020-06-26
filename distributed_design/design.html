@@ -54,7 +54,44 @@
 <h1 id="_1">线程上下文设计模式</h1>
 <p>上下文是贯穿整个系统或阶段生命周期的对象，其中包含了系统全局的一些信息，比如登录后的用户信息、账号信息，以及在程序每一个阶段运行时的数据。设计时要考虑到全局唯一性，还要考虑有些成员只能被初始化一次，比如配置信息加载，以及在多线程环境下，上下文成员的线程安全性。</p>
 <h1 id="reactor">Reactor 模式</h1>
-<p>参考：https://www.cnblogs.com/doit8791/p/7461479.html</p>
+<ul>
+<li>reactor: n. 核反应堆;</li>
+</ul>
+<p>基于事件驱动，主程序将事件以及对应事件处理的方法在Reactor上进行注册, 如果相应的事件发生，Reactor将会主动调用事件注册的接口，即 回调函数.</p>
+<p>最简单的Reactor模式：注册所有感兴趣的事件处理器，单线程轮询选择就绪事件，执行事件处理器。</p>
+<div class="hlcode"><pre> <span class="kd">interface</span> <span class="nc">ChannelHandler</span><span class="o">{</span>
+      <span class="kt">void</span> <span class="nf">channelReadable</span><span class="o">(</span><span class="n">Channel</span> <span class="n">channel</span><span class="o">);</span>
+      <span class="kt">void</span> <span class="nf">channelWritable</span><span class="o">(</span><span class="n">Channel</span> <span class="n">channel</span><span class="o">);</span>
+   <span class="o">}</span>
+   <span class="kd">class</span> <span class="nc">Channel</span><span class="o">{</span>
+     <span class="n">Socket</span> <span class="n">socket</span><span class="o">;</span>
+     <span class="n">Event</span> <span class="n">event</span><span class="o">;</span><span class="c1">//读，写或者连接</span>
+   <span class="o">}</span>
+
+   <span class="c1">//IO线程主循环:</span>
+   <span class="kd">class</span> <span class="nc">IoThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+   <span class="n">Channel</span> <span class="n">channel</span><span class="o">;</span>
+   <span class="k">while</span><span class="o">(</span><span class="n">channel</span><span class="o">=</span><span class="n">Selector</span><span class="o">.</span><span class="na">select</span><span class="o">()){</span><span class="c1">//选择就绪的事件和对应的连接</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">channel</span><span class="o">.</span><span class="na">event</span><span class="o">==</span><span class="n">accept</span><span class="o">){</span>
+         <span class="n">registerNewChannelHandler</span><span class="o">(</span><span class="n">channel</span><span class="o">);</span><span class="c1">//如果是新连接，则注册一个新的读写处理器</span>
+      <span class="o">}</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">channel</span><span class="o">.</span><span class="na">event</span><span class="o">==</span><span class="n">write</span><span class="o">){</span>
+         <span class="n">getChannelHandler</span><span class="o">(</span><span class="n">channel</span><span class="o">).</span><span class="na">channelWritable</span><span class="o">(</span><span class="n">channel</span><span class="o">);</span><span class="c1">//如果可以写，则执行写事件</span>
+      <span class="o">}</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">channel</span><span class="o">.</span><span class="na">event</span><span class="o">==</span><span class="n">read</span><span class="o">){</span>
+          <span class="n">getChannelHandler</span><span class="o">(</span><span class="n">channel</span><span class="o">).</span><span class="na">channelReadable</span><span class="o">(</span><span class="n">channel</span><span class="o">);</span><span class="c1">//如果可以读，则执行读事件</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+   <span class="o">}</span>
+   <span class="n">Map</span><span class="o">&lt;</span><span class="n">Channel</span><span class="err">，</span><span class="n">ChannelHandler</span><span class="o">&gt;</span> <span class="n">handlerMap</span><span class="o">;</span><span class="c1">//所有channel的对应事件处理器</span>
+  <span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>单线程处理I/O的效率确实非常高，没有线程切换，只是拼命的读、写、选择事件。但现在的服务器，一般都是多核处理器，如果能够利用多核心进行I/O，无疑对效率会有更大的提高。</li>
+</ul>
 <h2 id="_2">传统做法回顾</h2>
 <h3 id="while">服务器一个while，单线程处理客户端所有的请求</h3>
 <div class="hlcode"><pre><span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
@@ -412,7 +449,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-18 09:23:40</p>
+        <p>Site Generated 2020-06-26 16:33:45</p>
       </span>
     </div>
 

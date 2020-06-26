@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Thread Lock - 剑指Offer</title>
+    <title>Java Lock - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;Thread Lock
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;Java Lock
     <span class="updated">Page Updated&nbsp;
       2019-03-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Thread Lock</div>
+<div class="page_title">Java Lock</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#lock">Lock</a><ul>
@@ -324,7 +324,7 @@
 <li>公平锁</li>
 </ul>
 <p><code>ReentrantLock</code>默认的构造函数是创建的<code>非公平锁</code>，可以通过参数<code>true</code>设为<code>公平锁</code>，但公平锁表现的性能不是很好。</p>
-<p><code>synchronized</code>是非公平锁（因为<code>synchronized</code>是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了<code>synchronized</code>吞吐率），可以重入</p>
+<p><code>synchronized</code>是非公平锁（因为<code>synchronized</code>是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了<code>synchronized</code>吞吐率）；<code>synchronized</code>是可以重入的。</p>
 <ul>
 <li>锁绑定多个条件</li>
 </ul>
@@ -476,7 +476,6 @@
 </pre></div>
 
 
-<p>参考：https://www.cnblogs.com/xiehongfeng100/p/4782135.html</p>
 <h3 id="_6">实际例子</h3>
 <div class="hlcode"><pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">;</span>
 
@@ -606,7 +605,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-18 09:23:40</p>
+        <p>Site Generated 2020-06-26 16:33:45</p>
       </span>
     </div>
 

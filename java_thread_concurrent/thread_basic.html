@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>线程 - 剑指Offer</title>
+    <title>线程基础 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;线程
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;线程基础
     <span class="updated">Page Updated&nbsp;
       2019-02-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">线程</div>
+<div class="page_title">线程基础</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#thread-runnable">Thread 类 &amp; Runnable 接口</a><ul>
@@ -36,7 +36,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#stacksize">stackSize</a></li>
+<li><a href="#stacksize">stackSize(线程所需栈空间)</a></li>
 </ul>
 </li>
 <li><a href="#_2">线程的状态</a><ul>
@@ -53,8 +53,8 @@
 </li>
 <li><a href="#monitor">Monitor</a></li>
 <li><a href="#waitnotify">对象的wait,notify方法</a><ul>
+<li><a href="#wait">wait方法的底层原理</a></li>
 <li><a href="#wait-sleep">wait 和 sleep 的区别？</a></li>
-<li><a href="#wait">wait原理</a></li>
 </ul>
 </li>
 <li><a href="#threadgroup">ThreadGroup线程组</a><ul>
@@ -66,12 +66,12 @@
 <li><a href="#thread-api">Thread API</a><ul>
 <li><a href="#sleep">sleep</a></li>
 <li><a href="#yield">yield</a><ul>
-<li><a href="#sleep-yield">sleep 与 yield的区别</a></li>
+<li><a href="#sleepyield">sleep与yield的区别</a></li>
 </ul>
 </li>
 <li><a href="#_4">线程的优先级</a></li>
 <li><a href="#id">线程ID</a><ul>
-<li><a href="#_5">获取当前线程</a></li>
+<li><a href="#threadcurrentthread">获取当前线程(Thread.currentThread())</a></li>
 <li><a href="#todo">设置线程上下文类加载器 //TODO</a></li>
 </ul>
 </li>
@@ -79,16 +79,16 @@
 <li><a href="#threadinterrupt">thread.interrupt()</a></li>
 </ul>
 </li>
-<li><a href="#joinjoin">Join(线程的join方法)</a><ul>
+<li><a href="#joinjoin">join(线程的join方法)</a><ul>
 <li><a href="#join">join源码分析</a></li>
 </ul>
 </li>
-<li><a href="#_6">关闭一个线程</a><ul>
-<li><a href="#_7">正常结束</a></li>
-<li><a href="#_8">捕获中断信号关闭线程</a></li>
+<li><a href="#_5">关闭一个线程</a><ul>
+<li><a href="#_6">正常结束</a></li>
+<li><a href="#_7">捕获中断信号关闭线程</a></li>
 <li><a href="#volatile">使用volatile开关控制</a></li>
-<li><a href="#_9">异常退出</a></li>
-<li><a href="#_10">进程假死</a></li>
+<li><a href="#_8">异常退出</a></li>
+<li><a href="#_9">进程假死</a></li>
 </ul>
 </li>
 </ul>
@@ -152,7 +152,7 @@
 
 <h3 id="init">init</h3>
 <ol>
-<li>一个线程的创建肯定是由另一个线程完成的</li>
+<li>一个线程的创建肯定是由另一个线程完成的(线程的父子关系)</li>
 <li>被创建线程的父线程是创建它的线程</li>
 </ol>
 <div class="hlcode"><pre> <span class="cm">/**</span>
@@ -289,11 +289,11 @@
 
 <h4 id="_1">需要注意的点</h4>
 <ol>
-<li>start方法用synchronized修饰，为同步方法；真正执行线程</li>
-<li>虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被多次start会抛出异常；threadStatus的状态由JVM控制。</li>
+<li><code>start</code>方法用<code>synchronized</code>修饰，为同步方法；表示真正的去执行线程</li>
+<li>虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被<strong>多次start调用会抛出异常</strong>；threadStatus的状态由JVM控制。</li>
 <li>使用Runnable时，主线程无法捕获子线程中的异常状态。线程的异常，应在线程内部解决。</li>
 </ol>
-<p>区别：start()是开启新线程，并执行其中的run方法；run()是在当前线程执行其run方法.</p>
+<p>区别：<font color='red'><code>start()</code>是让另一个新线程开启，并执行其中的run方法；<code>run()</code>是直接当前线程执行其run方法.run方法一般称为线程的执行单元</font></p>
 <ul>
 <li>
 <p>when program calls start() method, a new thread is created and code inside run() is executed in new thread.Thread.start() calls the run() method asynchronousl（异步的）,which changes the state of new Thread to Runnable.</p>
@@ -304,7 +304,7 @@
 </ul>
 <p>native方法<code>start0()</code></p>
 <p>start0(); method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.</p>
-<h2 id="stacksize">stackSize</h2>
+<h2 id="stacksize">stackSize(线程所需栈空间)</h2>
 <div class="hlcode"><pre><span class="cm">/*</span>
 <span class="cm">* The requested stack size for this thread, or 0 if the creator did</span>
 <span class="cm">* not specify a stack size.  It is up to the VM to do whatever it</span>
@@ -314,9 +314,17 @@
 </pre></div>
 
 
+<ul>
+<li>
 <p>操作系统对一个进程的最大内存是有限制的</p>
+</li>
+<li>
 <p>虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存</p>
-<p>JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系</p>
+</li>
+<li>
+<p>JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系；生产上要监控线程数量，可能会由于bug导致线程数异常增多，引发心跳,OutOfMemory告警</p>
+</li>
+</ul>
 <h1 id="_2">线程的状态</h1>
 <h2 id="java6">Java线程的6种状态</h2>
 <ol>
@@ -433,10 +441,10 @@
 </pre></div>
 
 
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_state.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_state.jpg" /></p>
 <ul>
 <li>
-<p>阻塞(block)：阻塞状态是指线程因为某种原因放弃了cpu 使用权，也即让出了cpu timeslice，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu timeslice 转到运行(running)状态。阻塞的情况分三种：</p>
+<p>阻塞(blocked)：阻塞状态是指线程因为某种原因放弃了cpu使用权，也即让出了cpu时间片，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu时间片，转到运行(running)状态。阻塞的情况分三种：</p>
 </li>
 <li>
 <p>等待阻塞：运行(running)的线程执行<code>o.wait()</code>方法，JVM会把该线程放入等待队列(waitting queue)中。</p>
@@ -472,7 +480,7 @@
         <span class="n">Thread</span> <span class="n">t4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
             <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">class</span><span class="o">){</span>
                 <span class="k">try</span><span class="o">{</span>
-                    <span class="c1">// 有时间的等待</span>
+                    <span class="c1">// 有限时间的等待</span>
                     <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span> <span class="c1">// TIMED_WAITING</span>
                 <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
                     <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
@@ -483,7 +491,7 @@
 
         <span class="n">Thread</span> <span class="n">t5</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
             <span class="k">try</span><span class="o">{</span>
-                <span class="c1">// 无时间的等待</span>
+                <span class="c1">// 无限时间的等待</span>
                 <span class="n">t2</span><span class="o">.</span><span class="na">join</span><span class="o">();</span> <span class="c1">// WAITING</span>
             <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
                 <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
@@ -492,7 +500,7 @@
         <span class="n">t5</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
 
         <span class="n">Thread</span> <span class="n">t6</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
-            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">class</span><span class="o">){</span> <span class="c1">// 竞争锁，竞争不到</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">class</span><span class="o">){</span> <span class="c1">// 竞争锁，竞争不到，BLOCKED</span>
                 <span class="k">try</span><span class="o">{</span>
                     <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
                 <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
@@ -553,7 +561,7 @@
 </ol>
 <h1 id="monitor">Monitor</h1>
 <p><a href="https://www.programcreek.com/2011/12/monitors-java-synchronization-mechanism/" target="_blank">Monitors – The Basic Idea of Java Synchronization</a></p>
-<h1 id="waitnotify">对象的wait,notify方法</h1>
+<h1 id="waitnotify">对象的<code>wait</code>,<code>notify</code>方法</h1>
 <ul>
 <li>wait: 在其它线程调用此对象的<code>notify()</code>方法或<code>notifyAll()</code>方法前，导致当前线程等待</li>
 <li>notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。</li>
@@ -561,7 +569,7 @@
 </ul>
 <div class="hlcode"><pre><span class="err">参考文档：</span> <span class="nl">https:</span><span class="c1">//www.baeldung.com/java-wait-notify</span>
 
-<span class="n">Simply</span> <span class="n">put</span><span class="o">,</span> <span class="n">when</span> <span class="n">we</span> <span class="n">call</span> <span class="n">wait</span><span class="o">()</span> <span class="err">–</span> <span class="k">this</span> <span class="n">forces</span> <span class="n">the</span> <span class="n">current</span> <span class="n">thread</span> <span class="n">to</span> <span class="n">wait</span> <span class="n">until</span> <span class="n">some</span> <span class="n">other</span> <span class="n">thread</span> <span class="n">invokes</span> <span class="n">notify</span><span class="o">()</span> <span class="n">or</span> <span class="n">notifyAll</span><span class="o">()</span> <span class="n">on</span> <span class="n">the</span> <span class="n">same</span> <span class="n">object</span><span class="o">.</span>
+<span class="n">Simply</span> <span class="n">put</span><span class="o">,</span> <span class="n">when</span> <span class="n">we</span> <span class="n">call</span> <span class="n">wait</span><span class="o">()</span> <span class="err">–</span> <span class="k">this</span> <span class="n">forces</span> <span class="n">the</span> <span class="n">current</span> <span class="n">thread</span> <span class="n">to</span> <span class="n">wait</span> <span class="n">until</span> <span class="n">some</span> <span class="n">other</span> <span class="n">thread</span> <span class="n">invokes</span> <span class="n">notify</span><span class="o">()</span> <span class="n">or</span> <span class="n">notifyAll</span><span class="o">()</span> <span class="n">on</span> <span class="n">the</span> <span class="n">same</span> <span class="n">object</span><span class="o">.(</span><span class="err">当调用</span><span class="n">wait</span><span class="o">()</span><span class="err">后，当前线程将等待其它线程调用</span><span class="n">notity</span><span class="o">())</span>
 
 <span class="n">For</span> <span class="k">this</span><span class="o">,</span> <span class="n">the</span> <span class="n">current</span> <span class="n">thread</span> <span class="n">must</span> <span class="n">own</span> <span class="n">the</span> <span class="n">object</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">monitor</span><span class="o">.</span> <span class="n">According</span> <span class="n">to</span> <span class="n">Javadocs</span><span class="o">,</span> <span class="k">this</span> <span class="n">can</span> <span class="n">happen</span> <span class="nl">when:</span>
 
@@ -619,34 +627,35 @@
 </pre></div>
 
 
+<h2 id="wait">wait方法的底层原理</h2>
+<ul>
+<li>Java中每一个对象都可以成为一个监视器（Monitor）, 该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒调度), 一个入口队列(EntryQueue,要去竞争获取锁).</li>
+<li><code>waiting</code>进入<code>_waitSet</code>等待中，是阻塞状态，不会占用CPU</li>
+<li><code>waiting</code>被唤醒后，不是直接执行，而是进入<code>_EntryList</code>，去竞争<code>monitor</code>来获得机会去执行</li>
+<li>其中<code>_EntryList</code>是没有获取到锁的Blocking状态，要继续竞争锁</li>
+</ul>
 <h2 id="wait-sleep"><code>wait</code> 和 <code>sleep</code> 的区别？</h2>
 <ol>
 <li>
 <p>wait()方法属于Object类,sleep()属于Thread类；</p>
 </li>
 <li>
-<p>wait()方法释放cpu给其它线程，自己让出资源进入等待池等待；sleep继续占用cpu，不让出资源；</p>
+<p>wait()方法让自己让出锁资源进入等待池等待，让出CPU；sleep是占用锁资源不释放放，处于阻塞状态，让出CPU；</p>
 </li>
 <li>
 <p>sleep()必须指定时间，wait()可以指定时间也可以不指定；sleep()时间到，线程处于阻塞或可运行状态；</p>
 </li>
 <li>
-<p>wait()方法会释放持有的锁，不然其它线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁，所以释放锁，可以执行其他线程，也可以唤醒自己，只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；</p>
+<p>wait()方法会释放持有的锁，不然其它线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁；所以释放锁，让其它线程可以进入synchronized同步块，可以执行其它线程，也可以唤醒自己；只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；</p>
 </li>
 <li>
-<p>wait()方法只能在同步方法或同步代码块中调用，否则会报<code>illegalMonitorStateException</code>异常，如果没有设定时间，使用<code>notify()</code>来唤醒；而sleep()能在任何地方调用；</p>
+<p>wait()方法只能在同步方法或同步代码块中调用，否则会报<code>illegalMonitorStateException</code>异常，如果没有设定时间，使用<code>notify()</code>来唤醒；而<code>sleep()</code>能在任何地方调用；</p>
 </li>
 </ol>
-<h2 id="wait">wait原理</h2>
-<ul>
-<li><code>waiting</code>进入<code>wait_set</code>等待中，是阻塞状态，不会占用CPU</li>
-<li><code>waiting</code>被唤醒后，不是直接执行，而是进入<code>EntryList</code>，去竞争<code>monitor</code>已获得机会去执行</li>
-<li><code>EntryList</code>是没有获取到锁的Blocking状态，要竞争锁</li>
-</ul>
 <h1 id="threadgroup"><code>ThreadGroup</code>线程组</h1>
 <h2 id="_3">线程组认识</h2>
 <div class="hlcode"><pre><span class="n">ThreadGroup</span> <span class="n">tg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadGroup</span><span class="o">(</span><span class="s">&quot;tg&quot;</span><span class="o">);</span>
-<span class="n">Thread</span> <span class="n">tr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">tg</span><span class="o">,</span><span class="s">&quot;tr&quot;</span><span class="o">);</span>
+<span class="n">Thread</span> <span class="n">tr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">tg</span><span class="o">,</span> <span class="s">&quot;tr&quot;</span><span class="o">);</span>
 
 <span class="c1">// 不断获取上一级的 线程组</span>
 <span class="n">ThreadGroup</span> <span class="n">tg_parent</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="na">getThreadGroup</span><span class="o">();</span>
@@ -791,7 +800,7 @@
 <p>用户线程：Java虚拟机在它所有非守护线程已经离开后自动离开</p>
 </li>
 <li>
-<p>守护线程：守护线程则是用来服务用户线程的，如果没有其他用户线程在运行，那么就没有可服务对象，也就没有理由继续下去</p>
+<p>守护线程：守护线程则是用来服务用户线程的，如果没有其它用户线程在运行，那么就没有可服务对象，也就没有理由继续下去</p>
 </li>
 </ol>
 <h1 id="thread-api">Thread API</h1>
@@ -816,7 +825,7 @@
 </pre></div>
 
 
-<p>启发式的方式：提醒调度器愿意放弃当前CPU资源，如果CPU资源不紧张，则会忽略这种提醒</p>
+<p>启发式的方式：提醒调度器<strong>愿意放弃当前CPU资源</strong>，如果CPU资源不紧张，则会忽略这种提醒</p>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm">* A hint to the scheduler that the current thread is willing to yield</span>
 <span class="cm">* its current use of a processor. The scheduler is free to ignore this</span>
@@ -871,18 +880,26 @@
             <span class="n">ts</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
         <span class="o">}</span>
     <span class="o">}</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
         <span class="n">test</span><span class="o">();</span>
-       <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Main thread finished&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Main thread finished&quot;</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 
 
-<h3 id="sleep-yield">sleep 与 yield的区别</h3>
 <ul>
-<li><code>yield</code>会使<code>RUNNING</code>状态的 Thread 进入<code>Runnable</code>状态（如果CPU调度器没有忽略这个提示的话）</li>
-<li><code>sleep</code>回使得线程短暂的<code>Blocked</code>, 会在给定的时间内释放CPU资源</li>
+<li>输出顺序无规律,如下是其中的一次输出，所以并不总是直接让出CPU</li>
+</ul>
+<div class="hlcode"><pre><span class="nl">id:</span><span class="mi">0</span>
+<span class="nl">id:</span><span class="mi">1</span>
+<span class="n">Main</span> <span class="n">thread</span> <span class="n">finished</span>
+</pre></div>
+
+
+<h3 id="sleepyield"><code>sleep</code>与<code>yield</code>的区别</h3>
+<ul>
+<li><code>yield</code>会使<code>RUNNING</code>状态的线程进入<code>Runnable</code>状态（如果CPU调度器没有忽略这个提示的话）</li>
 <li>一个线程<code>sleep</code>,另一个线程调用<code>interrupt</code>会捕获到中断信号，而<code>yield</code>则不会</li>
 </ul>
 <h2 id="_4">线程的优先级</h2>
@@ -952,7 +969,7 @@
 </pre></div>
 
 
-<h3 id="_5">获取当前线程</h3>
+<h3 id="threadcurrentthread">获取当前线程(<code>Thread.currentThread()</code>)</h3>
 <div class="hlcode"><pre><span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="nd">@Override</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
@@ -981,7 +998,7 @@
 </pre></div>
 
 
-<p>打断一个线程并不等于该线程的生命周期结束，仅仅是打断当前线程的阻塞状态</p>
+<p>打断一个线程并不等于该线程的生命周期结束，仅仅是<strong>打断当前线程的阻塞状态</strong></p>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
@@ -1050,7 +1067,7 @@
 </pre></div>
 
 
-<h2 id="joinjoin">Join(线程的join方法)</h2>
+<h2 id="joinjoin">join(线程的join方法)</h2>
 <p>与<code>sleep</code>一样也是一个可中断的方法，底层是对象的<code>wait</code>方法</p>
 <p>线程B<code>join</code>线程A，会使得<code>当前线程B进入等待</code>，直到线程A结束生命周期，或者到达给定的时间，在此期间B线程是处于<code>Blocked</code>的</p>
 <h3 id="join">join源码分析</h3>
@@ -1086,9 +1103,9 @@
 </pre></div>
 
 
-<h2 id="_6">关闭一个线程</h2>
-<h3 id="_7">正常结束</h3>
-<h3 id="_8">捕获中断信号关闭线程</h3>
+<h2 id="_5">关闭一个线程</h2>
+<h3 id="_6">正常结束</h3>
+<h3 id="_7">捕获中断信号关闭线程</h3>
 <h3 id="volatile">使用volatile开关控制</h3>
 <div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
@@ -1123,14 +1140,14 @@
 </pre></div>
 
 
-<h3 id="_9">异常退出</h3>
-<h3 id="_10">进程假死</h3>
+<h3 id="_8">异常退出</h3>
+<h3 id="_9">进程假死</h3>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-18 09:23:40</p>
+        <p>Site Generated 2020-06-26 16:33:45</p>
       </span>
     </div>
 

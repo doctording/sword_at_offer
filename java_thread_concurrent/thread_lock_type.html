@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Java中的各种锁概念 - 剑指Offer</title>
+    <title>Java Lock 分类 - 剑指Offer</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;Java中的各种锁概念
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;Java Lock 分类
     <span class="updated">Page Updated&nbsp;
       2019-03-15 00:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Java中的各种锁概念</div>
+<div class="page_title">Java Lock 分类</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#_1">常见的各种锁</a><ul>
@@ -91,12 +91,12 @@
 </ul>
 <h2 id="_3">乐观锁&amp;悲观锁</h2>
 <h3 id="_4">乐观锁</h3>
-<p>乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去拿数据的时候都认为别人不会修改，所以<strong>不会上锁</strong>，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。eg: CAS</p>
+<p>乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去读数据的时候都认为别人不会修改，所以<strong>不会上锁</strong>，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。eg: CAS</p>
 <h3 id="_5">悲观锁</h3>
 <p>悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性高，每次去拿数据的时候都认为别人会修改，所以每次在读写数据的时候<strong>都会上锁</strong>，这样别人想读写这个数据就会Block直到拿到锁。Java中的悲观锁就是Synchronized,AQS框架下的锁则是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁，如偏向锁(RetreenLock)。</p>
 <h2 id="_6">自旋锁</h2>
 <p><a href="https://en.wikipedia.org/wiki/Spinlock" target="_blank">Spinlock WikiPedia</a></p>
-<p>自旋锁是采用让当前线程不停地的在循环体内执行实现的，只有当循环的条件被其它线程改变时，才能进入临界区；否则一直自旋</p>
+<p>自旋锁是采用让当前线程不停地的在循环体内执行实现的，只有当循环的条件被其它线程改变时，才能进入临界区；否则一直自旋，消耗CPU</p>
 <h3 id="_7">自旋锁存在的意义与使用场景</h3>
 <p>阻塞与唤醒线程需要操作系统切换CPU状态，需要消耗一定时间；自旋只是当前线程自己循环，没有线程状态的改变，稍快</p>
 <h3 id="atomicreference">AtomicReference实现一个公平的自旋锁</h3>
@@ -283,6 +283,9 @@
 </ul>
 <p>同一个线程可以反复获取锁多次，然后需要释放多次</p>
 <p>同一个线程在外层函数获得锁之后，内层递归函数仍能获取该锁的代码，在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁，即：<strong>线程可以进入任何一个它已经拥有的锁所同步的代码块</strong>，防止死锁</p>
+<ul>
+<li>synchronized是可重入锁</li>
+</ul>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Lock</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
@@ -392,6 +395,21 @@
 </pre></div>
 
 
+<p>ReentrantLock继承父类AQS（AQS内部维护了一个同步状态status来计数重入次数，初始为0）<br />
+<em> 当线程尝试获取锁时，可重入锁先尝试获取并更新<code>state</code>值，如果<code>state == 0</code>表示没有其它线程在执行同步代码，则将<code>state</code>设置为1,当前线程开始执行；非可重入锁同<br />
+</em> 如果<code>state &gt; 0</code>，则判断当前线程是否是获取到这个锁的线程，如果是则<code>state = state + 1</code>；如果是非重入锁，则直接去获取并更新当前status，此时如果<code>state &gt; 0</code>则会导致其获取锁失败，当前线程会阻塞</p>
+<ul>
+<li>可重前<code>state == 1</code></li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state.png" /></p>
+<ul>
+<li>可重入操作，<code>state = state + 1</code></li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state_2.png" /></p>
+<ul>
+<li>可重入后 <code>state = state - 1</code></li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state_3.png" /></p>
 <h3 id="_9">公平锁</h3>
 <p>表示线程获取锁的顺序是按照线程申请锁的顺序来分配的，即<code>FIFO</code>, 队列结构</p>
 <div class="hlcode"><pre> <span class="cm">/**</span>
@@ -741,8 +759,8 @@
 </pre></div>
 
 
-<p>内部通过一个int类型的成员变量state来控制同步状态(对同步状态执行CAS操作)</p>
-<p>当state=0时，则说明没有任何线程占有共享资源的锁，当state=1时，则说明有线程目前正在使用共享变量，其他线程必须加入同步队列进行等待</p>
+<p>内部通过一个int类型的成员变量<code>state</code>来控制同步状态(对同步状态执行CAS操作)</p>
+<p>当state=0时，则说明没有任何线程占有共享资源的锁，当<code>state == 1</code>时，则说明有线程目前正在使用共享变量，其它线程必须加入同步队列进行等待</p>
 <p>Node结点是对每一个访问同步代码的线程的封装,包含了需要同步的线程本身以及线程的状态，如是否被阻塞，是否等待唤醒，是否已经被取消等</p>
 <div class="hlcode"><pre><span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
     <span class="c1">//共享模式</span>
@@ -796,7 +814,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-18 09:23:40</p>
+        <p>Site Generated 2020-06-26 16:33:45</p>
       </span>
     </div>
 

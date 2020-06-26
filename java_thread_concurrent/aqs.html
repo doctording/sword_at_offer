@@ -97,7 +97,7 @@
 <p><strong>park</strong>: n. 公园; 专用区; 园区; (英国) 庄园，庭院; v. 停(车); 泊(车); 坐下(或站着); 把…搁置，推迟(在以后的会议上讨论或处理);</p>
 <h3 id="fifoclh">FIFO队列(CLH 队列，双向链表)</h3>
 <p>整个框架的关键就是如何管理被阻塞的线程的队列，该队列是严格的FIFO队列，因此，框架不支持基于优先级的同步。</p>
-<p>自旋判断前驱节点是否释放了锁：如去前驱没有释放锁，那么就一直自旋；否则就能获取到锁，结束自旋</p>
+<p>自旋判断前驱节点是否释放了锁：如果前驱没有释放锁，那么就一直自旋；否则就能获取到锁，结束自旋</p>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm">    * Creates and enqueues node for current thread and given mode.</span>
 <span class="cm">    *</span>
@@ -230,7 +230,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-18 09:23:40</p>
+        <p>Site Generated 2020-06-26 16:33:45</p>
       </span>
     </div>
 

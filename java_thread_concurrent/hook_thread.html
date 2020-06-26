@@ -1,0 +1,216 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Hook线程 - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_thread_concurrent">java_thread_concurrent</a>&nbsp;&#187;&nbsp;Hook线程
+    <span class="updated">Page Updated&nbsp;
+      2019-02-15 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Hook线程</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#hook">Hook线程以及捕获线程执行异常</a><ul>
+<li><a href="#_1">获取线程运行时异常</a><ul>
+<li><a href="#_2">例子代码</a></li>
+</ul>
+</li>
+<li><a href="#_3">注入钩子线程</a><ul>
+<li><a href="#hook_1">Hook线程的应用</a></li>
+<li><a href="#hook_2">Hook线程应用场景以及注意事项</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="hook">Hook线程以及捕获线程执行异常</h1>
+<h2 id="_1">获取线程运行时异常</h2>
+<p>当线程在运行过程中出现异常时，JVM会调用<code>dispatchUncaughtException</code>方法，该方法会将对应的线程实例以及异常信息传递给会调接口</p>
+<h3 id="_2">例子代码</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/25 11:07</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CaptureThreadException</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">setDefaultUncaughtExceptionHandler</span><span class="o">((</span><span class="n">t</span><span class="o">,</span><span class="n">e</span><span class="o">)-&gt;{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;thread:&quot;</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; occur exception&quot;</span><span class="o">);</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">});</span>
+
+        <span class="kd">final</span> <span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+            <span class="o">}</span>
+            <span class="c1">// 有异常抛出</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="o">},</span> <span class="s">&quot;test-e&quot;</span><span class="o">);</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>程序输出（捕获到线程异常）</li>
+</ul>
+<div class="hlcode"><pre><span class="nl">thread:</span><span class="n">test</span><span class="o">-</span><span class="n">e</span> <span class="n">occur</span> <span class="n">exception</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">ArithmeticException</span><span class="o">:</span> <span class="o">/</span> <span class="n">by</span> <span class="n">zero</span>
+    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">thread</span><span class="o">.</span><span class="na">CaptureThreadException</span><span class="o">.</span><span class="na">lambda</span><span class="n">$main$1</span><span class="o">(</span><span class="n">CaptureThreadException</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">24</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">748</span><span class="o">)</span>
+</pre></div>
+
+
+<ul>
+<li>异常不断的往上抛：【线程异常】-&gt;【MainGroup】-&gt;【SystemGroup】-&gt;【System.err】</li>
+</ul>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CaptureThreadException</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 获取当前线程的线程组</span>
+        <span class="n">ThreadGroup</span> <span class="n">mainGroup</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getThreadGroup</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mainGroup</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mainGroup</span><span class="o">.</span><span class="na">getParent</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mainGroup</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">getParent</span><span class="o">());</span>
+
+
+<span class="c1">//        Thread.setDefaultUncaughtExceptionHandler((t,e)-&gt;{</span>
+<span class="c1">//            System.out.println(&quot;thread:&quot; + t.getName() + &quot; occur exception&quot;);</span>
+<span class="c1">//            e.printStackTrace();</span>
+<span class="c1">//        });</span>
+
+        <span class="kd">final</span> <span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+            <span class="o">}</span>
+            <span class="c1">// 有异常抛出</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="o">},</span> <span class="s">&quot;test-e&quot;</span><span class="o">);</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="_3">注入钩子线程</h2>
+<p>JVM进程的退出是由于JVM进程中没有活跃的非守护线程，或者收到了系统终端信号，向JVM程序注入一个Hook线程，在JVM进程退出的时候，Hook线程会启动执行，通过<code>Runtime</code>可以为JVM注入多个Hook线程</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">addShutdownHook</span><span class="o">(</span><span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;the hook thread 1 is running.&quot;</span><span class="o">);</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;the hook thread 1 will exit.&quot;</span><span class="o">);</span>
+    <span class="o">}));</span>
+    <span class="c1">// 钩子线程可以注册多个</span>
+    <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">addShutdownHook</span><span class="o">(</span><span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;the hook thread 2 is running.&quot;</span><span class="o">);</span>
+            <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;the hook thread 2 will exit.&quot;</span><span class="o">);</span>
+    <span class="o">}));</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;the program will is stopping.&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="hook_1">Hook线程的应用</h3>
+<p>防止重复启动，启动的时候创建lock文件，进程中断或退出的时候删除lock文件</p>
+<div class="hlcode"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PreventDupStart</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">LOCK_PATH</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">LOCK_FILE</span> <span class="o">=</span> <span class="s">&quot;.lock&quot;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">PERMISSION</span> <span class="o">=</span> <span class="s">&quot;rw-------&quot;</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+
+        <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">addShutdownHook</span><span class="o">(</span><span class="k">new</span> <span class="n">Thread</span><span class="o">(()-&gt;{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;the program received kill SIGNAL.&quot;</span><span class="o">);</span>
+                <span class="n">getLockFile</span><span class="o">().</span><span class="na">toFile</span><span class="o">().</span><span class="na">delete</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;the hook thread 1 will exit.&quot;</span><span class="o">);</span>
+        <span class="o">}));</span>
+
+        <span class="c1">// 检查是否存在.lock文件</span>
+        <span class="n">checkRunning</span><span class="o">();</span>
+
+        <span class="c1">// 模拟程序运行</span>
+        <span class="k">for</span> <span class="o">(;;){</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;program is running&quot;</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">checkRunning</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">Path</span> <span class="n">path</span> <span class="o">=</span> <span class="n">getLockFile</span><span class="o">();</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">path</span><span class="o">.</span><span class="na">toFile</span><span class="o">().</span><span class="na">exists</span><span class="o">()){</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="s">&quot;the program already start&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">PosixFilePermission</span><span class="o">&gt;</span> <span class="n">perms</span> <span class="o">=</span> <span class="n">PosixFilePermissions</span><span class="o">.</span><span class="na">fromString</span><span class="o">(</span><span class="n">PERMISSION</span><span class="o">);</span>
+        <span class="n">Files</span><span class="o">.</span><span class="na">createFile</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">PosixFilePermissions</span><span class="o">.</span><span class="na">asFileAttribute</span><span class="o">(</span><span class="n">perms</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Path</span> <span class="nf">getLockFile</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">LOCK_PATH</span><span class="o">,</span> <span class="n">LOCK_FILE</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="hook_2">Hook线程应用场景以及注意事项</h3>
+<ol>
+<li>Hook线程只有在收到退出信号的时候会被执行，如果在kill的时候使用了参数9,那么Hook线程不会得到执行，进程将会立刻退出，因此<code>.lock</code>文件将得不到清理</li>
+<li>Hook线程也可以执行一些资源释放的工作，比如关闭文件句炳，socket链接，数据库connection等</li>
+<li>尽量不要在Hook线程中执行一些耗时非常长的操作，因为其会导致程序迟迟不能退出</li>
+</ol>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-26 16:33:45</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

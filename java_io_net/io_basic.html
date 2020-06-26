@@ -50,7 +50,7 @@
 <li><a href="#io_2">IO模型：同步/阻塞概念</a><ul>
 <li><a href="#io_3">阻塞与非阻塞(等待IO时的状态)</a></li>
 <li><a href="#_7">同步与异步（用户线程与内核的消息交互方式）</a></li>
-<li><a href="#_8">人用水壶烧水处理例子说明</a></li>
+<li><a href="#_8">用水壶烧水的例子说明[同步/阻塞]</a></li>
 <li><a href="#io_4">网络IO模型演进</a><ul>
 <li><a href="#bioblocking-io-io">传统的BIO(Blocking I/O 阻塞IO)</a><ul>
 <li><a href="#selectornio-single-thread">selector(NIO Single Thread 模型)</a></li>
@@ -91,7 +91,6 @@
 </div>
 <h1 id="java-io">Java IO 基础</h1>
 <p>流是一组有顺序的，有起点和终点的字节集合，是对数据传输的总称或抽象。即数据在两设备间的传输称为流，<strong>流的本质是数据传输</strong>，根据数据传输特性将流抽象为各种类，方便更直观的进行数据操作。</p>
-<p><small>参考： https://www.cnblogs.com/QQ846300233/p/6046388.html</small></p>
 <ul>
 <li>字节流 InputStream/OutStream</li>
 </ul>
@@ -113,7 +112,6 @@
 </ol>
 <p>目前的操作系统，用户空间和内核空间的区分一般采用虚拟内存来实现，因此用户空间和内存空间都是在虚拟内存中。使用虚拟内存无非是因为其两大优势：一是它可以使多个虚拟内存地址指向同一个物理内存;二是虚拟内存的空间可以大于物理内存的空间。</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer_virtual.png" /></p>
-<p><small>参考： https://blog.csdn.net/u012129558/article/details/82878994</small></p>
 <ul>
 <li>
 <p>当用户空间所需要的数据在内核空间中已经存在，那么内核无需再次向磁盘控制硬件发起<code>系统调用</code>，直接<strong>对内核缓冲区进行复制</strong>，这些数据成为高速缓存，当然内核也可以预读取用户空间需要的数据。</p>
@@ -201,13 +199,13 @@
 <h2 id="_7">同步与异步（用户线程与内核的消息交互方式）</h2>
 <ul>
 <li>
-<p>同步指用户线程发起IO请求后需要等待或者轮询内核IO操作完成后才能继续执行；同步有阻塞，非阻塞</p>
+<p>同步指用户线程发起IO请求后需要等待或者轮询内核IO操作完成后才能继续执行；同步有阻塞，非阻塞之分</p>
 </li>
 <li>
 <p>异步是指用户线程发起IO请求后仍然继续执行，当<strong>内核IO操作完成后会通知用户线程</strong>，或者调用用户线程注册的回调函数。异步一定是非阻塞的（内核会通过函数回调或者信号机制通知用户进程；类似观察者模式）</p>
 </li>
 </ul>
-<h2 id="_8">人用水壶烧水处理例子说明</h2>
+<h2 id="_8">用水壶烧水的例子说明[同步/阻塞]</h2>
 <ul>
 <li>
 <p>同步阻塞</p>
@@ -544,7 +542,9 @@
 <li>怎么用，用在什么地方</li>
 </ol>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png" /></p>
-<p><code>linux epoll 服务端</code>例子</p>
+<ul>
+<li><code>linux epoll 服务端</code>例子</li>
+</ul>
 <div class="hlcode"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
 <span class="p">{</span>
     <span class="c1">//服务器IP + port</span>
@@ -715,7 +715,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-18 09:23:40</p>
+        <p>Site Generated 2020-06-26 16:33:45</p>
       </span>
     </div>
 
