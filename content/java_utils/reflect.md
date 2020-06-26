@@ -12,7 +12,7 @@ Java的反射（`reflection`）机制是指在程序的运行状态中，可以�
 
 对于一个字节码文件`.class`，虽然表面上我们对该字节码文件一无所知，但该文件本身却记录了许多信息。Java在将.class字节码文件载入时，JVM将产生一个`java.lang.Class`对象代表该.class字节码文件，从该Class对象中可以获得类的许多基本信息，这就是反射机制。
 
-## 获得Class对象的方式
+## 获得`Class对象`的方式
 
 * Class.forName(“类的全限定名”)
 * 实例对象.getClass()

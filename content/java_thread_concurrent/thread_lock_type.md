@@ -1,5 +1,5 @@
 ---
-title: "Java中的各种锁概念"
+title: "Java Lock 分类"
 layout: page
 date: 2019-03-15 00:00
 ---
@@ -27,7 +27,7 @@ date: 2019-03-15 00:00
 
 ### 乐观锁
 
-乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去拿数据的时候都认为别人不会修改，所以**不会上锁**，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。eg: CAS
+乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去读数据的时候都认为别人不会修改，所以**不会上锁**，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。eg: CAS
 
 ### 悲观锁
 
@@ -37,7 +37,7 @@ date: 2019-03-15 00:00
 
 <a href="https://en.wikipedia.org/wiki/Spinlock" target="_blank">Spinlock WikiPedia</a>
 
-自旋锁是采用让当前线程不停地的在循环体内执行实现的，只有当循环的条件被其它线程改变时，才能进入临界区；否则一直自旋
+自旋锁是采用让当前线程不停地的在循环体内执行实现的，只有当循环的条件被其它线程改变时，才能进入临界区；否则一直自旋，消耗CPU
 
 ### 自旋锁存在的意义与使用场景
 
@@ -232,6 +232,8 @@ class SpinLock{
 
 同一个线程在外层函数获得锁之后，内层递归函数仍能获取该锁的代码，在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁，即：**线程可以进入任何一个它已经拥有的锁所同步的代码块**，防止死锁
 
+* synchronized是可重入锁
+
 ```java
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -340,6 +342,22 @@ public class Main {
 
 }
 ```
+
+ReentrantLock继承父类AQS（AQS内部维护了一个同步状态status来计数重入次数，初始为0）
+* 当线程尝试获取锁时，可重入锁先尝试获取并更新`state`值，如果`state == 0`表示没有其它线程在执行同步代码，则将`state`设置为1,当前线程开始执行；非可重入锁同
+* 如果`state > 0`，则判断当前线程是否是获取到这个锁的线程，如果是则`state = state + 1`；如果是非重入锁，则直接去获取并更新当前status，此时如果`state > 0`则会导致其获取锁失败，当前线程会阻塞
+
+* 可重前`state == 1`
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state.png)
+
+* 可重入操作，`state = state + 1`
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state_2.png)
+
+* 可重入后 `state = state - 1`
+
+![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state_3.png)
 
 ### 公平锁
 
@@ -715,9 +733,9 @@ A shared lock on a resource can be owned by several tasks at the same time. Howe
  *
 ```
 
-内部通过一个int类型的成员变量state来控制同步状态(对同步状态执行CAS操作)
+内部通过一个int类型的成员变量`state`来控制同步状态(对同步状态执行CAS操作)
 
-当state=0时，则说明没有任何线程占有共享资源的锁，当state=1时，则说明有线程目前正在使用共享变量，其他线程必须加入同步队列进行等待
+当state=0时，则说明没有任何线程占有共享资源的锁，当`state == 1`时，则说明有线程目前正在使用共享变量，其它线程必须加入同步队列进行等待
 
 Node结点是对每一个访问同步代码的线程的封装,包含了需要同步的线程本身以及线程的状态，如是否被阻塞，是否等待唤醒，是否已经被取消等
 

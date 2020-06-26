@@ -39,8 +39,6 @@ date: 2019-03-18 00:00
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer_virtual.png)
 
-<small>参考： https://blog.csdn.net/u012129558/article/details/82878994</small>
-
 * 当用户空间所需要的数据在内核空间中已经存在，那么内核无需再次向磁盘控制硬件发起`系统调用`，直接**对内核缓冲区进行复制**，这些数据成为高速缓存，当然内核也可以预读取用户空间需要的数据。
 
 * 用户空间通常是常规进程所在区域，即非特权区域，不能直接访问磁盘硬件设备；

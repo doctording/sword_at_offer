@@ -781,3 +781,160 @@ method return: class java.lang.Integer
 * 部署在同一个服务器上的两个Web应用程序所使用的Java类库可以相互共享
 
 * 支持热替换(特殊的动态加载机制)
+
+## com.mysql.jdbc.Driver（打破`parents delegate`）
+
+## 例子代码
+
+```java
+public static void main(String[] args) {
+    Connection conn = null;
+    Statement stmt = null;
+    try{
+        //STEP 1: Register JDBC driver
+        Class.forName("com.mysql.jdbc.Driver");
+        //STEP 2: Open a connection
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test",
+                "root", "");
+        //STEP 3: Execute a query
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from tb_user limit 5");
+        //STEP 4: Get results
+        while(rs.next()){
+            System.out.println(rs.getString("id") + " " + rs.getString("name"));
+        }
+        rs.close();
+    }catch(Exception e){
+
+    }//end try
+}
+```
+
+## 源码逻辑说明
+
+```java
+public class Driver extends NonRegisteringDriver implements java.sql.Driver {
+    public Driver() throws SQLException {
+    }
+
+    static {
+        try {
+            // 静态方法将Driver实例注册到DriverManager中
+            DriverManager.registerDriver(new Driver());
+        } catch (SQLException var1) {
+            throw new RuntimeException("Can't register driver!");
+        }
+    }
+}
+```
+
+```java
+/**
+    * Registers the given driver with the {@code DriverManager}.
+    * A newly-loaded driver class should call
+    * the method {@code registerDriver} to make itself
+    * known to the {@code DriverManager}. If the driver is currently
+    * registered, no action is taken.
+    *
+    * @param driver the new JDBC Driver that is to be registered with the
+    *               {@code DriverManager}
+    * @exception SQLException if a database access error occurs
+    * @exception NullPointerException if {@code driver} is null
+    */
+public static synchronized void registerDriver(java.sql.Driver driver)
+    throws SQLException {
+
+    registerDriver(driver, null);
+}
+```
+
+### Connection的`getConnection`方法
+
+```java
+//  Worker method called by the public getConnection() methods.
+private static Connection getConnection(
+    String url, java.util.Properties info, Class<?> caller) throws SQLException {
+    /*
+        * When callerCl is null, we should check the application's
+        * (which is invoking this class indirectly)
+        * classloader, so that the JDBC driver class outside rt.jar
+        * can be loaded from here.
+        */
+    // 得到线程上下文类加载器
+    ClassLoader callerCL = caller != null ? caller.getClassLoader() : null;
+    synchronized(DriverManager.class) {
+        // synchronize loading of the correct classloader.
+        if (callerCL == null) {
+            callerCL = Thread.currentThread().getContextClassLoader();
+        }
+    }
+
+    if(url == null) {
+        throw new SQLException("The url cannot be null", "08001");
+    }
+
+    println("DriverManager.getConnection(\"" + url + "\")");
+
+    // Walk through the loaded registeredDrivers attempting to make a connection.
+    // Remember the first exception that gets raised so we can reraise it.
+    SQLException reason = null;
+
+    // 递归DruidManager中已经注册的驱动类，然后验证数据库驱动是否可以被制定的类加载器加载
+    // 如果验证通过则返回Connection,此刻返回的Connection则属数据库厂商提供的实例
+    for(DriverInfo aDriver : registeredDrivers) {
+        // If the caller does not have permission to load the driver then
+        // skip it.
+        if(isDriverAllowed(aDriver.driver, callerCL)) {
+            try {
+                println("    trying " + aDriver.driver.getClass().getName());
+                Connection con = aDriver.driver.connect(url, info);
+                if (con != null) {
+                    // Success!
+                    println("getConnection returning " + aDriver.driver.getClass().getName());
+                    return (con);
+                }
+            } catch (SQLException ex) {
+                if (reason == null) {
+                    reason = ex;
+                }
+            }
+
+        } else {
+            println("    skipping: " + aDriver.getClass().getName());
+        }
+
+    }
+
+    // if we got here nobody could connect.
+    if (reason != null)    {
+        println("getConnection failed: " + reason);
+        throw reason;
+    }
+
+    println("getConnection: no suitable driver found for "+ url);
+    throw new SQLException("No suitable driver found for "+ url, "08001");
+}
+```
+
+```java
+private static boolean isDriverAllowed(Driver driver, ClassLoader classLoader) {
+    boolean result = false;
+    if(driver != null) {
+        Class<?> aClass = null;
+        try {
+            // 使用线程上下文类加载器进行数据库驱动的加载和初始化
+            aClass = Class.forName(driver.getClass().getName(), true, classLoader);
+        } catch (Exception ex) {
+            result = false;
+        }
+
+        result = ( aClass == driver.getClass() ) ? true : false;
+    }
+
+    return result;
+}
+```
+
+数据库驱动加载接口被作为JDK核心标准类库的一部分，由于JVM类加载的双亲委托(`parents delegate`)机制的限制，启动类加载器不可能加载得到第三方厂商提供的具体实现。如何解决？
+
+线程上下文类加载器：有了线程上下文类加载器，启动类加载器(根加载器)反倒需要委托子类加载器去加载厂商提供的对JDK定义的SPI的实现

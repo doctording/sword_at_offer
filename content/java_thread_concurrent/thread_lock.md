@@ -1,5 +1,5 @@
 ---
-title: "Thread Lock"
+title: "Java Lock"
 layout: page
 date: 2019-03-15 00:00
 ---
@@ -284,7 +284,7 @@ main end
 
 `ReentrantLock`默认的构造函数是创建的`非公平锁`，可以通过参数`true`设为`公平锁`，但公平锁表现的性能不是很好。
 
-`synchronized`是非公平锁（因为`synchronized`是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了`synchronized`吞吐率），可以重入
+`synchronized`是非公平锁（因为`synchronized`是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了`synchronized`吞吐率）；`synchronized`是可以重入的。
 
 * 锁绑定多个条件
 
@@ -440,8 +440,6 @@ void write_unlock{
     unlock(write_mutex);
 }
 ```
-
-参考：https://www.cnblogs.com/xiehongfeng100/p/4782135.html
 
 ### 实际例子
 
