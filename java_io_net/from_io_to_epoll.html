@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
+    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>从io到epoll - 剑指Offer</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/sword_at_offer/">Home</a>&nbsp;&#187;&nbsp;<a href="/sword_at_offer/#java_io_net">java_io_net</a>&nbsp;&#187;&nbsp;从io到epoll
+    <span class="updated">Page Updated&nbsp;
+      2020-06-26 00:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">从io到epoll</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#nioepoll">从nio到epoll</a><ul>
+<li><a href="#bio">BIO实践</a><ul>
+<li><a href="#bio_1">BIO的问题?</a></li>
+<li><a href="#select">select</a><ul>
+<li><a href="#select_1">select的问题?</a></li>
+</ul>
+</li>
+<li><a href="#epoll">epoll</a></li>
+</ul>
+</li>
+<li><a href="#io">I/O存储金字塔</a></li>
+<li><a href="#linux">附：Linux相关操作</a><ul>
+<li><a href="#man">man命令的使用</a></li>
+<li><a href="#nc">nc命令</a></li>
+<li><a href="#strace">strace命令</a></li>
+<li><a href="#linux_1">linux 相关文件描述符</a><ul>
+<li><a href="#ulimit-n">ulimit -n</a></li>
+<li><a href="#_1">输入/输出/错误描述符</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="nioepoll">从<code>nio</code>到<code>epoll</code></h1>
+<h2 id="bio">BIO实践</h2>
+<ul>
+<li>BIO Server</li>
+</ul>
+<p>服务端监听8090端口，每一个客户端用一个线程处理，不断的获取客户端的输入数据并打印</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.ServerSocket</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.Socket</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/25 18:54</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestSocket</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="mi">8090</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;step1 new ServerSocket(8090)&quot;</span><span class="o">);</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="kd">final</span> <span class="n">Socket</span> <span class="n">client</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;step2 client:&quot;</span> <span class="o">+</span> <span class="n">client</span><span class="o">.</span><span class="na">getPort</span><span class="o">());</span>
+            <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()-&gt;{</span>
+                <span class="k">try</span><span class="o">{</span>
+                    <span class="n">InputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">();</span>
+                    <span class="n">BufferedReader</span> <span class="n">bufferedReader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">in</span><span class="o">));</span>
+                    <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">bufferedReader</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>nc命令去连接服务端</li>
+</ul>
+<div class="hlcode"><pre><span class="n">nc</span> <span class="n">localhost</span> <span class="mi">8090</span>
+<span class="err">````</span>
+
+<span class="o">*</span> <span class="n">strace</span> <span class="err">追踪</span>
+
+<span class="err">```</span><span class="n">java</span>
+<span class="n">javac</span> <span class="n">TestSocket</span><span class="o">.</span><span class="na">java</span>
+<span class="n">strace</span> <span class="o">-</span><span class="n">ff</span> <span class="o">-</span><span class="n">o</span> <span class="o">./</span><span class="n">stracefile</span> <span class="n">java</span> <span class="n">TestSocket</span>
+</pre></div>
+
+
+<p>ServerSocket启动:</p>
+<ol>
+<li>socket 系统调用, 得到文件描述符,如 fd5</li>
+<li>bind端口</li>
+<li>listen，文件描述符</li>
+<li>accept(阻塞状态), 有客户端连接得到新的socket, 产生文件描述符 如 fd6，fd7</li>
+</ol>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_0.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_2.png" /></p>
+<p>通过进程ID号知道有多少个线程:</p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/proc_task_threads.png" /></p>
+<p>补充：linux创建线程，走的clone系统调用，eg：</p>
+<div class="hlcode"><pre><span class="n">clone</span><span class="o">(</span><span class="n">child_stack</span><span class="o">=</span><span class="mh">0x7fd8d8508ff0</span><span class="o">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">CLONE_VM</span><span class="o">|</span><span class="n">CLONE_FS</span><span class="o">|</span><span class="n">CLONE_FILES</span><span class="o">|</span><span class="n">CLONE_SIGHAND</span><span class="o">|</span><span class="n">CLONE_THREAD</span><span class="o">|</span><span class="n">CLONE_SYSVSEM</span><span class="o">|</span><span class="n">CLONE_SETTLS</span><span class="o">|</span><span class="n">CLONE_</span>     <span class="n">PARENT_SETTID</span><span class="o">|</span><span class="n">CLONE_CHILD_CLEARTID</span><span class="o">,</span> <span class="n">parent_tidptr</span><span class="o">=</span><span class="mh">0x7fd8d85099d0</span><span class="o">,</span> <span class="n">tls</span><span class="o">=</span><span class="mh">0x7fd8d8509700</span><span class="o">,</span> <span class="n">child_tidptr</span><span class="o">=</span><span class="mh">0x7fd8d85099d0</span><span class="o">)</span> <span class="o">=</span> <span class="mi">4787</span>
+</pre></div>
+
+
+<ul>
+<li>netstat查看tcp相关</li>
+</ul>
+<p>有<code>Listen</code>,<code>ESTABLISHED</code>状态的TCP</p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_3.png" /></p>
+<p>在工作目录会看到很多stracefile,以.线程id结尾；<code>56544</code>端口客户端连接，<code>vim stracefile.4772</code>(4772是服务端开启的线程)，可以找到如下一句</p>
+<div class="hlcode"><pre><span class="n">accept</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="o">{</span><span class="n">sa_family</span><span class="o">=</span><span class="n">AF_INET6</span><span class="o">,</span> <span class="n">sin6_port</span><span class="o">=</span><span class="n">htons</span><span class="o">(</span><span class="mi">56544</span><span class="o">),</span> <span class="n">inet_pton</span><span class="o">(</span><span class="n">AF_INET6</span><span class="o">,</span> <span class="s">&quot;::ffff:127.0.0.1&quot;</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">sin6_addr</span><span class="o">),</span> <span class="n">sin6_flowinfo</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">sin6_scope_id</span><span class="o">=</span><span class="mi">0</span><span class="o">},</span> <span class="o">[</span><span class="mi">28</span><span class="o">])</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">fcntl</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span> <span class="n">F_GETFL</span><span class="o">)</span>                       <span class="o">=</span> <span class="mh">0x2</span> <span class="o">(</span><span class="n">flags</span> <span class="n">O_RDWR</span><span class="o">)</span>
+<span class="n">fcntl</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span> <span class="n">F_SETFL</span><span class="o">,</span> <span class="n">O_RDWR</span><span class="o">)</span>               <span class="o">=</span> <span class="mi">0</span>
+<span class="n">lseek</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">62493071</span><span class="o">,</span> <span class="n">SEEK_SET</span><span class="o">)</span>            <span class="o">=</span> <span class="mi">62493071</span>
+<span class="n">read</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;PK\3\4\n\0\0\10\0\0000\211|L9\267\215\270R\6\0\0R\6\0\0;\0\0\0&quot;</span><span class="o">,</span> <span class="mi">30</span><span class="o">)</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">lseek</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">62493160</span><span class="o">,</span> <span class="n">SEEK_SET</span><span class="o">)</span>            <span class="o">=</span> <span class="mi">62493160</span>
+<span class="n">read</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;\312\376\272\276\0\0\0004\0:\7\0!\n\0\v\0\&quot;\t\0\10\0#\n\0\1\0$\t\0\v\0&quot;</span><span class="o">...,</span> <span class="mi">1618</span><span class="o">)</span> <span class="o">=</span> <span class="mi">1618</span>
+<span class="n">write</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;step2 client:56544&quot;</span><span class="o">,</span> <span class="mi">18</span><span class="o">)</span>      <span class="o">=</span> <span class="mi">18</span>
+</pre></div>
+
+
+<p><code>man 2 accept</code>了解到 accept 的返回：系统会产生一个文件描述符，关联接收到的socket文件</p>
+<div class="hlcode"><pre><span class="n">RETURN</span> <span class="n">VALUE</span>
+       <span class="n">On</span> <span class="n">success</span><span class="o">,</span> <span class="n">these</span> <span class="n">system</span> <span class="n">calls</span> <span class="k">return</span> <span class="n">a</span> <span class="n">nonnegative</span> <span class="n">integer</span> <span class="n">that</span> <span class="n">is</span> <span class="n">a</span> <span class="n">descriptor</span> <span class="k">for</span> <span class="n">the</span> <span class="n">accepted</span> <span class="n">socket</span><span class="o">.</span>  <span class="n">On</span> <span class="n">error</span><span class="o">,</span>  <span class="o">-</span><span class="mi">1</span>  <span class="n">is</span> <span class="n">returned</span><span class="o">,</span> <span class="n">and</span> <span class="n">errno</span> <span class="n">is</span> <span class="n">set</span> <span class="n">appropriately</span><span class="o">.</span>
+</pre></div>
+
+
+<p>从上可以看出是文件描述符<code>6</code>的一个文件,即代表了连接上的socket：</p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_1.png" /></p>
+<ul>
+<li>strace给客户端起的线程，会阻塞在<code>recvfrom</code>接收数据上</li>
+</ul>
+<div class="hlcode"><pre><span class="n">set_robust_list</span><span class="o">(</span><span class="mh">0x7fd8d85099e0</span><span class="o">,</span> <span class="mi">24</span><span class="o">)</span>     <span class="o">=</span> <span class="mi">0</span>
+<span class="n">gettid</span><span class="o">()</span>                                <span class="o">=</span> <span class="mi">4787</span>
+<span class="n">rt_sigprocmask</span><span class="o">(</span><span class="n">SIG_BLOCK</span><span class="o">,</span> <span class="n">NULL</span><span class="o">,</span> <span class="o">[</span><span class="n">QUIT</span><span class="o">],</span> <span class="mi">8</span><span class="o">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">rt_sigprocmask</span><span class="o">(</span><span class="n">SIG_UNBLOCK</span><span class="o">,</span> <span class="o">[</span><span class="n">HUP</span> <span class="n">INT</span> <span class="n">ILL</span> <span class="n">BUS</span> <span class="n">FPE</span> <span class="n">SEGV</span> <span class="n">USR2</span> <span class="n">TERM</span><span class="o">],</span> <span class="n">NULL</span><span class="o">,</span> <span class="mi">8</span><span class="o">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">rt_sigprocmask</span><span class="o">(</span><span class="n">SIG_BLOCK</span><span class="o">,</span> <span class="o">[</span><span class="n">QUIT</span><span class="o">],</span> <span class="n">NULL</span><span class="o">,</span> <span class="mi">8</span><span class="o">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">futex</span><span class="o">(</span><span class="mh">0x7fd8f000b354</span><span class="o">,</span> <span class="n">FUTEX_WAKE_OP_PRIVATE</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mh">0x7fd8f000b350</span><span class="o">,</span> <span class="o">{</span><span class="n">FUTEX_OP_SET</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">FUTEX_OP_CMP_GT</span><span class="o">,</span> <span class="mi">1</span><span class="o">})</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">futex</span><span class="o">(</span><span class="mh">0x7fd8f000b328</span><span class="o">,</span> <span class="n">FUTEX_WAKE_PRIVATE</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sched_getaffinity</span><span class="o">(</span><span class="mi">4787</span><span class="o">,</span> <span class="mi">32</span><span class="o">,</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">145</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">])</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">sched_getaffinity</span><span class="o">(</span><span class="mi">4787</span><span class="o">,</span> <span class="mi">32</span><span class="o">,</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">145</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">])</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">mmap</span><span class="o">(</span><span class="mh">0x7fd8d8409000</span><span class="o">,</span> <span class="mi">12288</span><span class="o">,</span> <span class="n">PROT_READ</span><span class="o">|</span><span class="n">PROT_WRITE</span><span class="o">,</span> <span class="n">MAP_PRIVATE</span><span class="o">|</span><span class="n">MAP_FIXED</span><span class="o">|</span><span class="n">MAP_ANONYMOUS</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span> <span class="o">=</span> <span class="mh">0x7fd8d8409000</span>
+<span class="n">mprotect</span><span class="o">(</span><span class="mh">0x7fd8d8409000</span><span class="o">,</span> <span class="mi">12288</span><span class="o">,</span> <span class="n">PROT_NONE</span><span class="o">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">lseek</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">30054856</span><span class="o">,</span> <span class="n">SEEK_SET</span><span class="o">)</span>            <span class="o">=</span> <span class="mi">30054856</span>
+<span class="n">read</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;PK\3\4\n\0\0\10\0\0006\211|L\24w\0067E\3\0\0E\3\0\0\27\0\0\0&quot;</span><span class="o">,</span> <span class="mi">30</span><span class="o">)</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">lseek</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">30054909</span><span class="o">,</span> <span class="n">SEEK_SET</span><span class="o">)</span>            <span class="o">=</span> <span class="mi">30054909</span>
+<span class="n">read</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;\312\376\272\276\0\0\0004\0-\t\0\6\0\34\n\0\7\0\35\t\0\32\0\36\n\0\37\0\33\n\0&quot;</span><span class="o">...,</span> <span class="mi">837</span><span class="o">)</span> <span class="o">=</span> <span class="mi">837</span>
+<span class="n">lseek</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">30056639</span><span class="o">,</span> <span class="n">SEEK_SET</span><span class="o">)</span>            <span class="o">=</span> <span class="mi">30056639</span>
+<span class="n">read</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;PK\3\4\n\0\0\10\0\0B\211|L\305SF\t\265\r\0\0\265\r\0\0 \0\0\0&quot;</span><span class="o">,</span> <span class="mi">30</span><span class="o">)</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">lseek</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">30056701</span><span class="o">,</span> <span class="n">SEEK_SET</span><span class="o">)</span>            <span class="o">=</span> <span class="mi">30056701</span>
+<span class="n">read</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;\312\376\272\276\0\0\0004\0\242\n\0Y\0Z\n\0-\0[\t\0,\0\\\t\0,\0]\t\0&quot;</span><span class="o">...,</span> <span class="mi">3509</span><span class="o">)</span> <span class="o">=</span> <span class="mi">3509</span>
+<span class="n">recvfrom</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span> <span class="s">&quot;helloABC\n&quot;</span><span class="o">,</span> <span class="mi">8192</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">NULL</span><span class="o">,</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">ioctl</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span> <span class="n">FIONREAD</span><span class="o">,</span> <span class="o">[</span><span class="mi">0</span><span class="o">])</span>                 <span class="o">=</span> <span class="mi">0</span>
+<span class="n">write</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;helloABC&quot;</span><span class="o">,</span> <span class="mi">8</span><span class="o">)</span>                 <span class="o">=</span> <span class="mi">8</span>
+<span class="n">write</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;\n&quot;</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>                       <span class="o">=</span> <span class="mi">1</span>
+<span class="n">recvfrom</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span>
+</pre></div>
+
+
+<h3 id="bio_1">BIO的问题?</h3>
+<ul>
+<li>线程开销大（线程多，单核需要切换线程）</li>
+<li>资源开销大，线程栈消耗内存；系统调用多</li>
+</ul>
+<p><code>C10K</code>问题: 需要每次遍历<code>n</code>个fd()，去进行系统调用检查，但实际上可能只有<code>m</code>(m &lt;&lt; n)个fd是准备好数据的；</p>
+<ol>
+<li>fd拷贝到内核复杂度是<code>O(n)</code></li>
+<li>内核检查fd是否准备好的复杂度是<code>O(n)</code></li>
+</ol>
+<h3 id="select">select</h3>
+<p>BIO的问题解决,可以把所有fd放到一个集合(select)中，一次性的拷贝到内核处理，那么复杂度：</p>
+<ol>
+<li>fd拷贝到内核复杂度是<code>O(1)</code></li>
+<li>内核检查fd是否准备好的复杂度是<code>O(n)</code></li>
+</ol>
+<h4 id="select_1">select的问题?</h4>
+<ul>
+<li>虽然每次只进行一次fd集合拷贝到内核，但注意到每次传递都差不多是同样的fd集合</li>
+<li>内核仍然是需要遍历所有fd去检查其是否准备好数据的，但实际上可能只有<code>m</code>(m &lt;&lt; n)个fd是准备好数据的，遍历仍然很慢；</li>
+</ul>
+<h3 id="epoll">epoll</h3>
+<ul>
+<li>
+<p>select的问题解决，在内核区域开辟一块共享区域，有一个fd就加入进去，不用拷贝了；随着fd的增多，这个集合也增多了；不像select那样，每次传递重复的fd集合</p>
+</li>
+<li>
+<p>不需要遍历所有fd，基于事件驱动（中断），哪个df准备好了，就发出通知事件，这些事件放到一个事件区域中，用户态自己去等待其中的事件</p>
+</li>
+<li>
+<p>无需fd拷贝到内核</p>
+</li>
+<li>内核检查fd是否准备好,采用事件通知方式</li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png" /></p>
+<h2 id="io">I/O存储金字塔</h2>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/disk.png" /></p>
+<h2 id="linux">附：Linux相关操作</h2>
+<h3 id="man">man命令的使用</h3>
+<ol>
+<li>是普通的命令</li>
+<li>是系统调用,如open,write之类的(通过这个，至少可以很方便的查到调用这个函数，需要加什么头文件)</li>
+<li>是库函数,如printf,fread</li>
+<li>是特殊文件,也就是/dev下的各种设备文件</li>
+<li>是指文件的格式,比如passwd, 就会说明这个文件中各个字段的含义</li>
+<li>是给游戏留的,由各个游戏自己定义</li>
+<li>是附件还有一些变量,比如向environ这种全局变量在这里就有说明</li>
+<li>是系统管理用的命令,</li>
+</ol>
+<p>eg:</p>
+<div class="hlcode"><pre><span class="n">man</span> <span class="mi">2</span> <span class="n">accept</span>
+<span class="n">man</span> <span class="mi">2</span> <span class="n">socket</span>
+</pre></div>
+
+
+<h3 id="nc">nc命令</h3>
+<ul>
+<li>
+<p>nc命令的作用</p>
+</li>
+<li>
+<p>实现任意<code>TCP</code>或<code>UDP</code>端口的侦听，nc可以作为server以TCP或UDP方式侦听指定端口</p>
+</li>
+<li>端口的扫描，nc可以作为client发起<code>TCP</code>或<code>UDP</code>连接</li>
+<li>机器之间传输文件</li>
+<li>机器之间的网络测速</li>
+</ul>
+<div class="hlcode"><pre><span class="n">nc</span> <span class="o">[-</span><span class="n">hlnruz</span><span class="o">][-</span><span class="n">g</span><span class="o">&lt;</span><span class="err">网关</span><span class="o">...&gt;][-</span><span class="n">G</span><span class="o">&lt;</span><span class="err">指向器数目</span><span class="o">&gt;][-</span><span class="n">i</span><span class="o">&lt;</span><span class="err">延迟秒数</span><span class="o">&gt;][-</span><span class="n">o</span><span class="o">&lt;</span><span class="err">输出文件</span><span class="o">&gt;][-</span><span class="n">p</span><span class="o">&lt;</span><span class="err">通信端口</span><span class="o">&gt;][-</span><span class="n">s</span><span class="o">&lt;</span><span class="err">来源位址</span><span class="o">&gt;][-</span><span class="n">v</span><span class="o">...][-</span><span class="n">w</span><span class="o">&lt;</span><span class="err">超时秒数</span><span class="o">&gt;][</span><span class="err">主机名称</span><span class="o">][</span><span class="err">通信端口</span><span class="o">...]</span>
+</pre></div>
+
+
+<h3 id="strace"><code>strace</code>命令</h3>
+<p>trace system calls and signals(可用于诊断、调试和教学的Linux用户空间跟踪器。我们用它来监控用户空间进程和内核的交互，比如系统调用、信号传递、进程状态变更等。)</p>
+<div class="hlcode"><pre><span class="nx">man</span> <span class="nx">strace</span>
+</pre></div>
+
+
+<h3 id="linux_1">linux 相关文件描述符</h3>
+<h4 id="ulimit-n"><code>ulimit -n</code></h4>
+<ul>
+<li>
+<p>查看用户级文件描述符的限制，一般：1024</p>
+</li>
+<li>
+<p>查看系统级别限制</p>
+</li>
+</ul>
+<div class="hlcode"><pre><span class="n">sysctl</span> <span class="o">-</span><span class="n">a</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">file</span><span class="o">-</span><span class="n">max</span>
+<span class="nl">sysctl:</span> <span class="n">fs</span><span class="o">.</span><span class="na">file</span><span class="o">-</span><span class="n">max</span> <span class="o">=</span> <span class="mi">100262</span>
+
+<span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">fs</span><span class="o">/</span><span class="n">file</span><span class="o">-</span><span class="n">max</span>
+<span class="mi">100262</span>
+</pre></div>
+
+
+<h4 id="_1">输入/输出/错误描述符</h4>
+<ul>
+<li>0：标准输入（stdin），通常对应终端的键盘</li>
+<li>1：标准输出（stdout），通常对应终端的屏幕</li>
+<li>2： 标准错误（stderr），通常对应终端的屏幕</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-28 09:36:13</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
