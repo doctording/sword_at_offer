@@ -547,6 +547,10 @@ int main(int argc, char *argv[])
 }
 ```
 
+## DMA
+
+## zero copy
+
 ## 虚拟内存
 
 虚拟内存是计算机系统内存管理的一种技术。
