@@ -28,22 +28,37 @@
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#nioepoll">从nio到epoll</a><ul>
 <li><a href="#bio">BIO实践</a><ul>
+<li><a href="#bio-server">BIO Server &amp; 系统调用</a><ul>
+<li><a href="#nc">nc命令去连接服务端</a></li>
+<li><a href="#serversocket">ServerSocket启动过程</a></li>
+<li><a href="#netstattcp">netstat查看tcp相关</a></li>
+<li><a href="#_1">文件描述符的查看</a></li>
+</ul>
+</li>
 <li><a href="#bio_1">BIO的问题?</a></li>
 <li><a href="#select">select</a><ul>
 <li><a href="#select_1">select的问题?</a></li>
 </ul>
 </li>
-<li><a href="#epoll">epoll</a></li>
+<li><a href="#epoll">epoll</a><ul>
+<li><a href="#epoll_1">epoll 三个函数</a><ul>
+<li><a href="#epoll_create">epoll_create</a></li>
+<li><a href="#epoll_ctl">epoll_ctl</a></li>
+<li><a href="#epoll_wait">epoll_wait</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#io">I/O存储金字塔</a></li>
 <li><a href="#linux">附：Linux相关操作</a><ul>
 <li><a href="#man">man命令的使用</a></li>
-<li><a href="#nc">nc命令</a></li>
+<li><a href="#nc_1">nc命令</a></li>
 <li><a href="#strace">strace命令</a></li>
 <li><a href="#linux_1">linux 相关文件描述符</a><ul>
 <li><a href="#ulimit-n">ulimit -n</a></li>
-<li><a href="#_1">输入/输出/错误描述符</a></li>
+<li><a href="#_2">输入/输出/错误描述符</a></li>
 </ul>
 </li>
 </ul>
@@ -54,9 +69,7 @@
 </div>
 <h1 id="nioepoll">从<code>nio</code>到<code>epoll</code></h1>
 <h2 id="bio">BIO实践</h2>
-<ul>
-<li>BIO Server</li>
-</ul>
+<h3 id="bio-server">BIO Server &amp; 系统调用</h3>
 <p>服务端监听8090端口，每一个客户端用一个线程处理，不断的获取客户端的输入数据并打印</p>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
@@ -93,13 +106,11 @@
 </pre></div>
 
 
-<ul>
-<li>nc命令去连接服务端</li>
-</ul>
+<h4 id="nc">nc命令去连接服务端</h4>
 <div class="hlcode"><pre><span class="n">nc</span> <span class="n">localhost</span> <span class="mi">8090</span>
 <span class="err">````</span>
 
-<span class="o">*</span> <span class="n">strace</span> <span class="err">追踪</span>
+<span class="err">####</span> <span class="n">strace</span> <span class="err">追踪系统调用</span>
 
 <span class="err">```</span><span class="n">java</span>
 <span class="n">javac</span> <span class="n">TestSocket</span><span class="o">.</span><span class="na">java</span>
@@ -107,7 +118,7 @@
 </pre></div>
 
 
-<p>ServerSocket启动:</p>
+<h4 id="serversocket">ServerSocket启动过程</h4>
 <ol>
 <li>socket 系统调用, 得到文件描述符,如 fd5</li>
 <li>bind端口</li>
@@ -116,18 +127,19 @@
 </ol>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_0.png" /></p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_2.png" /></p>
-<p>通过进程ID号知道有多少个线程:</p>
+<ul>
+<li><font color='red'>小知识</font>：通过进程ID号能知道有多少个线程(<code>/proc/&lt;pid&gt;/task</code>)</li>
+</ul>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/proc_task_threads.png" /></p>
 <p>补充：linux创建线程，走的clone系统调用，eg：</p>
 <div class="hlcode"><pre><span class="n">clone</span><span class="o">(</span><span class="n">child_stack</span><span class="o">=</span><span class="mh">0x7fd8d8508ff0</span><span class="o">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">CLONE_VM</span><span class="o">|</span><span class="n">CLONE_FS</span><span class="o">|</span><span class="n">CLONE_FILES</span><span class="o">|</span><span class="n">CLONE_SIGHAND</span><span class="o">|</span><span class="n">CLONE_THREAD</span><span class="o">|</span><span class="n">CLONE_SYSVSEM</span><span class="o">|</span><span class="n">CLONE_SETTLS</span><span class="o">|</span><span class="n">CLONE_</span>     <span class="n">PARENT_SETTID</span><span class="o">|</span><span class="n">CLONE_CHILD_CLEARTID</span><span class="o">,</span> <span class="n">parent_tidptr</span><span class="o">=</span><span class="mh">0x7fd8d85099d0</span><span class="o">,</span> <span class="n">tls</span><span class="o">=</span><span class="mh">0x7fd8d8509700</span><span class="o">,</span> <span class="n">child_tidptr</span><span class="o">=</span><span class="mh">0x7fd8d85099d0</span><span class="o">)</span> <span class="o">=</span> <span class="mi">4787</span>
 </pre></div>
 
 
-<ul>
-<li>netstat查看tcp相关</li>
-</ul>
+<h4 id="netstattcp">netstat查看tcp相关</h4>
 <p>有<code>Listen</code>,<code>ESTABLISHED</code>状态的TCP</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_3.png" /></p>
+<h4 id="_1">文件描述符的查看</h4>
 <p>在工作目录会看到很多stracefile,以.线程id结尾；<code>56544</code>端口客户端连接，<code>vim stracefile.4772</code>(4772是服务端开启的线程)，可以找到如下一句</p>
 <div class="hlcode"><pre><span class="n">accept</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="o">{</span><span class="n">sa_family</span><span class="o">=</span><span class="n">AF_INET6</span><span class="o">,</span> <span class="n">sin6_port</span><span class="o">=</span><span class="n">htons</span><span class="o">(</span><span class="mi">56544</span><span class="o">),</span> <span class="n">inet_pton</span><span class="o">(</span><span class="n">AF_INET6</span><span class="o">,</span> <span class="s">&quot;::ffff:127.0.0.1&quot;</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">sin6_addr</span><span class="o">),</span> <span class="n">sin6_flowinfo</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">sin6_scope_id</span><span class="o">=</span><span class="mi">0</span><span class="o">},</span> <span class="o">[</span><span class="mi">28</span><span class="o">])</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="n">fcntl</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span> <span class="n">F_GETFL</span><span class="o">)</span>                       <span class="o">=</span> <span class="mh">0x2</span> <span class="o">(</span><span class="n">flags</span> <span class="n">O_RDWR</span><span class="o">)</span>
@@ -213,6 +225,28 @@
 <li>内核检查fd是否准备好,采用事件通知方式</li>
 </ul>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png" /></p>
+<h4 id="epoll_1">epoll 三个函数</h4>
+<h5 id="epoll_create">epoll_create</h5>
+<p><code>int epoll_create(int size)</code></p>
+<p>创建一个epoll句柄，参数size用来告诉内核监听的数目，size为epoll所支持的最大句柄数</p>
+<h5 id="epoll_ctl">epoll_ctl</h5>
+<p><code>int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)</code></p>
+<p>函数功能：用于控制某个文件描述符上的事件，可以注册事件，修改事件，删除事件。</p>
+<p>参数epfd为epoll的句柄，即 epoll_create 函数返回值<br />
+参数op表示动作，用3个宏来表示：<br />
+    EPOLL_CTL_ADD(注册新的fd到epfd)， <br />
+    EPOLL_CTL_MOD(修改已经注册的fd的监听事件)，<br />
+    EPOLL_CTL_DEL(从epfd删除一个fd)；<br />
+其中参数fd为需要监听的标示符；<br />
+参数event告诉内核需要监听的事件</p>
+<h5 id="epoll_wait">epoll_wait</h5>
+<p><code>int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout)</code><br />
+该函数用于轮询I/O事件的发生；</p>
+<p>epfd:由epoll_create 生成的epoll专用的文件描述符；<br />
+epoll_event:用于回传代处理事件的数组；<br />
+maxevents:每次能处理的事件数；<br />
+timeout:等待I/O事件发生的超时值（ms）；-1永不超时，直到有事件产生才触发，0立即返回。</p>
+<p>该函数返回发生事件数。-1有错误。</p>
 <h2 id="io">I/O存储金字塔</h2>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/disk.png" /></p>
 <h2 id="linux">附：Linux相关操作</h2>
@@ -233,7 +267,7 @@
 </pre></div>
 
 
-<h3 id="nc">nc命令</h3>
+<h3 id="nc_1">nc命令</h3>
 <ul>
 <li>
 <p>nc命令的作用</p>
@@ -273,7 +307,7 @@
 </pre></div>
 
 
-<h4 id="_1">输入/输出/错误描述符</h4>
+<h4 id="_2">输入/输出/错误描述符</h4>
 <ul>
 <li>0：标准输入（stdin），通常对应终端的键盘</li>
 <li>1：标准输出（stdout），通常对应终端的屏幕</li>
@@ -284,7 +318,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-28 09:36:13</p>
+        <p>Site Generated 2020-07-11 20:35:19</p>
       </span>
     </div>
 

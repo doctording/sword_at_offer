@@ -39,10 +39,6 @@
 <li><a href="#vfs">vfs(虚拟文件系统)</a></li>
 </ul>
 </li>
-<li><a href="#mmap">mmap</a><ul>
-<li><a href="#memory-mapped-file">内存映射文件(memory-mapped file，用户内存到文件系统页的映射)</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -64,27 +60,6 @@
 <li><a href="#select">select</a></li>
 <li><a href="#poll">poll</a></li>
 <li><a href="#epoll">epoll</a></li>
-</ul>
-</li>
-<li><a href="#dma">DMA</a></li>
-<li><a href="#zero-copy">zero copy</a></li>
-<li><a href="#_9">虚拟内存</a><ul>
-<li><a href="#_10">同时将多个进程保存在内存中以便允许多道程序设计？（最初的目标）</a><ul>
-<li><a href="#_11">一次性</a></li>
-<li><a href="#_12">驻留性</a></li>
-</ul>
-</li>
-<li><a href="#_13">局部性原理(虚拟内存技术实现的条件)</a><ul>
-<li><a href="#_14">时间局部性</a></li>
-<li><a href="#_15">空间局部性</a></li>
-</ul>
-</li>
-<li><a href="#_16">局部性原理=&gt;虚拟存储器</a></li>
-<li><a href="#_17">虚拟内存技术的实现 和 面临的实现问题</a></li>
-<li><a href="#_18">几个常见的动态分区分配</a></li>
-<li><a href="#_19">内存碎片</a></li>
-<li><a href="#_20">=&gt; 非连续内存分配机制</a></li>
-<li><a href="#io_6">采用分页技术的操作系统执行IO的全过程</a></li>
 </ul>
 </li>
 </ul>
@@ -164,33 +139,6 @@
 <h4 id="vfs">vfs(虚拟文件系统)</h4>
 <p>虚拟文件系统(VFS)是由Sun microsystems公司在定义网络文件系统(NFS)时创造的。它是一种用于网络环境的分布式文件系统，是允许和操作系统使用不同的文件系统实现的接口。虚拟文件系统（VFS）是物理文件系统与服务之间的一个接口层，它对Linux的每个文件系统的所有细节进行抽象，使得不同的文件系统在Linux核心以及系统中运行的其他进程看来，都是相同的。严格说来，VFS并不是一种实际的文件系统。它只存在于内存中，不存在于任何外存空间。VFS在系统启动时建立，在系统关闭时消亡。</p>
 <p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/vfs.png" /></p>
-<h3 id="mmap">mmap</h3>
-<p>mmap将一个文件或者其它对象映射进内存。文件被映射到多个页上，如果文件的大小不是所有页的大小之和，最后一个页不被使用的空间将会清零</p>
-<h4 id="memory-mapped-file">内存映射文件(memory-mapped file，用户内存到文件系统页的映射)</h4>
-<p>由一个文件到一块内存的映射；文件的数据就是这块区域内存中对应的数据，读写文件中的数据，即直接对这块内存区域的地址操作，减少了内存复制的环节。</p>
-<p>使用内存映射文件处理存储于磁盘上的文件时，将不必再对文件执行I/O操作，这意味着在对文件进行处理时将不必再为文件申请并分配缓存，所有的文件缓存操作均由系统直接管理，由于取消了将文件数据加载到内存、数据从内存到文件的回写以及释放内存块等步骤，使得内存映射文件在处理大数据量的文件时能起到相当重要的作用。</p>
-<p><img alt="" src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/mem_file.png" /></p>
-<p>好处：</p>
-<ul>
-<li>
-<p>用户进程把文件数据当作内存，所以无需发起<code>read()</code>或 <code>write()</code>系统调用。</p>
-</li>
-<li>
-<p>当用户进程碰触到映射内存空间，页错误会自动产生，从而将文件数据从磁盘读进内存。如果用户修改了映射内存空间，相关页会自动标记为脏，随后刷新到磁盘，文件得到更新。</p>
-</li>
-<li>
-<p>操作系统的虚拟内存子系统会对页进行智能高速缓存，自动根据系统负载进行内存管理。</p>
-</li>
-<li>
-<p>数据总是按页对齐的，无需执行缓冲区拷贝。</p>
-</li>
-<li>
-<p>大型文件使用映射，无需耗费大量内存，即可进行数据拷贝。</p>
-</li>
-<li>
-<p>映射文件区域的能力取决于于内存寻址的大小。在32位机器中，你不能访问超过4GB或2 ^ 32（以上的文件）。</p>
-</li>
-</ul>
 <h1 id="io_2">IO模型：同步/阻塞概念</h1>
 <h2 id="io_3">阻塞与非阻塞(等待IO时的状态)</h2>
 <p>函数或方法（用户线程调用内核IO操作）的实现方式：</p>
@@ -537,7 +485,7 @@
 <li>同时连接的大量客户端在一时刻可能只有很少的就绪状态，因此随着监视的描述符数量的增长，其效率也会线性下降</li>
 </ul>
 <h3 id="epoll">epoll</h3>
-<p>https://github.com/doctording/linux_epoll</p>
+<p><a href="https://github.com/doctording/linux_epoll">epoll linux例子程序</a></p>
 <ol>
 <li>epoll是一个I/O管理组件</li>
 <li>select 和 poll 的升级版本</li>
@@ -617,8 +565,8 @@
                 <span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">perror</span><span class="p">(</span><span class="s">&quot;send error&quot;</span><span class="p">);</span> <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span>
             <span class="p">}</span>
             <span class="c1">//处理用户发来的消息，并广播，使其他用户收到信息</span>
-            <span class="k">else</span> 
-            <span class="p">{</span>   
+            <span class="k">else</span>
+            <span class="p">{</span>
                 <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">sendBroadcastmessage</span><span class="p">(</span><span class="n">sockfd</span><span class="p">);</span>
                 <span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">perror</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">);</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span>
             <span class="p">}</span>
@@ -629,97 +577,12 @@
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-
-
-<h2 id="dma">DMA</h2>
-<h2 id="zero-copy">zero copy</h2>
-<h2 id="_9">虚拟内存</h2>
-<p>虚拟内存是计算机系统内存管理的一种技术。</p>
-<p>它使得应用程序认为它拥有连续的可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要时进行数据交换。目前，大多数操作系统都使用了虚拟内存，如Windows家族的“虚拟内存”；Linux的“交换空间”等。</p>
-<p>所有程序均需经由内存执行，若执行的程序占用内存很大或很多，则会导致内存消耗殆尽。运用了虚拟内存技术，即匀出一部分硬盘空间来充当内存使用，来解决该问题</p>
-<h3 id="_10">同时将多个进程保存在内存中以便允许多道程序设计？（最初的目标）</h3>
-<h4 id="_11">一次性</h4>
-<p>作业必须一次性全部装入内存后，方能开始运行。这会导致两种情况发生：<br />
-当作业很大，不能全部被装入内存时，将使该作业无法运行；<br />
-当大量作业要求运行时，由于内存不足以容纳所有作业，只能使少数作业先运行，导致多道程序度的下降。</p>
-<h4 id="_12">驻留性</h4>
-<p>作业被装入内存后，就一直驻留在内存中，其任何部分都不会被换出，直至作业运行结束。运行中的进程，会因等待I/O而被阻塞，可能处于长期等待状态。</p>
-<p>由以上分析可知，许多在程序运行中不用或暂时不用的程序（数据）占据了大量的内存空间，而一些需要运行的作业又无法装入运行，显然浪费了宝贵的内存资源。</p>
-<h3 id="_13">局部性原理(虚拟内存技术实现的条件)</h3>
-<h4 id="_14">时间局部性</h4>
-<p>如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。</p>
-<h4 id="_15">空间局部性</h4>
-<p>一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。</p>
-<p>时间局部性是通过将近来使用的指令和数据保存到高速缓存存储器中，并使用高速缓存的层次结构实现。空间局部性通常是使用较大的高速缓存，并将预取机制集成到高速缓存控制逻辑中实现。虚拟内存技术实际上就是建立了 “内存一外存”的两级存储器的结构，利用局部性原理实现髙速缓存。</p>
-<h3 id="_16">局部性原理=&gt;虚拟存储器</h3>
-<p>基于局部性原理，在程序<strong>装入时</strong>，可以将程序的一部分装入内存，而将其余部分留在外存，就可以启动程序执行。在程序<strong>执行过程中</strong>，当所访问的信息不在内存时，由操作系统将所需要的部分调入内存,然后继续执行程序。另一方面，操作系统将内存中暂时不使用的内容换出到外存上，从而腾出空间存放将要调入内存的信息。这样，系统好像为用户提供了一个比实际内存大得多的存储器，称为虚拟存储器。</p>
-<ul>
-<li>多次性，是指无需在作业运行时一次性地全部装入内存，而是允许被分成多次调入内存运行。</li>
-<li>对换性，是指无需在作业运行时一直常驻内存，而是允许在作业的运行过程中，进行换进和换出。</li>
-<li>虚拟性，是指从逻辑上扩充内存的容量，使用户所看到的内存容量，远大于实际的内存容量。</li>
-</ul>
-<h3 id="_17">虚拟内存技术的实现 和 面临的实现问题</h3>
-<p>虚拟内存中，允许将一个作业分多次调入内存。操作系统如何分配内存？逻辑地址与物理地址的映射?</p>
-<h3 id="_18">几个常见的动态分区分配</h3>
-<ul>
-<li>最先匹配(First-fit)</li>
-</ul>
-<p>优势：简单、易于产生更大空闲块、在高地址空间有大块的空闲分区<br />
-劣势：外部碎片、分配大块时较慢</p>
-<ul>
-<li>最佳匹配(Best-fit)</li>
-</ul>
-<p>优势：当大部分分配时小尺寸时非常有效<br />
-劣势：外部碎片、释放分区较慢、易产生很多没用的微小碎片（不怎么好）</p>
-<ul>
-<li>最差匹配(Worst-fit)</li>
-</ul>
-<p>优势：假如分配时中等尺寸效果最好、避免出现太多的小碎片<br />
-劣势：重分配慢、外部碎片、易于破碎大的空闲块以致大分区无法被分配</p>
-<h3 id="_19">内存碎片</h3>
-<p>内存中无法被利用的存储空间称为碎片。</p>
-<p>内部碎片：指分配给作业的存储空间中未被利用的部分，如固定分区中存在的碎片。</p>
-<p>外部碎片：指系统中无法利用的小的空闲分区。如分区与分区之间存在的碎片。这些不连续的区间就是外部碎片。</p>
-<h3 id="_20">=&gt; 非连续内存分配机制</h3>
-<ul>
-<li>请求<code>分页</code>存储管理</li>
-<li>请求<code>分段</code>存储管理</li>
-<li>请求<code>段页式</code>存储管理</li>
-</ul>
-<p>不管哪种方式，都需要有一定的硬件支持。一般需要的支持有以下几个方面：</p>
-<ul>
-<li>一定容量的内存和外存。</li>
-<li>页表机制（或段表机制），作为主要的数据结构。</li>
-<li>中断机构，当用户程序要访问的部分尚未调入内存，则产生中断。</li>
-<li>地址变换机构，逻辑地址到物理地址的变换。</li>
-</ul>
-<h3 id="io_6">采用分页技术的操作系统执行IO的全过程</h3>
-<ul>
-<li>
-<p>确定请求的数据分布在文件系统的哪些页(磁盘扇区组)。磁盘上的文件内容和元数 据可能跨越多个文件系统页，而且这些页可能也不连续。</p>
-</li>
-<li>
-<p>在内核空间分配足够数量的内存页，以容纳得到确定的文件系统页。</p>
-</li>
-<li>
-<p>在内存页与磁盘上的文件系统页之间建立映射。</p>
-</li>
-<li>
-<p>为每一个内存页产生页错误</p>
-</li>
-<li>
-<p>虚拟内存系统俘获页错误，安排页面调入，从磁盘上读取页内容，使页有效。</p>
-</li>
-<li>
-<p>一旦页面调入操作完成，文件系统即对原始数据进行解析，取得所需文件内容或属性信息。</p>
-</li>
-</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-28 09:36:13</p>
+        <p>Site Generated 2020-07-11 20:35:19</p>
       </span>
     </div>
 

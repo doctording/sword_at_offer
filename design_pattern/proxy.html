@@ -230,15 +230,21 @@
 <h3 id="javacglib">Java动态代理和cglib动态代理的区别？</h3>
 <ul>
 <li>JDK动态代理只能对实现了接口的类生成代理，而不能针对类</li>
-<li>CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法</li>
+<li>
+<p>CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法</p>
+</li>
+<li>
+<p>JDK动态代理类实现了InvocationHandler接口，重写的invoke方法。</p>
+</li>
+<li>JDK动态代理的基础是反射机制method.invoke(对象，参数),Proxy.newProxyInstance()</li>
+<li>cglib动态代理原理是对指定的目标生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。</li>
 </ul>
-<p>// TODO</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-28 09:36:13</p>
+        <p>Site Generated 2020-07-11 20:35:19</p>
       </span>
     </div>
 
