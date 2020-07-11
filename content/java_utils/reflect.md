@@ -213,7 +213,7 @@ public static Class<?> forName(String className)
 }
 ```
 
-将类的.class文件加载到jvm中之外，还会对类进行解释，执行类中的static块(静态成员初始化，静态代码块)
+将类的`.class`文件加载到jvm中之外，还会对类进行解释，执行类中的static块(静态成员初始化，静态代码块)
 
 ### ClassLoader.loadClass
 
@@ -239,4 +239,4 @@ public Class<?> loadClass(String name) throws ClassNotFoundException {
 }
 ```
 
-第2个boolean参数，表示目标对象是否进行链接，false表示不进行链接，不进行链接意味着不进行包括初始化等一些列步骤，那么静态块和静态成员就不会得到执行
+第2个boolean参数，表示目标对象是否进行链接，false表示不进行链接，不进行链接意味着就不会进行包括初始化等的一系列步骤，那么静态块和静态成员就不会得到执行

@@ -192,4 +192,6 @@ public class ClientTest {
 * JDK动态代理只能对实现了接口的类生成代理，而不能针对类
 * CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法
 
-// TODO
+1. JDK动态代理类实现了InvocationHandler接口，重写的invoke方法。
+2. JDK动态代理的基础是反射机制method.invoke(对象，参数),Proxy.newProxyInstance()
+3. cglib动态代理原理是对指定的目标生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。

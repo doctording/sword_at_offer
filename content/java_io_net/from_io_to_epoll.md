@@ -10,7 +10,7 @@ date: 2020-06-26 00:00
 
 ## BIO实践
 
-* BIO Server
+### BIO Server & 系统调用
 
 服务端监听8090端口，每一个客户端用一个线程处理，不断的获取客户端的输入数据并打印
 
@@ -49,20 +49,20 @@ public class TestSocket {
 }
 ```
 
-* nc命令去连接服务端
+#### nc命令去连接服务端
 
 ```java
 nc localhost 8090
 ````
 
-* strace 追踪
+#### strace 追踪系统调用
 
 ```java
 javac TestSocket.java
 strace -ff -o ./stracefile java TestSocket
 ```
 
-ServerSocket启动:
+#### ServerSocket启动过程
 
 1. socket 系统调用, 得到文件描述符,如 fd5
 2. bind端口
@@ -73,7 +73,7 @@ ServerSocket启动:
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_2.png)
 
-通过进程ID号知道有多少个线程:
+* <font color='red'>小知识</font>：通过进程ID号能知道有多少个线程(`/proc/<pid>/task`)
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/proc_task_threads.png)
 
@@ -83,11 +83,13 @@ ServerSocket启动:
 clone(child_stack=0x7fd8d8508ff0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_     PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7fd8d85099d0, tls=0x7fd8d8509700, child_tidptr=0x7fd8d85099d0) = 4787
 ```
 
-* netstat查看tcp相关
+#### netstat查看tcp相关
 
 有`Listen`,`ESTABLISHED`状态的TCP
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_3.png)
+
+#### 文件描述符的查看
 
 在工作目录会看到很多stracefile,以.线程id结尾；`56544`端口客户端连接，`vim stracefile.4772`(4772是服务端开启的线程)，可以找到如下一句
 
@@ -174,6 +176,40 @@ BIO的问题解决,可以把所有fd放到一个集合(select)中，一次性的
 2. 内核检查fd是否准备好,采用事件通知方式
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png)
+
+#### epoll 三个函数
+
+##### epoll_create
+
+`int epoll_create(int size)`
+
+创建一个epoll句柄，参数size用来告诉内核监听的数目，size为epoll所支持的最大句柄数
+
+##### epoll_ctl
+
+`int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)`
+
+函数功能：用于控制某个文件描述符上的事件，可以注册事件，修改事件，删除事件。
+
+参数epfd为epoll的句柄，即 epoll_create 函数返回值
+参数op表示动作，用3个宏来表示：  
+    EPOLL_CTL_ADD(注册新的fd到epfd)， 
+    EPOLL_CTL_MOD(修改已经注册的fd的监听事件)，
+    EPOLL_CTL_DEL(从epfd删除一个fd)；
+其中参数fd为需要监听的标示符；
+参数event告诉内核需要监听的事件
+
+##### epoll_wait
+
+`int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout)`
+该函数用于轮询I/O事件的发生；
+
+epfd:由epoll_create 生成的epoll专用的文件描述符；
+epoll_event:用于回传代处理事件的数组；
+maxevents:每次能处理的事件数；
+timeout:等待I/O事件发生的超时值（ms）；-1永不超时，直到有事件产生才触发，0立即返回。
+
+该函数返回发生事件数。-1有错误。
 
 ## I/O存储金字塔
 

@@ -17,9 +17,9 @@ date: 2019-06-07 00:00
                    /            \
                   /              \
                 checked           unchkecked
-                                      |
-                                      |
-                                  RuntimeException
+                  |                    |
+                  |                    |
+                IOException      RuntimeException
 ```
 
 ## checked exception
