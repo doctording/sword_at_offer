@@ -27,8 +27,12 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#_1">反射</a><ul>
-<li><a href="#class">获得Class对象的方式</a></li>
-<li><a href="#spring">例子(仿Spring)</a></li>
+<li><a href="#class">获得Class对象的方式</a><ul>
+<li><a href="#class_1">获得Class对象的例子代码</a></li>
+</ul>
+</li>
+<li><a href="#class_2">Class 对象</a></li>
+<li><a href="#spring">反射例子(仿Spring)</a></li>
 <li><a href="#classfornameclassloaderloadclass">Class.forName()和ClassLoader.loadClass()的区别</a><ul>
 <li><a href="#classforname">Class.forName()</a></li>
 <li><a href="#classloaderloadclass">ClassLoader.loadClass</a></li>
@@ -40,13 +44,74 @@
 </div>
 <h1 id="_1">反射</h1>
 <p>Java的反射（<code>reflection</code>）机制是指在程序的运行状态中，可以构造任意一个类的对象，可以了解任意一个对象所属的类，可以了解任意一个类的成员变量和方法，可以调用任意一个对象的属性和方法。这种动态获取程序信息以及动态调用对象的功能称为Java语言的反射机制。</p>
-<p>对于一个字节码文件<code>.class</code>，虽然表面上我们对该字节码文件一无所知，但该文件本身却记录了许多信息。Java在将.class字节码文件载入时，JVM将产生一个<code>java.lang.Class</code>对象代表该.class字节码文件，从该Class对象中可以获得类的许多基本信息，这就是反射机制。</p>
+<p>对于一个字节码文件<code>.class</code>，虽然表面上我们对该字节码文件一无所知，但该文件本身却记录了许多信息。Java在将<code>.class</code>字节码文件载入时，JVM将产生一个<code>java.lang.Class</code>对象代表该<code>.class</code>字节码文件，从该Class对象中可以获得类的许多基本信息，这就是反射机制。</p>
 <h2 id="class">获得<code>Class对象</code>的方式</h2>
 <ul>
 <li>Class.forName(“类的全限定名”)</li>
 <li>实例对象.getClass()</li>
 <li>类名.class （类字面常量）</li>
 </ul>
+<h3 id="class_1">获得<code>Class对象</code>的例子代码</h3>
+<div class="hlcode"><pre><span class="kd">static</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+    <span class="n">Class</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&quot;reflect.PayService&quot;</span><span class="o">);</span>
+    <span class="n">Class</span> <span class="n">clazz2</span> <span class="o">=</span> <span class="n">PayService</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
+
+    <span class="n">PayService</span> <span class="n">payService</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AliPayServiceImpl</span><span class="o">();</span>
+    <span class="n">Class</span> <span class="n">clazz3</span> <span class="o">=</span> <span class="n">payService</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
+
+    <span class="c1">// interface reflect.PayService</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+    <span class="c1">// interface reflect.PayService</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clazz2</span><span class="o">);</span>
+    <span class="c1">// class reflect.AliPayServiceImpl</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clazz3</span><span class="o">);</span>
+    <span class="c1">// class java.lang.Object</span>
+    <span class="n">Class</span> <span class="n">clazz4</span> <span class="o">=</span> <span class="n">clazz3</span><span class="o">.</span><span class="na">getSuperclass</span><span class="o">();</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clazz4</span><span class="o">);</span>
+    <span class="c1">// true</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clazz</span> <span class="o">==</span> <span class="n">clazz2</span><span class="o">);</span>
+    <span class="c1">// false</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clazz2</span> <span class="o">==</span> <span class="n">clazz3</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>PayService</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:44</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PayService</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="nf">payUse</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>AliPayServiceImpl</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">package</span> <span class="n">reflect</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @Author mubi</span>
+<span class="cm"> * @Date 2020/6/16 06:43</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AliPayServiceImpl</span> <span class="kd">implements</span> <span class="n">PayService</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">payUse</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;in method payUse&quot;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="s">&quot;AliPayServiceImpl&quot;</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="class_2">Class 对象</h2>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm"> * Instances of the class {@code Class} represent classes and</span>
 <span class="cm"> * interfaces in a running Java application.  An enum is a kind of</span>
@@ -99,7 +164,7 @@
 </pre></div>
 
 
-<h2 id="spring">例子(仿Spring)</h2>
+<h2 id="spring">反射例子(仿Spring)</h2>
 <ul>
 <li>UserController</li>
 </ul>
@@ -244,7 +309,7 @@
 </pre></div>
 
 
-<p>将类的<code>.class</code>文件加载到jvm中之外，还会对类进行解释，执行类中的static块(静态成员初始化，静态代码块)</p>
+<p>将类的<code>.class</code>文件加载到jvm中之外，还会对类进行解释，执行类中的<code>static</code>块(静态成员初始化，静态代码块)</p>
 <h3 id="classloaderloadclass">ClassLoader.loadClass</h3>
 <div class="hlcode"><pre><span class="cm">/**</span>
 <span class="cm">    * Loads the class with the specified &lt;a href=&quot;#name&quot;&gt;binary name&lt;/a&gt;.</span>
@@ -268,13 +333,13 @@
 </pre></div>
 
 
-<p>第2个boolean参数，表示目标对象是否进行链接，false表示不进行链接，不进行链接意味着就不会进行包括初始化等的一系列步骤，那么静态块和静态成员就不会得到执行</p>
+<p>第2个boolean参数，表示目标对象是否进行链接，false表示<font color='red'>不进行链接</font>，不进行链接意味着就不会进行包括初始化等的一系列步骤，那么静态块和静态成员就不会得到执行</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-07-11 20:35:19</p>
+        <p>Site Generated 2020-07-12 23:13:41</p>
       </span>
     </div>
 
