@@ -20,17 +20,112 @@ date: 2019-03-20 00:00
 
 ## 静态代理
 
-* 在程序运行前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就确定了
+在程序运行前就已经存在代理类的字节码`.class`文件，代理类和委托类的关系在运行前就确定了
 
-* 代理对象的一个接口只服务于一种类型的对象；且如果要代理的方法很多，势必要为每一种方法都进行代理，不易扩展
+代理对象的一个接口只服务于一种类型的对象；且如果要代理的方法很多，势必要<font color='red'>为每一种方法都进行代理</font>，**不易扩展**
+
+* 代理类
+
+```java
+package reflect;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 21:13
+ */
+public class PayStaticProxy implements PayService{
+    private PayService payService;
+
+    public PayStaticProxy(PayService payService) {
+        this.payService = payService;
+    }
+
+    @Override
+    public String payUse() {
+        System.out.println("in PayStaticProxy");
+        return payService.payUse();
+    }
+
+    public PayService getPayService() {
+        return payService;
+    }
+
+    public void setPayService(PayService payService) {
+        this.payService = payService;
+    }
+}
+```
+
+```java
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:44
+ */
+public interface PayService {
+    String payUse();
+}
+```
+
+```java
+package reflect;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:43
+ */
+public class WeixinPayServiceImpl implements PayService {
+
+    @Override
+    public String payUse() {
+        System.out.println("in method payUse");
+        return "WeixinPayServiceImpl";
+    }
+}
+```
+
+* 测试代码
+
+```java
+static void testStaticProxy() throws Exception{
+    PayService payService = new WeixinPayServiceImpl();
+    PayStaticProxy payStaticProxy = new PayStaticProxy(payService);
+    /**
+        * in method payUse
+        * WeixinPayServiceImpl
+        */
+    System.out.println(payService.payUse());
+    Class clazz = payStaticProxy.getClass();
+    Field[] fields = clazz.getDeclaredFields();
+    for(Field field: fields) {
+        Class fieldClazz = field.getType();
+        /**
+            *  ---interface reflect.PayService
+            */
+        System.out.println("---" + fieldClazz);
+    }
+    PayService payService1 = payStaticProxy.getPayService();
+    /**
+        * true
+        */
+    System.out.println(payService1 instanceof WeixinPayServiceImpl);
+    /**
+        * false
+        */
+    System.out.println(payService1 instanceof AliPayServiceImpl);
+}
+```
 
 ## 动态代理
 
-* 在程序运行期间由JVM根据反射等机制动态的生成，所以不存在代理类的字节码文件。代理类和委托类的关系是在程序运行时确定的
+* 在程序运行期间由JVM根据反射等机制动态的生成，不存在代理类的字节码文件。代理类和委托类的关系是在程序运行时确定的
 
 ### 动态代理的几种实现方式?
 
 #### JDK原生动态代理(反射机制)
+
+其中：`InvocationHandler`接口是proxy代理实例的调用处理程序实现的一个接口，每一个proxy代理实例都有一个关联的调用处理程序；在代理实例调用方法时，方法调用被编码分派到调用处理程序的`invoke`方法。
+
+核心就是代理对象的生成，即`Proxy.newProxyInstance(classLoader, proxyInterface, handler)`
 
 * Service
 
@@ -153,6 +248,7 @@ public class PayProxy implements MethodInterceptor {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
         enhancer.setCallback(this);
+        // 代理对象
         return enhancer.create();
     }
 
@@ -185,7 +281,15 @@ public class ClientTest {
 }
 ```
 
-* Enhancer既能够代理普通的class，也能够代理接口。Enhancer创建一个被代理对象的子类并且拦截所有的方法调用（包括从Object中继承的toString和hashCode方法），Enhancer不能够拦截final方法
+* Enhancer既能够代理**普通的class**，也能够**代理接口**。Enhancer创建一个被代理对象的子类并且拦截所有的方法调用（包括从Object中继承的toString和hashCode方法），Enhancer不能够拦截final方法
+
+##### cglib 底层原理
+
+* 底层使用ASM(ASM是一个Java字节码操纵框架)，可以直接产生二进制class文件；动态字节码技术，不是反射(`method.invoke`)执行
+
+* 代理本质：增强，拦截，前后加代码逻辑
+
+eg: 实现`MethodInterceptor`的**intercept**方法，可以任意修改目标方法
 
 ### Java动态代理和cglib动态代理的区别？
 
@@ -193,5 +297,5 @@ public class ClientTest {
 * CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法
 
 1. JDK动态代理类实现了InvocationHandler接口，重写的invoke方法。
-2. JDK动态代理的基础是反射机制method.invoke(对象，参数),Proxy.newProxyInstance()
+2. JDK动态代理的基础是反射机制:method.invoke(对象，参数),Proxy.newProxyInstance()
 3. cglib动态代理原理是对指定的目标生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。

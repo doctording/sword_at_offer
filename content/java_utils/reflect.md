@@ -10,13 +10,74 @@ date: 2020-06-14 00:00
 
 Java的反射（`reflection`）机制是指在程序的运行状态中，可以构造任意一个类的对象，可以了解任意一个对象所属的类，可以了解任意一个类的成员变量和方法，可以调用任意一个对象的属性和方法。这种动态获取程序信息以及动态调用对象的功能称为Java语言的反射机制。
 
-对于一个字节码文件`.class`，虽然表面上我们对该字节码文件一无所知，但该文件本身却记录了许多信息。Java在将.class字节码文件载入时，JVM将产生一个`java.lang.Class`对象代表该.class字节码文件，从该Class对象中可以获得类的许多基本信息，这就是反射机制。
+对于一个字节码文件`.class`，虽然表面上我们对该字节码文件一无所知，但该文件本身却记录了许多信息。Java在将`.class`字节码文件载入时，JVM将产生一个`java.lang.Class`对象代表该`.class`字节码文件，从该Class对象中可以获得类的许多基本信息，这就是反射机制。
 
 ## 获得`Class对象`的方式
 
 * Class.forName(“类的全限定名”)
 * 实例对象.getClass()
 * 类名.class （类字面常量）
+
+### 获得`Class对象`的例子代码
+
+```java
+static void test() throws Exception{
+    Class clazz = Class.forName("reflect.PayService");
+    Class clazz2 = PayService.class;
+
+    PayService payService = new AliPayServiceImpl();
+    Class clazz3 = payService.getClass();
+
+    // interface reflect.PayService
+    System.out.println(clazz);
+    // interface reflect.PayService
+    System.out.println(clazz2);
+    // class reflect.AliPayServiceImpl
+    System.out.println(clazz3);
+    // class java.lang.Object
+    Class clazz4 = clazz3.getSuperclass();
+    System.out.println(clazz4);
+    // true
+    System.out.println(clazz == clazz2);
+    // false
+    System.out.println(clazz2 == clazz3);
+}
+```
+
+* PayService
+
+```java
+package reflect;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:44
+ */
+public interface PayService {
+    String payUse();
+}
+```
+
+* AliPayServiceImpl
+
+```java
+package reflect;
+
+/**
+ * @Author mubi
+ * @Date 2020/6/16 06:43
+ */
+public class AliPayServiceImpl implements PayService {
+
+    @Override
+    public String payUse() {
+        System.out.println("in method payUse");
+        return "AliPayServiceImpl";
+    }
+}
+```
+
+## Class 对象
 
 ```java
 /**
@@ -70,7 +131,7 @@ public final class Class<T> implements java.io.Serializable,
                               AnnotatedElement {
 ```
 
-## 例子(仿Spring)
+## 反射例子(仿Spring)
 
 * UserController
 
@@ -213,7 +274,7 @@ public static Class<?> forName(String className)
 }
 ```
 
-将类的`.class`文件加载到jvm中之外，还会对类进行解释，执行类中的static块(静态成员初始化，静态代码块)
+将类的`.class`文件加载到jvm中之外，还会对类进行解释，执行类中的`static`块(静态成员初始化，静态代码块)
 
 ### ClassLoader.loadClass
 
@@ -239,4 +300,4 @@ public Class<?> loadClass(String name) throws ClassNotFoundException {
 }
 ```
 
-第2个boolean参数，表示目标对象是否进行链接，false表示不进行链接，不进行链接意味着就不会进行包括初始化等的一系列步骤，那么静态块和静态成员就不会得到执行
+第2个boolean参数，表示目标对象是否进行链接，false表示<font color='red'>不进行链接</font>，不进行链接意味着就不会进行包括初始化等的一系列步骤，那么静态块和静态成员就不会得到执行
