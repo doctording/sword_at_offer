@@ -27,6 +27,8 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#java">Java自带的各类型命令工具</a><ul>
+<li><a href="#jvm">JVM 内存溢出&amp;内存泄漏</a></li>
+<li><a href="#jvm_1">JVM调优</a></li>
 <li><a href="#jps">jps</a></li>
 <li><a href="#jstat">jstat</a><ul>
 <li><a href="#1jstat-gcgc">例1（jstat -gc）查看gc信息</a></li>
@@ -93,6 +95,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="jvm">JVM 内存溢出&amp;内存泄漏</h2>
+<ul>
+<li>
+<p>内存溢出：（out of memory）通俗理解就是内存不够，通常在运行大型软件或游戏时，软件或游戏所需要的内存远远超出了你主机内安装的内存所承受大小，就叫内存溢出。</p>
+</li>
+<li>
+<p>内存泄漏：（Memory Leak）是指程序中己动态分配的堆内存由于某种原因程序未释放或无法释放，造成系统内存的浪费，导致程序运行速度减慢甚至系统崩溃等严重后果</p>
+</li>
+</ul>
+<p>泄漏越来越多，会导致内存溢出</p>
+<h2 id="jvm_1">JVM调优</h2>
+<ol>
+<li>根据需求进行JVM规划和预调优</li>
+<li>优化JVM运行环境（慢，卡顿）</li>
+<li>解决JVM运行过程中的各种问题（full gc, oom等）</li>
+</ol>
 <h2 id="jps">jps</h2>
 <div class="hlcode"><pre><span class="nx">mubi</span><span class="err">@</span><span class="nx">mubideMacBook</span><span class="o">-</span><span class="nx">Pro</span> <span class="nx">webapps</span> <span class="nx">$</span> <span class="nx">jps</span> <span class="o">--</span><span class="nx">help</span>
 <span class="nx">illegal</span> <span class="nx">argument</span><span class="o">:</span> <span class="o">--</span><span class="nx">help</span>
@@ -470,7 +488,7 @@ FGC：从应用程序启动到采样时old代(全gc)gc次数</p>
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-07-12 23:13:41</p>
+        <p>Site Generated 2020-07-16 22:52:09</p>
       </span>
     </div>
 
