@@ -109,13 +109,18 @@
 </ul>
 </li>
 <li><a href="#remark-phasestw-cpu">Remark Phase（最终标记，STW, CPU停顿处理垃圾）</a></li>
-<li><a href="#copyingcleanup-phasestwgc">Copying/Cleanup Phase（筛选回收，STW，根据用户期望的GC停顿时间回收）</a></li>
+<li><a href="#copyingcleanup-phaseregionstwgc">Copying/Cleanup Phase（筛选部分region回收，而非全部回收；STW，根据用户期望的GC停顿时间回收）</a></li>
 </ul>
 </li>
 <li><a href="#gc_1">对年轻代和老年代GC的总结</a></li>
 </ul>
 </li>
 <li><a href="#g1_4">G1的优势（为什么能够设置一个停留时间）</a></li>
+</ul>
+</li>
+<li><a href="#g1-cms">G1 和 CMS</a><ul>
+<li><a href="#g1-cms-region">G1 和 CMS 堆空间分配方式不同（分代 &amp; region）</a></li>
+<li><a href="#g1-cms-gc">G1 和 CMS GC的区别</a></li>
 </ul>
 </li>
 <li><a href="#_14">内存分配与回收策略(理论基础)</a><ul>
@@ -138,11 +143,6 @@
 <li><a href="#full-gc">Full GC触发条件</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#g1-cms">G1 和 CMS</a><ul>
-<li><a href="#g1-cms-region">G1 和 CMS 堆空间分配方式不同（分代 &amp; region）</a></li>
-<li><a href="#g1-cms-gc">G1 和 CMS GC的区别</a></li>
 </ul>
 </li>
 <li><a href="#jvmgc">JVM参数与GC</a><ul>
@@ -1116,7 +1116,7 @@ no, i am dead
 <h5 id="remark-phasestw-cpu">Remark Phase（最终标记，STW, CPU停顿处理垃圾）</h5>
 <p>Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.<br />
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）</p>
-<h5 id="copyingcleanup-phasestwgc">Copying/Cleanup Phase（<code>筛选</code>回收，STW，根据用户期望的GC停顿时间回收）</h5>
+<h5 id="copyingcleanup-phaseregionstwgc">Copying/Cleanup Phase（<code>筛选</code>部分region回收，而非全部回收；STW，根据用户期望的GC停顿时间回收）</h5>
 <p>G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.</p>
 <p>（the lowest "liveness"的region会被清理调）</p>
 <p>（<code>yong gc</code>和<code>mixed gc</code>会同时进行）</p>
@@ -1159,6 +1159,63 @@ no, i am dead
 <p>G1的另一个显著特点他能够让用户设置应用的暂停时间，为什么G1能做到这一点呢？也许你已经注意到了，G1是<strong>选择一些内存块，而不是整个代的内存来回收</strong>，这是G1跟其它GC非常不同的一点，其它GC每次回收都会回收整个Generation的内存(Eden, Old), 而回收内存所需的时间就取决于内存的大小，以及实际垃圾的多少，所以垃圾回收时间是不可控的；而G1每次并不会回收整代内存，到底回收多少内存就看用户配置的暂停时间，配置的时间短就少回收点，配置的时间长就多回收点，伸缩自如。</p>
 <p>由于内存被分成了很多小块，又带来了另外好处，由于内存块比较小，进行内存压缩整理的代价都比较小，相比其它GC算法，可以有效的规避内存碎片的问题。</p>
 <p>G1的思想，感觉有点像Java<code>CocurrentHashMap</code>，将一个大的分成若干个Region，然后再处理；即【分而治之】的思想</p>
+<h2 id="g1-cms">G1 和 CMS</h2>
+<h3 id="g1-cms-region">G1 和 CMS 堆空间分配方式不同（分代 &amp; region）</h3>
+<ul>
+<li>
+<p><code>CMS</code>将堆逻辑上分成<code>Eden</code>,<code>Survivor(S0,S1)</code>,<code>Old</code>；并且他们是固定大小JVM启动的时候就已经设定不能改变,并且是连续的内存块</p>
+</li>
+<li>
+<p><code>G1</code>将堆分成多个大小相同的<code>Region(区域)</code>,默认2048个,在1Mb到32Mb之间大小,逻辑上分成<code>Eden</code>,<code>Survivor</code>,<code>Old</code>,<code>Humongous</code>(巨型),<code>空闲</code>；他们不是固定大小,会根据每次GC的信息做出调整</p>
+</li>
+</ul>
+<h3 id="g1-cms-gc">G1 和 CMS GC的区别</h3>
+<p>CMS的Young GC就是依赖并行GC(ParNew)去完成的，只有老年代中使用CMS GC(也就是Old GC)</p>
+<p>CMS 使用<strong>分代回收</strong>,堆被分成了年轻代和老年代,其中年轻代回收依赖ParNew去回收,需要STW(<code>Stop The World</code>)</p>
+<p>G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc，在不同的条件下被触发。</p>
+<ul>
+<li>young gc</li>
+</ul>
+<p>发生在年轻代的GC算法，一般对象（除了巨型对象）都是在eden region中分配内存，当所有eden region被耗尽无法申请内存时，就会触发一次young gc，这种触发机制和之前的young gc差不多，执行完一次young gc，活跃对象会被拷贝到survivor region或者晋升到old region中，空闲的region会被放入空闲列表中，等待下次被使用。</p>
+<ul>
+<li>mixed gc</li>
+</ul>
+<p>当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是一部分老年代，而不是全部老年代，可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制</p>
+<ul>
+<li>full gc</li>
+</ul>
+<p>如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的<code>serial old gc</code>，会导致异常长时间的暂停时间；这需要进行不断的调优，尽可能的避免full gc的产生</p>
+<p><strong>g1 yong gc log</strong></p>
+<div class="hlcode"><pre><span class="o">[</span><span class="n">GC</span> <span class="n">pause</span> <span class="o">(</span><span class="n">G1</span> <span class="n">Evacuation</span> <span class="n">Pause</span><span class="o">)</span> <span class="o">(</span><span class="n">young</span><span class="o">),</span> <span class="mf">0.0707344</span> <span class="n">secs</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Parallel</span> <span class="nl">Time:</span> <span class="mf">68.6</span> <span class="n">ms</span><span class="o">,</span> <span class="n">GC</span> <span class="nl">Workers:</span> <span class="mi">2</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Start</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">4044130.9</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">4044130.9</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">4044131.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Ext</span> <span class="n">Root</span> <span class="n">Scanning</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">3.1</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">3.3</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">3.5</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.5</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">6.6</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Update</span> <span class="n">RS</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">4.4</span><span class="o">]</span>
+         <span class="o">[</span><span class="n">Processed</span> <span class="nl">Buffers:</span> <span class="nl">Min:</span> <span class="mi">77</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">111.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mi">146</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mi">69</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mi">223</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Scan</span> <span class="n">RS</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.7</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="n">Scanning</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">1.0</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Object</span> <span class="n">Copy</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">61.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">62.1</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">62.8</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">1.4</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">124.1</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Termination</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.0</span><span class="o">]</span>
+         <span class="o">[</span><span class="n">Termination</span> <span class="nl">Attempts:</span> <span class="nl">Min:</span> <span class="mi">1</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mi">1</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mi">0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mi">2</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Other</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.1</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Total</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">137.0</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">End</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="nl">Fixup:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="nl">Purge:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="n">Clear</span> <span class="nl">CT:</span> <span class="mf">0.4</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="nl">Other:</span> <span class="mf">1.7</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Choose</span> <span class="nl">CSet:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Ref</span> <span class="nl">Proc:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Ref</span> <span class="nl">Enq:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Redirty</span> <span class="nl">Cards:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Humongous</span> <span class="nl">Register:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Humongous</span> <span class="nl">Reclaim:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
+      <span class="o">[</span><span class="n">Free</span> <span class="nl">CSet:</span> <span class="mf">0.7</span> <span class="n">ms</span><span class="o">]</span>
+   <span class="o">[</span><span class="nl">Eden:</span> <span class="mf">1160.0</span><span class="n">M</span><span class="o">(</span><span class="mf">1160.0</span><span class="n">M</span><span class="o">)-&gt;</span><span class="mf">0.0</span><span class="n">B</span><span class="o">(</span><span class="mf">1153.0</span><span class="n">M</span><span class="o">)</span> <span class="nl">Survivors:</span> <span class="mf">68.0</span><span class="n">M</span><span class="o">-&gt;</span><span class="mf">75.0</span><span class="n">M</span> <span class="nl">Heap:</span> <span class="mf">1551.2</span><span class="n">M</span><span class="o">(</span><span class="mf">2048.0</span><span class="n">M</span><span class="o">)-&gt;</span><span class="mf">398.7</span><span class="n">M</span><span class="o">(</span><span class="mf">2048.0</span><span class="n">M</span><span class="o">)]</span>
+ <span class="o">[</span><span class="nl">Times:</span> <span class="n">user</span><span class="o">=</span><span class="mf">0.14</span> <span class="n">sys</span><span class="o">=</span><span class="mf">0.00</span><span class="o">,</span> <span class="n">real</span><span class="o">=</span><span class="mf">0.07</span> <span class="n">secs</span><span class="o">]</span>
+</pre></div>
+
+
 <h2 id="_14">内存分配与回收策略(理论基础)</h2>
 <h3 id="eden">对象优先在Eden分配</h3>
 <p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配是，虚拟机将发起一次<code>Minor GC</code>。（<code>-XX:+PrintGCDetails</code>）</p>
@@ -1338,63 +1395,6 @@ Heap
 <p>（5）由Eden区、From Space区向To Space区复制时，对象大小大于To Space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小</p>
 </li>
 </ul>
-<h2 id="g1-cms">G1 和 CMS</h2>
-<h3 id="g1-cms-region">G1 和 CMS 堆空间分配方式不同（分代 &amp; region）</h3>
-<ul>
-<li>
-<p><code>CMS</code>将堆逻辑上分成<code>Eden</code>,<code>Survivor(S0,S1)</code>,<code>Old</code>；并且他们是固定大小JVM启动的时候就已经设定不能改变,并且是连续的内存块</p>
-</li>
-<li>
-<p><code>G1</code>将堆分成多个大小相同的<code>Region(区域)</code>,默认2048个,在1Mb到32Mb之间大小,逻辑上分成<code>Eden</code>,<code>Survivor</code>,<code>Old</code>,<code>Humongous</code>(巨型),<code>空闲</code>；他们不是固定大小,会根据每次GC的信息做出调整</p>
-</li>
-</ul>
-<h3 id="g1-cms-gc">G1 和 CMS GC的区别</h3>
-<p>CMS的Young GC就是依赖并行GC(ParNew)去完成的，只有老年代中使用CMS GC(也就是Old GC)</p>
-<p>CMS 使用<strong>分代回收</strong>,堆被分成了年轻代和老年代,其中年轻代回收依赖ParNew去回收,需要STW(<code>Stop The World</code>)</p>
-<p>G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc，在不同的条件下被触发。</p>
-<ul>
-<li>young gc</li>
-</ul>
-<p>发生在年轻代的GC算法，一般对象（除了巨型对象）都是在eden region中分配内存，当所有eden region被耗尽无法申请内存时，就会触发一次young gc，这种触发机制和之前的young gc差不多，执行完一次young gc，活跃对象会被拷贝到survivor region或者晋升到old region中，空闲的region会被放入空闲列表中，等待下次被使用。</p>
-<ul>
-<li>mixed gc</li>
-</ul>
-<p>当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是一部分老年代，而不是全部老年代，可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制</p>
-<ul>
-<li>full gc</li>
-</ul>
-<p>如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的<code>serial old gc</code>，会导致异常长时间的暂停时间；这需要进行不断的调优，尽可能的避免full gc的产生</p>
-<p><strong>yong gc log</strong></p>
-<div class="hlcode"><pre><span class="o">[</span><span class="n">GC</span> <span class="n">pause</span> <span class="o">(</span><span class="n">G1</span> <span class="n">Evacuation</span> <span class="n">Pause</span><span class="o">)</span> <span class="o">(</span><span class="n">young</span><span class="o">),</span> <span class="mf">0.0707344</span> <span class="n">secs</span><span class="o">]</span>
-   <span class="o">[</span><span class="n">Parallel</span> <span class="nl">Time:</span> <span class="mf">68.6</span> <span class="n">ms</span><span class="o">,</span> <span class="n">GC</span> <span class="nl">Workers:</span> <span class="mi">2</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Start</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">4044130.9</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">4044130.9</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">4044131.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Ext</span> <span class="n">Root</span> <span class="n">Scanning</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">3.1</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">3.3</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">3.5</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.5</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">6.6</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Update</span> <span class="n">RS</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">2.2</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">4.4</span><span class="o">]</span>
-         <span class="o">[</span><span class="n">Processed</span> <span class="nl">Buffers:</span> <span class="nl">Min:</span> <span class="mi">77</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">111.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mi">146</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mi">69</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mi">223</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Scan</span> <span class="n">RS</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.4</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.7</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="n">Scanning</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">1.0</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Object</span> <span class="n">Copy</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">61.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">62.1</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">62.8</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">1.4</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">124.1</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Termination</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.0</span><span class="o">]</span>
-         <span class="o">[</span><span class="n">Termination</span> <span class="nl">Attempts:</span> <span class="nl">Min:</span> <span class="mi">1</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">1.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mi">1</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mi">0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mi">2</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Other</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">0.1</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">Total</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">68.5</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">,</span> <span class="nl">Sum:</span> <span class="mf">137.0</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">GC</span> <span class="n">Worker</span> <span class="n">End</span> <span class="o">(</span><span class="n">ms</span><span class="o">):</span> <span class="nl">Min:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Avg:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Max:</span> <span class="mf">4044199.4</span><span class="o">,</span> <span class="nl">Diff:</span> <span class="mf">0.0</span><span class="o">]</span>
-   <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="nl">Fixup:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
-   <span class="o">[</span><span class="n">Code</span> <span class="n">Root</span> <span class="nl">Purge:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
-   <span class="o">[</span><span class="n">Clear</span> <span class="nl">CT:</span> <span class="mf">0.4</span> <span class="n">ms</span><span class="o">]</span>
-   <span class="o">[</span><span class="nl">Other:</span> <span class="mf">1.7</span> <span class="n">ms</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Choose</span> <span class="nl">CSet:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Ref</span> <span class="nl">Proc:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Ref</span> <span class="nl">Enq:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Redirty</span> <span class="nl">Cards:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Humongous</span> <span class="nl">Register:</span> <span class="mf">0.1</span> <span class="n">ms</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Humongous</span> <span class="nl">Reclaim:</span> <span class="mf">0.0</span> <span class="n">ms</span><span class="o">]</span>
-      <span class="o">[</span><span class="n">Free</span> <span class="nl">CSet:</span> <span class="mf">0.7</span> <span class="n">ms</span><span class="o">]</span>
-   <span class="o">[</span><span class="nl">Eden:</span> <span class="mf">1160.0</span><span class="n">M</span><span class="o">(</span><span class="mf">1160.0</span><span class="n">M</span><span class="o">)-&gt;</span><span class="mf">0.0</span><span class="n">B</span><span class="o">(</span><span class="mf">1153.0</span><span class="n">M</span><span class="o">)</span> <span class="nl">Survivors:</span> <span class="mf">68.0</span><span class="n">M</span><span class="o">-&gt;</span><span class="mf">75.0</span><span class="n">M</span> <span class="nl">Heap:</span> <span class="mf">1551.2</span><span class="n">M</span><span class="o">(</span><span class="mf">2048.0</span><span class="n">M</span><span class="o">)-&gt;</span><span class="mf">398.7</span><span class="n">M</span><span class="o">(</span><span class="mf">2048.0</span><span class="n">M</span><span class="o">)]</span>
- <span class="o">[</span><span class="nl">Times:</span> <span class="n">user</span><span class="o">=</span><span class="mf">0.14</span> <span class="n">sys</span><span class="o">=</span><span class="mf">0.00</span><span class="o">,</span> <span class="n">real</span><span class="o">=</span><span class="mf">0.07</span> <span class="n">secs</span><span class="o">]</span>
-</pre></div>
-
-
 <h2 id="jvmgc">JVM参数与GC</h2>
 <table>
 <thead>
@@ -1452,8 +1452,26 @@ Heap
 </pre></div>
 
 
+<table>
+<thead>
+<tr>
+<th>gc 类型</th>
+<th>方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>yong gc</td>
+<td>Parallel Scavenge（PSYoungGen）</td>
+</tr>
+<tr>
+<td>full gc</td>
+<td>Parallel Old（ParOldGen）</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>java 程序</li>
+<li>Java 程序</li>
 </ul>
 <div class="hlcode"><pre> <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testAllocation</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">{</span>
         <span class="kt">byte</span><span class="o">[]</span> <span class="n">a1</span><span class="o">,</span> <span class="n">a2</span><span class="o">,</span> <span class="n">a3</span><span class="o">,</span> <span class="n">a4</span><span class="o">;</span>
@@ -1509,24 +1527,6 @@ Heap
 </pre></div>
 
 
-<table>
-<thead>
-<tr>
-<th>gc 类型</th>
-<th>方式</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>yong gc</td>
-<td>Parallel Scavenge（PSYoungGen）</td>
-</tr>
-<tr>
-<td>full gc</td>
-<td>Parallel Old（ParOldGen）</td>
-</tr>
-</tbody>
-</table>
 <h1 id="_20">堆外内存</h1>
 <h2 id="_21">问题</h2>
 <p><code>metaspace</code>没有限制，堆内存使用正常(没有<code>full gc</code>)，然后遇到<code>OOMKilled(程序因为内存使用超过限额被 kill -9 杀掉)</code></p>
@@ -1792,7 +1792,7 @@ Heap
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-07-16 22:52:09</p>
+        <p>Site Generated 2020-07-16 23:33:44</p>
       </span>
     </div>
 
