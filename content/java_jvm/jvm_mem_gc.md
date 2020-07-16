@@ -912,7 +912,7 @@ G1 snapshot at the begining,关注引用的删除：当B->D消失时，要把这
 Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）
 
-##### Copying/Cleanup Phase（`筛选`回收，STW，根据用户期望的GC停顿时间回收）
+##### Copying/Cleanup Phase（`筛选`部分region回收，而非全部回收；STW，根据用户期望的GC停顿时间回收）
 
 G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.
 
@@ -950,6 +950,66 @@ G1的另一个显著特点他能够让用户设置应用的暂停时间，为什
 由于内存被分成了很多小块，又带来了另外好处，由于内存块比较小，进行内存压缩整理的代价都比较小，相比其它GC算法，可以有效的规避内存碎片的问题。
 
 G1的思想，感觉有点像Java`CocurrentHashMap`，将一个大的分成若干个Region，然后再处理；即【分而治之】的思想
+
+## G1 和 CMS
+
+### G1 和 CMS 堆空间分配方式不同（分代 & region）
+
+* `CMS`将堆逻辑上分成`Eden`,`Survivor(S0,S1)`,`Old`；并且他们是固定大小JVM启动的时候就已经设定不能改变,并且是连续的内存块
+
+* `G1`将堆分成多个大小相同的`Region(区域)`,默认2048个,在1Mb到32Mb之间大小,逻辑上分成`Eden`,`Survivor`,`Old`,`Humongous`(巨型),`空闲`；他们不是固定大小,会根据每次GC的信息做出调整
+
+### G1 和 CMS GC的区别
+
+CMS的Young GC就是依赖并行GC(ParNew)去完成的，只有老年代中使用CMS GC(也就是Old GC)
+
+CMS 使用**分代回收**,堆被分成了年轻代和老年代,其中年轻代回收依赖ParNew去回收,需要STW(`Stop The World`)
+
+G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc，在不同的条件下被触发。
+
+* young gc
+
+发生在年轻代的GC算法，一般对象（除了巨型对象）都是在eden region中分配内存，当所有eden region被耗尽无法申请内存时，就会触发一次young gc，这种触发机制和之前的young gc差不多，执行完一次young gc，活跃对象会被拷贝到survivor region或者晋升到old region中，空闲的region会被放入空闲列表中，等待下次被使用。
+
+* mixed gc
+
+当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是一部分老年代，而不是全部老年代，可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制
+
+* full gc
+
+如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的`serial old gc`，会导致异常长时间的暂停时间；这需要进行不断的调优，尽可能的避免full gc的产生
+
+**g1 yong gc log**
+
+```java
+[GC pause (G1 Evacuation Pause) (young), 0.0707344 secs]
+   [Parallel Time: 68.6 ms, GC Workers: 2]
+      [GC Worker Start (ms): Min: 4044130.9, Avg: 4044130.9, Max: 4044131.0, Diff: 0.0]
+      [Ext Root Scanning (ms): Min: 3.1, Avg: 3.3, Max: 3.5, Diff: 0.5, Sum: 6.6]
+      [Update RS (ms): Min: 2.2, Avg: 2.2, Max: 2.2, Diff: 0.0, Sum: 4.4]
+         [Processed Buffers: Min: 77, Avg: 111.5, Max: 146, Diff: 69, Sum: 223]
+      [Scan RS (ms): Min: 0.4, Avg: 0.4, Max: 0.4, Diff: 0.0, Sum: 0.7]
+      [Code Root Scanning (ms): Min: 0.0, Avg: 0.5, Max: 1.0, Diff: 1.0, Sum: 1.0]
+      [Object Copy (ms): Min: 61.4, Avg: 62.1, Max: 62.8, Diff: 1.4, Sum: 124.1]
+      [Termination (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+         [Termination Attempts: Min: 1, Avg: 1.0, Max: 1, Diff: 0, Sum: 2]
+      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.1]
+      [GC Worker Total (ms): Min: 68.5, Avg: 68.5, Max: 68.5, Diff: 0.0, Sum: 137.0]
+      [GC Worker End (ms): Min: 4044199.4, Avg: 4044199.4, Max: 4044199.4, Diff: 0.0]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.4 ms]
+   [Other: 1.7 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.1 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.1 ms]
+      [Humongous Register: 0.1 ms]
+      [Humongous Reclaim: 0.0 ms]
+      [Free CSet: 0.7 ms]
+   [Eden: 1160.0M(1160.0M)->0.0B(1153.0M) Survivors: 68.0M->75.0M Heap: 1551.2M(2048.0M)->398.7M(2048.0M)]
+ [Times: user=0.14 sys=0.00, real=0.07 secs]
+```
 
 ## 内存分配与回收策略(理论基础)
 
@@ -1092,66 +1152,6 @@ JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhi
 
 * （5）由Eden区、From Space区向To Space区复制时，对象大小大于To Space可用内存，则把该对象转存到老年代，且老年代的可用内存小于该对象大小
 
-## G1 和 CMS
-
-### G1 和 CMS 堆空间分配方式不同（分代 & region）
-
-* `CMS`将堆逻辑上分成`Eden`,`Survivor(S0,S1)`,`Old`；并且他们是固定大小JVM启动的时候就已经设定不能改变,并且是连续的内存块
-
-* `G1`将堆分成多个大小相同的`Region(区域)`,默认2048个,在1Mb到32Mb之间大小,逻辑上分成`Eden`,`Survivor`,`Old`,`Humongous`(巨型),`空闲`；他们不是固定大小,会根据每次GC的信息做出调整
-
-### G1 和 CMS GC的区别
-
-CMS的Young GC就是依赖并行GC(ParNew)去完成的，只有老年代中使用CMS GC(也就是Old GC)
-
-CMS 使用**分代回收**,堆被分成了年轻代和老年代,其中年轻代回收依赖ParNew去回收,需要STW(`Stop The World`)
-
-G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc，在不同的条件下被触发。
-
-* young gc
-
-发生在年轻代的GC算法，一般对象（除了巨型对象）都是在eden region中分配内存，当所有eden region被耗尽无法申请内存时，就会触发一次young gc，这种触发机制和之前的young gc差不多，执行完一次young gc，活跃对象会被拷贝到survivor region或者晋升到old region中，空闲的region会被放入空闲列表中，等待下次被使用。
-
-* mixed gc
-
-当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是一部分老年代，而不是全部老年代，可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制
-
-* full gc
-
-如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的`serial old gc`，会导致异常长时间的暂停时间；这需要进行不断的调优，尽可能的避免full gc的产生
-
-**yong gc log**
-
-```java
-[GC pause (G1 Evacuation Pause) (young), 0.0707344 secs]
-   [Parallel Time: 68.6 ms, GC Workers: 2]
-      [GC Worker Start (ms): Min: 4044130.9, Avg: 4044130.9, Max: 4044131.0, Diff: 0.0]
-      [Ext Root Scanning (ms): Min: 3.1, Avg: 3.3, Max: 3.5, Diff: 0.5, Sum: 6.6]
-      [Update RS (ms): Min: 2.2, Avg: 2.2, Max: 2.2, Diff: 0.0, Sum: 4.4]
-         [Processed Buffers: Min: 77, Avg: 111.5, Max: 146, Diff: 69, Sum: 223]
-      [Scan RS (ms): Min: 0.4, Avg: 0.4, Max: 0.4, Diff: 0.0, Sum: 0.7]
-      [Code Root Scanning (ms): Min: 0.0, Avg: 0.5, Max: 1.0, Diff: 1.0, Sum: 1.0]
-      [Object Copy (ms): Min: 61.4, Avg: 62.1, Max: 62.8, Diff: 1.4, Sum: 124.1]
-      [Termination (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
-         [Termination Attempts: Min: 1, Avg: 1.0, Max: 1, Diff: 0, Sum: 2]
-      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.1]
-      [GC Worker Total (ms): Min: 68.5, Avg: 68.5, Max: 68.5, Diff: 0.0, Sum: 137.0]
-      [GC Worker End (ms): Min: 4044199.4, Avg: 4044199.4, Max: 4044199.4, Diff: 0.0]
-   [Code Root Fixup: 0.0 ms]
-   [Code Root Purge: 0.0 ms]
-   [Clear CT: 0.4 ms]
-   [Other: 1.7 ms]
-      [Choose CSet: 0.0 ms]
-      [Ref Proc: 0.1 ms]
-      [Ref Enq: 0.0 ms]
-      [Redirty Cards: 0.1 ms]
-      [Humongous Register: 0.1 ms]
-      [Humongous Reclaim: 0.0 ms]
-      [Free CSet: 0.7 ms]
-   [Eden: 1160.0M(1160.0M)->0.0B(1153.0M) Survivors: 68.0M->75.0M Heap: 1551.2M(2048.0M)->398.7M(2048.0M)]
- [Times: user=0.14 sys=0.00, real=0.07 secs]
-```
-
 ## JVM参数与GC
 
 年轻代 | 老年代 | jvm 参数 |
@@ -1171,7 +1171,12 @@ G1 | G1 | -XX:+UseG1GC
 -Xloggc:/Users/mubi/git_workspace/java8/gc.log -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -XX:+PrintGCDetails
 ```
 
-* java 程序
+gc 类型 | 方式
+-|-
+yong gc | Parallel Scavenge（PSYoungGen）
+full gc | Parallel Old（ParOldGen）
+
+* Java 程序
 
 ```java
  public static void testAllocation() throws InterruptedException{
@@ -1226,11 +1231,6 @@ Heap
   class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
 
 ```
-
-gc 类型 | 方式
--|-
-yong gc | Parallel Scavenge（PSYoungGen）
-full gc | Parallel Old（ParOldGen）
 
 # 堆外内存
 
