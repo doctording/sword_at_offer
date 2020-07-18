@@ -9,3 +9,9 @@
 *py3env
 *.vscode
 output/
+
+# gitbook
+_book
+node_modules
+*/node_modules/
+*/_book

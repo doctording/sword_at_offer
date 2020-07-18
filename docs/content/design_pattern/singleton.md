@@ -25,7 +25,7 @@ final class Singleton{
     private static Singleton instance = null;
 
     public static Singleton getInstance(){
-        if(null == instance){
+        if (null == instance) {
             System.out.println("new Singleton()");
             instance = new Singleton();
         }
@@ -163,8 +163,5 @@ final class Singleton{
 * 当调用`getInstance`时，才会初始化Holder实例；而在Java程序类加载的编译时期`<clinit>()`方法中，该方法是一个同步方法；类里面的静态变量是初始化一次放在常量池中的
 
 ## 枚举
-
-```java
-```
 
 枚举类型不允许被继承，同样是线程安全的且只能被实例化一次，但是枚举类型不能够实现懒加载

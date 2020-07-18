@@ -439,7 +439,7 @@ public class FinalizeEscapeGC {
 
 * output
 
-```bash
+```java
 finalize method executed!
 abc
 yes, i am still alive
@@ -1062,7 +1062,7 @@ public class MainTest {
 }
 ```
 
-```js
+```java
 -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
 ```
 
@@ -1072,7 +1072,7 @@ eden | from survivor | to survivor | old
 
 ##### 对应GC日志
 
-```s
+```java
 [GC [PSYoungGen: 7534K->416K(9216K)] 7534K->6560K(19456K), 0.0049590 secs] [Times: user=0.01 sys=0.00, real=0.01 secs]
 [Full GC [PSYoungGen: 416K->0K(9216K)] [ParOldGen: 6144K->6466K(10240K)] 6560K->6466K(19456K) [PSPermGen: 3121K->3120K(21504K)], 0.0103590 secs] [Times: user=0.02 sys=0.00, real=0.01 secs]
 Heap

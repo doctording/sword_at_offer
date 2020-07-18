@@ -16,6 +16,31 @@ date: 2019-02-15 00:00
 
 * Thread类有一个类型为`ThreadLocal.ThreadLocalMap`的实例变量threadLocals，也就是说每个线程有一个自己的ThreadLocalMap(是线程自己拥有的map)。
 
+* 使用例子
+
+```java
+public class ThreadLocalTest {
+
+    private static ThreadLocal<String> threadLocal = new ThreadLocal<>();
+
+    public static void main(String[] args) {
+        set();
+        System.out.println(get()); // 打印 abc
+    }
+
+    private static String get() {
+        return threadLocal.get();
+    }
+
+    private static void set() {
+        threadLocal.set("abc");
+    }
+
+}
+```
+
+`new ThreadLocal<>();`就仅仅实例话一个`ThreadLocal`对象，会作为线程`ThreadLocal.ThreadLocalMap`的key
+
 ### set源码
 
 ```java
