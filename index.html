@@ -1,777 +1,1829 @@
+
 <!DOCTYPE HTML>
-<html>
-  <head>
-    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/style.css">
-    <link rel="Stylesheet" type="text/css" href="/sword_at_offer/static/css/tango.css">
-    <link rel="shortcut icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/sword_at_offer/favicon.ico" type="image/x-icon">
-    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>剑指Offer</title>
-    <meta name="keywords" content="algorithm，python"/>
-    <meta name="description" content="for python and algorithm"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-
-  <body>
-    <div id="container">
-      
-<div class="title">剑指Offer</div>
-
-<div class="index">    
-    <div class="category">
-      <h2 id="db_cache">Db_cache
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./db_cache/LFU.html">LFU</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./db_cache/LRU.html">LRU</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./db_cache/consistent_hash.html">一致性Hash</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./db_cache/bloom.html">布隆过滤器</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./db_cache/mysql.html">数据库/表/查询</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./db_cache/cache.html">缓存</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="design_pattern">Design_pattern
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/proxy.html">代理模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/singleton.html">单例模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/factory.html">工厂模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/template.html">模板方法</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/strategy.html">策略模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/decorator.html">装饰器模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/observer.html">观察者模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/visitor.html">访问者模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/iterator.html">迭代器模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./design_pattern/adapter.html">适配器模式</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="distributed_design">Distributed_design
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/nginx.html">nginx基础</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/rpc.html">rpc</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/tomcat.html">Tomcat</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/distribute.html">分布式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/design.html">设计模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./distributed_design/flow_limit.html">限流</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="java8">Java8
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/java8_completableFuture.html">Java8 CompletableFuture</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/java8_future.html">Java8 Future</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/interface_default.html">Java8 interface defalt static</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/java8_mem.html">Java8 jvm内存结构</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/lambda.html">Java8 lambda表达式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/java8_optional.html">Java8 Optional</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/streams.html">Java8 Streams</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java8/streams_parallel.html">Java8 并行数据处理与性能</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="java_data_structure">Java_data_structure
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/b_tree.html">B/B+ Tree</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/java_basic_datastructure.html">Java 基础数据结构</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/array_list.html">Java8 ArrayList & LinkedList</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/concurrent_datastructure.html">Java8 concurrent数据结构</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/hash_map.html">Java8 HashMap</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/hash_table.html">Java8 HashTable</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/unsafe.html">Java8 unsafe</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/System_arraycopy.html">System.arraycopy, Array.copyOf</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/fail_fast.html">集合 fail-fast,ConcurrentModificationException</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_data_structure/advanced_structure.html">高级数据结构</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="java_io_net">Java_io_net
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./java_io_net/io_interrupte.html">IO和中断</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_io_net/http_tcp.html">Java http & tcp</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_io_net/io_basic.html">Java IO基础</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_io_net/nio_basic.html">Java nio</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_io_net/from_io_to_epoll.html">从io到epoll</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="java_jvm">Java_jvm
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_runtime.html">Java Runtime</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_mem_model.html">Java 内存模型与线程</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_mem_gc.html">Java 堆栈 & 各种GC</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_class_load.html">Java 类加载机制,类加载器,内存布局</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_params.html">JVM VM参数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_jvm/jvm_tools.html">JVM命令工具(jstack,jmap,jcmd...)</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="java_thinking_in_Java">Java_thinking_in_java
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thinking_in_Java/innner_class.html">《Java编程思想》第10章：内部类</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thinking_in_Java/basic.html">《Java编程思想》第3章：操作符，第4章：控制执行流程</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thinking_in_Java/constructor.html">《Java编程思想》第5章：初始化和清理(重点)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thinking_in_Java/public_private_protect.html">《Java编程思想》第6章：访问权限控制（重要）</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thinking_in_Java/class_final.html">《Java编程思想》第7章：复用类</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thinking_in_Java/polymorphism.html">《Java编程思想》第8章：多态</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thinking_in_Java/interface_abstract_class.html">《Java编程思想》第9章：接口 补充：抽象类</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="java_thread_concurrent">Java_thread_concurrent
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/aqs.html">AQS</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/cas.html">CAS(Conmpare And Swap/Exchange) & unsafe</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/countdownlatch_cyclicBarrier.html">CountDownLatch & CyclicBarrier</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/cpu_cache.html">CPU,缓存</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/hook_thread.html">Hook线程</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_lock.html">Java Lock</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_lock_type.html">Java Lock 分类</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/lock_support.html">LockSupport Park & Unpark</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/longAdder.html">LongAdder</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/semaphore.html">Semaphore</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/synchronized.html">synchronized 关键字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_signal_condition.html">Thread Signal & Condition</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_deadlock.html">Thread 死锁</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_pool.html">Thread 线程池</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/threadLocal.html">ThreadLocal</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/volatile.html">volatile 关键字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_design.html">多线程设计模式</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/concurrency_problems.html">常见的多线程题目</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_basic.html">线程基础</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_thread_concurrent/thread_pool_self.html">自定义线程池</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="java_utils">Java_utils
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/equals_hashcode.html">== & equals方法 & hashcode方法</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/Calendar.html">Calendar & Date</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/Compare.html">Comparison method violates its general contract!</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/Map.html">HashMap,HashTable,ConcurrentHashMap 对比</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/int_Integer.html">int(基本类型) & Integer(包装类类型)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/exception.html">Java异常&错误</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/String.html">String,StringBuffer,StringBuilder</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/reflect.html">反射机制</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/call_back.html">回调 & 事件机制</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/quick_sort.html">快排(没事手写写)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/array_collection.html">数组，集合转换等问题</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./java_utils/annotation.html">注解 Annotation</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="python">Python
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./python/py_contextor.html">python上下文管理器</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./python/py_array2.html">python二维数组</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./python/py_coroutine.html">python协程gevent</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./python/py_object.html">python可变对象与不可变对象,引用</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./python/py.html">python基础知识</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./python/py_time.html">python时间处理相关</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="thought_implement_by_java">Thought_implement_by_java
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/01.html">01 二维数组中的查找</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/02.html">02 替换空格</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/03.html">03 从尾到头打印链表</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/04.html">04 重建二叉树</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/05.html">05 用两个栈实现队列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/06.html">06 旋转数组的最小数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/07.html">07 斐波那契数列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/11.html">11 二进制中1的个数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/13.html">13 调整数组顺序使奇数位于偶数前面</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/20.html">20 包含min函数的栈</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/21.html">21 栈的压入、弹出序列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/23.html">22 二叉搜索树的后序遍历序列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/22.html">22 从上到下打印二叉树</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/25.html">25 复杂链表的复制</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/26.html">26 二叉搜索树与双向链表</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/27.html">27 字符串的排列, 全排列问题</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/28.html">28 数组中出现次数超过一半的数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/29.html">29 最小的K个数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/32.html">32 把数组排成最小的数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/33.html">33 丑数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/35.html">35 数组中的逆序对</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/41.html">41 和为S的两个数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/43.html">43 左旋转字符串(String取substring)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/44.html">44 翻转单词顺序列(String,StringBuffer)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/46.html">46 孩子们的游戏(圆圈中最后剩下的数)-约瑟夫环</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/48.html">48 不用加减乘除做加法</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/49.html">49 把字符串转换成整数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/55.html">55 链表中环的入口结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/56.html">56 删除链表中重复的结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/59.html">59 之字型打印二叉树</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/62.html">63 二叉搜索树的第k个结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/63.html">63 数据流中的中位数(优先队列实现堆)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/64.html">64 滑动窗口的最大值</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/65.html">65 矩阵中的路径(DFS+回溯)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_java/67.html">67 剪绳子(动态规划)</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="thought_implement_by_python">Thought_implement_by_python
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/01.html">01 二维数组中的查找</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/02.html">02 替换空格</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/03.html">03 从尾到头打印链表</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/04.html">04 重建二叉树 by pre & in order</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/05.html">05 用两个栈实现队列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/06.html">06 旋转数组的最小数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/07.html">07 斐波那契数列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/08.html">08 跳台阶</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/09.html">09 变态跳台阶</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/10.html">10 矩形覆盖</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/11.html">11 二进制中1的个数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/12.html">12 数值的整数次方</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/13.html">13 调整数组顺序使奇数位于偶数前面</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/14.html">14 链表中倒数第k个结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/15.html">15 反转链表</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/16.html">16 合并两个排序的链表</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/17.html">17 树的子结构</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/18.html">18 二叉树的镜像</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/19.html">19 顺时针打印矩阵</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/20.html">20 包含min函数的栈</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/21.html">21 栈的压入、弹出序列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/22.html">22 从上往下打印二叉树,层次遍历</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/23.html">23 二叉搜索树的后序遍历序列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/24.html">24 二叉树中和为某一值的路径</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/25.html">25 复杂链表的复制</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/26.html">26 二叉搜索树与双向链表</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/27.html">27 字符串的排列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/28.html">28 数组中出现次数超过一半的数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/29.html">29 最小的K个数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/30.html">30 连续子数组的最大和</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/31.html">31 整数中1出现的次数（从1到n整数中1出现的次数)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/32.html">32 把数组排成最小的数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/33.html">33 丑数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/34.html">34 第一个只出现一次的字符</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/35.html">35 数组中的逆序对</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/36.html">36 两个链表的第一个公共结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/37.html">37 数字在排序数组中出现的次数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/38.html">38 二叉树的深度</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/39.html">39 平衡二叉树</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/40.html">40 数组中只出现一次的数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/41.html">41 和为S的连续正数序列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/42.html">42 和为S的两个数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/43.html">43 左旋转字符串</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/44.html">44 翻转单词顺序列</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/45.html">45 扑克牌顺子</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/46.html">46 孩子们的游戏(圆圈中最后剩下的数)-约瑟夫环</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/47.html">47 求1+2+3+...+n(思维发散)</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/48.html">48 不用加减乘除做加法</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/49.html">49 把字符串转换成整数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/50.html">50 数组中重复的数字</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/51.html">51 构建乘积数组</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/52.html">52 正则表达式匹配</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/53.html">53 表示数值的字符串</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/54.html">54 字符流中第一个不重复的字符</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/55.html">55 链表中环的入口结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/56.html">56 删除链表中重复的结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/57.html">57 二叉树的下一个结点，中序</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/58.html">58 对称的二叉树</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/59.html">59 按之字形顺序打印二叉树</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/60.html">60 把二叉树打印成多行</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/61.html">61 序列化二叉树</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/62.html">62 二叉搜索树的第k个结点</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/63.html">63 数据流中的中位数</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/64.html">64 滑动窗口的最大值</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/65.html">65 矩阵中的路径</a>
-          </li>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_implement_by_python/66.html">66 机器人的运动范围</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="thought_of_solve">Thought_of_solve
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./thought_of_solve/thought.html">剑指Offer解题思路(全)</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>  
-    <div class="category">
-      <h2 id="tips">Tips
-      </h2>
-      <div class="category_pages">
-        <ul>  
-          <li class="pagelist item_arrow">
-              <a href="./tips/gettingstarted.html">simiki help</a>
-          </li>
-        </ul>
-      </div> <!-- end category_pages -->
-    </div> <!-- end category -->
-    <div class="clearfix"></div>
-</div>
-    </div>
-    <div id="footer">
-      <span>
-        <p>Copyright © 2020 doctording.
-        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-07-16 23:33:44</p>
-      </span>
-    </div>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Introduction · spring-note</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="doctording">
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
 
     
-<script>
-  var list_wrappers = document.getElementsByClassName('list_wrapper')
-  for (var i = 0, len = list_wrappers.length; i < len; i++) {
-    var list_wrapper = list_wrappers[i];
-    var coll_name = list_wrapper.getElementsByClassName('coll_name')[0];
-    var coll_list = list_wrapper.getElementsByClassName('coll_list')[0];
-    var width = coll_name.clientWidth + 3;
-    // http://stackoverflow.com/a/10118190/1276501
-    coll_list.setAttribute("style","margin-left: " + width + "px");
-    coll_list.style.marginLeft = width + "px";
-  }
-</script>
-  </body>
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-page-treeview/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter active" data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [1 常见设计模式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="content/design_pattern/proxy.html">
+            
+                <a href="content/design_pattern/proxy.html">
+            
+                    
+                    代理模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="content/design_pattern/singleton.html">
+            
+                <a href="content/design_pattern/singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="content/design_pattern/factory.html">
+            
+                <a href="content/design_pattern/factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="content/design_pattern/template.html">
+            
+                <a href="content/design_pattern/template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="content/design_pattern/strategy.html">
+            
+                <a href="content/design_pattern/strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="content/design_pattern/decorator.html">
+            
+                <a href="content/design_pattern/decorator.html">
+            
+                    
+                    装饰器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="content/design_pattern/observer.html">
+            
+                <a href="content/design_pattern/observer.html">
+            
+                    
+                    观察者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="content/design_pattern/visitor.html">
+            
+                <a href="content/design_pattern/visitor.html">
+            
+                    
+                    访问者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="content/design_pattern/iterator.html">
+            
+                <a href="content/design_pattern/iterator.html">
+            
+                    
+                    迭代器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="content/design_pattern/facade.html">
+            
+                <a href="content/design_pattern/facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [2 数据结构和算法基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="content/java_data_structure/java_basic_datastructure.html">
+            
+                <a href="content/java_data_structure/java_basic_datastructure.html">
+            
+                    
+                    常见基础数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="content/java_data_structure/array_list.html">
+            
+                <a href="content/java_data_structure/array_list.html">
+            
+                    
+                    ArrayList & LinkedList
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="content/java_data_structure/hash_map.html">
+            
+                <a href="content/java_data_structure/hash_map.html">
+            
+                    
+                    HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.3" data-path="content/java_data_structure/hash_table.html">
+            
+                <a href="content/java_data_structure/hash_table.html">
+            
+                    
+                    HashTable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.4" data-path="content/java_utils/Map.html">
+            
+                <a href="content/java_utils/Map.html">
+            
+                    
+                    HashMap,HashTable,ConcurrentHashMap 对比
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.5" data-path="content/java_data_structure/fail_fast.html">
+            
+                <a href="content/java_data_structure/fail_fast.html">
+            
+                    
+                    fail-fast,ConcurrentModificationException
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.6" data-path="content/java_utils/quick_sort.html">
+            
+                <a href="content/java_utils/quick_sort.html">
+            
+                    
+                    快排(没事手写写)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="content/java_data_structure/concurrent_datastructure.html">
+            
+                <a href="content/java_data_structure/concurrent_datastructure.html">
+            
+                    
+                    concurrent数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="content/java_data_structure/advanced_structure.html">
+            
+                <a href="content/java_data_structure/advanced_structure.html">
+            
+                    
+                    高级数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.3.1" data-path="content/java_data_structure/b_tree.html">
+            
+                <a href="content/java_data_structure/b_tree.html">
+            
+                    
+                    B/B+ Tree
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    [3 Java基础问题]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="content/java_data_structure/System_arraycopy.html">
+            
+                <a href="content/java_data_structure/System_arraycopy.html">
+            
+                    
+                    System.arraycopy, Array.copyOf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="content/java_utils/equals_hashcode.html">
+            
+                <a href="content/java_utils/equals_hashcode.html">
+            
+                    
+                    == & equals方法 & hashcode方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="content/java_utils/Calendar.html">
+            
+                <a href="content/java_utils/Calendar.html">
+            
+                    
+                    Calendar & Date
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="content/java_utils/Compare.html">
+            
+                <a href="content/java_utils/Compare.html">
+            
+                    
+                    Comparison method violates its general contract
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="content/java_utils/int_Integer.html">
+            
+                <a href="content/java_utils/int_Integer.html">
+            
+                    
+                    int(基本类型) & Integer(包装类类型)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="content/java_utils/exception.html">
+            
+                <a href="content/java_utils/exception.html">
+            
+                    
+                    Java异常&错误
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="content/java_utils/String.html">
+            
+                <a href="content/java_utils/String.html">
+            
+                    
+                    String,StringBuffer,StringBuilder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="content/java_utils/reflect.html">
+            
+                <a href="content/java_utils/reflect.html">
+            
+                    
+                    反射机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="content/java_utils/call_back.html">
+            
+                <a href="content/java_utils/call_back.html">
+            
+                    
+                    回调 & 事件机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="content/java_utils/array_collection.html">
+            
+                <a href="content/java_utils/array_collection.html">
+            
+                    
+                    数组，集合转换等问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="content/java_utils/annotation.html">
+            
+                <a href="content/java_utils/annotation.html">
+            
+                    
+                    注解 Annotation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="content/java_jvm/jvm_runtime.html">
+            
+                <a href="content/java_jvm/jvm_runtime.html">
+            
+                    
+                    Runtime类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="content/java_data_structure/unsafe.html">
+            
+                <a href="content/java_data_structure/unsafe.html">
+            
+                    
+                    unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="content/java_thinking_in_Java/basic.html">
+            
+                <a href="content/java_thinking_in_Java/basic.html">
+            
+                    
+                    《Java编程思想》第3章：操作符，第4章：控制执行流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="content/java_thinking_in_Java/constructor.html">
+            
+                <a href="content/java_thinking_in_Java/constructor.html">
+            
+                    
+                    《Java编程思想》第5章：初始化和清理(重点)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="content/java_thinking_in_Java/public_private_protect.html">
+            
+                <a href="content/java_thinking_in_Java/public_private_protect.html">
+            
+                    
+                    《Java编程思想》第6章：访问权限控制(重要)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="content/java_thinking_in_Java/class_final.html">
+            
+                <a href="content/java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第7章：复用类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="content/java_thinking_in_Java/polymorphism.html">
+            
+                <a href="content/java_thinking_in_Java/polymorphism.html">
+            
+                    
+                    《Java编程思想》第8章：多态
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="content/java_thinking_in_Java/class_final.html">
+            
+                <a href="content/java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第9章：接口 补充：抽象类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="content/java_thinking_in_Java/innner_class.html">
+            
+                <a href="content/java_thinking_in_Java/innner_class.html">
+            
+                    
+                    《Java编程思想》第10章：内部类
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    [4 Java多线程 & 并发基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="content/java_thread_concurrent/thread_basic.html">
+            
+                <a href="content/java_thread_concurrent/thread_basic.html">
+            
+                    
+                    线程基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1.1" data-path="content/java_thread_concurrent/thread_design.html">
+            
+                <a href="content/java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.2" data-path="content/java_thread_concurrent/hook_thread.html">
+            
+                <a href="content/java_thread_concurrent/hook_thread.html">
+            
+                    
+                    Hook线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="content/java_thread_concurrent/thread_pool.html">
+            
+                <a href="content/java_thread_concurrent/thread_pool.html">
+            
+                    
+                    线程池
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="content/java_thread_concurrent/concurrency_problems.html">
+            
+                <a href="content/java_thread_concurrent/concurrency_problems.html">
+            
+                    
+                    常见的多线程题目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.2" data-path="content/java_thread_concurrent/thread_pool_self.html">
+            
+                <a href="content/java_thread_concurrent/thread_pool_self.html">
+            
+                    
+                    自定义线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="content/java_thread_concurrent/cas.html">
+            
+                <a href="content/java_thread_concurrent/cas.html">
+            
+                    
+                    CAS(Conmpare And Swap/Exchange) & unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="content/java_thread_concurrent/aqs.html">
+            
+                <a href="content/java_thread_concurrent/aqs.html">
+            
+                    
+                    AQS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" >
+            
+                <span>
+            
+                    
+                    [常见关键字和类]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.5.1" data-path="content/java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="content/java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.2" data-path="content/java_thread_concurrent/longAdder.html">
+            
+                <a href="content/java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.3" data-path="content/java_thread_concurrent/semaphore.html">
+            
+                <a href="content/java_thread_concurrent/semaphore.html">
+            
+                    
+                    Semaphore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.4" data-path="content/java_thread_concurrent/volatile.html">
+            
+                <a href="content/java_thread_concurrent/volatile.html">
+            
+                    
+                    volatile 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.5" data-path="content/java_thread_concurrent/synchronized.html">
+            
+                <a href="content/java_thread_concurrent/synchronized.html">
+            
+                    
+                    synchronized 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="content/java_thread_concurrent/thread_lock.html">
+            
+                <a href="content/java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.6.1" data-path="content/java_thread_concurrent/thread_lock_type.html">
+            
+                <a href="content/java_thread_concurrent/thread_lock_type.html">
+            
+                    
+                    Java Lock 分类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.2" data-path="content/java_thread_concurrent/thread_deadlock.html">
+            
+                <a href="content/java_thread_concurrent/thread_deadlock.html">
+            
+                    
+                    Thread 死锁问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="content/java_thread_concurrent/threadLocal.html">
+            
+                <a href="content/java_thread_concurrent/threadLocal.html">
+            
+                    
+                    ThreadLocal
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    [5 Java8]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="content/java8/java8_completableFuture.html">
+            
+                <a href="content/java8/java8_completableFuture.html">
+            
+                    
+                    CompletableFuture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="content/java8/java8_future.html">
+            
+                <a href="content/java8/java8_future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="content/java8/interface_default.html">
+            
+                <a href="content/java8/interface_default.html">
+            
+                    
+                    interface defalt static
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="content/java8/java8_mem.html">
+            
+                <a href="content/java8/java8_mem.html">
+            
+                    
+                    Java8 jvm内存结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="content/java8/lambda.html">
+            
+                <a href="content/java8/lambda.html">
+            
+                    
+                    Java8 lambda表达式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="content/java8/java8_optional.html">
+            
+                <a href="content/java8/java8_optional.html">
+            
+                    
+                    Java8 Optional
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="content/java8/streams.html">
+            
+                <a href="content/java8/streams.html">
+            
+                    
+                    Java8 Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="content/java8/streams_parallel.html">
+            
+                <a href="content/java8/streams_parallel.html">
+            
+                    
+                    Java8 并行数据处理与性能
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    [6 JVM]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="content/java_jvm/jvm_mem_model.html">
+            
+                <a href="content/java_jvm/jvm_mem_model.html">
+            
+                    
+                    内存模型与线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="content/java_jvm/jvm_class_load.html">
+            
+                <a href="content/java_jvm/jvm_class_load.html">
+            
+                    
+                    类加载机制,类加载器,内存布局
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="content/java_jvm/jvm_mem_gc.html">
+            
+                <a href="content/java_jvm/jvm_mem_gc.html">
+            
+                    
+                    堆栈 & 各种GC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="content/java_jvm/jvm_params.html">
+            
+                <a href="content/java_jvm/jvm_params.html">
+            
+                    
+                    JVM参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="content/java_jvm/jvm_tools.html">
+            
+                <a href="content/java_jvm/jvm_tools.html">
+            
+                    
+                    JVM命令工具(jstack,jmap,jcmd...)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" >
+            
+                <span>
+            
+                    
+                    [7 缓存 & 限流]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="content/db_cache/LFU.html">
+            
+                <a href="content/db_cache/LFU.html">
+            
+                    
+                    LFU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="content/db_cache/LRU.html">
+            
+                <a href="content/db_cache/LRU.html">
+            
+                    
+                    LRU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="content/db_cache/consistent_hash.html">
+            
+                <a href="content/db_cache/consistent_hash.html">
+            
+                    
+                    一致性Hash
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="content/db_cache/bloom.html">
+            
+                <a href="content/db_cache/bloom.html">
+            
+                    
+                    布隆过滤器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="content/db_cache/cache.html">
+            
+                <a href="content/db_cache/cache.html">
+            
+                    
+                    缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="content/distributed_design/flow_limit.html">
+            
+                <a href="content/distributed_design/flow_limit.html">
+            
+                    
+                    限流
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="content/java_thread_concurrent/cpu_cache.html">
+            
+                <a href="content/java_thread_concurrent/cpu_cache.html">
+            
+                    
+                    CPU,缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" >
+            
+                <span>
+            
+                    
+                    [8 数据库]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="content/db_cache/mysql.html">
+            
+                <a href="content/db_cache/mysql.html">
+            
+                    
+                    数据库/表/查询
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    [9 I/O & 网络 & 分布式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="content/distributed_design/nginx.html">
+            
+                <a href="content/distributed_design/nginx.html">
+            
+                    
+                    nginx基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="content/distributed_design/rpc.html">
+            
+                <a href="content/distributed_design/rpc.html">
+            
+                    
+                    rpc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="content/distributed_design/tomcat.html">
+            
+                <a href="content/distributed_design/tomcat.html">
+            
+                    
+                    tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="content/distributed_design/distribute.html">
+            
+                <a href="content/distributed_design/distribute.html">
+            
+                    
+                    分布式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="content/distributed_design/design.html">
+            
+                <a href="content/distributed_design/design.html">
+            
+                    
+                    设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" >
+            
+                <span>
+            
+                    
+                    [I/O与网络]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.6.1" data-path="content/java_io_net/io_interrupte.html">
+            
+                <a href="content/java_io_net/io_interrupte.html">
+            
+                    
+                    IO和中断
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.2" data-path="content/java_io_net/http_tcp.html">
+            
+                <a href="content/java_io_net/http_tcp.html">
+            
+                    
+                    http & tcp
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.3" data-path="content/java_io_net/io_basic.html">
+            
+                <a href="content/java_io_net/io_basic.html">
+            
+                    
+                    IO基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.4" data-path="content/java_io_net/nio_basic.html">
+            
+                <a href="content/java_io_net/nio_basic.html">
+            
+                    
+                    nio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.5" data-path="content/java_io_net/from_io_to_epoll.html">
+            
+                <a href="content/java_io_net/from_io_to_epoll.html">
+            
+                    
+                    从io到epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    [10 剑指offer]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="content/thought_of_solve/thought.html">
+            
+                <a href="content/thought_of_solve/thought.html">
+            
+                    
+                    剑指Offer解题思路(全)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Introduction</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#&#x5251;&#x6307;offer&#x5237;&#x9898;&#x8BF4;&#x660E;">&#x5251;&#x6307;offer&#x5237;&#x9898;&#x8BF4;&#x660E;</a><i></i></div></li>
+<li><div><a href="#java-&#x6280;&#x80FD;&#x6811;">Java &#x6280;&#x80FD;&#x6811;</a><i></i></div></li>
+<li><div><a href="#&#x5927;&#x6570;&#x636E;">&#x5927;&#x6570;&#x636E;</a><i></i></div></li>
+</ul>
+</div>
+
+<p>&#x8BF7;&#x8BBF;&#x95EE;: <a href="https://doctording.github.io/sword_at_offer/" target="_blank">https://doctording.github.io/sword_at_offer/</a></p>
+<p>&#x6B22;&#x8FCE;<code>star</code>&#xFF0C;<code>fork</code>&#xFF0C;<code>pr</code></p>
+<hr>
+<h1 id="&#x5251;&#x6307;offer&#x5237;&#x9898;&#x8BF4;&#x660E;">&#x5251;&#x6307;offer&#x5237;&#x9898;&#x8BF4;&#x660E;</h1>
+<p>&#x5237;&#x9898;&#x5730;&#x5740;: <a href="http://www.nowcoder.com/ta/coding-interviews?page=1" target="_blank">http://www.nowcoder.com/ta/coding-interviews?page=1</a></p>
+<p>&#x9700;&#x8981;&#x627E;&#x5230;&#x6700;&#x4F18;&#x89E3;&#x6CD5;&#xFF1A;&#x53C2;&#x8003;&#x5B66;&#x4E60;&#x725B;&#x5BA2;&#x7F51;<strong>&#x5DE6;&#x7A0B;&#x4E91;</strong>&#x89C6;&#x9891;&#x3001;&#x725B;&#x5BA2;&#x7F51;&#x7B97;&#x6CD5;&#x8BA8;&#x8BBA;&#x3001;&#x300A;&#x5251;&#x6307;offer&#x300B;&#x56FE;&#x4E66;&#xFF0C;LeetCode&#x7B49;&#x3002;</p>
+<p>&#x76F4;&#x63A5;&#x7F16;&#x8F91;&#x5668;&#x6572;&#x51FA;&#x4EE3;&#x7801;&#xFF0C;&#x6216;&#x5728;&#x7EB8;&#x4E0A;&#x76F4;&#x63A5;&#x5199;&#x51FA;&#x4EE3;&#x7801;&#xFF08;&#x6CE8;&#x610F;&#x65F6;&#x95F4;/&#x7A7A;&#x95F4;&#x590D;&#x6742;&#x5EA6;&#xFF09;&#xFF1B;&#x5251;&#x6307;offer&#x6574;&#x4F53;&#x96BE;&#x5EA6;&#x90FD;&#x4E0D;&#x9AD8;&#xFF0C;&#x4E0D;&#x8FC7;&#x5982;&#x679C;&#x624B;&#x6495;&#x4EE3;&#x7801;&#x7684;&#x8BDD;&#xFF0C;&#x8FD8;&#x662F;&#x5F88;&#x953B;&#x70BC;&#x7684;&#x3002;</p>
+<h1 id="java-&#x6280;&#x80FD;&#x6811;">Java &#x6280;&#x80FD;&#x6811;</h1>
+<p>Java &#x6587;&#x6863;&#x4E2D;&#x5FC3;: <a href="https://docs.oracle.com/en/java/javase/14/" target="_blank">https://docs.oracle.com/en/</a></p>
+<ul>
+<li><p>&#x57FA;&#x7840;</p>
+<ol>
+<li>ArrayList, List, Map, Set&#x7B49;&#x6570;&#x636E;&#x7ED3;&#x6784;</li>
+<li>String,StringBuffer,StringBuilder</li>
+<li>&#x53CD;&#x5C04;</li>
+<li>&#x5BF9;&#x8C61;&#x7684;&#x51E0;&#x79CD;&#x5F15;&#x7528;&#x7C7B;&#x578B;</li>
+</ol>
+</li>
+<li><p>&#x7EBF;&#x7A0B;</p>
+<ol>
+<li>&#x7EBF;&#x7A0B;&#x57FA;&#x7840;</li>
+<li>&#x539F;&#x7406;</li>
+<li>&#x7EBF;&#x7A0B;&#x6C60;</li>
+</ol>
+</li>
+<li><p>&#x5E76;&#x53D1;&#x57FA;&#x7840;</p>
+<ol>
+<li>&#x5E76;&#x53D1;&#x7684;&#x4E09;&#x5927;&#x6027;&#x8D28;(&#x539F;&#x5B50;&#x6027;&#xFF0C;&#x53EF;&#x89C1;&#x6027;&#xFF0C;&#x987A;&#x5E8F;&#x6027;)</li>
+<li>volatile / synchronized / CAS / Lock</li>
+<li>AQS</li>
+<li>&#x539F;&#x5B50;&#x7C7B;</li>
+<li>java.util.concurrent(JUC)&#xFF1A;CountDownLatch / Semaphore / CyclicBarrier / Exchanger</li>
+</ol>
+</li>
+<li><p>JVM</p>
+<ol>
+<li>&#x7C7B;&#x52A0;&#x8F7D;&#x673A;&#x5236;&#xFF0C;&#x53CC;&#x4EB2;&#x59D4;&#x6D3E;&#x6A21;&#x578B;</li>
+<li>JMM(&#x5185;&#x5B58;&#x6A21;&#x578B;)&#xFF1A;&#x5806;&#xFF0C;&#x5143;&#x7A7A;&#x95F4;&#xFF1B;&#x865A;&#x62DF;&#x673A;&#x6808;&#xFF0C;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x6808;&#xFF0C;&#x7A0B;&#x5E8F;&#x8BA1;&#x6570;&#x5668;</li>
+<li>GC&#xFF0C;&#x5783;&#x573E;&#x6536;&#x96C6;&#x7B97;&#x6CD5;</li>
+<li>&#x5185;&#x5B58;&#x6CC4;&#x6F0F;&#xFF0C;GC&#x8C03;&#x4F18;</li>
+<li>jstack, jmap, jconsole&#x7B49;&#x547D;&#x4EE4;</li>
+</ol>
+</li>
+<li><p>&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</p>
+<ol>
+<li>&#x5355;&#x4F8B;</li>
+<li>&#x5DE5;&#x5382;&#x6A21;&#x5F0F;</li>
+<li>&#x8FED;&#x4EE3;&#x5668;&#x6A21;&#x5F0F;</li>
+<li>&#x4EE3;&#x7406;&#x6A21;&#x5F0F;</li>
+</ol>
+</li>
+<li><p>IO</p>
+<ol>
+<li>BIO</li>
+<li>NIO</li>
+<li>AIO</li>
+</ol>
+</li>
+<li><p>&#x7F51;&#x7EDC;</p>
+<ol>
+<li>Socket&#xFF0C;TCP&#xFF0C;HTTP</li>
+<li>HTTPS</li>
+<li>&#x5E8F;&#x5217;&#x5316;</li>
+<li>RPC</li>
+</ol>
+</li>
+<li><p>&#x6570;&#x636E;&#x5E93;</p>
+<ol>
+<li>&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;</li>
+<li>&#x4E8B;&#x7269;&#xFF0C;&#x9694;&#x79BB;&#x673A;&#x5236;</li>
+<li>&#x7D22;&#x5F15;</li>
+<li>&#x4E3B;&#x4ECE;&#xFF0C;&#x5206;&#x5E93;&#xFF0C;&#x5206;&#x8868;</li>
+<li>&#x6570;&#x636E;&#x5E93;&#x9501;</li>
+<li>&#x6162;&#x67E5;&#x8BE2; &amp; SQL&#x4F18;&#x5316;</li>
+</ol>
+</li>
+<li><p>&#x6846;&#x67B6;</p>
+<ol>
+<li>Mybatis</li>
+<li>Spring&#xFF0C;Spring MVC</li>
+<li>SpringBoot</li>
+</ol>
+</li>
+</ul>
+<p><a href="https://github.com/doctording/spring-framework-5.1.3.RELEASE" target="_blank">Spring &amp; Mybatis</a></p>
+<ul>
+<li><p>&#x670D;&#x52A1;&#x5668;</p>
+<ol>
+<li>Tomcat</li>
+<li>Netty</li>
+</ol>
+</li>
+<li><p>&#x6D88;&#x606F;&#x4E2D;&#x95F4;&#x4EF6;</p>
+<ol>
+<li>Kafka</li>
+</ol>
+</li>
+<li><p>&#x9AD8;&#x5E76;&#x53D1; &amp; &#x5206;&#x5E03;&#x5F0F;</p>
+<ol>
+<li>&#x7F13;&#x5B58;&#xFF1A;Redis, &#x6301;&#x4E45;&#x5316;</li>
+<li>&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF0C;&#x4E00;&#x81F4;&#x6027;Hash&#x539F;&#x7406;&#x7B49;</li>
+<li>&#x6570;&#x636E;&#x5E93;&#x8BFB;&#x5199;&#x5206;&#x79BB;</li>
+<li>zookeeper</li>
+<li>&#x9650;&#x6D41;&#xFF1A;&#x7F13;&#x5B58;&#x51FB;&#x7A7F;&#xFF0C;&#x96EA;&#x5D29;&#x7B49;</li>
+</ol>
+</li>
+<li><p>&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;</p>
+<ol>
+<li>&#x5185;&#x5B58;&#x7BA1;&#x7406;&#xFF1B;&#x9875;&#x9762;&#x7F6E;&#x6362;&#x7B97;&#x6CD5;&#xFF1A;LRU, LFU</li>
+<li>&#x5185;&#x6838;&#xFF0C;&#x7528;&#x6237;&#x6001;</li>
+<li>&#x865A;&#x62DF;&#x5185;&#x5B58;&#xFF1B; MMAP</li>
+<li>&#x7F13;&#x51B2;&#x533A;</li>
+<li>&#x8FDB;&#x7A0B;&#xFF0C;&#x7EBF;&#x7A0B;&#xFF1B;&#x8FDB;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;&#xFF1B;&#x540C;&#x6B65;&#x673A;&#x5236;</li>
+<li>&#x5C40;&#x90E8;&#x6027;&#x539F;&#x7406;</li>
+<li>IO&#x590D;&#x7528;</li>
+</ol>
+</li>
+<li><p>&#x7B97;&#x6CD5;&#x548C;&#x76F8;&#x5173;&#x9898;&#x76EE;&#x624B;&#x5199;</p>
+<ol>
+<li>&#x624B;&#x5199;&#x5355;&#x4F8B;&#x6A21;&#x5F0F;</li>
+<li>&#x624B;&#x5199;<code>String</code></li>
+<li>&#x624B;&#x5199;<code>HashMap</code></li>
+<li>&#x624B;&#x5199;<code>semaphore</code></li>
+<li>&#x5B57;&#x5178;&#x6811;</li>
+<li>&#x6B63;&#x5219;</li>
+<li>&#x5404;&#x79CD;&#x6392;&#x5E8F;&#xFF1A;&#x5F52;&#x5E76;&#xFF0C;&#x5FEB;&#x6392;&#xFF0C;&#x5806;&#x6392;</li>
+</ol>
+</li>
+</ul>
+<h1 id="&#x5927;&#x6570;&#x636E;">&#x5927;&#x6570;&#x636E;</h1>
+<ol>
+<li>HDFS, Hadoop / Yarn, Hive, HBase</li>
+<li>Spark&#xFF0C;Storm</li>
+<li>Flink</li>
+<li>Druid.io</li>
+</ol>
+<footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
+2020-07-18 15:33:11
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"[1 常见设计模式]","level":"1.2","depth":1,"ref":"","articles":[{"title":"代理模式","level":"1.2.1","depth":2,"path":"content/design_pattern/proxy.md","ref":"./content/design_pattern/proxy.md","articles":[]},{"title":"单例模式","level":"1.2.2","depth":2,"path":"content/design_pattern/singleton.md","ref":"./content/design_pattern/singleton.md","articles":[]},{"title":"工厂模式","level":"1.2.3","depth":2,"path":"content/design_pattern/factory.md","ref":"./content/design_pattern/factory.md","articles":[]},{"title":"模板方法","level":"1.2.4","depth":2,"path":"content/design_pattern/template.md","ref":"./content/design_pattern/template.md","articles":[]},{"title":"策略模式","level":"1.2.5","depth":2,"path":"content/design_pattern/strategy.md","ref":"./content/design_pattern/strategy.md","articles":[]},{"title":"装饰器模式","level":"1.2.6","depth":2,"path":"content/design_pattern/decorator.md","ref":"./content/design_pattern/decorator.md","articles":[]},{"title":"观察者模式","level":"1.2.7","depth":2,"path":"content/design_pattern/observer.md","ref":"./content/design_pattern/observer.md","articles":[]},{"title":"访问者模式","level":"1.2.8","depth":2,"path":"content/design_pattern/visitor.md","ref":"./content/design_pattern/visitor.md","articles":[]},{"title":"迭代器模式","level":"1.2.9","depth":2,"path":"content/design_pattern/iterator.md","ref":"./content/design_pattern/iterator.md","articles":[]},{"title":"门面模式","level":"1.2.10","depth":2,"path":"content/design_pattern/facade.md","ref":"./content/design_pattern/facade.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"README.md","mtime":"2020-07-18T07:33:11.231Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-18T11:56:34.961Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
 </html>
+

@@ -1,0 +1,2013 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Java8 lambda表达式 · spring-note</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="doctording">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-page-treeview/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="java8_optional.html" />
+    
+    
+    <link rel="prev" href="java8_mem.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [1 常见设计模式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../design_pattern/proxy.html">
+            
+                <a href="../design_pattern/proxy.html">
+            
+                    
+                    代理模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../design_pattern/singleton.html">
+            
+                <a href="../design_pattern/singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../design_pattern/factory.html">
+            
+                <a href="../design_pattern/factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../design_pattern/template.html">
+            
+                <a href="../design_pattern/template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../design_pattern/strategy.html">
+            
+                <a href="../design_pattern/strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../design_pattern/decorator.html">
+            
+                <a href="../design_pattern/decorator.html">
+            
+                    
+                    装饰器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../design_pattern/observer.html">
+            
+                <a href="../design_pattern/observer.html">
+            
+                    
+                    观察者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../design_pattern/visitor.html">
+            
+                <a href="../design_pattern/visitor.html">
+            
+                    
+                    访问者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../design_pattern/iterator.html">
+            
+                <a href="../design_pattern/iterator.html">
+            
+                    
+                    迭代器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="../design_pattern/facade.html">
+            
+                <a href="../design_pattern/facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [2 数据结构和算法基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../java_data_structure/java_basic_datastructure.html">
+            
+                <a href="../java_data_structure/java_basic_datastructure.html">
+            
+                    
+                    常见基础数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../java_data_structure/array_list.html">
+            
+                <a href="../java_data_structure/array_list.html">
+            
+                    
+                    ArrayList & LinkedList
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../java_data_structure/hash_map.html">
+            
+                <a href="../java_data_structure/hash_map.html">
+            
+                    
+                    HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.3" data-path="../java_data_structure/hash_table.html">
+            
+                <a href="../java_data_structure/hash_table.html">
+            
+                    
+                    HashTable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.4" data-path="../java_utils/Map.html">
+            
+                <a href="../java_utils/Map.html">
+            
+                    
+                    HashMap,HashTable,ConcurrentHashMap 对比
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.5" data-path="../java_data_structure/fail_fast.html">
+            
+                <a href="../java_data_structure/fail_fast.html">
+            
+                    
+                    fail-fast,ConcurrentModificationException
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.6" data-path="../java_utils/quick_sort.html">
+            
+                <a href="../java_utils/quick_sort.html">
+            
+                    
+                    快排(没事手写写)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../java_data_structure/concurrent_datastructure.html">
+            
+                <a href="../java_data_structure/concurrent_datastructure.html">
+            
+                    
+                    concurrent数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../java_data_structure/advanced_structure.html">
+            
+                <a href="../java_data_structure/advanced_structure.html">
+            
+                    
+                    高级数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.3.1" data-path="../java_data_structure/b_tree.html">
+            
+                <a href="../java_data_structure/b_tree.html">
+            
+                    
+                    B/B+ Tree
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    [3 Java基础问题]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../java_data_structure/System_arraycopy.html">
+            
+                <a href="../java_data_structure/System_arraycopy.html">
+            
+                    
+                    System.arraycopy, Array.copyOf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../java_utils/equals_hashcode.html">
+            
+                <a href="../java_utils/equals_hashcode.html">
+            
+                    
+                    == & equals方法 & hashcode方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../java_utils/Calendar.html">
+            
+                <a href="../java_utils/Calendar.html">
+            
+                    
+                    Calendar & Date
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../java_utils/Compare.html">
+            
+                <a href="../java_utils/Compare.html">
+            
+                    
+                    Comparison method violates its general contract
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../java_utils/int_Integer.html">
+            
+                <a href="../java_utils/int_Integer.html">
+            
+                    
+                    int(基本类型) & Integer(包装类类型)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../java_utils/exception.html">
+            
+                <a href="../java_utils/exception.html">
+            
+                    
+                    Java异常&错误
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../java_utils/String.html">
+            
+                <a href="../java_utils/String.html">
+            
+                    
+                    String,StringBuffer,StringBuilder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../java_utils/reflect.html">
+            
+                <a href="../java_utils/reflect.html">
+            
+                    
+                    反射机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="../java_utils/call_back.html">
+            
+                <a href="../java_utils/call_back.html">
+            
+                    
+                    回调 & 事件机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="../java_utils/array_collection.html">
+            
+                <a href="../java_utils/array_collection.html">
+            
+                    
+                    数组，集合转换等问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="../java_utils/annotation.html">
+            
+                <a href="../java_utils/annotation.html">
+            
+                    
+                    注解 Annotation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="../java_jvm/jvm_runtime.html">
+            
+                <a href="../java_jvm/jvm_runtime.html">
+            
+                    
+                    Runtime类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="../java_data_structure/unsafe.html">
+            
+                <a href="../java_data_structure/unsafe.html">
+            
+                    
+                    unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="../java_thinking_in_Java/basic.html">
+            
+                <a href="../java_thinking_in_Java/basic.html">
+            
+                    
+                    《Java编程思想》第3章：操作符，第4章：控制执行流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="../java_thinking_in_Java/constructor.html">
+            
+                <a href="../java_thinking_in_Java/constructor.html">
+            
+                    
+                    《Java编程思想》第5章：初始化和清理(重点)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="../java_thinking_in_Java/public_private_protect.html">
+            
+                <a href="../java_thinking_in_Java/public_private_protect.html">
+            
+                    
+                    《Java编程思想》第6章：访问权限控制(重要)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第7章：复用类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="../java_thinking_in_Java/polymorphism.html">
+            
+                <a href="../java_thinking_in_Java/polymorphism.html">
+            
+                    
+                    《Java编程思想》第8章：多态
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第9章：接口 补充：抽象类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="../java_thinking_in_Java/innner_class.html">
+            
+                <a href="../java_thinking_in_Java/innner_class.html">
+            
+                    
+                    《Java编程思想》第10章：内部类
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    [4 Java多线程 & 并发基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../java_thread_concurrent/thread_basic.html">
+            
+                <a href="../java_thread_concurrent/thread_basic.html">
+            
+                    
+                    线程基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1.1" data-path="../java_thread_concurrent/thread_design.html">
+            
+                <a href="../java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.2" data-path="../java_thread_concurrent/hook_thread.html">
+            
+                <a href="../java_thread_concurrent/hook_thread.html">
+            
+                    
+                    Hook线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../java_thread_concurrent/thread_pool.html">
+            
+                <a href="../java_thread_concurrent/thread_pool.html">
+            
+                    
+                    线程池
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="../java_thread_concurrent/concurrency_problems.html">
+            
+                <a href="../java_thread_concurrent/concurrency_problems.html">
+            
+                    
+                    常见的多线程题目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.2" data-path="../java_thread_concurrent/thread_pool_self.html">
+            
+                <a href="../java_thread_concurrent/thread_pool_self.html">
+            
+                    
+                    自定义线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../java_thread_concurrent/cas.html">
+            
+                <a href="../java_thread_concurrent/cas.html">
+            
+                    
+                    CAS(Conmpare And Swap/Exchange) & unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../java_thread_concurrent/aqs.html">
+            
+                <a href="../java_thread_concurrent/aqs.html">
+            
+                    
+                    AQS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" >
+            
+                <span>
+            
+                    
+                    [常见关键字和类]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.5.1" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.2" data-path="../java_thread_concurrent/longAdder.html">
+            
+                <a href="../java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.3" data-path="../java_thread_concurrent/semaphore.html">
+            
+                <a href="../java_thread_concurrent/semaphore.html">
+            
+                    
+                    Semaphore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.4" data-path="../java_thread_concurrent/volatile.html">
+            
+                <a href="../java_thread_concurrent/volatile.html">
+            
+                    
+                    volatile 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.5" data-path="../java_thread_concurrent/synchronized.html">
+            
+                <a href="../java_thread_concurrent/synchronized.html">
+            
+                    
+                    synchronized 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.6.1" data-path="../java_thread_concurrent/thread_lock_type.html">
+            
+                <a href="../java_thread_concurrent/thread_lock_type.html">
+            
+                    
+                    Java Lock 分类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.2" data-path="../java_thread_concurrent/thread_deadlock.html">
+            
+                <a href="../java_thread_concurrent/thread_deadlock.html">
+            
+                    
+                    Thread 死锁问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../java_thread_concurrent/threadLocal.html">
+            
+                <a href="../java_thread_concurrent/threadLocal.html">
+            
+                    
+                    ThreadLocal
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    [5 Java8]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="java8_completableFuture.html">
+            
+                <a href="java8_completableFuture.html">
+            
+                    
+                    CompletableFuture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="java8_future.html">
+            
+                <a href="java8_future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="interface_default.html">
+            
+                <a href="interface_default.html">
+            
+                    
+                    interface defalt static
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="java8_mem.html">
+            
+                <a href="java8_mem.html">
+            
+                    
+                    Java8 jvm内存结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.6.5" data-path="lambda.html">
+            
+                <a href="lambda.html">
+            
+                    
+                    Java8 lambda表达式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="java8_optional.html">
+            
+                <a href="java8_optional.html">
+            
+                    
+                    Java8 Optional
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="streams.html">
+            
+                <a href="streams.html">
+            
+                    
+                    Java8 Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="streams_parallel.html">
+            
+                <a href="streams_parallel.html">
+            
+                    
+                    Java8 并行数据处理与性能
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    [6 JVM]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../java_jvm/jvm_mem_model.html">
+            
+                <a href="../java_jvm/jvm_mem_model.html">
+            
+                    
+                    内存模型与线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../java_jvm/jvm_class_load.html">
+            
+                <a href="../java_jvm/jvm_class_load.html">
+            
+                    
+                    类加载机制,类加载器,内存布局
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../java_jvm/jvm_mem_gc.html">
+            
+                <a href="../java_jvm/jvm_mem_gc.html">
+            
+                    
+                    堆栈 & 各种GC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../java_jvm/jvm_params.html">
+            
+                <a href="../java_jvm/jvm_params.html">
+            
+                    
+                    JVM参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../java_jvm/jvm_tools.html">
+            
+                <a href="../java_jvm/jvm_tools.html">
+            
+                    
+                    JVM命令工具(jstack,jmap,jcmd...)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" >
+            
+                <span>
+            
+                    
+                    [7 缓存 & 限流]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../db_cache/LFU.html">
+            
+                <a href="../db_cache/LFU.html">
+            
+                    
+                    LFU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../db_cache/LRU.html">
+            
+                <a href="../db_cache/LRU.html">
+            
+                    
+                    LRU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../db_cache/consistent_hash.html">
+            
+                <a href="../db_cache/consistent_hash.html">
+            
+                    
+                    一致性Hash
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="../db_cache/bloom.html">
+            
+                <a href="../db_cache/bloom.html">
+            
+                    
+                    布隆过滤器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="../db_cache/cache.html">
+            
+                <a href="../db_cache/cache.html">
+            
+                    
+                    缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="../distributed_design/flow_limit.html">
+            
+                <a href="../distributed_design/flow_limit.html">
+            
+                    
+                    限流
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="../java_thread_concurrent/cpu_cache.html">
+            
+                <a href="../java_thread_concurrent/cpu_cache.html">
+            
+                    
+                    CPU,缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" >
+            
+                <span>
+            
+                    
+                    [8 数据库]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../db_cache/mysql.html">
+            
+                <a href="../db_cache/mysql.html">
+            
+                    
+                    数据库/表/查询
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    [9 I/O & 网络 & 分布式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../distributed_design/nginx.html">
+            
+                <a href="../distributed_design/nginx.html">
+            
+                    
+                    nginx基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="../distributed_design/rpc.html">
+            
+                <a href="../distributed_design/rpc.html">
+            
+                    
+                    rpc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/tomcat.html">
+            
+                <a href="../distributed_design/tomcat.html">
+            
+                    
+                    tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/distribute.html">
+            
+                <a href="../distributed_design/distribute.html">
+            
+                    
+                    分布式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" >
+            
+                <span>
+            
+                    
+                    [I/O与网络]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.6.1" data-path="../java_io_net/io_interrupte.html">
+            
+                <a href="../java_io_net/io_interrupte.html">
+            
+                    
+                    IO和中断
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.2" data-path="../java_io_net/http_tcp.html">
+            
+                <a href="../java_io_net/http_tcp.html">
+            
+                    
+                    http & tcp
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.3" data-path="../java_io_net/io_basic.html">
+            
+                <a href="../java_io_net/io_basic.html">
+            
+                    
+                    IO基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.4" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    nio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.5" data-path="../java_io_net/from_io_to_epoll.html">
+            
+                <a href="../java_io_net/from_io_to_epoll.html">
+            
+                    
+                    从io到epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    [10 剑指offer]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../thought_of_solve/thought.html">
+            
+                <a href="../thought_of_solve/thought.html">
+            
+                    
+                    剑指Offer解题思路(全)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Java8 lambda表达式</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#lambda">lambda</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x9700;&#x6C42;&#x4E0D;&#x65AD;&#x53D8;&#x5316;&#x7684;&#x627E;&#x82F9;&#x679C;">&#x9700;&#x6C42;&#x4E0D;&#x65AD;&#x53D8;&#x5316;&#x7684;&#x627E;&#x82F9;&#x679C;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#java8-&#x4E0E;-java7-&#x5185;&#x5B58;&#x7A7A;&#x95F4;&#x7684;&#x533A;&#x522B;">java8 &#x4E0E; java7 &#x5185;&#x5B58;&#x7A7A;&#x95F4;&#x7684;&#x533A;&#x522B;</a><i></i></div></li>
+<li><div><a href="#functionalinterface-&#x63A5;&#x53E3;&#x4F7F;&#x7528;&#x6761;&#x4EF6;">@FunctionalInterface &#x63A5;&#x53E3;&#x4F7F;&#x7528;&#x6761;&#x4EF6;</a><i></i></div></li>
+<li><div><a href="#lambda&#x7684;&#x4F7F;&#x7528;">lambda&#x7684;&#x4F7F;&#x7528;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x57FA;&#x672C;&#x8BED;&#x6CD5;">&#x57FA;&#x672C;&#x8BED;&#x6CD5;</a><i></i></div></li>
+<li><div><a href="#java8&#x6E90;&#x7801;&#x4F7F;&#x7528;lambda&#x7684;&#x573A;&#x666F;">java8&#x6E90;&#x7801;&#x4F7F;&#x7528;lambda&#x7684;&#x573A;&#x666F;</a><i></i></div></li>
+<li><div><a href="#&#x590D;&#x5408;&#x5F0F;lambda&#x8868;&#x8FBE;&#x5F0F;">&#x590D;&#x5408;&#x5F0F;lambda&#x8868;&#x8FBE;&#x5F0F;</a><i></i></div></li>
+<li><div><a href="#&#x300A;java8-in-action&#x300B;-lambda&#x603B;&#x7ED3;">&#x300A;java8 in action&#x300B; lambda&#x603B;&#x7ED3;</a><i></i></div></li>
+</ul></li>
+</ul></li>
+<li><div><a href="#lambda&#x8868;&#x8FBE;&#x5F0F;-&#x4E0E;-jvm&#x5B57;&#x8282;&#x7801;">lambda&#x8868;&#x8FBE;&#x5F0F; &#x4E0E; JVM&#x5B57;&#x8282;&#x7801;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x533F;&#x540D;&#x5185;&#x90E8;&#x7C7B;-jvm&#x5B57;&#x8282;&#x7801;">&#x533F;&#x540D;&#x5185;&#x90E8;&#x7C7B; jvm&#x5B57;&#x8282;&#x7801;</a><i></i></div></li>
+<li><div><a href="#lambda-&#x5B57;&#x8282;&#x7801;">lambda &#x5B57;&#x8282;&#x7801;</a><i></i></div></li>
+<li><div><a href="#invokedynamic-&#x6307;&#x4EE4;">invokedynamic &#x6307;&#x4EE4;</a><i></i></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+
+
+<p>[TOC]</p>
+<h1 id="lambda">lambda</h1>
+<h2 id="&#x9700;&#x6C42;&#x4E0D;&#x65AD;&#x53D8;&#x5316;&#x7684;&#x627E;&#x82F9;&#x679C;">&#x9700;&#x6C42;&#x4E0D;&#x65AD;&#x53D8;&#x5316;&#x7684;&#x627E;&#x82F9;&#x679C;</h2>
+<p>&#x51FD;&#x6570;&#x5F0F;&#x7F16;&#x7A0B;&#xFF0C;&#x65B9;&#x6CD5;&#x548C;Lambda&#x4F5C;&#x4E3A;&#x4E00;&#x7B49;&#x516C;&#x6C11;</p>
+<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Apple</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">String</span> color<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">long</span> weight<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Apple</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Apple</span><span class="token punctuation">(</span><span class="token class-name">String</span> color<span class="token punctuation">,</span> <span class="token keyword">long</span> weight<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>color <span class="token operator">=</span> color<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>weight <span class="token operator">=</span> weight<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">getColor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> color<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setColor</span><span class="token punctuation">(</span><span class="token class-name">String</span> color<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>color <span class="token operator">=</span> color<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">long</span> <span class="token function">getWeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> weight<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setWeight</span><span class="token punctuation">(</span><span class="token keyword">long</span> weight<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>weight <span class="token operator">=</span> weight<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">&quot;Apple{&quot;</span> <span class="token operator">+</span>
+                <span class="token string">&quot;color=&apos;&quot;</span> <span class="token operator">+</span> color <span class="token operator">+</span> <span class="token string">&apos;\&apos;&apos;</span> <span class="token operator">+</span>
+                <span class="token string">&quot;, weight=&quot;</span> <span class="token operator">+</span> weight <span class="token operator">+</span>
+                <span class="token string">&apos;}&apos;</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<pre class="language-"><code class="lang-java"><span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">AppleFilter</span> <span class="token punctuation">{</span>
+    <span class="token comment">/**
+        * &#x8FC7;&#x6EE4;&#x5668;&#x63A5;&#x53E3;
+        * @param apple
+        * @return
+        */</span>
+    <span class="token keyword">boolean</span> <span class="token function">filter</span><span class="token punctuation">(</span><span class="token class-name">Apple</span> apple<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Apple</span><span class="token punctuation">&gt;</span></span> <span class="token function">findApple</span><span class="token punctuation">(</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Apple</span><span class="token punctuation">&gt;</span></span> apples<span class="token punctuation">,</span> <span class="token class-name">AppleFilter</span> appleFilter<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Apple</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Apple</span> apple <span class="token operator">:</span> apples<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>appleFilter<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>apple<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>apple<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> list<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<pre class="language-"><code class="lang-java"><span class="token comment">// lambda&#x8868;&#x8FBE;&#x5F0F;&#xFF0C;&#x627E;&#x5230;&#x7EFF;&#x8272;&#x7684;&#x82F9;&#x679C;</span>
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Apple</span><span class="token punctuation">&gt;</span></span> lambdaResult <span class="token operator">=</span> <span class="token function">findApple</span><span class="token punctuation">(</span>list<span class="token punctuation">,</span> apple <span class="token operator">-&gt;</span> apple<span class="token punctuation">.</span><span class="token function">getColor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">&quot;green&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="java8-&#x4E0E;-java7-&#x5185;&#x5B58;&#x7A7A;&#x95F4;&#x7684;&#x533A;&#x522B;">java8 &#x4E0E; java7 &#x5185;&#x5B58;&#x7A7A;&#x95F4;&#x7684;&#x533A;&#x522B;</h3>
+<pre class="language-"><code class="lang-java"><span class="token operator">^</span><span class="token class-name">Cmubi</span><span class="token annotation punctuation">@mubideMacBook</span><span class="token operator">-</span><span class="token class-name">Pro</span> <span class="token class-name">Home</span> $ pwd
+<span class="token operator">/</span><span class="token class-name">Library</span><span class="token operator">/</span><span class="token class-name">Java</span><span class="token operator">/</span><span class="token class-name">JavaVirtualMachines</span><span class="token operator">/</span>jdk1<span class="token punctuation">.</span><span class="token number">7.0_80</span><span class="token punctuation">.</span>jdk<span class="token operator">/</span><span class="token class-name">Contents</span><span class="token operator">/</span><span class="token class-name">Home</span>
+mubi<span class="token annotation punctuation">@mubideMacBook</span><span class="token operator">-</span><span class="token class-name">Pro</span> <span class="token class-name">Home</span> $ bin<span class="token operator">/</span>jstat <span class="token operator">-</span>gcutil <span class="token number">62850</span> <span class="token number">1000</span> <span class="token number">10</span>
+<span class="token class-name">Warning</span><span class="token operator">:</span> <span class="token class-name">Unresolved</span> <span class="token class-name">Symbol</span><span class="token operator">:</span> sun<span class="token punctuation">.</span>gc<span class="token punctuation">.</span>generation<span class="token punctuation">.</span><span class="token number">2.</span>space<span class="token punctuation">.</span><span class="token number">0.</span>capacity substituted <span class="token class-name">NaN</span>
+<span class="token class-name">Warning</span><span class="token operator">:</span> <span class="token class-name">Unresolved</span> <span class="token class-name">Symbol</span><span class="token operator">:</span> sun<span class="token punctuation">.</span>gc<span class="token punctuation">.</span>generation<span class="token punctuation">.</span><span class="token number">2.</span>space<span class="token punctuation">.</span><span class="token number">0.</span>used substituted <span class="token class-name">NaN</span>
+<span class="token class-name">Warning</span><span class="token operator">:</span> <span class="token class-name">Unresolved</span> <span class="token class-name">Symbol</span><span class="token operator">:</span> sun<span class="token punctuation">.</span>gc<span class="token punctuation">.</span>generation<span class="token punctuation">.</span><span class="token number">2.</span>space<span class="token punctuation">.</span><span class="token number">0.</span>capacity substituted <span class="token class-name">NaN</span>
+  S0     S1     <span class="token class-name">E</span>      <span class="token class-name">O</span>      <span class="token class-name">P</span>     YGC     YGCT    FGC    FGCT     GCT
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">76.97</span>  <span class="token number">56.33</span>      &#xFFFD;    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">77.08</span>  <span class="token number">56.33</span>      &#xFFFD;    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">77.22</span>  <span class="token number">56.33</span>      &#xFFFD;    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">77.33</span>  <span class="token number">56.33</span>      &#xFFFD;    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+<span class="token operator">^</span><span class="token class-name">Cmubi</span><span class="token annotation punctuation">@mubideMacBook</span><span class="token operator">-</span><span class="token class-name">Pro</span> <span class="token class-name">Home</span> $ jstat <span class="token operator">-</span>gcutil <span class="token number">62850</span> <span class="token number">1000</span> <span class="token number">10</span>
+  S0     S1     <span class="token class-name">E</span>      <span class="token class-name">O</span>      <span class="token class-name">M</span>     CCS    YGC     YGCT    FGC    FGCT     GCT
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">78.86</span>  <span class="token number">56.33</span>  <span class="token number">93.46</span>  <span class="token number">89.80</span>    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">78.93</span>  <span class="token number">56.33</span>  <span class="token number">93.46</span>  <span class="token number">89.80</span>    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">79.04</span>  <span class="token number">56.33</span>  <span class="token number">93.46</span>  <span class="token number">89.80</span>    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">79.17</span>  <span class="token number">56.33</span>  <span class="token number">93.46</span>  <span class="token number">89.80</span>    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+  <span class="token number">0.00</span>  <span class="token number">85.81</span>  <span class="token number">79.29</span>  <span class="token number">56.33</span>  <span class="token number">93.46</span>  <span class="token number">89.80</span>    <span class="token number">161</span>    <span class="token number">1.624</span>    <span class="token number">14</span>    <span class="token number">0.603</span>    <span class="token number">2.227</span>
+<span class="token operator">^</span><span class="token class-name">Cmubi</span><span class="token annotation punctuation">@mubideMacBook</span><span class="token operator">-</span><span class="token class-name">Pro</span> <span class="token class-name">Home</span> $
+</code></pre>
+<p>java7:</p>
+<ul>
+<li>S0  &#x2014; Heap&#x4E0A;&#x7684; Survivor space 0 &#x533A;&#x5DF2;&#x4F7F;&#x7528;&#x7A7A;&#x95F4;&#x7684;&#x767E;&#x5206;&#x6BD4;</li>
+<li>S1  &#x2014; Heap&#x4E0A;&#x7684; Survivor space 1 &#x533A;&#x5DF2;&#x4F7F;&#x7528;&#x7A7A;&#x95F4;&#x7684;&#x767E;&#x5206;&#x6BD4;</li>
+<li>E   &#x2014; Heap&#x4E0A;&#x7684; Eden space &#x533A;&#x5DF2;&#x4F7F;&#x7528;&#x7A7A;&#x95F4;&#x7684;&#x767E;&#x5206;&#x6BD4;</li>
+<li>O   &#x2014; Heap&#x4E0A;&#x7684; Old space &#x533A;&#x5DF2;&#x4F7F;&#x7528;&#x7A7A;&#x95F4;&#x7684;&#x767E;&#x5206;&#x6BD4;</li>
+<li>P   &#x2014; Perm space &#x533A;&#x5DF2;&#x4F7F;&#x7528;&#x7A7A;&#x95F4;&#x7684;&#x767E;&#x5206;&#x6BD4;</li>
+<li>YGC &#x2014; &#x4ECE;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x542F;&#x52A8;&#x5230;&#x91C7;&#x6837;&#x65F6;&#x53D1;&#x751F; Young GC &#x7684;&#x6B21;&#x6570;</li>
+<li>YGCT&#x2013; &#x4ECE;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x542F;&#x52A8;&#x5230;&#x91C7;&#x6837;&#x65F6; Young GC &#x6240;&#x7528;&#x7684;&#x65F6;&#x95F4;(&#x5355;&#x4F4D;&#x79D2;)</li>
+<li>FGC &#x2014; &#x4ECE;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x542F;&#x52A8;&#x5230;&#x91C7;&#x6837;&#x65F6;&#x53D1;&#x751F; Full GC &#x7684;&#x6B21;&#x6570;</li>
+<li>FGCT&#x2013; &#x4ECE;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x542F;&#x52A8;&#x5230;&#x91C7;&#x6837;&#x65F6; Full GC &#x6240;&#x7528;&#x7684;&#x65F6;&#x95F4;(&#x5355;&#x4F4D;&#x79D2;)</li>
+<li>GCT &#x2014; &#x4ECE;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x542F;&#x52A8;&#x5230;&#x91C7;&#x6837;&#x65F6;&#x7528;&#x4E8E;&#x5783;&#x573E;&#x56DE;&#x6536;&#x7684;&#x603B;&#x65F6;&#x95F4;(&#x5355;&#x4F4D;&#x79D2;)</li>
+</ul>
+<p>java8:</p>
+<p>&#x5C11;&#x4E86;&#x4E00;&#x4E2A; Perm space</p>
+<p>&#x65B0;&#x589E;&#x4E86;</p>
+<ul>
+<li>M   - &#x5143;&#x7A7A;&#x95F4;&#xFF08;Metaspace&#xFF09;&#xFF1A; Klass Metaspace, NoKlass Metaspace</li>
+<li>CCS - &#x8868;&#x793A;&#x7684;&#x662F;NoKlass Metaspace&#x7684;&#x4F7F;&#x7528;&#x7387;</li>
+</ul>
+<h3 id="functionalinterface-&#x63A5;&#x53E3;&#x4F7F;&#x7528;&#x6761;&#x4EF6;"><code>@FunctionalInterface</code> &#x63A5;&#x53E3;&#x4F7F;&#x7528;&#x6761;&#x4EF6;</h3>
+<p>&#x53EA;&#x80FD;&#x5B9A;&#x4E49;&#x4E86;&#x552F;&#x4E00;&#x7684;&#x62BD;&#x8C61;&#x65B9;&#x6CD5;&#x7684;&#x63A5;&#x53E3;</p>
+<p>&#x5982;&#x4E0B;&#x7684;&#x9ED8;&#x8BA4;&#x65B9;&#x6CD5;&#x4E0D;&#x662F;&#xFF0C;&#x4E0D;&#x662F;&#x62BD;&#x8C61;&#x65B9;&#x6CD5;</p>
+<p><img src="imgs/functionalinterface.png" alt=""></p>
+<p>&#x5982;&#x4E0B;&#x6B63;&#x786E;: &#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#x91CC;&#x5141;&#x8BB8;&#x5B9A;&#x4E49;<code>&#x9ED8;&#x8BA4;&#x65B9;&#x6CD5;</code>&#x548C;<code>&#x9759;&#x6001;&#x65B9;&#x6CD5;</code>,&#x4E5F;&#x53EF;&#x4EE5;&#x5305;&#x542B;<code>Object</code>&#x91CC;&#x7684;<code>public</code>&#x65B9;&#x6CD5;</p>
+<pre class="language-"><code class="lang-java"><span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">AppleFilter2</span> <span class="token punctuation">{</span>
+    <span class="token keyword">boolean</span> <span class="token function">filter</span><span class="token punctuation">(</span><span class="token class-name">Apple</span> apple<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">default</span> <span class="token keyword">boolean</span> <span class="token function">filter2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">filter3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">boolean</span> <span class="token function">equals</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="lambda&#x7684;&#x4F7F;&#x7528;">lambda&#x7684;&#x4F7F;&#x7528;</h3>
+<h4 id="&#x57FA;&#x672C;&#x8BED;&#x6CD5;">&#x57FA;&#x672C;&#x8BED;&#x6CD5;</h4>
+<pre class="language-"><code class="lang-java"><span class="token punctuation">(</span>parameters<span class="token punctuation">)</span> <span class="token operator">-&gt;</span> expression
+
+<span class="token punctuation">(</span>parameters<span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span> statements<span class="token punctuation">;</span> <span class="token punctuation">}</span>
+</code></pre>
+<pre class="language-"><code class="lang-bash"><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> -<span class="token operator">&gt;</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> -<span class="token operator">&gt;</span> <span class="token string">&quot;Raoul&quot;</span>
+<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> -<span class="token operator">&gt;</span> <span class="token punctuation">{</span>return <span class="token string">&quot;Mario&quot;</span><span class="token punctuation">;</span><span class="token punctuation">}</span>
+<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>Integer i<span class="token punctuation">)</span> -<span class="token operator">&gt;</span> <span class="token builtin class-name">return</span> <span class="token string">&quot;Alan&quot;</span> + i<span class="token punctuation">;</span>
+<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>String s<span class="token punctuation">)</span> -<span class="token operator">&gt;</span> <span class="token punctuation">{</span><span class="token string">&quot;IronMan&quot;</span><span class="token punctuation">;</span><span class="token punctuation">}</span>
+
+<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>,<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> &#x65E0;&#x6548;
+<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> &#x9700;&#x8981;&#x52A0;&#x4E0A;<span class="token variable"><span class="token variable">`</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token variable">`</span></span>
+<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> &#x9700;&#x8981;&#x53BB;&#x6389;<span class="token variable"><span class="token variable">`</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token variable">`</span></span>&#x548C;<span class="token variable"><span class="token variable">`</span><span class="token punctuation">;</span><span class="token variable">`</span></span>
+</code></pre>
+<h4 id="java8&#x6E90;&#x7801;&#x4F7F;&#x7528;lambda&#x7684;&#x573A;&#x666F;">java8&#x6E90;&#x7801;&#x4F7F;&#x7528;lambda&#x7684;&#x573A;&#x666F;</h4>
+<pre class="language-"><code class="lang-java"><span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Comparator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+
+<span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+
+<span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Function</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">,</span> <span class="token class-name">R</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+</code></pre>
+<h4 id="&#x590D;&#x5408;&#x5F0F;lambda&#x8868;&#x8FBE;&#x5F0F;">&#x590D;&#x5408;&#x5F0F;lambda&#x8868;&#x8FBE;&#x5F0F;</h4>
+<ul>
+<li><p>&#x6BD4;&#x8F83;&#x5668;&#x590D;&#x5408;</p>
+</li>
+<li><p>&#x9006;&#x5E8F;</p>
+</li>
+<li><p>&#x6BD4;&#x8F83;&#x5668;&#x94FE;</p>
+</li>
+<li><p>&#x8C13;&#x8BCD;&#x590D;&#x5408;</p>
+</li>
+</ul>
+<p>negate,and,or</p>
+<ul>
+<li>&#x51FD;&#x6570;&#x590D;&#x5408;</li>
+</ul>
+<p><code>Funtion</code>&#x63A5;&#x53E3;</p>
+<h4 id="&#x300A;java8-in-action&#x300B;-lambda&#x603B;&#x7ED3;">&#x300A;java8 in action&#x300B; lambda&#x603B;&#x7ED3;</h4>
+<ul>
+<li><code>Lambda</code>&#x8868;&#x8FBE;&#x5F0F;&#x53EF;&#x4EE5;&#x7406;&#x89E3;&#x4E3A;&#x4E00;&#x79CD;&#x533F;&#x540D;&#x51FD;&#x6570;:&#x5B83;&#x6CA1;&#x6709;&#x540D;&#x79F0;&#xFF0C;&#x4F46;&#x6709;&#x53C2;&#x6570;&#x5217;&#x8868;&#x3001;&#x51FD;&#x6570;&#x4E3B;&#x4F53;&#x3001;&#x8FD4;&#x56DE;&#x7C7B;&#x578B;&#xFF0C;&#x53EF;&#x80FD;&#x8FD8;&#x6709;&#x4E00;&#x4E2A;&#x53EF;&#x4EE5;&#x629B;&#x51FA;&#x7684;&#x5F02;&#x5E38;&#x7684;&#x5217;&#x8868;&#x3002;</li>
+<li><code>Lambda</code>&#x8868;&#x8FBE;&#x5F0F;&#x8BA9;&#x4F60;&#x53EF;&#x4EE5;&#x7B80;&#x6D01;&#x5730;&#x4F20;&#x9012;&#x4EE3;&#x7801;&#x3002;</li>
+<li>&#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#x5C31;&#x662F;&#x4EC5;&#x4EC5;&#x58F0;&#x660E;&#x4E86;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#x65B9;&#x6CD5;&#x7684;&#x63A5;&#x53E3;&#x3002;</li>
+<li>&#x53EA;&#x6709;&#x5728;&#x63A5;&#x53D7;&#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#x7684;&#x5730;&#x65B9;&#x624D;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;Lambda&#x8868;&#x8FBE;&#x5F0F;&#x3002;</li>
+<li><code>Lambda</code>&#x8868;&#x8FBE;&#x5F0F;&#x5141;&#x8BB8;&#x4F60;&#x76F4;&#x63A5;&#x5185;&#x8054;&#xFF0C;&#x4E3A;&#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#x7684;&#x62BD;&#x8C61;&#x65B9;&#x6CD5;&#x63D0;&#x4F9B;&#x5B9E;&#x73B0;&#xFF0C;&#x5E76;&#x4E14;<code>&#x5C06;&#x6574;&#x4E2A;&#x8868;&#x8FBE;&#x5F0F;&#x4F5C;&#x4E3A;&#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#x7684;&#x4E00;&#x4E2A;&#x5B9E;&#x4F8B;</code>&#x3002;</li>
+<li>Java 8&#x81EA;&#x5E26;&#x4E00;&#x4E9B;&#x5E38;&#x7528;&#x7684;&#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#xFF0C;&#x653E;&#x5728;<code>java.util.function</code>&#x5305;&#x91CC;&#xFF0C;&#x5305;&#x62EC;<code>Predicate<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T</span><span class="token punctuation">&gt;</span></span></code>&#x3001;<code>Function<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T,R</span><span class="token punctuation">&gt;</span></span></code>&#x3001;<code>Supplier<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T</span><span class="token punctuation">&gt;</span></span></code>&#x3001;<code>Consumer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T</span><span class="token punctuation">&gt;</span></span></code>&#x548C;<code>BinaryOperator<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T</span><span class="token punctuation">&gt;</span></span></code></li>
+<li>&#x4E3A;&#x4E86;&#x907F;&#x514D;&#x88C5;&#x7BB1;&#x64CD;&#x4F5C;&#xFF0C;&#x5BF9;<code>Predicate<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T</span><span class="token punctuation">&gt;</span></span></code>&#x548C;<code>Function<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T,</span> <span class="token attr-name">R</span><span class="token punctuation">&gt;</span></span></code>&#x7B49;&#x901A;&#x7528;&#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#x7684;&#x539F;&#x59CB;&#x7C7B;&#x578B;
+&#x7279;&#x5316;:<code>IntPredicate</code>&#x3001;<code>IntToLongFunction</code>&#x7B49;&#x3002;</li>
+<li>&#x73AF;&#x7ED5;&#x6267;&#x884C;&#x6A21;&#x5F0F;(&#x5373;&#x5728;&#x65B9;&#x6CD5;&#x6240;&#x5FC5;&#x9700;&#x7684;&#x4EE3;&#x7801;&#x4E2D;&#x95F4;&#xFF0C;&#x4F60;&#x9700;&#x8981;&#x6267;&#x884C;&#x70B9;&#x513F;&#x4EC0;&#x4E48;&#x64CD;&#x4F5C;&#xFF0C;&#x6BD4;&#x5982;&#x8D44;&#x6E90;&#x5206;&#x914D; &#x548C;&#x6E05;&#x7406;)&#x53EF;&#x4EE5;&#x914D;&#x5408;Lambda&#x63D0;&#x9AD8;&#x7075;&#x6D3B;&#x6027;&#x548C;&#x53EF;&#x91CD;&#x7528;&#x6027;&#x3002;</li>
+<li><code>Lambda</code>&#x8868;&#x8FBE;&#x5F0F;&#x6240;&#x9700;&#x8981;&#x4EE3;&#x8868;&#x7684;&#x7C7B;&#x578B;&#x79F0;&#x4E3A;&#x76EE;&#x6807;&#x7C7B;&#x578B;&#x3002;</li>
+<li>&#x65B9;&#x6CD5;&#x5F15;&#x7528;&#x8BA9;&#x4F60;&#x91CD;&#x590D;&#x4F7F;&#x7528;&#x73B0;&#x6709;&#x7684;&#x65B9;&#x6CD5;&#x5B9E;&#x73B0;&#x5E76;&#x76F4;&#x63A5;&#x4F20;&#x9012;&#x5B83;&#x4EEC;&#x3002;</li>
+<li><code>Comparator</code>&#x3001;<code>Predicate</code>&#x548C;<code>Function</code>&#x7B49;&#x51FD;&#x6570;&#x5F0F;&#x63A5;&#x53E3;&#x90FD;&#x6709;&#x51E0;&#x4E2A;&#x53EF;&#x4EE5;&#x7528;&#x6765;&#x7ED3;&#x5408;Lambda&#x8868;&#x8FBE;&#x5F0F;&#x7684;&#x9ED8;&#x8BA4;&#x65B9;&#x6CD5;&#x3002;</li>
+</ul>
+<h2 id="lambda&#x8868;&#x8FBE;&#x5F0F;-&#x4E0E;-jvm&#x5B57;&#x8282;&#x7801;">lambda&#x8868;&#x8FBE;&#x5F0F; &#x4E0E; JVM&#x5B57;&#x8282;&#x7801;</h2>
+<h3 id="&#x533F;&#x540D;&#x5185;&#x90E8;&#x7C7B;-jvm&#x5B57;&#x8282;&#x7801;">&#x533F;&#x540D;&#x5185;&#x90E8;&#x7C7B; jvm&#x5B57;&#x8282;&#x7801;</h3>
+<ul>
+<li>InnerClass.java</li>
+</ul>
+<pre class="language-"><code class="lang-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>function</span><span class="token punctuation">.</span><span class="token class-name">Function</span><span class="token punctuation">;</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">InnerClass</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Function</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> f <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Function</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">apply</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> obj<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li><code>javac InnerClass.java</code></li>
+</ul>
+<p>&#x751F;&#x6210;</p>
+<pre class="language-"><code class="lang-bash">InnerClass<span class="token variable">$1</span>.class
+InnerClass.class
+</code></pre>
+<ul>
+<li><code>javap -c -v InnerClass</code> &#x67E5;&#x770B;&#x5B57;&#x8282;&#x7801;&#x548C;&#x5E38;&#x91CF;&#x6C60;</li>
+</ul>
+<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> com<span class="token punctuation">.</span>other<span class="token punctuation">.</span><span class="token class-name">InnerClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
+    flags<span class="token operator">:</span> ACC_PUBLIC
+    <span class="token class-name">Code</span><span class="token operator">:</span>
+      stack<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
+         <span class="token number">0</span><span class="token operator">:</span> aload_0
+         <span class="token number">1</span><span class="token operator">:</span> invokespecial #<span class="token number">1</span>                  <span class="token comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span>
+         <span class="token number">4</span><span class="token operator">:</span> aload_0
+         <span class="token number">5</span><span class="token operator">:</span> <span class="token keyword">new</span>           #<span class="token number">2</span>                  <span class="token comment">// class com/other/InnerClass$1</span>
+         <span class="token number">8</span><span class="token operator">:</span> dup
+         <span class="token number">9</span><span class="token operator">:</span> aload_0
+        <span class="token number">10</span><span class="token operator">:</span> invokespecial #<span class="token number">3</span>                  <span class="token comment">// Method com/other/InnerClass$1.&quot;&lt;init&gt;&quot;:(Lcom/other/InnerClass;)V</span>
+        <span class="token number">13</span><span class="token operator">:</span> putfield      #<span class="token number">4</span>                  <span class="token comment">// Field f:Ljava/util/function/Function;</span>
+        <span class="token number">16</span><span class="token operator">:</span> <span class="token keyword">return</span>
+      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
+        line <span class="token number">4</span><span class="token operator">:</span> <span class="token number">0</span>
+        line <span class="token number">5</span><span class="token operator">:</span> <span class="token number">4</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li><p>&#x901A;&#x8FC7;&#x5B57;&#x8282;&#x7801;&#x64CD;&#x4F5C;<code>new</code>&#xFF0C;&#x4E00;&#x4E2A;<code>InnerClass$1</code>&#x7C7B;&#x578B;&#x7684;&#x5BF9;&#x8C61;&#x88AB;&#x5B9E;&#x4F8B;&#x5316;&#x4E86;&#x3002;&#x4E0E;&#x6B64;&#x540C;&#x65F6;&#xFF0C;&#x4E00;&#x4E2A;&#x6307;&#x5411;&#x65B0;&#x521B;&#x5EFA;&#x5BF9;&#x8C61;&#x7684;&#x5F15;&#x7528;&#x4F1A;&#x88AB;&#x538B;&#x5165;&#x6808;&#x3002;</p>
+</li>
+<li><p><code>dup</code>&#x64CD;&#x4F5C;&#x4F1A;&#x590D;&#x5236;&#x6808;&#x4E0A;&#x7684;&#x5F15;&#x7528;&#x3002;</p>
+</li>
+<li><p>&#x63A5;&#x7740;&#xFF0C;&#x8FD9;&#x4E2A;&#x503C;&#x4F1A;&#x88AB;<code>invokespecial</code>&#x6307;&#x4EE4;&#x5904;&#x7406;&#xFF0C;&#x8BE5;&#x6307;&#x4EE4;&#x4F1A;&#x521D;&#x59CB;&#x5316;&#x5BF9;&#x8C61;&#x3002;</p>
+</li>
+<li><p>&#x6808;&#x9876;&#x73B0;&#x5728;&#x5305;&#x542B;&#x4E86;&#x6307;&#x5411;&#x5BF9;&#x8C61;&#x7684;&#x5F15;&#x7528;&#xFF0C;&#x8BE5;&#x503C;&#x901A;&#x8FC7;<code>putfield</code>&#x6307;&#x4EE4;&#x4FDD;&#x5B58;&#x5230;&#x4E86;LambdaBytecode&#x7C7B;&#x7684;f1&#x5B57;&#x6BB5;</p>
+</li>
+</ul>
+<h3 id="lambda-&#x5B57;&#x8282;&#x7801;">lambda &#x5B57;&#x8282;&#x7801;</h3>
+<pre class="language-"><code class="lang-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>function</span><span class="token punctuation">.</span><span class="token class-name">Function</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Lambda</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Function</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> f <span class="token operator">=</span> obj <span class="token operator">-&gt;</span> obj<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<pre class="language-"><code class="lang-java"> <span class="token keyword">public</span> com<span class="token punctuation">.</span>other<span class="token punctuation">.</span><span class="token class-name">Lambda</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    descriptor<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token class-name">V</span>
+    flags<span class="token operator">:</span> ACC_PUBLIC
+    <span class="token class-name">Code</span><span class="token operator">:</span>
+      stack<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> locals<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> args_size<span class="token operator">=</span><span class="token number">1</span>
+         <span class="token number">0</span><span class="token operator">:</span> aload_0
+         <span class="token number">1</span><span class="token operator">:</span> invokespecial #<span class="token number">1</span>                  <span class="token comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span>
+         <span class="token number">4</span><span class="token operator">:</span> aload_0
+         <span class="token number">5</span><span class="token operator">:</span> invokedynamic #<span class="token number">2</span><span class="token punctuation">,</span>  <span class="token number">0</span>              <span class="token comment">// InvokeDynamic #0:apply:()Ljava/util/function/Function;</span>
+        <span class="token number">10</span><span class="token operator">:</span> putfield      #<span class="token number">3</span>                  <span class="token comment">// Field f:Ljava/util/function/Function;</span>
+        <span class="token number">13</span><span class="token operator">:</span> <span class="token keyword">return</span>
+      <span class="token class-name">LineNumberTable</span><span class="token operator">:</span>
+        line <span class="token number">5</span><span class="token operator">:</span> <span class="token number">0</span>
+        line <span class="token number">6</span><span class="token operator">:</span> <span class="token number">4</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>&#x521B;&#x5EFA;&#x989D;&#x5916;&#x7684;&#x7C7B;&#x73B0;&#x5728;&#x88AB;<code>invokedynamic</code>&#x6307;&#x4EE4;&#x66FF;&#x4EE3;&#x4E86;</p>
+<h3 id="invokedynamic-&#x6307;&#x4EE4;">invokedynamic &#x6307;&#x4EE4;</h3>
+<p>&#x5B57;&#x8282;&#x7801;&#x6307;&#x4EE4;<code>invokedynamic</code>&#x6700;&#x521D;&#x88AB;JDK7&#x5F15;&#x5165;&#xFF0C;&#x7528;&#x4E8E;&#x652F;&#x6301;&#x8FD0;&#x884C;&#x4E8E;JVM&#x4E0A;&#x7684;&#x52A8;&#x6001;&#x7C7B;&#x578B;&#x8BED;&#x8A00;&#x3002;&#x6267;&#x884C;&#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x65F6;&#xFF0C;<code>invokedynamic</code>&#x6DFB;&#x52A0;&#x4E86;&#x66F4;&#x9AD8;&#x5C42;&#x7684;&#x62BD;&#x8C61;&#xFF0C;&#x4F7F;&#x5F97;&#x4E00;&#x90E8;&#x5206;&#x903B;&#x8F91;&#x53EF;&#x4EE5;&#x4F9D;&#x636E;&#x52A8;&#x6001;&#x8BED;&#x8A00;&#x7684;&#x7279;&#x5F81;&#x6765;&#x51B3;&#x5B9A;&#x8C03;&#x7528;&#x76EE;&#x6807;&#x3002;&#x8FD9;&#x4E00;&#x6307;&#x4EE4;&#x7684;&#x5178;&#x578B;&#x4F7F;&#x7528;&#x573A;&#x666F;&#x5982;&#x4E0B;:</p>
+<p><code>def add(a, b) { a + b }</code></p>
+<p>&#x8FD9;&#x91CC;a&#x548C;b&#x7684;&#x7C7B;&#x578B;&#x5728;&#x7F16;&#x8BD1;&#x65F6;&#x90FD;&#x672A;&#x77E5;&#xFF0C;&#x6709;&#x53EF;&#x80FD;&#x968F;&#x7740;&#x8FD0;&#x884C;&#x65F6;&#x53D1;&#x751F;&#x53D8;&#x5316;&#x3002;&#x7531;&#x4E8E;&#x8FD9;&#x4E2A;&#x539F;&#x56E0;&#xFF0C;JVM&#x9996;&#x6B21;&#x6267;&#x884C;<code>invokedynamic</code>&#x8C03;&#x7528;&#x65F6;&#xFF0C;&#x5B83;&#x4F1A;&#x67E5;&#x8BE2;&#x4E00;&#x4E2A;<code>bootstrap</code>&#x65B9;&#x6CD5;&#xFF0C;&#x8BE5;&#x65B9;&#x6CD5;&#x5B9E;&#x73B0;&#x4E86;&#x4F9D;&#x8D56;&#x8BED;&#x8A00;&#x7684;&#x903B;&#x8F91;&#xFF0C;&#x53EF;&#x4EE5;&#x51B3;&#x5B9A;&#x9009;&#x62E9;&#x54EA;&#x4E00;&#x4E2A;&#x65B9;&#x6CD5;&#x8FDB;&#x884C;&#x8C03;&#x7528;&#x3002;bootstrap&#x65B9;&#x6CD5;&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x94FE;&#x63A5;&#x8C03;&#x7528;&#x70B9;(linked call site)&#x3002;&#x5F88;&#x591A;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x5982;&#x679C;add&#x65B9;&#x6CD5;&#x4F7F;&#x7528;&#x4E24;&#x4E2A;int&#x7C7B;&#x578B;&#x7684;&#x53D8;&#x91CF;&#xFF0C;&#x7D27;&#x63A5;&#x4E0B;&#x6765;&#x7684;&#x8C03;&#x7528;&#x4E5F;&#x4F1A;&#x4F7F;&#x7528;&#x4E24;&#x4E2A;int&#x7C7B;&#x578B;&#x7684;&#x503C;&#x3002;&#x6240;&#x4EE5;&#xFF0C;&#x6BCF;&#x6B21;&#x8C03;&#x7528;&#x4E5F;&#x6CA1;&#x6709;&#x5FC5;&#x8981;&#x90FD;&#x91CD;&#x65B0;&#x9009;&#x62E9;&#x8C03;&#x7528;&#x7684;&#x65B9;&#x6CD5;&#x3002;&#x8C03;&#x7528;&#x70B9;&#x81EA;&#x8EAB;&#x5C31;&#x5305;&#x542B;&#x4E86;&#x4E00;&#x5B9A;&#x7684;&#x903B;&#x8F91;&#xFF0C;&#x53EF;&#x4EE5;&#x5224;&#x65AD;&#x5728;&#x4EC0;&#x4E48;&#x60C5;&#x51B5;&#x4E0B;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x91CD;&#x65B0;&#x94FE;&#x63A5;&#x3002;</p>
+<p><code>invokedynamic</code>&#x6307;&#x4EE4;&#x5C06;&#x5B9E;&#x73B0;Lambda&#x8868;&#x8FBE;&#x5F0F;&#x7684;&#x8FD9;&#x90E8;&#x5206;&#x4EE3;&#x7801;&#x7684;&#x5B57;&#x8282;&#x7801;&#x751F;&#x6210;&#x63A8;&#x8FDF;&#x5230;&#x8FD0;&#x884C;&#x65F6;</p>
+<ul>
+<li><p>Lambda&#x8868;&#x8FBE;&#x5F0F;&#x7684;&#x4EE3;&#x7801;&#x5757;&#x5230;&#x5B57;&#x8282;&#x7801;&#x7684;&#x8F6C;&#x6362;&#x7531;&#x9AD8;&#x5C42;&#x7684;&#x7B56;&#x7565;&#x53D8;&#x6210;&#x4E86;&#x5B58;&#x7CB9;&#x7684;&#x5B9E;&#x73B0;&#x7EC6;&#x8282;&#x3002;&#x5B83;&#x73B0;&#x5728;&#x53EF;&#x4EE5;&#x52A8;&#x6001;&#x5730;&#x6539;&#x53D8;&#xFF0C;&#x6216;&#x8005;&#x5728;&#x672A;&#x6765;&#x7248;&#x672C;&#x4E2D;&#x5F97;&#x5230;&#x4F18;&#x5316;&#x3001;&#x4FEE;&#x6539;&#xFF0C;&#x5E76;&#x4E14;&#x4FDD;&#x6301;&#x4E86;&#x5B57;&#x8282;&#x7801;&#x7684;&#x540E;&#x5411;&#x517C;&#x5BB9;&#x6027;</p>
+</li>
+<li><p>&#x6CA1;&#x6709;&#x5E26;&#x6765;&#x989D;&#x5916;&#x7684;&#x5F00;&#x9500;&#xFF0C;&#x6CA1;&#x6709;&#x989D;&#x5916;&#x7684;&#x5B57;&#x6BB5;&#xFF0C;&#x4E5F;&#x4E0D;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x9759;&#x6001;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x800C;&#x8FD9;&#x4E9B;&#x5982;&#x679C;&#x4E0D;&#x4F7F;&#x7528; Lambda&#xFF0C;&#x5C31;&#x4E0D;&#x4F1A;&#x5B9E;&#x73B0;&#x3002;</p>
+</li>
+<li><p>&#x5BF9;&#x65E0;&#x72B6;&#x6001;&#x975E;&#x6355;&#x83B7;&#x578B;Lambda&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;Lambda&#x5BF9;&#x8C61;&#x7684;&#x5B9E;&#x4F8B;&#xFF0C;&#x5BF9;&#x5176;&#x8FDB;&#x884C;&#x7F13;&#x5B58;&#xFF0C;&#x4E4B;&#x540E; &#x5BF9;&#x540C;&#x4E00;&#x5BF9;&#x8C61;&#x7684;&#x8BBF;&#x95EE;&#x90FD;&#x8FD4;&#x56DE;&#x540C;&#x6837;&#x7684;&#x5185;&#x5BB9;&#x3002;&#x8FD9;&#x662F;&#x4E00;&#x79CD;&#x5E38;&#x89C1;&#x7684;&#x7528;&#x4F8B;&#xFF0C;&#x4E5F;&#x662F;&#x4EBA;&#x4EEC;&#x5728;Java 8&#x4E4B;&#x524D;&#x5C31;&#x60EF;&#x7528;&#x7684;&#x65B9;&#x5F0F;;&#x6BD4;&#x5982;&#xFF0C;&#x4EE5;static final&#x53D8;&#x91CF;&#x7684;&#x65B9;&#x5F0F;&#x58F0;&#x660E;&#x67D0;&#x4E2A;&#x6BD4;&#x8F83;&#x5668;&#x5B9E;&#x4F8B;&#x3002;</p>
+</li>
+<li><p>&#x6CA1;&#x6709;&#x989D;&#x5916;&#x7684;&#x6027;&#x80FD;&#x5F00;&#x9500;&#xFF0C;&#x56E0;&#x4E3A;&#x8FD9;&#x4E9B;&#x8F6C;&#x6362;&#x90FD;&#x662F;&#x5FC5;&#x987B;&#x7684;&#xFF0C;&#x5E76;&#x4E14;&#x7ED3;&#x679C;&#x4E5F;&#x8FDB;&#x884C;&#x4E86;&#x94FE;&#x63A5;&#xFF0C;&#x4EC5;&#x5728;Lambda &#x9996;&#x6B21;&#x88AB;&#x8C03;&#x7528;&#x65F6;&#x9700;&#x8981;&#x8F6C;&#x6362;&#x3002;&#x5176;&#x540E;&#x6240;&#x6709;&#x7684;&#x8C03;&#x7528;&#x90FD;&#x80FD;&#x76F4;&#x63A5;&#x8DF3;&#x8FC7;&#x8FD9;&#x4E00;&#x6B65;&#xFF0C;&#x76F4;&#x63A5;&#x8C03;&#x7528;&#x4E4B;&#x524D;&#x94FE;&#x63A5;&#x7684;&#x5B9E;&#x73B0;</p>
+</li>
+</ul>
+<p>&#x5C06;Lambda&#x8868;&#x8FBE;&#x5F0F;&#x7684;&#x4EE3;&#x7801;&#x4F53;&#x586B;&#x5165;&#x5230;&#x8FD0;&#x884C;&#x65F6;&#x52A8;&#x6001;&#x521B;&#x5EFA;&#x7684;&#x9759;&#x6001;&#x65B9;&#x6CD5;, &#x7C7B;&#x4F3C;&#x5982;&#x4E0B;</p>
+<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Lambda</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Function</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> f <span class="token operator">=</span> <span class="token punctuation">[</span>dynamic invocation of lambda$<span class="token number">1</span><span class="token punctuation">]</span>
+    <span class="token keyword">static</span> <span class="token class-name">String</span> lambda$<span class="token function">1</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> obj<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token punctuation">}</span>
+</code></pre>
+<footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
+2020-06-10 10:29:36
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="java8_mem.html" class="navigation navigation-prev " aria-label="Previous page: Java8 jvm内存结构">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="java8_optional.html" class="navigation navigation-next " aria-label="Next page: Java8 Optional">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Java8 lambda表达式","layout":"page","date":"2019-02-15 00:00","level":"1.6.5","depth":2,"next":{"title":"Java8 Optional","level":"1.6.6","depth":2,"path":"content/java8/java8_optional.md","ref":"./content/java8/java8_optional.md","articles":[]},"previous":{"title":"Java8 jvm内存结构","level":"1.6.4","depth":2,"path":"content/java8/java8_mem.md","ref":"./content/java8/java8_mem.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java8/lambda.md","mtime":"2020-06-10T02:29:36.645Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-18T11:56:34.961Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

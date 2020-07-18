@@ -1,0 +1,2135 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>缓存 · spring-note</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="doctording">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-page-treeview/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../distributed_design/flow_limit.html" />
+    
+    
+    <link rel="prev" href="bloom.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [1 常见设计模式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../design_pattern/proxy.html">
+            
+                <a href="../design_pattern/proxy.html">
+            
+                    
+                    代理模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../design_pattern/singleton.html">
+            
+                <a href="../design_pattern/singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../design_pattern/factory.html">
+            
+                <a href="../design_pattern/factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../design_pattern/template.html">
+            
+                <a href="../design_pattern/template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../design_pattern/strategy.html">
+            
+                <a href="../design_pattern/strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../design_pattern/decorator.html">
+            
+                <a href="../design_pattern/decorator.html">
+            
+                    
+                    装饰器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../design_pattern/observer.html">
+            
+                <a href="../design_pattern/observer.html">
+            
+                    
+                    观察者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../design_pattern/visitor.html">
+            
+                <a href="../design_pattern/visitor.html">
+            
+                    
+                    访问者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../design_pattern/iterator.html">
+            
+                <a href="../design_pattern/iterator.html">
+            
+                    
+                    迭代器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="../design_pattern/facade.html">
+            
+                <a href="../design_pattern/facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [2 数据结构和算法基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../java_data_structure/java_basic_datastructure.html">
+            
+                <a href="../java_data_structure/java_basic_datastructure.html">
+            
+                    
+                    常见基础数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../java_data_structure/array_list.html">
+            
+                <a href="../java_data_structure/array_list.html">
+            
+                    
+                    ArrayList & LinkedList
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../java_data_structure/hash_map.html">
+            
+                <a href="../java_data_structure/hash_map.html">
+            
+                    
+                    HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.3" data-path="../java_data_structure/hash_table.html">
+            
+                <a href="../java_data_structure/hash_table.html">
+            
+                    
+                    HashTable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.4" data-path="../java_utils/Map.html">
+            
+                <a href="../java_utils/Map.html">
+            
+                    
+                    HashMap,HashTable,ConcurrentHashMap 对比
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.5" data-path="../java_data_structure/fail_fast.html">
+            
+                <a href="../java_data_structure/fail_fast.html">
+            
+                    
+                    fail-fast,ConcurrentModificationException
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.6" data-path="../java_utils/quick_sort.html">
+            
+                <a href="../java_utils/quick_sort.html">
+            
+                    
+                    快排(没事手写写)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../java_data_structure/concurrent_datastructure.html">
+            
+                <a href="../java_data_structure/concurrent_datastructure.html">
+            
+                    
+                    concurrent数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../java_data_structure/advanced_structure.html">
+            
+                <a href="../java_data_structure/advanced_structure.html">
+            
+                    
+                    高级数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.3.1" data-path="../java_data_structure/b_tree.html">
+            
+                <a href="../java_data_structure/b_tree.html">
+            
+                    
+                    B/B+ Tree
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    [3 Java基础问题]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../java_data_structure/System_arraycopy.html">
+            
+                <a href="../java_data_structure/System_arraycopy.html">
+            
+                    
+                    System.arraycopy, Array.copyOf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../java_utils/equals_hashcode.html">
+            
+                <a href="../java_utils/equals_hashcode.html">
+            
+                    
+                    == & equals方法 & hashcode方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../java_utils/Calendar.html">
+            
+                <a href="../java_utils/Calendar.html">
+            
+                    
+                    Calendar & Date
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../java_utils/Compare.html">
+            
+                <a href="../java_utils/Compare.html">
+            
+                    
+                    Comparison method violates its general contract
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../java_utils/int_Integer.html">
+            
+                <a href="../java_utils/int_Integer.html">
+            
+                    
+                    int(基本类型) & Integer(包装类类型)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../java_utils/exception.html">
+            
+                <a href="../java_utils/exception.html">
+            
+                    
+                    Java异常&错误
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../java_utils/String.html">
+            
+                <a href="../java_utils/String.html">
+            
+                    
+                    String,StringBuffer,StringBuilder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../java_utils/reflect.html">
+            
+                <a href="../java_utils/reflect.html">
+            
+                    
+                    反射机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="../java_utils/call_back.html">
+            
+                <a href="../java_utils/call_back.html">
+            
+                    
+                    回调 & 事件机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="../java_utils/array_collection.html">
+            
+                <a href="../java_utils/array_collection.html">
+            
+                    
+                    数组，集合转换等问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="../java_utils/annotation.html">
+            
+                <a href="../java_utils/annotation.html">
+            
+                    
+                    注解 Annotation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="../java_jvm/jvm_runtime.html">
+            
+                <a href="../java_jvm/jvm_runtime.html">
+            
+                    
+                    Runtime类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="../java_data_structure/unsafe.html">
+            
+                <a href="../java_data_structure/unsafe.html">
+            
+                    
+                    unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="../java_thinking_in_Java/basic.html">
+            
+                <a href="../java_thinking_in_Java/basic.html">
+            
+                    
+                    《Java编程思想》第3章：操作符，第4章：控制执行流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="../java_thinking_in_Java/constructor.html">
+            
+                <a href="../java_thinking_in_Java/constructor.html">
+            
+                    
+                    《Java编程思想》第5章：初始化和清理(重点)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="../java_thinking_in_Java/public_private_protect.html">
+            
+                <a href="../java_thinking_in_Java/public_private_protect.html">
+            
+                    
+                    《Java编程思想》第6章：访问权限控制(重要)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第7章：复用类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="../java_thinking_in_Java/polymorphism.html">
+            
+                <a href="../java_thinking_in_Java/polymorphism.html">
+            
+                    
+                    《Java编程思想》第8章：多态
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第9章：接口 补充：抽象类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="../java_thinking_in_Java/innner_class.html">
+            
+                <a href="../java_thinking_in_Java/innner_class.html">
+            
+                    
+                    《Java编程思想》第10章：内部类
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    [4 Java多线程 & 并发基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../java_thread_concurrent/thread_basic.html">
+            
+                <a href="../java_thread_concurrent/thread_basic.html">
+            
+                    
+                    线程基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1.1" data-path="../java_thread_concurrent/thread_design.html">
+            
+                <a href="../java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.2" data-path="../java_thread_concurrent/hook_thread.html">
+            
+                <a href="../java_thread_concurrent/hook_thread.html">
+            
+                    
+                    Hook线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../java_thread_concurrent/thread_pool.html">
+            
+                <a href="../java_thread_concurrent/thread_pool.html">
+            
+                    
+                    线程池
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="../java_thread_concurrent/concurrency_problems.html">
+            
+                <a href="../java_thread_concurrent/concurrency_problems.html">
+            
+                    
+                    常见的多线程题目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.2" data-path="../java_thread_concurrent/thread_pool_self.html">
+            
+                <a href="../java_thread_concurrent/thread_pool_self.html">
+            
+                    
+                    自定义线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../java_thread_concurrent/cas.html">
+            
+                <a href="../java_thread_concurrent/cas.html">
+            
+                    
+                    CAS(Conmpare And Swap/Exchange) & unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../java_thread_concurrent/aqs.html">
+            
+                <a href="../java_thread_concurrent/aqs.html">
+            
+                    
+                    AQS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" >
+            
+                <span>
+            
+                    
+                    [常见关键字和类]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.5.1" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.2" data-path="../java_thread_concurrent/longAdder.html">
+            
+                <a href="../java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.3" data-path="../java_thread_concurrent/semaphore.html">
+            
+                <a href="../java_thread_concurrent/semaphore.html">
+            
+                    
+                    Semaphore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.4" data-path="../java_thread_concurrent/volatile.html">
+            
+                <a href="../java_thread_concurrent/volatile.html">
+            
+                    
+                    volatile 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.5" data-path="../java_thread_concurrent/synchronized.html">
+            
+                <a href="../java_thread_concurrent/synchronized.html">
+            
+                    
+                    synchronized 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.6.1" data-path="../java_thread_concurrent/thread_lock_type.html">
+            
+                <a href="../java_thread_concurrent/thread_lock_type.html">
+            
+                    
+                    Java Lock 分类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.2" data-path="../java_thread_concurrent/thread_deadlock.html">
+            
+                <a href="../java_thread_concurrent/thread_deadlock.html">
+            
+                    
+                    Thread 死锁问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../java_thread_concurrent/threadLocal.html">
+            
+                <a href="../java_thread_concurrent/threadLocal.html">
+            
+                    
+                    ThreadLocal
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    [5 Java8]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../java8/java8_completableFuture.html">
+            
+                <a href="../java8/java8_completableFuture.html">
+            
+                    
+                    CompletableFuture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../java8/java8_future.html">
+            
+                <a href="../java8/java8_future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../java8/interface_default.html">
+            
+                <a href="../java8/interface_default.html">
+            
+                    
+                    interface defalt static
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../java8/java8_mem.html">
+            
+                <a href="../java8/java8_mem.html">
+            
+                    
+                    Java8 jvm内存结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../java8/lambda.html">
+            
+                <a href="../java8/lambda.html">
+            
+                    
+                    Java8 lambda表达式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="../java8/java8_optional.html">
+            
+                <a href="../java8/java8_optional.html">
+            
+                    
+                    Java8 Optional
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../java8/streams.html">
+            
+                <a href="../java8/streams.html">
+            
+                    
+                    Java8 Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="../java8/streams_parallel.html">
+            
+                <a href="../java8/streams_parallel.html">
+            
+                    
+                    Java8 并行数据处理与性能
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    [6 JVM]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../java_jvm/jvm_mem_model.html">
+            
+                <a href="../java_jvm/jvm_mem_model.html">
+            
+                    
+                    内存模型与线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../java_jvm/jvm_class_load.html">
+            
+                <a href="../java_jvm/jvm_class_load.html">
+            
+                    
+                    类加载机制,类加载器,内存布局
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../java_jvm/jvm_mem_gc.html">
+            
+                <a href="../java_jvm/jvm_mem_gc.html">
+            
+                    
+                    堆栈 & 各种GC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../java_jvm/jvm_params.html">
+            
+                <a href="../java_jvm/jvm_params.html">
+            
+                    
+                    JVM参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../java_jvm/jvm_tools.html">
+            
+                <a href="../java_jvm/jvm_tools.html">
+            
+                    
+                    JVM命令工具(jstack,jmap,jcmd...)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" >
+            
+                <span>
+            
+                    
+                    [7 缓存 & 限流]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="LFU.html">
+            
+                <a href="LFU.html">
+            
+                    
+                    LFU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="LRU.html">
+            
+                <a href="LRU.html">
+            
+                    
+                    LRU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="consistent_hash.html">
+            
+                <a href="consistent_hash.html">
+            
+                    
+                    一致性Hash
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="bloom.html">
+            
+                <a href="bloom.html">
+            
+                    
+                    布隆过滤器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.8.5" data-path="cache.html">
+            
+                <a href="cache.html">
+            
+                    
+                    缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="../distributed_design/flow_limit.html">
+            
+                <a href="../distributed_design/flow_limit.html">
+            
+                    
+                    限流
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="../java_thread_concurrent/cpu_cache.html">
+            
+                <a href="../java_thread_concurrent/cpu_cache.html">
+            
+                    
+                    CPU,缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" >
+            
+                <span>
+            
+                    
+                    [8 数据库]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="mysql.html">
+            
+                <a href="mysql.html">
+            
+                    
+                    数据库/表/查询
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    [9 I/O & 网络 & 分布式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../distributed_design/nginx.html">
+            
+                <a href="../distributed_design/nginx.html">
+            
+                    
+                    nginx基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="../distributed_design/rpc.html">
+            
+                <a href="../distributed_design/rpc.html">
+            
+                    
+                    rpc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/tomcat.html">
+            
+                <a href="../distributed_design/tomcat.html">
+            
+                    
+                    tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/distribute.html">
+            
+                <a href="../distributed_design/distribute.html">
+            
+                    
+                    分布式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" >
+            
+                <span>
+            
+                    
+                    [I/O与网络]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.6.1" data-path="../java_io_net/io_interrupte.html">
+            
+                <a href="../java_io_net/io_interrupte.html">
+            
+                    
+                    IO和中断
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.2" data-path="../java_io_net/http_tcp.html">
+            
+                <a href="../java_io_net/http_tcp.html">
+            
+                    
+                    http & tcp
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.3" data-path="../java_io_net/io_basic.html">
+            
+                <a href="../java_io_net/io_basic.html">
+            
+                    
+                    IO基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.4" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    nio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.5" data-path="../java_io_net/from_io_to_epoll.html">
+            
+                <a href="../java_io_net/from_io_to_epoll.html">
+            
+                    
+                    从io到epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    [10 剑指offer]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../thought_of_solve/thought.html">
+            
+                <a href="../thought_of_solve/thought.html">
+            
+                    
+                    剑指Offer解题思路(全)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >缓存</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#&#x7F13;&#x5B58;">&#x7F13;&#x5B58;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x7F13;&#x5B58;&#x7684;&#x4F7F;&#x7528;">&#x7F13;&#x5B58;&#x7684;&#x4F7F;&#x7528;</a><i></i></div></li>
+<li><div><a href="#&#x7F13;&#x5B58;&#x7A7F;&#x900F;">&#x7F13;&#x5B58;&#x7A7F;&#x900F;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x4EC0;&#x4E48;&#x662F;&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#xFF08;cache-penetration&#xFF09;">&#x4EC0;&#x4E48;&#x662F;&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#xFF08;cache penetration&#xFF09;</a><i></i></div></li>
+<li><div><a href="#why-does-cache-penetration-occur&#xFF08;&#x5982;&#x4F55;&#x4EA7;&#x751F;&#xFF1F;&#xFF09;">Why does cache penetration occur?&#xFF08;&#x5982;&#x4F55;&#x4EA7;&#x751F;&#xFF1F;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#the-hazard-of-cache-penetration&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#x7684;&#x5371;&#x5BB3;">The hazard of cache penetration(&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#x7684;&#x5371;&#x5BB3;)</a><i></i></div></li>
+<li><div><a href="#&#x5982;&#x4F55;&#x89E3;&#x51B3;&#x7F13;&#x5B58;&#x7A7F;&#x900F;">&#x5982;&#x4F55;&#x89E3;&#x51B3;&#x7F13;&#x5B58;&#x7A7F;&#x900F;</a><i></i></div></li>
+<li><div><a href="#&#x89E3;&#x51B3;1&#x7F13;&#x5B58;&#x7A7A;&#x5BF9;&#x8C61;cache-empty-data&#xFF08;&#x7F3A;&#x70B9;&#xFF09;">&#x89E3;&#x51B3;1:&#x7F13;&#x5B58;&#x7A7A;&#x5BF9;&#x8C61;(Cache empty data)&#xFF08;&#x7F3A;&#x70B9;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#&#x89E3;&#x51B3;2bloomfilter">&#x89E3;&#x51B3;2:BloomFilter</a><i></i></div></li>
+<li><div><a href="#bloomfilter&#x7684;&#x7F3A;&#x70B9;">BloomFilter&#x7684;&#x7F3A;&#x70B9;</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#xFF08;cache-avalanche&#xFF09;">&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#xFF08;cache avalanche&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#x7684;&#x6982;&#x5FF5;">&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#x7684;&#x6982;&#x5FF5;</a><i></i></div></li>
+<li><div><a href="#&#x5982;&#x4F55;&#x89E3;&#x51B3;">&#x5982;&#x4F55;&#x89E3;&#x51B3;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#using-a-cache-cluster-to-ensure-high-availability-of-caches">Using a Cache Cluster to Ensure High Availability of Caches</a><i></i></div></li>
+<li><div><a href="#using-hystrix&#xFF08;&#x9650;&#x6D41;&#xFF09;">Using Hystrix&#xFF08;&#x9650;&#x6D41;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#&#x4E8B;&#x540E;&#x6062;&#x590D;&#x7F13;&#x5B58;">&#x4E8B;&#x540E;&#x6062;&#x590D;&#x7F13;&#x5B58;</a><i></i></div></li>
+</ul></li>
+</ul></li>
+<li><div><a href="#hotspot-data-set-is-invalid-&#x70ED;&#x70B9;&#x6570;&#x636E;&#x96C6;&#x5931;&#x6548;">Hotspot data set is invalid (&#x70ED;&#x70B9;&#x6570;&#x636E;&#x96C6;&#x5931;&#x6548;)</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#what-is-the-hotspot-data-set-failure">What is the hotspot data set failure?</a><i></i></div></li>
+<li><div><a href="#&#x89E3;&#x51B3;&#x65B9;&#x6CD5;">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#facebooks-memcached-multiget-hole-more-machines--more-capacity&#x65E0;&#x5E95;&#x6D1E;&#x95EE;&#x9898;">Facebook&apos;s Memcached Multiget Hole: More Machines != More Capacity(&#x65E0;&#x5E95;&#x6D1E;&#x95EE;&#x9898;)</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x4EA7;&#x751F;&#x539F;&#x56E0;">&#x4EA7;&#x751F;&#x539F;&#x56E0;</a><i></i></div></li>
+<li><div><a href="#&#x5371;&#x5BB3;&#xFF08;&#x66F4;&#x591A;&#x7684;&#x673A;&#x5668;&#x4E0D;&#x4EE3;&#x8868;&#x66F4;&#x591A;&#x7684;&#x6027;&#x80FD;&#xFF09;">&#x5371;&#x5BB3;&#xFF08;&#x66F4;&#x591A;&#x7684;&#x673A;&#x5668;&#x4E0D;&#x4EE3;&#x8868;&#x66F4;&#x591A;&#x7684;&#x6027;&#x80FD;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#hash&#x7684;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;">hash&#x7684;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;</a><i></i></div></li>
+<li><div><a href="#&#x9488;&#x5BF9;&#x6027;&#x7684;&#x4F18;&#x5316;">&#x9488;&#x5BF9;&#x6027;&#x7684;&#x4F18;&#x5316;</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#&#x5982;&#x4F55;&#x4FDD;&#x8BC1;&#x7F13;&#x5B58;&#x4E0E;&#x6570;&#x636E;&#x5E93;&#x53CC;&#x5199;&#x65F6;&#x4E00;&#x81F4;&#x7684;&#x95EE;&#x9898;">&#x5982;&#x4F55;&#x4FDD;&#x8BC1;&#x7F13;&#x5B58;&#x4E0E;&#x6570;&#x636E;&#x5E93;&#x53CC;&#x5199;&#x65F6;&#x4E00;&#x81F4;&#x7684;&#x95EE;&#x9898;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#cache-aside-pattern">Cache Aside Pattern</a><i></i></div></li>
+<li><div><a href="#&#x7F13;&#x5B58;&#x6570;&#x636E;&#x5E93;&#x66F4;&#x65B0;">&#x7F13;&#x5B58;/&#x6570;&#x636E;&#x5E93;&#x66F4;&#x65B0;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x7F13;&#x5B58;">&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x7F13;&#x5B58;</a><i></i></div></li>
+<li><div><a href="#&#x5148;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;1">&#x5148;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;(&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;1)</a><i></i></div></li>
+<li><div><a href="#&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;2">&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;(&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;2)</a><i></i></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+
+
+<p>[TOC]</p>
+<h1 id="&#x7F13;&#x5B58;">&#x7F13;&#x5B58;</h1>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>penetration</td>
+<td>n. &#x7A7F;&#x900F;; &#x6E17;&#x900F;; &#x8FDB;&#x5165;; &#x63D2;&#x5165;</td>
+</tr>
+<tr>
+<td>avalanche</td>
+<td>n. &#x96EA;&#x5D29;; &#x5C71;&#x5D29;;</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://medium.com/@mena.meseha/3-major-problems-and-solutions-in-the-cache-world-155ecae41d4f" target="_blank">3 major problems and solutions in the cache world</a></p>
+<h2 id="&#x7F13;&#x5B58;&#x7684;&#x4F7F;&#x7528;">&#x7F13;&#x5B58;&#x7684;&#x4F7F;&#x7528;</h2>
+<p>In most Internet applications:</p>
+<ol>
+<li>When the business system initiates a certain query request, it first determines whether the data exists in the cache;</li>
+<li>If there is a cache, return the data directly;</li>
+<li>If the cache does not exist, query the database again and return the data.</li>
+</ol>
+<pre class="language-"><code class="lang-java">&#x4E1A;&#x52A1;&#x67E5;&#x8BE2; <span class="token operator">=</span>&#x300B; &#x5224;&#x65AD;&#x7F13;&#x5B58;&#x547D;&#x4E2D; <span class="token operator">=</span>&#x300B; &#x76F4;&#x63A5;&#x8FD4;&#x56DE;&#x6570;&#x636E;&#x7ED3;&#x679C;
+                      &#x5426;&#x5219;&#xFF1A; &#x67E5;&#x8BE2;&#x6570;&#x636E;&#x5E93;&#x5E76;&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#xFF0C;&#x7136;&#x540E;&#x8FD4;&#x56DE;&#x6570;&#x636E;&#x7ED3;&#x679C;
+</code></pre>
+<ul>
+<li>&#x7F13;&#x5B58;&#x5206;&#x62C5;&#x90E8;&#x5206;&#x8BF7;&#x6C42;&#x538B;&#x529B;</li>
+<li>&#x4F46;&#x7F13;&#x5B58;&#x4E0D;&#x53EF;&#x80FD;&#x628A;&#x6240;&#x6709;&#x7684;&#x6570;&#x636E;&#x90FD;&#x7F13;&#x5B58;&#x8D77;&#x6765;(&#x9700;&#x8981;&#x6709;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#x548C;&#x5220;&#x9664;&#x7B56;&#x7565;&#xFF09;</li>
+</ul>
+<h2 id="&#x7F13;&#x5B58;&#x7A7F;&#x900F;">&#x7F13;&#x5B58;&#x7A7F;&#x900F;</h2>
+<h3 id="&#x4EC0;&#x4E48;&#x662F;&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#xFF08;cache-penetration&#xFF09;">&#x4EC0;&#x4E48;&#x662F;&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#xFF08;cache penetration&#xFF09;</h3>
+<p>&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#x662F;&#x8BF4;&#xFF1A;&#x6536;&#x5230;&#x4E00;&#x4E2A;&#x8BF7;&#x6C42;&#xFF0C;&#x4F46;&#x662F;&#x8BE5;&#x8BF7;&#x6C42;&#x5728;&#x7F13;&#x5B58;&#x4E2D;&#x4E0D;&#x5B58;&#x5728;&#xFF0C;&#x53EA;&#x80FD;&#x53BB;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x67E5;&#x8BE2;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x653E;&#x8FDB;&#x7F13;&#x5B58;&#x3002;&#x4F46;&#x5F53;&#x6709;&#x597D;&#x591A;&#x8BF7;&#x6C42;&#x540C;&#x65F6;&#x8BBF;&#x95EE;&#x540C;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x65F6;&#xFF0C;&#x4E1A;&#x52A1;&#x7CFB;&#x7EDF;&#x628A;&#x8FD9;&#x4E9B;&#x8BF7;&#x6C42;&#x5168;&#x53D1;&#x5230;&#x4E86;&#x6570;&#x636E;&#x5E93;&#xFF1B;&#x6216;&#x8005;&#x6076;&#x610F;&#x6784;&#x9020;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x4E0A;&#x4E0D;&#x5B58;&#x5728;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x7136;&#x540E;&#x5927;&#x91CF;&#x53D1;&#x9001;&#x8FD9;&#x4E2A;&#x8BF7;&#x6C42;&#xFF0C;&#x8FD9;&#x6837;&#x6BCF;&#x6B21;&#x90FD;&#x4F1A;&#x88AB;&#x53D1;&#x9001;&#x5230;&#x6570;&#x636E;&#x5E93;&#x53BB;&#x5904;&#x7406;&#xFF0C;&#x6700;&#x7EC8;&#x5BFC;&#x81F4;&#x6570;&#x636E;&#x5E93;&#x6302;&#x6389;&#x3002;</p>
+<p>&#x5373;&#xFF1A;&#x8BF7;&#x6C42;&#x7684;&#x6570;&#x636E;&#x5728;&#x7F13;&#x5B58;&#x5927;&#x91CF;&#x4E0D;&#x547D;&#x4E2D;&#xFF0C;&#x5BFC;&#x81F4;&#x8BF7;&#x6C42;&#x90FD;&#x8D70;&#x6570;&#x636E;&#x5E93;&#x3002;&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#x5982;&#x679C;&#x53D1;&#x751F;&#x4E86;&#xFF0C;&#x4E5F;&#x53EF;&#x80FD;&#x628A;&#x6211;&#x4EEC;&#x7684;&#x6570;&#x636E;&#x5E93;&#x641E;&#x57AE;&#xFF0C;&#x5BFC;&#x81F4;&#x6574;&#x4E2A;&#x670D;&#x52A1;&#x762B;&#x75EA;&#xFF01;</p>
+<h3 id="why-does-cache-penetration-occur&#xFF08;&#x5982;&#x4F55;&#x4EA7;&#x751F;&#xFF1F;&#xFF09;">Why does cache penetration occur?&#xFF08;&#x5982;&#x4F55;&#x4EA7;&#x751F;&#xFF1F;&#xFF09;</h3>
+<p>There are many reasons for cache penetration, which are generally as follows:</p>
+<ol>
+<li><p>Malicious attacks deliberately create a large amount of non-existent data to request our services. Since these data do not exist in the cache, massive requests fall into the database, which may cause the database to crash.</p>
+</li>
+<li><p>Code logic error. This is the programmer&#x2019;s pot, nothing to say, must be avoided in development!</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>malicious</td>
+<td>adj.&#x6076;&#x610F;&#x7684;&#xFF0C;&#x6709;&#x654C;&#x610F;&#x7684;&#xFF1B; &#x84C4;&#x610F;&#x7684;&#xFF1B; &#x9884;&#x8C0B;&#x7684;&#xFF1B; &#x5B58;&#x5FC3;&#x4E0D;&#x826F;&#x7684;</td>
+</tr>
+<tr>
+<td>attack</td>
+<td>vt.&amp; vi.&#x653B;&#x51FB;&#xFF0C;&#x8FDB;&#x653B;&#xFF0C;&#x62A8;&#x51FB;&#xFF1B;n.&#x653B;&#x51FB;&#xFF1B; &#x62A8;&#x51FB;&#xFF1B;&#xFF08;&#x961F;&#x5458;&#x7B49;&#x7684;&#xFF09;&#x8FDB;&#x653B;&#xFF1B;&#xFF08;&#x75BE;&#x75C5;&#xFF09;&#x4FB5;&#x88AD;&#xFF1B;vt.&#x62A8;&#x51FB;&#xFF1B; &#x975E;&#x96BE;&#xFF1B; &#x4FB5;&#x88AD;&#xFF1B; &#x635F;&#x5BB3;</td>
+</tr>
+<tr>
+<td>deliberate</td>
+<td>adj.&#x6545;&#x610F;&#x7684;&#xFF1B; &#x84C4;&#x610F;&#x7684;&#xFF1B; &#x6DF1;&#x601D;&#x719F;&#x8651;&#x7684;&#xFF1B; &#x614E;&#x91CD;&#x7684;&#xFF1B;vt.&#x6743;&#x8861;&#xFF1B;vi.&#x719F;&#x8651;&#xFF1B; &#x5546;&#x8BA8;&#xFF1B;</td>
+</tr>
+<tr>
+<td>pot</td>
+<td>n.&#x7F50;&#xFF1B; &#x4E00;&#x7F50;&#xFF1B; &#xFF08;&#x67D0;&#x79CD;&#x7528;&#x9014;&#x7684;&#xFF09;&#x5BB9;&#x5668;&#xFF1B; &#x9676;&#x76C6; &#x9505;&#xFF1B;vt.&#x628A;&#x2026;&#x683D;&#x5165;&#x76C6;&#x4E2D;&#xFF1B; &#x79CD;&#x76C6;&#x683D;&#xFF1B; &#x53F0;&#x7403;&#x3001;&#x666E;&#x5C14;&#x548C;&#x65AF;&#x8BFA;&#x514B;&#x51FB;&#xFF08;&#x7403;&#xFF09;&#x5165;&#x888B;&#xFF1B; &#x5C04;&#x6740;; vi.&#x968F;&#x624B;&#x5C04;&#x51FB;&#xFF1B;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-hazard-of-cache-penetration&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#x7684;&#x5371;&#x5BB3;">The hazard of cache penetration(&#x7F13;&#x5B58;&#x7A7F;&#x900F;&#x7684;&#x5371;&#x5BB3;)</h3>
+<p>If there are massive data that does not exist in the query request, then these massive requests will fall into the database, and the database pressure will increase dramatically, which may lead to system crash. (You have to know that the most vulnerable in the current business system is IO, a little bit It will collapse under pressure, so we have to think of ways to protect it).</p>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hazard</td>
+<td>vt.&#x5192;&#x9669;&#xFF1B; &#x4F7F;&#x906D;&#x53D7;&#x5371;&#x9669;&#xFF1B;n.&#x5371;&#x9669;&#xFF1B; &#x5192;&#x9669;&#x7684;&#x4E8B;&#xFF1B; &#x673A;&#x4F1A;&#xFF1B; &#x53CC;&#x9AB0;&#x5B50;&#x6E38;&#x620F;</td>
+</tr>
+<tr>
+<td>massive</td>
+<td>adj.&#x5927;&#x7684;&#xFF0C;&#x91CD;&#x7684;&#xFF1B; &#x5927;&#x5757;&#x7684;&#xFF0C;&#x5927;&#x91CF;&#x7684;&#xFF1B; &#x9B41;&#x4F1F;&#x7684;&#xFF0C;&#x7ED3;&#x5B9E;&#x7684;&#xFF1B; &#x5927;&#x89C4;&#x6A21;&#x7684;</td>
+</tr>
+<tr>
+<td>fall into</td>
+<td>&#x5206;&#x6210;&#xFF1B; &#x6389;&#x8FDB;&#xFF0C;&#x9677;&#x5165;&#xFF1B; &#x5815;&#x5165;&#xFF1B; &#x9677;&#x4E8E;</td>
+</tr>
+<tr>
+<td>dramatically</td>
+<td>adv.&#x620F;&#x5267;&#x6027;&#x5730;&#xFF0C;&#x5F15;&#x4EBA;&#x6CE8;&#x76EE;&#x5730;&#xFF1B; &#x663E;&#x8457;&#x5730;&#xFF0C;&#x5267;&#x70C8;&#x5730;&#xFF1B;</td>
+</tr>
+<tr>
+<td>vulnerable</td>
+<td>adj.&#xFF08;&#x5730;&#x65B9;&#xFF09;&#x6613;&#x53D7;&#x653B;&#x51FB;&#x7684;&#xFF1B; &#x6613;&#x53D7;&#x4F24;&#x7684;&#xFF1B; &#x6613;&#x53D7;&#x6279;&#x8BC4;&#x7684;&#xFF1B; [&#x6865;&#x724C;]&#x5DF2;&#x6210;&#x5C40;&#x7684;</td>
+</tr>
+<tr>
+<td>collapse</td>
+<td>vi.&#x6298;&#x53E0;&#xFF1B; &#x5012;&#x584C;&#xFF1B; &#x5D29;&#x6E83;&#xFF1B; &#xFF08;&#x5C24;&#x6307;&#x5DE5;&#x4F5C;&#x52B3;&#x7D2F;&#x540E;&#xFF09;&#x5750;&#x4E0B;; vt.&#x4F7F;&#x5012;&#x584C;&#xFF1B; &#x4F7F;&#x574D;&#x584C;&#xFF1B; &#x4F7F;&#x74E6;&#x89E3;&#xFF1B;n.&#x57AE;&#x53F0;&#xFF1B; &#xFF08;&#x8EAB;&#x4F53;&#x7684;&#xFF09;&#x8870;&#x5F31;&#xFF1B;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="&#x5982;&#x4F55;&#x89E3;&#x51B3;&#x7F13;&#x5B58;&#x7A7F;&#x900F;">&#x5982;&#x4F55;&#x89E3;&#x51B3;&#x7F13;&#x5B58;&#x7A7F;&#x900F;</h3>
+<ol>
+<li><p>&#x5F53;&#x6211;&#x4EEC;&#x4ECE;&#x6570;&#x636E;&#x5E93;&#x627E;&#x4E0D;&#x5230;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x6211;&#x4EEC;&#x4E5F;&#x5C06;&#x8FD9;&#x4E2A;&#x7A7A;&#x5BF9;&#x8C61;&#x8BBE;&#x7F6E;&#x5230;&#x7F13;&#x5B58;&#x91CC;&#x8FB9;&#x53BB;&#x3002;&#x4E0B;&#x6B21;&#x518D;&#x8BF7;&#x6C42;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x4ECE;&#x7F13;&#x5B58;&#x91CC;&#x8FB9;&#x83B7;&#x53D6;&#x4E86;&#x3002;&#x4E00;&#x822C;&#x4F1A;&#x5C06;&#x7A7A;&#x5BF9;&#x8C61;&#x8BBE;&#x7F6E;&#x4E00;&#x4E2A;&#x8F83;&#x77ED;&#x7684;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#x3002;</p>
+</li>
+<li><p>&#x7531;&#x4E8E;&#x8BF7;&#x6C42;&#x7684;&#x53C2;&#x6570;&#x662F;&#x4E0D;&#x5408;&#x6CD5;&#x7684;(&#x6BCF;&#x6B21;&#x90FD;&#x8BF7;&#x6C42;&#x4E0D;&#x5B58;&#x5728;&#x7684;&#x53C2;&#x6570;)&#xFF0C;&#x4E8E;&#x662F;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x5E03;&#x9686;&#x8FC7;&#x6EE4;&#x5668;(BloomFilter)&#x6216;&#x8005;&#x538B;&#x7F29;filter&#x63D0;&#x524D;&#x62E6;&#x622A;&#xFF0C;&#x4E0D;&#x5408;&#x6CD5;&#x5C31;&#x4E0D;&#x8BA9;&#x8FD9;&#x4E2A;&#x8BF7;&#x6C42;&#x5230;&#x6570;&#x636E;&#x5E93;&#x5C42;&#xFF01;</p>
+</li>
+</ol>
+<h3 id="&#x89E3;&#x51B3;1&#x7F13;&#x5B58;&#x7A7A;&#x5BF9;&#x8C61;cache-empty-data&#xFF08;&#x7F3A;&#x70B9;&#xFF09;">&#x89E3;&#x51B3;1:&#x7F13;&#x5B58;&#x7A7A;&#x5BF9;&#x8C61;(Cache empty data)&#xFF08;&#x7F3A;&#x70B9;&#xFF09;</h3>
+<ul>
+<li>&#x6307;&#x6807;&#x4E0D;&#x6CBB;&#x672C;(&#x7A7A;&#x6570;&#x636E;&#x5BF9;&#x8C61;&#x672C;&#x8EAB;&#x7F13;&#x5B58;&#x4E5F;&#x662F;&#x6709;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#x7684;)</li>
+<li>&#x5927;&#x91CF;&#x7A7A;&#x503C;&#x4F1A;&#x5360;&#x7528;&#x7F13;&#x5B58;&#x5185;&#x5B58;</li>
+</ul>
+<h3 id="&#x89E3;&#x51B3;2bloomfilter">&#x89E3;&#x51B3;2:BloomFilter</h3>
+<p>It needs to add a barrier&#xFF08;n.&#x969C;&#x788D;&#xFF1B; &#x5C4F;&#x969C;&#xFF1B; &#x6805;&#x680F;&#xFF1B; &#x5206;&#x754C;&#x7EBF;vt.&#x628A;&#x2026;&#x5173;&#x5165;&#x6805;&#x680F;&#xFF1B; &#x7528;&#x6805;&#x680F;&#x56F4;&#x4F4F;&#xFF1B;&#xFF09; before the cache, which &#xFF1B;stores all the keys that exist in the current database.</p>
+<p>&#x5C06;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x67E5;&#x8BE2;&#x6761;&#x4EF6;&#xFF0C;&#x653E;&#x5165;&#x5E03;&#x9686;&#x8FC7;&#x6EE4;&#x5668;&#x4E2D;&#xFF1B;&#x5F53;&#x4E00;&#x4E2A;&#x67E5;&#x8BE2;&#x8BF7;&#x6C42;&#x8FC7;&#x6765;&#x65F6;&#xFF0C;&#x5148;&#x7ECF;&#x8FC7;&#x5E03;&#x9686;&#x8FC7;&#x6EE4;&#x5668;&#x8FDB;&#x884C;&#x67E5;&#xFF0C;&#x5982;&#x679C;&#x5224;&#x65AD;&#x8BF7;&#x6C42;&#x67E5;&#x8BE2;&#x503C;&#x5B58;&#x5728;&#xFF0C;&#x5219;&#x7EE7;&#x7EED;&#x67E5;&#xFF1B;&#x5982;&#x679C;&#x5224;&#x65AD;&#x8BF7;&#x6C42;&#x67E5;&#x8BE2;&#x4E0D;&#x5B58;&#x5728;&#xFF0C;&#x5219;&#x76F4;&#x63A5;&#x4E22;&#x5F03;&#x3002;</p>
+<p><a href="https://github.com/doctording/springboot_gradle_demos/tree/master/code/demo" target="_blank">springboot demo&#x9879;&#x76EE;</a></p>
+<ul>
+<li>&#x4F4E;&#x5E76;&#x53D1;,&#x5B9A;&#x65F6;&#x4EFB;&#x52A1;&#x53BB;&#x6BCF;&#x5929;&#x66F4;&#x65B0;bloomFilter,&#x7EF4;&#x62A4;&#x6BCF;&#x5929;&#x7684;&#x4E00;&#x4E2A;bloomFilter</li>
+<li>&#x521D;&#x59CB;&#x9884;&#x70ED;&#xFF0C;&#x52A8;&#x6001;&#x65B0;&#x589E;</li>
+</ul>
+<h3 id="bloomfilter&#x7684;&#x7F3A;&#x70B9;">BloomFilter&#x7684;&#x7F3A;&#x70B9;</h3>
+<ul>
+<li><p>&#x5B58;&#x5728;&#x8BEF;&#x5224;(&#x5F53;&#x4E00;&#x4E2A;&#x5E03;&#x9686;&#x8FC7;&#x6EE4;&#x5668;&#x5224;&#x65AD;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5728;&#x96C6;&#x5408;&#x4E2D;&#x5B58;&#x5728;&#x65F6;&#xFF0C;&#x6709;&#x4E00;&#x5B9A;&#x7684;&#x53EF;&#x80FD;&#x6027;&#x8BEF;&#x5224;;&#x4E0D;&#x5B58;&#x5728;&#x7684;&#x5219;100%&#x6B63;&#x786E;)&#x3002;&#x5982;&#x679C;bloom filter&#x4E2D;&#x5B58;&#x50A8;&#x7684;&#x662F;&#x9ED1;&#x540D;&#x5355;&#xFF0C;&#x90A3;&#x4E48;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x5EFA;&#x7ACB;&#x4E00;&#x4E2A;&#x767D;&#x540D;&#x5355;&#x6765;&#x5B58;&#x50A8;&#x53EF;&#x80FD;&#x4F1A;&#x8BEF;&#x5224;&#x7684;&#x5143;&#x7D20;</p>
+</li>
+<li><p>&#x5220;&#x9664;&#x56F0;&#x96BE;&#x3002;&#x4E00;&#x4E2A;&#x653E;&#x5165;&#x5BB9;&#x5668;&#x7684;&#x5143;&#x7D20;&#x6620;&#x5C04;&#x5230;bit&#x6570;&#x7EC4;&#x7684;k&#x4E2A;&#x4F4D;&#x7F6E;&#x4E0A;&#x662F;1&#xFF0C;&#x5220;&#x9664;&#x7684;&#x65F6;&#x5019;&#x4E0D;&#x80FD;&#x7B80;&#x5355;&#x7684;&#x76F4;&#x63A5;&#x7F6E;&#x4E3A;0&#xFF0C;&#x53EF;&#x80FD;&#x4F1A;&#x5F71;&#x54CD;&#x5176;&#x4ED6;&#x5143;&#x7D20;&#x7684;&#x5224;&#x65AD;&#x3002;&#x53EF;&#x4EE5;&#x91C7;&#x7528;<code>Counting Bloom Filter</code></p>
+</li>
+</ul>
+<p><code>Counting Bloom Filter</code>:&#x5C06;&#x6807;&#x51C6;Bloom Filter&#x4F4D;&#x6570;&#x7EC4;&#x7684;&#x6BCF;&#x4E00;&#x4F4D;&#x6269;&#x5C55;&#x4E3A;&#x4E00;&#x4E2A;&#x5C0F;&#x7684;&#x8BA1;&#x6570;&#x5668;&#xFF08;Counter&#xFF09;&#xFF0C;&#x5728;&#x63D2;&#x5165;&#x5143;&#x7D20;&#x65F6;&#x7ED9;&#x5BF9;&#x5E94;&#x7684;k&#xFF08;k&#x4E3A;&#x54C8;&#x5E0C;&#x51FD;&#x6570;&#x4E2A;&#x6570;&#xFF09;&#x4E2A;Counter&#x7684;&#x503C;&#x5206;&#x522B;&#x52A0;1&#xFF0C;&#x5220;&#x9664;&#x5143;&#x7D20;&#x65F6;&#x7ED9;&#x5BF9;&#x5E94;&#x7684;k&#x4E2A;Counter&#x7684;&#x503C;&#x5206;&#x522B;&#x51CF;1&#x3002;Counting Bloom Filter&#x901A;&#x8FC7;&#x591A;&#x5360;&#x7528;&#x51E0;&#x500D;&#x7684;&#x5B58;&#x50A8;&#x7A7A;&#x95F4;&#x7684;&#x4EE3;&#x4EF7;&#xFF0C;&#x7ED9;Bloom Filter&#x589E;&#x52A0;&#x4E86;&#x5220;&#x9664;&#x64CD;&#x4F5C;</p>
+<h2 id="&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#xFF08;cache-avalanche&#xFF09;">&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#xFF08;cache avalanche&#xFF09;</h2>
+<h3 id="&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#x7684;&#x6982;&#x5FF5;">&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#x7684;&#x6982;&#x5FF5;</h3>
+<p>If the cache goes down for some reason, the massive query request that was originally blocked by the cache will flock to the database like a mad dog. At this point, if the database can&#x2019;t withstand this huge pressure, it will collapse. This is the cache avalanche.</p>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>go down</td>
+<td>&#x505C;&#x6B62;&#xFF1B; &#x88AB;&#x63A5;&#x53D7;&#xFF1B; &#x6C89;&#x4E0B;&#xFF1B; &#x88AB;&#x6253;&#x8D25;</td>
+</tr>
+<tr>
+<td>flock to</td>
+<td>&#x6210;&#x7FA4;&#x7ED3;&#x961F;&#x5730;&#x8D70;&#x5411;&#x2026;&#xFF1B;</td>
+</tr>
+<tr>
+<td>mad</td>
+<td>adj.&#x75AF;&#x72C2;&#x7684;&#xFF1B; &#x731B;&#x70C8;&#x7684;&#xFF1B; &#x7740;&#x8FF7;&#x7684;&#xFF1B; &#x3014;&#x53E3;&#x8BED;&#x3015;&#x6124;&#x6012;&#x7684;&#xFF0C;&#x751F;&#x6C14;&#x7684;&#xFF1B;vt.&#x4F7F;&#x75AF;&#x72C2;&#xFF1B;</td>
+</tr>
+<tr>
+<td>withstand</td>
+<td>vt.&#x7ECF;&#x53D7;&#xFF0C;&#x627F;&#x53D7;&#xFF0C;&#x7981;&#x5F97;&#x8D77;&#xFF1B; &#x53CD;&#x6297;&#xFF1B;vi.&#x53CD;&#x6297;&#xFF1B; &#x8010;&#x5F97;&#x4F4F;&#xFF0C;&#x7981;&#x5F97;&#x8D77;&#xFF1B;</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Redis&#x6302;&#x6389;&#x4E86;&#xFF0C;&#x8BF7;&#x6C42;&#x5168;&#x90E8;&#x90FD;&#x8D70;&#x6570;&#x636E;&#x5E93;&#x4E86;</li>
+<li>&#x5BF9;&#x7F13;&#x5B58;&#x6570;&#x636E;&#x8BBE;&#x7F6E;&#x76F8;&#x540C;&#x7684;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#xFF0C;&#x5BFC;&#x81F4;&#x67D0;&#x6BB5;&#x65F6;&#x95F4;&#x5185;&#x7F13;&#x5B58;&#x5168;&#x90E8;&#x90FD;&#x5931;&#x6548;&#xFF0C;&#x8BF7;&#x6C42;&#x5168;&#x90E8;&#x8D70;&#x6570;&#x636E;&#x5E93;&#x4E86;</li>
+</ol>
+<p>&#x7F13;&#x5B58;&#x96EA;&#x5D29;&#x5982;&#x679C;&#x53D1;&#x751F;&#x4E86;&#xFF0C;&#x5F88;&#x53EF;&#x80FD;&#x5C31;&#x628A;&#x6211;&#x4EEC;&#x7684;&#x6570;&#x636E;&#x5E93;&#x641E;&#x57AE;&#xFF0C;&#x5BFC;&#x81F4;&#x6574;&#x4E2A;&#x670D;&#x52A1;&#x762B;&#x75EA;&#xFF01;</p>
+<h3 id="&#x5982;&#x4F55;&#x89E3;&#x51B3;">&#x5982;&#x4F55;&#x89E3;&#x51B3;</h3>
+<p>&#x5BF9;&#x4E8E;&#x201C;&#x5BF9;&#x7F13;&#x5B58;&#x6570;&#x636E;&#x8BBE;&#x7F6E;&#x76F8;&#x540C;&#x7684;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#xFF0C;&#x5BFC;&#x81F4;&#x67D0;&#x6BB5;&#x65F6;&#x95F4;&#x5185;&#x7F13;&#x5B58;&#x5931;&#x6548;&#xFF0C;&#x8BF7;&#x6C42;&#x5168;&#x90E8;&#x8D70;&#x6570;&#x636E;&#x5E93;&#x3002;&#x201D;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x975E;&#x5E38;&#x597D;&#x89E3;&#x51B3;&#xFF1A;</p>
+<ul>
+<li>&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#xFF1A;&#x5728;&#x7F13;&#x5B58;&#x7684;&#x65F6;&#x5019;&#x7ED9;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#x52A0;&#x4E0A;&#x4E00;&#x4E2A;&#x968F;&#x673A;&#x503C;&#xFF0C;&#x8FD9;&#x6837;&#x5C31;&#x4F1A;&#x5927;&#x5E45;&#x5EA6;&#x7684;&#x51CF;&#x5C11;&#x7F13;&#x5B58;&#x5728;&#x540C;&#x4E00;&#x65F6;&#x95F4;&#x8FC7;&#x671F;&#x3002;</li>
+</ul>
+<p>&#x5BF9;&#x4E8E;&#x201C;Redis&#x6302;&#x6389;&#x4E86;&#xFF0C;&#x8BF7;&#x6C42;&#x5168;&#x90E8;&#x8D70;&#x6570;&#x636E;&#x5E93;&#x201D;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x6709;&#x4EE5;&#x4E0B;&#x7684;&#x601D;&#x8DEF;&#xFF1A;</p>
+<h4 id="using-a-cache-cluster-to-ensure-high-availability-of-caches">Using a Cache Cluster to Ensure High Availability of Caches</h4>
+<ul>
+<li>&#x4E8B;&#x53D1;&#x524D;&#xFF1A;&#x5B9E;&#x73B0;Redis&#x7684;&#x9AD8;&#x53EF;&#x7528;(&#x4E3B;&#x4ECE;&#x67B6;&#x6784;+Sentinel &#x6216;&#x8005;Redis Cluster)&#xFF0C;&#x5C3D;&#x91CF;&#x907F;&#x514D;Redis&#x6302;&#x6389;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#x53D1;&#x751F;&#x3002;</li>
+</ul>
+<h4 id="using-hystrix&#xFF08;&#x9650;&#x6D41;&#xFF09;">Using Hystrix&#xFF08;&#x9650;&#x6D41;&#xFF09;</h4>
+<p>Hystrix is &#x200B;&#x200B;an open source &#x201C;anti-avalanche tool&#x201D; that reduces losses after avalanches by blowing, degrading, and limiting currents.</p>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>anti</td>
+<td>n.&amp; adj.&#x53CD;&#x5BF9;&#x8005;&#xFF0C;&#x53CD;&#x5BF9;&#x8BBA;&#x8005;&#x53CD;&#x5BF9;&#x7684;&#xFF1B;&#x62B5;&#x6297;</td>
+</tr>
+<tr>
+<td>losses</td>
+<td>n.&#x635F;&#x5931;( loss&#x7684;&#x540D;&#x8BCD;&#x590D;&#x6570; )&#xFF1B; &#x635F;&#x8017;&#xFF1B; &#x5931;&#x8D25;&#xFF1B; &#x964D;&#x4F4E;</td>
+</tr>
+<tr>
+<td>degrade</td>
+<td>vt.&#x964D;&#x4F4E;&#xFF0C;&#x8D2C;&#x4F4E;&#xFF1B; &#x4F7F;&#x964D;&#x7EA7;&#xFF1B; &#x964D;&#x4F4E;&#x2026;&#x8EAB;&#x4EFD;&#xFF1B; &#x4F7F;&#x4E22;&#x8138;&#xFF1B;vt.&amp; vi.&#xFF08;&#x4F7F;&#xFF09;&#x9000;&#x5316;&#xFF0C;&#x964D;&#x89E3;&#xFF0C;&#x5206;&#x89E3;&#xFF1B; &#x964D;&#x89E3;&#xFF1B; &#x64A4;&#x804C;&#xFF0C;&#x514D;&#x804C;&#xFF1B; &#x964D;&#x4F4E;&#x54C1;&#x683C;[&#x8EAB;&#x4EF7;&#xFF0C;&#x4EF7;&#x503C;&#xFF08;&#x7B49;&#xFF09;]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>&#x4E8B;&#x53D1;&#x4E2D;&#xFF1A;&#x4E07;&#x4E00;Redis&#x771F;&#x7684;&#x6302;&#x4E86;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E;&#x672C;&#x5730;&#x7F13;&#x5B58;(ehcache)+&#x9650;&#x6D41;(hystrix)&#xFF0C;&#x5C3D;&#x91CF;&#x907F;&#x514D;&#x6211;&#x4EEC;&#x7684;&#x6570;&#x636E;&#x5E93;&#x88AB;&#x5E72;&#x6389;(&#x8D77;&#x7801;&#x80FD;&#x4FDD;&#x8BC1;&#x6211;&#x4EEC;&#x7684;&#x670D;&#x52A1;&#x8FD8;&#x662F;&#x80FD;&#x6B63;&#x5E38;&#x5DE5;&#x4F5C;&#x7684;)</li>
+</ul>
+<h4 id="&#x4E8B;&#x540E;&#x6062;&#x590D;&#x7F13;&#x5B58;">&#x4E8B;&#x540E;&#x6062;&#x590D;&#x7F13;&#x5B58;</h4>
+<ul>
+<li>&#x4E8B;&#x53D1;&#x540E;&#xFF1A;redis&#x6301;&#x4E45;&#x5316;&#xFF0C;&#x91CD;&#x542F;&#x540E;&#x81EA;&#x52A8;&#x4ECE;&#x78C1;&#x76D8;&#x4E0A;&#x52A0;&#x8F7D;&#x6570;&#x636E;&#xFF0C;&#x5FEB;&#x901F;&#x6062;&#x590D;&#x7F13;&#x5B58;&#x6570;&#x636E;&#x3002;</li>
+</ul>
+<h2 id="hotspot-data-set-is-invalid-&#x70ED;&#x70B9;&#x6570;&#x636E;&#x96C6;&#x5931;&#x6548;">Hotspot data set is invalid (&#x70ED;&#x70B9;&#x6570;&#x636E;&#x96C6;&#x5931;&#x6548;)</h2>
+<h3 id="what-is-the-hotspot-data-set-failure">What is the hotspot data set failure?</h3>
+<p>We usually set an expiration time for the cache. After the expiration time, the database will be deleted directly by the cache, thus ensuring the real-time performance of the data to a certain extent.</p>
+<p>However, for some hot data with very high requests, once the valid time has passed, there will be a large number of requests falling on the database at this moment, which may cause the database to crash. The process is as follows:</p>
+<p>If a hotspot data fails, then when there is a query request [req-1] for the data again, it will go to the database query. However, from the time the request is sent to the database to the time the data is updated into the cache, since the data is still not in the cache, the query request arriving during this time will fall on the database, which will cause the database Enormous pressure. In addition, when these request queries are completed, the cache is updated repeatedly.</p>
+<h3 id="&#x89E3;&#x51B3;&#x65B9;&#x6CD5;">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</h3>
+<ol>
+<li>&#x8BBE;&#x7F6E;&#x70ED;&#x70B9;&#x6570;&#x636E;&#x6C38;&#x8FDC;&#x4E0D;&#x8FC7;&#x671F;&#xFF1B;&#x8BBE;&#x7F6E;&#x4E0D;&#x540C;&#x7684;&#x8FC7;&#x671F;&#x65F6;&#x95F4;</li>
+<li>&#x4F7F;&#x7528;&#x4E92;&#x65A5;&#x9501;</li>
+</ol>
+<p>&#x4E1A;&#x754C;&#x6BD4;&#x8F83;&#x5E38;&#x7528;&#x7684;&#x505A;&#x6CD5;&#xFF0C;&#x662F;&#x4F7F;&#x7528;mutex&#x3002;&#x7B80;&#x5355;&#x5730;&#x6765;&#x8BF4;&#xFF0C;&#x5C31;&#x662F;&#x5728;&#x7F13;&#x5B58;&#x5931;&#x6548;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4E0D;&#x662F;&#x7ACB;&#x5373;&#x53BB;load db&#xFF0C;&#x800C;&#x662F;&#x5148;&#x4F7F;&#x7528;&#x7F13;&#x5B58;&#x5DE5;&#x5177;&#x7684;&#x67D0;&#x4E9B;&#x5E26;&#x6210;&#x529F;&#x64CD;&#x4F5C;&#x8FD4;&#x56DE;&#x503C;&#x7684;&#x64CD;&#x4F5C;&#xFF08;&#x6BD4;&#x5982;Redis&#x7684;SETNX&#x6216;&#x8005;Memcache&#x7684;ADD&#xFF09;&#x53BB;set&#x4E00;&#x4E2A;mutex key&#xFF0C;&#x5F53;&#x64CD;&#x4F5C;&#x8FD4;&#x56DE;&#x6210;&#x529F;&#x65F6;&#xFF0C;&#x518D;&#x8FDB;&#x884C;load db&#x7684;&#x64CD;&#x4F5C;&#x5E76;&#x56DE;&#x8BBE;&#x7F13;&#x5B58;&#xFF1B;&#x5426;&#x5219;&#xFF0C;&#x5C31;&#x91CD;&#x8BD5;&#x6574;&#x4E2A;get&#x7F13;&#x5B58;&#x7684;&#x65B9;&#x6CD5;&#x3002;</p>
+<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> value <span class="token operator">=</span> redis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>value <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">//&#x4EE3;&#x8868;&#x7F13;&#x5B58;&#x503C;&#x8FC7;&#x671F;</span>
+        <span class="token comment">//&#x8BBE;&#x7F6E;3min&#x7684;&#x8D85;&#x65F6;&#xFF0C;&#x9632;&#x6B62;del&#x64CD;&#x4F5C;&#x5931;&#x8D25;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4E0B;&#x6B21;&#x7F13;&#x5B58;&#x8FC7;&#x671F;&#x4E00;&#x76F4;&#x4E0D;&#x80FD;load db</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>redis<span class="token punctuation">.</span><span class="token function">setnx</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">//&#x4EE3;&#x8868;&#x8BBE;&#x7F6E;&#x6210;&#x529F;</span>
+            value <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            redis<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> expire_secs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            redis<span class="token punctuation">.</span><span class="token function">del</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>  <span class="token comment">//&#x8FD9;&#x4E2A;&#x65F6;&#x5019;&#x4EE3;&#x8868;&#x540C;&#x65F6;&#x5019;&#x7684;&#x5176;&#x4ED6;&#x7EBF;&#x7A0B;&#x5DF2;&#x7ECF;load db&#x5E76;&#x56DE;&#x8BBE;&#x5230;&#x7F13;&#x5B58;&#x4E86;&#xFF0C;&#x8FD9;&#x65F6;&#x5019;&#x91CD;&#x8BD5;&#x83B7;&#x53D6;&#x7F13;&#x5B58;&#x503C;&#x5373;&#x53EF;</span>
+            <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//&#x91CD;&#x8BD5;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>We can use the lock mechanism that comes with the cache. When the first database query request is initiated, the data in the cache will be locked; at this time, other query requests that arrive at the cache will not be able to query the field, and thus will be blocked waiting; After a request completes the database query and caches the data update value, the lock is released; at this time, other blocked query requests can be directly retrieved from the cache.</p>
+<p>When a hotspot data fails, only the first database query request is sent to the database, and all other query requests are blocked, thus protecting the database. However, due to the use of a mutex, other requests will block waiting and the throughput of the system will drop. This needs to be combined with actual business considerations to allow this.
+&#xFF08;&#x5F53;&#x51FA;&#x73B0;&#x70ED;&#x70B9;&#x6570;&#x636E;&#x5931;&#x6548;&#x65F6;&#xFF0C;&#x53EA;&#x6709;&#x7B2C;&#x4E00;&#x4E2A;&#x8BF7;&#x6C42;&#x4F1A;&#x53D1;&#x9001;&#x5230;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x5176;&#x5B83;&#x7684;&#x8BF7;&#x6C42;&#x90FD;&#x4F1A;&#x88AB;&#x963B;&#x585E;&#xFF0C;&#x8FD9;&#x6837;&#x80FD;&#x4FDD;&#x62A4;&#x6570;&#x636E;&#x5E93;&#xFF1B;&#x5F53;&#x7136;&#xFF0C;&#x7531;&#x4E8E;&#x4F7F;&#x7528;&#x4E86;mutex&#xFF0C;&#x5176;&#x5B83;&#x7684;&#x8BF7;&#x6C42;&#x4F1A;&#x88AB;&#x963B;&#x585E;&#x800C;&#x8FDB;&#x884C;&#x7B49;&#x5F85;&#xFF0C;&#x8FD9;&#x4F1A;&#x964D;&#x4F4E;&#x7CFB;&#x7EDF;&#x7684;&#x541E;&#x5410;&#x7387;&#x3002;&#x8FD9;&#x9700;&#x8981;&#x4E0E;&#x5B9E;&#x9645;&#x7684;&#x4E1A;&#x52A1;&#x8003;&#x8651;&#x76F8;&#x7ED3;&#x5408;&#x3002;&#xFF09;</p>
+<ul>
+<li>&#x7B2C;&#x4E00;&#x4E2A;&#x83B7;&#x53D6;&#x5230;&#x9501;&#xFF0C;&#x5F53;&#x66F4;&#x65B0;&#x6216;&#x8005;&#x4ECE;&#x6570;&#x636E;&#x5E93;&#x83B7;&#x53D6;&#x5B8C;&#x6210;&#x540E;&#x518D;&#x91CA;&#x653E;&#x9501;&#xFF0C;<strong>&#x5176;&#x5B83;&#x7684;&#x8BF7;&#x6C42;&#x53EA;&#x9700;&#x8981;&#x727A;&#x7272;&#x4E00;&#x5B9A;&#x7684;&#x7B49;&#x5F85;&#x65F6;&#x95F4;</strong>&#xFF0C;&#x5373;&#x53EF;&#x76F4;&#x63A5;&#x4ECE;&#x7F13;&#x5B58;&#x4E2D;&#x7EE7;&#x7EED;&#x83B7;&#x53D6;&#x6570;&#x636E;&#x3002;</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/cache_mutex.png" alt=""></p>
+<p>Mutex locks can avoid the problem of database corruption caused by the failure of ahotspot data. In actual business, there are often scenes where a batch of hotspot data fails at the same time. So how do you prevent database overload for this scenario?</p>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>corruption</td>
+<td>n.&#x8150;&#x8D25;&#xFF1B; &#x8D2A;&#x6C61;&#xFF1B; &#x8D3F;&#x8D42;&#xFF1B; &#x53D8;&#x4F53;</td>
+</tr>
+<tr>
+<td>scenario</td>
+<td>n.&#x8BBE;&#x60F3;&#xFF1B; &#x53EF;&#x80FD;&#x53D1;&#x751F;&#x7684;&#x60C5;&#x51B5;&#xFF1B; &#x5267;&#x60C5;&#x6897;&#x6982;&#xFF1B;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="facebooks-memcached-multiget-hole-more-machines--more-capacity&#x65E0;&#x5E95;&#x6D1E;&#x95EE;&#x9898;">Facebook&apos;s Memcached Multiget Hole: More Machines != More Capacity(&#x65E0;&#x5E95;&#x6D1E;&#x95EE;&#x9898;)</h2>
+<p><a href="http://highscalability.com/blog/2009/10/26/facebooks-memcached-multiget-hole-more-machines-more-capacit.html" target="_blank">Facebook&#x2019;s Memcached Multiget Hole: More machines != More Capacity</a></p>
+<p>&#x7528;&#x4E00;&#x53E5;&#x901A;&#x4FD7;&#x7684;&#x8BDD;&#x603B;&#x7ED3;&#xFF1A;<strong>&#x66F4;&#x591A;&#x7684;&#x673A;&#x5668;&#x4E0D;&#x4EE3;&#x8868;&#x66F4;&#x591A;&#x7684;&#x6027;&#x80FD;</strong>&#xFF0C;&#x6240;&#x8C13;&#x201C;&#x65E0;&#x5E95;&#x6D1E;&#x201D;&#x5C31;&#x662F;&#x8BF4;&#x6295;&#x5165;&#x8D8A;&#x591A;&#x4E0D;&#x4E00;&#x5B9A;&#x4EA7;&#x51FA;&#x8D8A;&#x591A;&#x3002;</p>
+<h3 id="&#x4EA7;&#x751F;&#x539F;&#x56E0;">&#x4EA7;&#x751F;&#x539F;&#x56E0;</h3>
+<p>&#x952E;&#x503C;&#x6570;&#x636E;&#x5E93;&#x6216;&#x8005;&#x7F13;&#x5B58;&#x7CFB;&#x7EDF;&#xFF0C;&#x7531;&#x4E8E;&#x901A;&#x5E38;&#x91C7;&#x7528;hash&#x51FD;&#x6570;&#x5C06;key&#x6620;&#x5C04;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x5B9E;&#x4F8B;&#xFF0C;&#x9020;&#x6210;key&#x7684;&#x5206;&#x5E03;&#x4E0E;&#x4E1A;&#x52A1;&#x65E0;&#x5173;&#xFF0C;&#x4F46;&#x662F;&#x7531;&#x4E8E;&#x6570;&#x636E;&#x91CF;&#x3001;&#x8BBF;&#x95EE;&#x91CF;&#x7684;&#x9700;&#x6C42;&#xFF0C;&#x9700;&#x8981;&#x4F7F;&#x7528;&#x5206;&#x5E03;&#x5F0F;&#x540E;&#xFF08;&#x65E0;&#x8BBA;&#x662F;&#x5BA2;&#x6237;&#x7AEF;&#x4E00;&#x81F4;&#x6027;&#x54C8;&#x6027;&#x3001;redis-cluster&#x3001;codis&#xFF09;&#xFF0C;&#x6279;&#x91CF;&#x64CD;&#x4F5C;&#x6BD4;&#x5982;&#x6279;&#x91CF;&#x83B7;&#x53D6;&#x591A;&#x4E2A;key(&#x4F8B;&#x5982;redis&#x7684;mget&#x64CD;&#x4F5C;)&#xFF0C;&#x901A;&#x5E38;&#x9700;&#x8981;&#x4ECE;&#x4E0D;&#x540C;&#x5B9E;&#x4F8B;&#x83B7;&#x53D6;key&#x503C;&#xFF0C;&#x76F8;&#x6BD4;&#x4E8E;&#x5355;&#x673A;&#x6279;&#x91CF;&#x64CD;&#x4F5C;&#x53EA;&#x6D89;&#x53CA;&#x5230;&#x4E00;&#x6B21;&#x7F51;&#x7EDC;&#x64CD;&#x4F5C;&#xFF0C;&#x5206;&#x5E03;&#x5F0F;&#x6279;&#x91CF;&#x64CD;&#x4F5C;&#x4F1A;&#x6D89;&#x53CA;&#x5230;&#x591A;&#x6B21;&#x7F51;&#x7EDC;io&#x3002;</p>
+<p>eg:&#x4E00;&#x6B21;mget&#x64CD;&#x4F5C;&#xFF0C;&#x9700;&#x8981;&#x4ECE;&#x591A;&#x4E2A;&#x7F13;&#x5B58;&#x5B9E;&#x4F8B;&#x53BB;&#x83B7;&#x53D6;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x5305;&#x542B;&#x4E86;&#x591A;&#x6B21;&#x7F51;&#x7EDC;&#xFF1B;&#x5982;&#x679C;mget&#x7684;key&#x90FD;&#x5728;&#x4E00;&#x4E2A;&#x5B9E;&#x4F8B;&#x4E2D;&#xFF0C;&#x90A3;&#x4E48;&#x5C31;&#x53EA;&#x8981;&#x4E00;&#x6B21;&#x7F51;&#x7EDC;&#x64CD;&#x4F5C;</p>
+<h3 id="&#x5371;&#x5BB3;&#xFF08;&#x66F4;&#x591A;&#x7684;&#x673A;&#x5668;&#x4E0D;&#x4EE3;&#x8868;&#x66F4;&#x591A;&#x7684;&#x6027;&#x80FD;&#xFF09;">&#x5371;&#x5BB3;&#xFF08;&#x66F4;&#x591A;&#x7684;&#x673A;&#x5668;&#x4E0D;&#x4EE3;&#x8868;&#x66F4;&#x591A;&#x7684;&#x6027;&#x80FD;&#xFF09;</h3>
+<ol>
+<li><p>&#x5BA2;&#x6237;&#x7AEF;&#x4E00;&#x6B21;&#x6279;&#x91CF;&#x64CD;&#x4F5C;&#x4F1A;&#x6D89;&#x53CA;&#x591A;&#x6B21;&#x7F51;&#x7EDC;&#x64CD;&#x4F5C;&#xFF0C;&#x4E5F;&#x5C31;&#x610F;&#x5473;&#x7740;&#x6279;&#x91CF;&#x64CD;&#x4F5C;&#x4F1A;&#x968F;&#x7740;&#x5B9E;&#x4F8B;&#x7684;&#x589E;&#x591A;&#xFF0C;&#x8017;&#x65F6;&#x4F1A;&#x4E0D;&#x65AD;&#x589E;&#x5927;&#x3002;</p>
+</li>
+<li><p>&#x670D;&#x52A1;&#x7AEF;&#x7F51;&#x7EDC;&#x8FDE;&#x63A5;&#x6B21;&#x6570;&#x53D8;&#x591A;&#xFF0C;&#x5BF9;&#x5B9E;&#x4F8B;&#x7684;&#x6027;&#x80FD;&#x4E5F;&#x6709;&#x4E00;&#x5B9A;&#x5F71;&#x54CD;&#x3002;</p>
+</li>
+</ol>
+<h3 id="hash&#x7684;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;">hash&#x7684;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;</h3>
+<table>
+<thead>
+<tr>
+<th>&#x5206;&#x5E03;&#x65B9;&#x5F0F;</th>
+<th>&#x7279;&#x70B9;</th>
+<th>&#x5178;&#x578B;&#x4EA7;&#x54C1;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#x54C8;&#x5E0C;&#x5206;&#x5E03;</td>
+<td>1.&#x6570;&#x636E;&#x5206;&#x6563;&#x5EA6;&#x9AD8;,2.&#x952E;&#x503C;&#x5206;&#x5E03;&#x4E0E;&#x4E1A;&#x52A1;&#x65E0;&#x5173;,3.&#x65E0;&#x6CD5;&#x987A;&#x5E8F;&#x8BBF;&#x95EE;,4.&#x652F;&#x6301;&#x6279;&#x91CF;&#x64CD;&#x4F5C;</td>
+<td>&#x4E00;&#x81F4;&#x6027;&#x54C8;&#x5E0C;memcacheredisCluster&#x5176;&#x4ED6;&#x7F13;&#x5B58;&#x4EA7;&#x54C1;</td>
+</tr>
+<tr>
+<td>&#x987A;&#x5E8F;&#x5206;&#x5E03;</td>
+<td>1.&#x6570;&#x636E;&#x5206;&#x6563;&#x5EA6;&#x6613;&#x503E;&#x659C;,2.&#x952E;&#x503C;&#x5206;&#x5E03;&#x4E0E;&#x4E1A;&#x52A1;&#x76F8;&#x5173;,3.&#x53EF;&#x4EE5;&#x987A;&#x5E8F;&#x8BBF;&#x95EE;,4.&#x652F;&#x6301;&#x6279;&#x91CF;&#x64CD;&#x4F5C;</td>
+<td>BigTableHbase</td>
+</tr>
+</tbody>
+</table>
+<h3 id="&#x9488;&#x5BF9;&#x6027;&#x7684;&#x4F18;&#x5316;">&#x9488;&#x5BF9;&#x6027;&#x7684;&#x4F18;&#x5316;</h3>
+<ol>
+<li><p>&#x547D;&#x4EE4;&#x672C;&#x8EAB;&#x7684;&#x6548;&#x7387;&#xFF1A;&#x4F8B;&#x5982;sql&#x4F18;&#x5316;&#xFF0C;&#x547D;&#x4EE4;&#x4F18;&#x5316;</p>
+</li>
+<li><p>&#x7F51;&#x7EDC;&#x6B21;&#x6570;&#xFF1A;&#x51CF;&#x5C11;&#x901A;&#x4FE1;&#x6B21;&#x6570;</p>
+</li>
+<li><p>&#x964D;&#x4F4E;&#x63A5;&#x5165;&#x6210;&#x672C;:&#x957F;&#x8FDE;/&#x8FDE;&#x63A5;&#x6C60;,NIO&#x7B49;&#x3002;</p>
+</li>
+<li><p>IO&#x8BBF;&#x95EE;&#x5408;&#x5E76;:O(n)&#x5230;O(1)&#x8FC7;&#x7A0B;:&#x6279;&#x91CF;&#x63A5;&#x53E3;(mget)</p>
+</li>
+</ol>
+<p>&#x6279;&#x91CF;&#x64CD;&#x4F5C;&#x7684;&#x4E00;&#x4E9B;&#x65B9;&#x6848;</p>
+<table>
+<thead>
+<tr>
+<th>&#x65B9;&#x6848;</th>
+<th>&#x4F18;&#x70B9;</th>
+<th>&#x7F3A;&#x70B9;</th>
+<th>&#x7F51;&#x7EDC;IO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#x4E32;&#x884C;mget</td>
+<td>1.&#x7F16;&#x7A0B;&#x7B80;&#x5355;2.&#x5C11;&#x91CF;keys&#xFF0C;&#x6027;&#x80FD;&#x6EE1;&#x8DB3;&#x8981;&#x6C42;</td>
+<td>&#x5927;&#x91CF;keys&#x8BF7;&#x6C42;&#x5EF6;&#x8FDF;&#x4E25;&#x91CD;</td>
+<td>O(keys)</td>
+</tr>
+<tr>
+<td>&#x4E32;&#x884C;IO</td>
+<td>1.&#x7F16;&#x7A0B;&#x7B80;&#x5355;2.&#x5C11;&#x91CF;&#x8282;&#x70B9;&#xFF0C;&#x6027;&#x80FD;&#x6EE1;&#x8DB3;&#x8981;&#x6C42;</td>
+<td>&#x5927;&#x91CF;node&#x5EF6;&#x8FDF;&#x4E25;&#x91CD;</td>
+<td>O(nodes)</td>
+</tr>
+<tr>
+<td>&#x5E76;&#x884C;IO</td>
+<td>1.&#x5229;&#x7528;&#x5E76;&#x884C;&#x7279;&#x6027;2.&#x5EF6;&#x8FDF;&#x53D6;&#x51B3;&#x4E8E;&#x6700;&#x6162;&#x7684;&#x8282;&#x70B9;</td>
+<td>1.&#x7F16;&#x7A0B;&#x590D;&#x6742;2.&#x8D85;&#x65F6;&#x5B9A;&#x4F4D;&#x8F83;&#x96BE;</td>
+<td>O(max_slow(node))</td>
+</tr>
+<tr>
+<td>hash tags</td>
+<td>&#x6027;&#x80FD;&#x6700;&#x9AD8;</td>
+<td>1.tag-key&#x4E1A;&#x52A1;&#x7EF4;&#x62A4;&#x6210;&#x672C;&#x8F83;&#x9AD8;2.tag&#x5206;&#x5E03;&#x5BB9;&#x6613;&#x51FA;&#x73B0;&#x6570;&#x636E;&#x503E;&#x659C;</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="&#x5982;&#x4F55;&#x4FDD;&#x8BC1;&#x7F13;&#x5B58;&#x4E0E;&#x6570;&#x636E;&#x5E93;&#x53CC;&#x5199;&#x65F6;&#x4E00;&#x81F4;&#x7684;&#x95EE;&#x9898;">&#x5982;&#x4F55;&#x4FDD;&#x8BC1;&#x7F13;&#x5B58;&#x4E0E;&#x6570;&#x636E;&#x5E93;&#x53CC;&#x5199;&#x65F6;&#x4E00;&#x81F4;&#x7684;&#x95EE;&#x9898;</h2>
+<h3 id="cache-aside-pattern">Cache Aside Pattern</h3>
+<p><a href="https://docs.microsoft.com/en-us/azure/architecture/patterns/cache-aside" target="_blank">cache-aside</a></p>
+<p>Load data on demand into a cache from a data store. This can improve performance and also helps to <strong>maintain consistency</strong> between data held in the cache and data in the underlying data store.</p>
+<p>Applications should implement a strategy that helps to ensure that the data in the cache is as up-to-date as possible, but can also detect and handle situations that arise when the data in the cache has become stale.</p>
+<pre class="language-"><code class="lang-java">stale &#x82F1;<span class="token punctuation">[</span>ste&#x26A;l<span class="token punctuation">]</span> &#x7F8E;<span class="token punctuation">[</span>ste&#x26A;l<span class="token punctuation">]</span>
+adj<span class="token punctuation">.</span> &#x4E0D;&#x65B0;&#x9C9C;&#x7684;<span class="token punctuation">;</span> <span class="token punctuation">(</span>&#x7A7A;&#x6C14;<span class="token punctuation">)</span> &#x6C61;&#x6D4A;&#x7684;<span class="token punctuation">;</span> <span class="token punctuation">(</span>&#x70DF;&#x5473;<span class="token punctuation">)</span> &#x96BE;&#x95FB;&#x7684;<span class="token punctuation">;</span> &#x9648;&#x8150;&#x7684;<span class="token punctuation">;</span> &#x6CA1;&#x6709;&#x65B0;&#x610F;&#x7684;<span class="token punctuation">;</span> &#x8001;&#x6389;&#x7259;&#x7684;<span class="token punctuation">;</span>
+n<span class="token punctuation">.</span> &#xFF08;&#x725B;&#x9A6C;&#x3001;&#x9A86;&#x9A7C;&#x7684;&#xFF09; &#x5C3F;<span class="token punctuation">;</span>
+</code></pre>
+<h3 id="&#x7F13;&#x5B58;&#x6570;&#x636E;&#x5E93;&#x66F4;&#x65B0;">&#x7F13;&#x5B58;/&#x6570;&#x636E;&#x5E93;&#x66F4;&#x65B0;</h3>
+<ul>
+<li>&#x7ED9;&#x7F13;&#x5B58;&#x8BBE;&#x7F6E;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#xFF0C;&#x662F;&#x4FDD;&#x8BC1;&#x6700;&#x7EC8;&#x4E00;&#x81F4;&#x6027;&#x7684;&#x89E3;&#x51B3;&#x65B9;&#x6848;; &#x7406;&#x89E3;&#x5982;&#x4E0B;</li>
+</ul>
+<p>&#x5BF9;&#x5B58;&#x5165;&#x7F13;&#x5B58;&#x7684;&#x6570;&#x636E;&#x8BBE;&#x7F6E;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x5199;&#x64CD;&#x4F5C;&#x4EE5;&#x6570;&#x636E;&#x5E93;&#x4E3A;&#x51C6;&#xFF0C;&#x5BF9;&#x7F13;&#x5B58;&#x64CD;&#x4F5C;&#x53EA;&#x662F;&#x5C3D;&#x6700;&#x5927;&#x52AA;&#x529B;&#x5373;&#x53EF;&#x3002;&#x4E5F;&#x5C31;&#x662F;&#x8BF4;&#x5982;&#x679C;&#x6570;&#x636E;&#x5E93;&#x5199;&#x6210;&#x529F;&#xFF0C;&#x7F13;&#x5B58;&#x66F4;&#x65B0;&#x5931;&#x8D25;&#xFF0C;&#x90A3;&#x4E48;&#x53EA;&#x8981;&#x5230;&#x8FBE;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#xFF0C;&#x5219;&#x540E;&#x9762;&#x7684;&#x8BFB;&#x8BF7;&#x6C42;&#x81EA;&#x7136;&#x4F1A;&#x4ECE;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x8BFB;&#x53D6;&#x65B0;&#x503C;&#x7136;&#x540E;&#x56DE;&#x586B;&#x7F13;&#x5B58;</p>
+<h4 id="&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x7F13;&#x5B58;">&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x7F13;&#x5B58;</h4>
+<pre class="language-"><code class="lang-java"><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-&gt;</span>&#x65F6;&#x95F4;&#x7EBF;
+
+&#x7EBF;&#x7A0B;<span class="token class-name">A</span>&#x66F4;&#x65B0;&#x4E86;&#x6570;&#x636E;&#x5E93;             &#x7EBF;&#x7A0B;<span class="token class-name">A</span>&#x66F4;&#x65B0;&#x4E86;&#x7F13;&#x5B58;
+    &#x7EBF;&#x7A0B;<span class="token class-name">B</span>&#x66F4;&#x65B0;&#x4E86;&#x6570;&#x636E;&#x5E93;  &#x7EBF;&#x7A0B;<span class="token class-name">B</span>&#x66F4;&#x65B0;&#x4E86;&#x7F13;&#x5B58;
+</code></pre>
+<p>&#x8BF7;&#x6C42;A&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#x5E94;&#x8BE5;&#x6BD4;&#x8BF7;&#x6C42;B&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#x65E9;&#x624D;&#x5BF9;&#xFF0C;&#x4F46;&#x662F;&#x56E0;&#x4E3A;&#x7F51;&#x7EDC;&#x7B49;&#x539F;&#x56E0;&#xFF0C;B&#x5374;&#x6BD4;A&#x66F4;&#x65E9;&#x66F4;&#x65B0;&#x4E86;&#x7F13;&#x5B58;&#x4E86;&#xFF0C;&#x5BFC;&#x81F4;&#x810F;&#x6570;&#x636E;</p>
+<h4 id="&#x5148;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;1">&#x5148;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x518D;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;(&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;1)</h4>
+<pre class="language-"><code class="lang-java"><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-&gt;</span>&#x65F6;&#x95F4;&#x7EBF;
+
+&#x5148;&#x5220;&#x9664;&#x7F13;&#x5B58;                 &#x518D;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;             &#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;
+          &#x8BFB;&#x64CD;&#x4F5C;
+            &#x8BBE;&#x7F6E;&#x7F13;&#x5B58;
+                &#x8BFB;&#x810F;
+                &#x8BFB;&#x810F;
+</code></pre>
+<h4 id="&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;2">&#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x518D;&#x5220;&#x9664;&#x7F13;&#x5B58;&#xFF0C;&#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;(&#x5220;&#x9664;&#x7F13;&#x5B58;&#x65B9;&#x6848;2)</h4>
+<pre class="language-"><code class="lang-java"><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-&gt;</span>&#x65F6;&#x95F4;&#x7EBF;
+
+           &#x5148;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x5E93;    &#x518D;&#x5220;&#x9664;&#x7F13;&#x5B58;  &#x4E0B;&#x4E00;&#x6B21;&#x8BFB;&#x64CD;&#x4F5C;&#x4F1A;&#x66F4;&#x65B0;&#x7F13;&#x5B58;
+&#x8BFB;&#x64CD;&#x4F5C;<span class="token punctuation">(</span>&#x4E14;&#x7F13;&#x5B58;&#x5931;&#x6548;&#xFF09;
+      &#x8BFB;&#x8001;&#x6570;&#x636E;&#x5E93;                                         &#x66F4;&#x65B0;&#x7F13;&#x5B58;&#xFF08;&#x66F4;&#x65B0;&#x7684;&#x662F;&#x65E7;&#x7684;&#x6570;&#x636E;&#x5E93;&#x6570;&#x636E;&#xFF09;
+</code></pre>
+<p>&#x8FD9;&#x4E2A;&#x6761;&#x4EF6;&#x9700;&#x8981;&#x53D1;&#x751F;&#x5728;&#x8BFB;&#x7F13;&#x5B58;&#x65F6;&#x7F13;&#x5B58;&#x5931;&#x6548;&#xFF0C;&#x800C;&#x4E14;&#x6709;&#x4E00;&#x4E2A;&#x5E76;&#x53D1;&#x7684;&#x5199;&#x64CD;&#x4F5C;&#x3002;&#x5B9E;&#x9645;&#x4E0A;&#x6570;&#x636E;&#x5E93;&#x7684;&#x5199;&#x64CD;&#x4F5C;&#x4F1A;&#x6BD4;&#x8BFB;&#x64CD;&#x4F5C;&#x6162;&#x5F97;&#x591A;&#xFF0C;&#x800C;&#x4E14;&#x8FD8;&#x8981;&#x52A0;&#x9501;&#xFF0C;&#x800C;&#x8BFB;&#x64CD;&#x4F5C;&#x5FC5;&#x9700;&#x5728;&#x5199;&#x64CD;&#x4F5C;&#x524D;&#x8FDB;&#x5165;&#x6570;&#x636E;&#x5E93;&#x64CD;&#x4F5C;&#xFF0C;&#x53C8;&#x8981;&#x665A;&#x4E8E;&#x5199;&#x64CD;&#x4F5C;&#x66F4;&#x65B0;&#x7F13;&#x5B58;&#xFF0C;&#x6240;&#x6709;&#x8FD9;&#x4E9B;&#x6761;&#x4EF6;&#x90FD;&#x5177;&#x5907;&#x7684;&#x6982;&#x7387;&#x5E76;&#x4E0D;&#x5927;&#x3002;&#x4F46;&#x662F;&#x4E3A;&#x4E86;&#x907F;&#x514D;&#x8FD9;&#x79CD;&#x6781;&#x7AEF;&#x60C5;&#x51B5;&#x9020;&#x6210;&#x810F;&#x6570;&#x636E;&#x6240;&#x4EA7;&#x751F;&#x7684;&#x5F71;&#x54CD;&#xFF0C;&#x6211;&#x4EEC;&#x8FD8;&#x662F;&#x8981;&#x4E3A;&#x7F13;&#x5B58;&#x8BBE;&#x7F6E;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#x3002;</p>
+<footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
+2020-06-25 18:32:51
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="bloom.html" class="navigation navigation-prev " aria-label="Previous page: 布隆过滤器">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../distributed_design/flow_limit.html" class="navigation navigation-next " aria-label="Next page: 限流">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"缓存","layout":"page","date":"2020-03-30 18:00","level":"1.8.5","depth":2,"next":{"title":"限流","level":"1.8.6","depth":2,"path":"content/distributed_design/flow_limit.md","ref":"./content/distributed_design/flow_limit.md","articles":[]},"previous":{"title":"布隆过滤器","level":"1.8.4","depth":2,"path":"content/db_cache/bloom.md","ref":"./content/db_cache/bloom.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/cache.md","mtime":"2020-06-25T10:32:51.830Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-18T11:56:34.961Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

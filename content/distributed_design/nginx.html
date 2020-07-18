@@ -1,0 +1,2040 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>nginx基础 · spring-note</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="doctording">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-page-treeview/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="rpc.html" />
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [1 常见设计模式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../design_pattern/proxy.html">
+            
+                <a href="../design_pattern/proxy.html">
+            
+                    
+                    代理模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../design_pattern/singleton.html">
+            
+                <a href="../design_pattern/singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../design_pattern/factory.html">
+            
+                <a href="../design_pattern/factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../design_pattern/template.html">
+            
+                <a href="../design_pattern/template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../design_pattern/strategy.html">
+            
+                <a href="../design_pattern/strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../design_pattern/decorator.html">
+            
+                <a href="../design_pattern/decorator.html">
+            
+                    
+                    装饰器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../design_pattern/observer.html">
+            
+                <a href="../design_pattern/observer.html">
+            
+                    
+                    观察者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../design_pattern/visitor.html">
+            
+                <a href="../design_pattern/visitor.html">
+            
+                    
+                    访问者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../design_pattern/iterator.html">
+            
+                <a href="../design_pattern/iterator.html">
+            
+                    
+                    迭代器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="../design_pattern/facade.html">
+            
+                <a href="../design_pattern/facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [2 数据结构和算法基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../java_data_structure/java_basic_datastructure.html">
+            
+                <a href="../java_data_structure/java_basic_datastructure.html">
+            
+                    
+                    常见基础数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../java_data_structure/array_list.html">
+            
+                <a href="../java_data_structure/array_list.html">
+            
+                    
+                    ArrayList & LinkedList
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../java_data_structure/hash_map.html">
+            
+                <a href="../java_data_structure/hash_map.html">
+            
+                    
+                    HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.3" data-path="../java_data_structure/hash_table.html">
+            
+                <a href="../java_data_structure/hash_table.html">
+            
+                    
+                    HashTable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.4" data-path="../java_utils/Map.html">
+            
+                <a href="../java_utils/Map.html">
+            
+                    
+                    HashMap,HashTable,ConcurrentHashMap 对比
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.5" data-path="../java_data_structure/fail_fast.html">
+            
+                <a href="../java_data_structure/fail_fast.html">
+            
+                    
+                    fail-fast,ConcurrentModificationException
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.6" data-path="../java_utils/quick_sort.html">
+            
+                <a href="../java_utils/quick_sort.html">
+            
+                    
+                    快排(没事手写写)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../java_data_structure/concurrent_datastructure.html">
+            
+                <a href="../java_data_structure/concurrent_datastructure.html">
+            
+                    
+                    concurrent数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../java_data_structure/advanced_structure.html">
+            
+                <a href="../java_data_structure/advanced_structure.html">
+            
+                    
+                    高级数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.3.1" data-path="../java_data_structure/b_tree.html">
+            
+                <a href="../java_data_structure/b_tree.html">
+            
+                    
+                    B/B+ Tree
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    [3 Java基础问题]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../java_data_structure/System_arraycopy.html">
+            
+                <a href="../java_data_structure/System_arraycopy.html">
+            
+                    
+                    System.arraycopy, Array.copyOf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../java_utils/equals_hashcode.html">
+            
+                <a href="../java_utils/equals_hashcode.html">
+            
+                    
+                    == & equals方法 & hashcode方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../java_utils/Calendar.html">
+            
+                <a href="../java_utils/Calendar.html">
+            
+                    
+                    Calendar & Date
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../java_utils/Compare.html">
+            
+                <a href="../java_utils/Compare.html">
+            
+                    
+                    Comparison method violates its general contract
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../java_utils/int_Integer.html">
+            
+                <a href="../java_utils/int_Integer.html">
+            
+                    
+                    int(基本类型) & Integer(包装类类型)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../java_utils/exception.html">
+            
+                <a href="../java_utils/exception.html">
+            
+                    
+                    Java异常&错误
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../java_utils/String.html">
+            
+                <a href="../java_utils/String.html">
+            
+                    
+                    String,StringBuffer,StringBuilder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../java_utils/reflect.html">
+            
+                <a href="../java_utils/reflect.html">
+            
+                    
+                    反射机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="../java_utils/call_back.html">
+            
+                <a href="../java_utils/call_back.html">
+            
+                    
+                    回调 & 事件机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="../java_utils/array_collection.html">
+            
+                <a href="../java_utils/array_collection.html">
+            
+                    
+                    数组，集合转换等问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="../java_utils/annotation.html">
+            
+                <a href="../java_utils/annotation.html">
+            
+                    
+                    注解 Annotation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="../java_jvm/jvm_runtime.html">
+            
+                <a href="../java_jvm/jvm_runtime.html">
+            
+                    
+                    Runtime类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="../java_data_structure/unsafe.html">
+            
+                <a href="../java_data_structure/unsafe.html">
+            
+                    
+                    unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="../java_thinking_in_Java/basic.html">
+            
+                <a href="../java_thinking_in_Java/basic.html">
+            
+                    
+                    《Java编程思想》第3章：操作符，第4章：控制执行流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="../java_thinking_in_Java/constructor.html">
+            
+                <a href="../java_thinking_in_Java/constructor.html">
+            
+                    
+                    《Java编程思想》第5章：初始化和清理(重点)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="../java_thinking_in_Java/public_private_protect.html">
+            
+                <a href="../java_thinking_in_Java/public_private_protect.html">
+            
+                    
+                    《Java编程思想》第6章：访问权限控制(重要)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第7章：复用类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="../java_thinking_in_Java/polymorphism.html">
+            
+                <a href="../java_thinking_in_Java/polymorphism.html">
+            
+                    
+                    《Java编程思想》第8章：多态
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第9章：接口 补充：抽象类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="../java_thinking_in_Java/innner_class.html">
+            
+                <a href="../java_thinking_in_Java/innner_class.html">
+            
+                    
+                    《Java编程思想》第10章：内部类
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    [4 Java多线程 & 并发基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../java_thread_concurrent/thread_basic.html">
+            
+                <a href="../java_thread_concurrent/thread_basic.html">
+            
+                    
+                    线程基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1.1" data-path="../java_thread_concurrent/thread_design.html">
+            
+                <a href="../java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.2" data-path="../java_thread_concurrent/hook_thread.html">
+            
+                <a href="../java_thread_concurrent/hook_thread.html">
+            
+                    
+                    Hook线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../java_thread_concurrent/thread_pool.html">
+            
+                <a href="../java_thread_concurrent/thread_pool.html">
+            
+                    
+                    线程池
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="../java_thread_concurrent/concurrency_problems.html">
+            
+                <a href="../java_thread_concurrent/concurrency_problems.html">
+            
+                    
+                    常见的多线程题目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.2" data-path="../java_thread_concurrent/thread_pool_self.html">
+            
+                <a href="../java_thread_concurrent/thread_pool_self.html">
+            
+                    
+                    自定义线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../java_thread_concurrent/cas.html">
+            
+                <a href="../java_thread_concurrent/cas.html">
+            
+                    
+                    CAS(Conmpare And Swap/Exchange) & unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../java_thread_concurrent/aqs.html">
+            
+                <a href="../java_thread_concurrent/aqs.html">
+            
+                    
+                    AQS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" >
+            
+                <span>
+            
+                    
+                    [常见关键字和类]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.5.1" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.2" data-path="../java_thread_concurrent/longAdder.html">
+            
+                <a href="../java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.3" data-path="../java_thread_concurrent/semaphore.html">
+            
+                <a href="../java_thread_concurrent/semaphore.html">
+            
+                    
+                    Semaphore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.4" data-path="../java_thread_concurrent/volatile.html">
+            
+                <a href="../java_thread_concurrent/volatile.html">
+            
+                    
+                    volatile 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.5" data-path="../java_thread_concurrent/synchronized.html">
+            
+                <a href="../java_thread_concurrent/synchronized.html">
+            
+                    
+                    synchronized 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.6.1" data-path="../java_thread_concurrent/thread_lock_type.html">
+            
+                <a href="../java_thread_concurrent/thread_lock_type.html">
+            
+                    
+                    Java Lock 分类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.2" data-path="../java_thread_concurrent/thread_deadlock.html">
+            
+                <a href="../java_thread_concurrent/thread_deadlock.html">
+            
+                    
+                    Thread 死锁问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../java_thread_concurrent/threadLocal.html">
+            
+                <a href="../java_thread_concurrent/threadLocal.html">
+            
+                    
+                    ThreadLocal
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    [5 Java8]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../java8/java8_completableFuture.html">
+            
+                <a href="../java8/java8_completableFuture.html">
+            
+                    
+                    CompletableFuture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../java8/java8_future.html">
+            
+                <a href="../java8/java8_future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../java8/interface_default.html">
+            
+                <a href="../java8/interface_default.html">
+            
+                    
+                    interface defalt static
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../java8/java8_mem.html">
+            
+                <a href="../java8/java8_mem.html">
+            
+                    
+                    Java8 jvm内存结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../java8/lambda.html">
+            
+                <a href="../java8/lambda.html">
+            
+                    
+                    Java8 lambda表达式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="../java8/java8_optional.html">
+            
+                <a href="../java8/java8_optional.html">
+            
+                    
+                    Java8 Optional
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../java8/streams.html">
+            
+                <a href="../java8/streams.html">
+            
+                    
+                    Java8 Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="../java8/streams_parallel.html">
+            
+                <a href="../java8/streams_parallel.html">
+            
+                    
+                    Java8 并行数据处理与性能
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    [6 JVM]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../java_jvm/jvm_mem_model.html">
+            
+                <a href="../java_jvm/jvm_mem_model.html">
+            
+                    
+                    内存模型与线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../java_jvm/jvm_class_load.html">
+            
+                <a href="../java_jvm/jvm_class_load.html">
+            
+                    
+                    类加载机制,类加载器,内存布局
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../java_jvm/jvm_mem_gc.html">
+            
+                <a href="../java_jvm/jvm_mem_gc.html">
+            
+                    
+                    堆栈 & 各种GC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../java_jvm/jvm_params.html">
+            
+                <a href="../java_jvm/jvm_params.html">
+            
+                    
+                    JVM参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../java_jvm/jvm_tools.html">
+            
+                <a href="../java_jvm/jvm_tools.html">
+            
+                    
+                    JVM命令工具(jstack,jmap,jcmd...)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" >
+            
+                <span>
+            
+                    
+                    [7 缓存 & 限流]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../db_cache/LFU.html">
+            
+                <a href="../db_cache/LFU.html">
+            
+                    
+                    LFU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../db_cache/LRU.html">
+            
+                <a href="../db_cache/LRU.html">
+            
+                    
+                    LRU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../db_cache/consistent_hash.html">
+            
+                <a href="../db_cache/consistent_hash.html">
+            
+                    
+                    一致性Hash
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="../db_cache/bloom.html">
+            
+                <a href="../db_cache/bloom.html">
+            
+                    
+                    布隆过滤器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="../db_cache/cache.html">
+            
+                <a href="../db_cache/cache.html">
+            
+                    
+                    缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="flow_limit.html">
+            
+                <a href="flow_limit.html">
+            
+                    
+                    限流
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="../java_thread_concurrent/cpu_cache.html">
+            
+                <a href="../java_thread_concurrent/cpu_cache.html">
+            
+                    
+                    CPU,缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" >
+            
+                <span>
+            
+                    
+                    [8 数据库]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../db_cache/mysql.html">
+            
+                <a href="../db_cache/mysql.html">
+            
+                    
+                    数据库/表/查询
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    [9 I/O & 网络 & 分布式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.10.1" data-path="nginx.html">
+            
+                <a href="nginx.html">
+            
+                    
+                    nginx基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="rpc.html">
+            
+                <a href="rpc.html">
+            
+                    
+                    rpc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="distribute.html">
+            
+                <a href="distribute.html">
+            
+                    
+                    分布式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="design.html">
+            
+                <a href="design.html">
+            
+                    
+                    设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" >
+            
+                <span>
+            
+                    
+                    [I/O与网络]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.6.1" data-path="../java_io_net/io_interrupte.html">
+            
+                <a href="../java_io_net/io_interrupte.html">
+            
+                    
+                    IO和中断
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.2" data-path="../java_io_net/http_tcp.html">
+            
+                <a href="../java_io_net/http_tcp.html">
+            
+                    
+                    http & tcp
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.3" data-path="../java_io_net/io_basic.html">
+            
+                <a href="../java_io_net/io_basic.html">
+            
+                    
+                    IO基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.4" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    nio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.5" data-path="../java_io_net/from_io_to_epoll.html">
+            
+                <a href="../java_io_net/from_io_to_epoll.html">
+            
+                    
+                    从io到epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    [10 剑指offer]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../thought_of_solve/thought.html">
+            
+                <a href="../thought_of_solve/thought.html">
+            
+                    
+                    剑指Offer解题思路(全)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >nginx基础</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#nginx-reverse-proxy&#xFF08;&#x53CD;&#x5411;&#x4EE3;&#x7406;&#xFF09;">nginx reverse proxy&#xFF08;&#x53CD;&#x5411;&#x4EE3;&#x7406;&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#what-is-a-reverse-proxy-server">What Is a Reverse Proxy Server?</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#high-performance-load-balancing-&#xFF08;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF09;">High-Performance Load Balancing &#xFF08;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#http-load-balance">HTTP load balance</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#problem">Problem</a><i></i></div></li>
+<li><div><a href="#solution&#x89E3;&#x51B3;&#x65B9;&#x6848;">Solution(&#x89E3;&#x51B3;&#x65B9;&#x6848;)</a><i></i></div></li>
+<li><div><a href="#&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;">&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#round-robin&#xFF08;&#x8F6E;&#x8BE2;&#xFF09;">Round Robin&#xFF08;&#x8F6E;&#x8BE2;&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#weight-round-robin">Weight Round Robin</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#least-connections&#xFF08;&#x6700;&#x5C0F;&#x8FDE;&#x63A5;&#x6570;&#xFF09;">Least connections&#xFF08;&#x6700;&#x5C0F;&#x8FDE;&#x63A5;&#x6570;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#least-time&#x6700;&#x77ED;&#x54CD;&#x5E94;&#x65F6;&#x95F4;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;">Least time(&#x6700;&#x77ED;&#x54CD;&#x5E94;&#x65F6;&#x95F4;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;)</a><i></i></div></li>
+<li><div><a href="#generic-hash&#x54C8;&#x5E0C;">Generic hash(&#x54C8;&#x5E0C;)</a><i></i></div></li>
+<li><div><a href="#random">Random</a><i></i></div></li>
+<li><div><a href="#ip-hash">IP hash</a><i></i></div></li>
+<li><div><a href="#url-hash">URL hash</a><i></i></div></li>
+</ul></li>
+</ul></li>
+<li><div><a href="#tcpudp-load-balance">TCP/UDP load balance</a><i></i></div></li>
+<li><div><a href="#cookie--session&#xFF08;http-&#x77E5;&#x8BC6;&#x590D;&#x4E60;&#xFF09;">cookie &amp; session&#xFF08;http &#x77E5;&#x8BC6;&#x590D;&#x4E60;&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#http&#x65E0;&#x8FDE;&#x63A5;&#x6982;&#x5FF5;&#x4ECB;&#x7ECD;">http&#x65E0;&#x8FDE;&#x63A5;&#x6982;&#x5FF5;&#x4ECB;&#x7ECD;</a><i></i></div></li>
+<li><div><a href="#session">Session</a><i></i></div></li>
+<li><div><a href="#cookie">Cookie</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#how-to-create-cookie">how to create cookie</a><i></i></div></li>
+</ul></li>
+</ul></li>
+<li><div><a href="#http-health-checks&#xFF08;http&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;">HTTP Health Checks&#xFF08;HTTP&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#server-slow-start&#xFF08;&#x670D;&#x52A1;&#x6162;&#x5F00;&#x59CB;&#xFF09;">Server Slow Start&#xFF08;&#x670D;&#x52A1;&#x6162;&#x5F00;&#x59CB;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#passive-health-checks">Passive Health Checks</a><i></i></div></li>
+<li><div><a href="#active-health-checks">Active Health Checks</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#tcp-health-checks&#xFF08;tcp&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;">TCP Health Checks&#xFF08;TCP&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#passive-tcp-health-checks&#x88AB;&#x52A8;&#x7684;tcp&#x5065;&#x5EB7;&#x68C0;&#x67E5;">Passive TCP Health Checks(&#x88AB;&#x52A8;&#x7684;TCP&#x5065;&#x5EB7;&#x68C0;&#x67E5;)</a><i></i></div></li>
+<li><div><a href="#active-tcp-health-checks&#x4E3B;&#x52A8;&#x7684;tcp&#x5065;&#x5EB7;&#x68C0;&#x67E5;">Active TCP Health Checks(&#x4E3B;&#x52A8;&#x7684;TCP&#x5065;&#x5EB7;&#x68C0;&#x67E5;)</a><i></i></div></li>
+<li><div><a href="#fine-tuning-tcp-health-checks">Fine-Tuning TCP Health Checks</a><i></i></div></li>
+</ul></li>
+</ul></li>
+<li><div><a href="#massively-scalable-content-caching">Massively Scalable Content Caching</a><i></i></div></li>
+</ul>
+</div>
+
+
+<p>[TOC]</p>
+<h1 id="nginx-reverse-proxy&#xFF08;&#x53CD;&#x5411;&#x4EE3;&#x7406;&#xFF09;">nginx reverse proxy&#xFF08;&#x53CD;&#x5411;&#x4EE3;&#x7406;&#xFF09;</h1>
+<p><a href="https://www.nginx.com/resources/glossary/reverse-proxy-server/" target="_blank">nginx reverse proxy docs</a></p>
+<h2 id="what-is-a-reverse-proxy-server">What Is a Reverse Proxy Server?</h2>
+<p>A proxy server is a go&#x2011;between or intermediary server that forwards requests for content from multiple clients to different servers across the Internet. A <strong>reverse proxy server</strong> is a type of proxy server that typically sits behind the firewall in a private network and directs client requests to the appropriate backend server. A reverse proxy provides an additional level of abstraction and control to ensure the smooth flow of network traffic between clients and servers.</p>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>intermediary</td>
+<td>adj.&#x4E2D;&#x95F4;&#x4EBA;&#x7684;&#xFF1B; &#x8C03;&#x89E3;&#x7684;&#xFF1B; &#x5C45;&#x95F4;&#x7684;&#xFF1B; &#x5A92;&#x4ECB;&#x7684;; n. &#x4E2D;&#x95F4;&#x4EBA;&#xFF1B; &#x5A92;&#x4ECB;&#xFF1B; &#x8C03;&#x89E3;&#x4EBA;&#xFF1B; &#x4E2D;&#x95F4;&#x9636;&#x6BB5;</td>
+</tr>
+<tr>
+<td>go&#x2011;between</td>
+<td>&#x4E2D;&#x95F4;&#x4EBA;</td>
+</tr>
+<tr>
+<td>firewall</td>
+<td>n.&#x9632;&#x706B;&#x5899;&#xFF1B;vt.&#x7528;&#x4F5C;&#x9632;&#x706B;&#x5899;&#xFF1B;</td>
+</tr>
+<tr>
+<td>backend server</td>
+<td>&#x540E;&#x7AEF;&#x670D;&#x52A1;&#x5668;</td>
+</tr>
+<tr>
+<td>smooth</td>
+<td>adj.&#x5149;&#x6ED1;&#x7684;&#xFF1B; &#x6D41;&#x7545;&#x7684;&#xFF1B; &#x67D4;&#x8F6F;&#x7684;&#xFF1B; &#x6E29;&#x548C;&#x7684;&#xFF0C;&#x5B89;&#x8BE6;&#x7684;;vt.&#x4F7F;&#x5E73;&#x6ED1;&#xFF1B; &#x6392;&#x9664;&#xFF0C;&#x6D88;&#x9664;&#xFF1B; &#x5B89;&#x629A;&#xFF0C;&#x5E73;&#x606F;&#xFF1B; &#x4F7F;&#x4F18;&#x96C5;;vi.&#x53D8;&#x5E73;&#x548C;&#xFF0C;&#x53D8;&#x7F13;&#x548C;&#xFF1B;;n.&#x5E73;&#x5730;&#xFF0C;&#x5E73;&#x9762;&#xFF1B;</td>
+</tr>
+<tr>
+<td>forwards</td>
+<td>adv.&#x5411;&#x524D;&#x65B9;&#xFF0C;&#x7EE7;&#x7EED;&#x5411;&#x524D;&#xFF1B;v.&#x4FC3;&#x8FDB;( forward&#x7684;&#x7B2C;&#x4E09;&#x4EBA;&#x79F0;&#x5355;&#x6570; )&#xFF1B; &#xFF08;&#x6309;&#x65B0;&#x5730;&#x5740;&#xFF09;&#x8F6C;&#x5BC4;&#xFF1B; &#x53D1;&#x9001;&#xFF1B; &#x52A9;&#x957F;&#xFF1B;</td>
+</tr>
+</tbody>
+</table>
+<p>Common uses for a reverse proxy server include:</p>
+<ul>
+<li><p><strong>Load balancing</strong> &#x2013; A reverse proxy server can act as a &#x201C;traffic cop&#x201D;, sitting in front of your backend servers and distributing client requests across a group of servers in a manner that maximizes speed and capacity utilization while ensuring no one server is overloaded, which can degrade performance. If a server goes down, the load balancer redirects traffic to the remaining online servers.</p>
+</li>
+<li><p><strong>Web acceleration</strong> &#x2013; Reverse  proxies can compress inbound and outbound data, as well as cache commonly requested content, both of which speed up the flow of traffic between clients and servers. They can also perform additional tasks such as SSL encryption to take load off of your web servers, thereby boosting their performance.</p>
+</li>
+<li><p><strong>Security and anonymity</strong> &#x2013; By intercepting requests headed for your backend servers, a reverse proxy server protects their identities and acts as an additional defense against security attacks. It also ensures that multiple servers can be accessed from a single record locator or URL regardless of the structure of your local area network.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Load balancing</td>
+<td>&#x8D1F;&#x8F7D;&#x5747;&#x8861;</td>
+</tr>
+<tr>
+<td>Web acceleration</td>
+<td>&#x7F51;&#x7EDC;&#x52A0;&#x901F;</td>
+</tr>
+<tr>
+<td>Security and anonymity</td>
+<td>&#x5B89;&#x5168;&#x548C;&#x533F;&#x540D;</td>
+</tr>
+<tr>
+<td>degrade</td>
+<td>vt.&#x964D;&#x4F4E;&#xFF0C;&#x8D2C;&#x4F4E;&#xFF1B; &#x4F7F;&#x964D;&#x7EA7;&#xFF1B; &#x964D;&#x4F4E;&#x2026;&#x8EAB;&#x4EFD;&#xFF1B; &#x4F7F;&#x4E22;&#x8138;;vt.&amp; vi.&#xFF08;&#x4F7F;&#xFF09;&#x9000;&#x5316;&#xFF0C;&#x964D;&#x89E3;&#xFF0C;&#x5206;&#x89E3;&#xFF1B; &#x964D;&#x89E3;&#xFF1B; &#x64A4;&#x804C;&#xFF0C;&#x514D;&#x804C;&#xFF1B; &#x964D;&#x4F4E;&#x54C1;&#x683C;[&#x8EAB;&#x4EF7;&#xFF0C;&#x4EF7;&#x503C;&#xFF08;&#x7B49;&#xFF09;]</td>
+</tr>
+<tr>
+<td>traffic cop</td>
+<td>n.&lt;&#x7F8E;&#x53E3;&gt;&#x4EA4;&#x901A;&#x8B66;&#x5BDF;&#xFF1B;</td>
+</tr>
+<tr>
+<td>inbound</td>
+<td>adj.&#x56DE;&#x5185;&#x5730;&#x7684;&#xFF1B; &#x5F52;&#x672C;&#x56FD;&#x7684;&#xFF1B; &#x5230;&#x8FBE;&#x7684;&#xFF1B; &#x5165;&#x5883;&#x7684;</td>
+</tr>
+<tr>
+<td>outbound</td>
+<td>adj.&#x5F00;&#x5F80;&#x5916;&#x5730;&#x7684;&#xFF0C;&#x5F00;&#x5F80;&#x5916;&#x56FD;&#x7684;&#xFF1B;</td>
+</tr>
+<tr>
+<td>take load off</td>
+<td>&#x5378;&#x4E0B;&#x5305;&#x88B1;</td>
+</tr>
+<tr>
+<td>boost</td>
+<td>vt.&#x4FC3;&#x8FDB;&#xFF0C;&#x63D0;&#x9AD8;&#xFF1B; &#x589E;&#x52A0;&#xFF1B; &#x5439;&#x6367;&#xFF1B; &#x5411;&#x4E0A;&#x63A8;&#x8D77;;vi.&#x5BA3;&#x626C;&#xFF1B; [&#x7F8E;&#x56FD;&#x4FDA;&#x8BED;]&#xFF08;&#x5C24;&#x6307;&#x5728;&#x5546;&#x5E97;&#xFF09;&#x884C;&#x7A83;&#xFF0C;&#x5077;&#x7A83;&#xFF1B;n.&#x63D0;&#x9AD8;&#xFF0C;&#x589E;&#x52A0;&#xFF1B; &#x5E2E;&#x52A9;&#xFF1B; &#x5439;&#x6367;&#xFF1B; &#x52A0;&#x901F;[&#x52A9;&#x63A8;]&#x5668;</td>
+</tr>
+</tbody>
+</table>
+<h1 id="high-performance-load-balancing-&#xFF08;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF09;">High-Performance Load Balancing &#xFF08;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF09;</h1>
+<ul>
+<li>multiple copies of the same system</li>
+<li>horizontal scaling(&#x6C34;&#x5E73;&#x6269;&#x5C55;)</li>
+</ul>
+<h2 id="http-load-balance">HTTP load balance</h2>
+<h3 id="problem">Problem</h3>
+<p>You need to distribute load between two or more HTTP servers.</p>
+<p>(&#x9700;&#x8981;&#x89E3;&#x51B3;&#x7684;&#x662F;&#xFF1A;&#x5C06;&#x7528;&#x6237;&#x8BF7;&#x6C42;&#x5206;&#x53D1;&#x5230; 2 &#x53F0;&#x4EE5;&#x4E0A; HTTP &#x670D;&#x52A1;&#x5668;)</p>
+<h3 id="solution&#x89E3;&#x51B3;&#x65B9;&#x6848;">Solution(&#x89E3;&#x51B3;&#x65B9;&#x6848;)</h3>
+<ul>
+<li>&#x5C06;&#x540E;&#x7AEF;&#x8BF7;&#x6C42;&#x8DEF;&#x7531;&#x5230;2&#x4E2A;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x5E76;&#x914D;&#x7F6E;&#x6743;&#x91CD;</li>
+</ul>
+<pre class="language-"><code class="lang-java">upstream backend <span class="token punctuation">{</span>
+    server <span class="token number">10.10</span><span class="token number">.12</span><span class="token number">.45</span><span class="token operator">:</span><span class="token number">80</span> weight<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
+    server app<span class="token punctuation">.</span>example<span class="token punctuation">.</span>com<span class="token operator">:</span><span class="token number">80</span> weight<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+server <span class="token punctuation">{</span>
+    location <span class="token operator">/</span> <span class="token punctuation">{</span>
+        proxy_pass http<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>backend<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>upstream</td>
+<td>adj.&#x5411;&#x4E0A;&#x6E38;&#x7684;&#xFF1B; &#x9006;&#x6D41;&#x800C;&#x4E0A;&#x7684;&#xFF1B; &#xFF08;&#x77F3;&#x6CB9;&#x5DE5;&#x4E1A;&#x7B49;&#xFF09;&#x4E0A;&#x6E38;&#x7684;&#xFF1B;adv.&#x5411;&#x4E0A;&#x6E38;&#xFF1B; &#x9006;&#x6D41;&#x5730;&#xFF1B;n.&#x4E0A;&#x6E38;&#x90E8;&#x95E8;&#xFF1B;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>&#x5982;&#x4E0B;&#xFF0C;&#x9ED8;&#x8BA4;&#x4F7F;&#x7528;<code>Round Robin</code>&#x4F7F;&#x7528;&#x4E24;&#x53F0;&#x670D;&#x52A1;&#x5668;</li>
+</ul>
+<pre class="language-"><code class="lang-java">http <span class="token punctuation">{</span>
+    upstream backend <span class="token punctuation">{</span>
+        server backend1<span class="token punctuation">.</span>example<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
+        server backend2<span class="token punctuation">.</span>example<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
+        server <span class="token number">192.0</span><span class="token number">.0</span><span class="token number">.1</span> backup<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    server <span class="token punctuation">{</span>
+        location <span class="token operator">/</span> <span class="token punctuation">{</span>
+            proxy_pass http<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>backend<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;">&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;</h3>
+<h4 id="round-robin&#xFF08;&#x8F6E;&#x8BE2;&#xFF09;">Round Robin&#xFF08;&#x8F6E;&#x8BE2;&#xFF09;</h4>
+<p>This is the default load-balancing method, which distributes requests in the order of the list of servers in the upstream pool.You can also take weight into consideration for a weighted round robin, which you can use if the capacity of the upstream servers varies. The higher the integer value for the weight, the more favored the server will be in the round robin. The algorithm behind weight is simply statistical probability of a weighted average.</p>
+<p>&#x5C06;&#x8BF7;&#x6C42;&#x6309;&#x987A;&#x5E8F;&#x8F6E;&#x6D41;&#x5206;&#x914D;&#x5230;&#x540E;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#xFF0C;&#x5747;&#x8861;&#x7684;&#x5BF9;&#x5F85;&#x6BCF;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x800C;&#x4E0D;&#x5173;&#x5FC3;&#x670D;&#x52A1;&#x5668;&#x5B9E;&#x9645;&#x7684;&#x8FDE;&#x63A5;&#x6570;&#x548C;&#x5F53;&#x524D;&#x7684;&#x7CFB;&#x7EDF;&#x8D1F;&#x8F7D;&#x3002;&#x4E5F;&#x53EF;&#x4EE5;&#x8003;&#x8651;&#x5047;&#x5982;&#x6743;&#x91CD;&#x3002;</p>
+<h5 id="weight-round-robin">Weight Round Robin</h5>
+<h4 id="least-connections&#xFF08;&#x6700;&#x5C0F;&#x8FDE;&#x63A5;&#x6570;&#xFF09;">Least connections&#xFF08;&#x6700;&#x5C0F;&#x8FDE;&#x63A5;&#x6570;&#xFF09;</h4>
+<p>This method balances load by proxying the current request to the upstream server with the least number of open connections.Least connections, like round robin, also takes weights into account when deciding to which server to send the connection. The directive name is least_conn.</p>
+<p>&#x7531;&#x4E8E;&#x540E;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x7684;&#x914D;&#x7F6E;&#x4E0D;&#x5C3D;&#x76F8;&#x540C;&#xFF0C;&#x5BF9;&#x8BF7;&#x6C42;&#x7684;&#x5904;&#x7406;&#x6709;&#x5FEB;&#x6709;&#x6162;&#xFF0C;&#x5B83;&#x6B63;&#x662F;&#x6839;&#x636E;&#x540E;&#x7AEF;&#x670D;&#x52A1;&#x5668;&#x5F53;&#x524D;&#x7684;&#x8FDE;&#x63A5;&#x60C5;&#x51B5;&#xFF0C;&#x52A8;&#x6001;&#x7684;&#x9009;&#x53D6;&#x5176;&#x4E2D;&#x5F53;&#x524D;&#x79EF;&#x538B;&#x8FDE;&#x63A5;&#x6570;&#x6700;&#x5C11;&#x7684;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x6765;&#x5904;&#x7406;&#x5F53;&#x524D;&#x8BF7;&#x6C42;&#xFF0C;&#x5C3D;&#x53EF;&#x80FD;&#x7684;&#x63D0;&#x9AD8;&#x540E;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x5229;&#x7528;&#x7387;&#xFF0C;&#x5C06;&#x8D1F;&#x8F7D;&#x5408;&#x7406;&#x7684;&#x5206;&#x6D41;&#x5230;&#x6BCF;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x3002;</p>
+<h4 id="least-time&#x6700;&#x77ED;&#x54CD;&#x5E94;&#x65F6;&#x95F4;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;">Least time(&#x6700;&#x77ED;&#x54CD;&#x5E94;&#x65F6;&#x95F4;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;)</h4>
+<p>Available only in NGINX Plus, least time is akin to least connections in that it proxies to the upstream server with the least number of current connections but favors the servers with the lowest average response times. This method is one of the most sophisticated load-balancing algorithms and fits the needs of highly performant web applications. This algorithm is a valueadd over least connections because a small number of connections does not necessarily mean the quickest response. A parameter of header or last_byte must be specified for this directive. When header is specified, the time to receive the response header is used. When last_byte is specified, the time to receive the full response is used. The directive name is least_time.</p>
+<p>&#x5C06;&#x8BF7;&#x6C42; &#x5206;&#x53D1;&#x7ED9;&#x5E73;&#x5747;&#x54CD;&#x5E94;&#x65F6;&#x95F4;&#x66F4;&#x77ED;&#x7684;&#x5E94;&#x7528;&#x670D;&#x52A1;&#x5668;&#x3002;&#x5B83;&#x662F;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;&#x6700;&#x590D;&#x6742;&#x7684;&#x7B97;&#x6CD5; &#x4E4B;&#x4E00;&#xFF0C;&#x80FD;&#x591F;&#x9002;&#x7528;&#x4E8E;&#x9700;&#x8981;&#x9AD8;&#x6027;&#x80FD;&#x7684; Web &#x670D;&#x52A1;&#x5668;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7684;&#x4E1A;&#x52A1;&#x573A;&#x666F;&#x3002;&#x8BE5;&#x7B97;&#x6CD5; &#x662F;&#x5BF9;&#x6700;&#x5C11;&#x8FDE;&#x63A5;&#x6570;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;&#x7684;&#x4F18;&#x5316;&#x5B9E;&#x73B0;&#xFF0C;&#x56E0;&#x4E3A;&#x6700;&#x5C11;&#x7684;&#x8BBF;&#x95EE;&#x8FDE;&#x63A5;&#x5E76;&#x975E;&#x610F;&#x5473;&#x7740; &#x66F4;&#x5FEB;&#x7684;&#x54CD;&#x5E94;&#x3002;&#x8BE5;&#x6307;&#x4EE4;&#x7684;&#x914D;&#x7F6E;&#x540D;&#x79F0;&#x662F; least_time&#x3002;</p>
+<h4 id="generic-hash&#x54C8;&#x5E0C;">Generic hash(&#x54C8;&#x5E0C;)</h4>
+<p>The administrator defines a hash with the given text, variables of the request or runtime, or both. NGINX distributes the load among the servers by producing a hash for the current request and placing it against the upstream servers. This method is very useful when you need more control over where requests are sent or for determining which upstream server most likely will have the data cached. Note that when a server is added or removed from the pool, the hashed requests will be redistributed. This algorithm has an optional parameter, consistent, to minimize the effect of redistribution. The directive name is hash.</p>
+<p>&#x7F13;&#x5B58;&#x4F7F;&#x7528;&#xFF0C;&#x4E00;&#x81F4;&#x6027;&#x54C8;&#x5E0C;&#x95EE;&#x9898;</p>
+<h4 id="random">Random</h4>
+<p>This method is used to instruct NGINX to select a random server from the group, taking server weights into consideration. The optional two [method] parameter directs NGINX to randomly select two servers and then use the provided loadbalancing method to balance between those two. By default the least_conn method is used if two is passed without a method. The directive name for random load balancing is random.</p>
+<h4 id="ip-hash">IP hash</h4>
+<p>This method works only for HTTP. IP hash uses the client IP address as the hash. Slightly different from using the remote variable in a generic hash, this algorithm uses the first three octets of an IPv4 address or the entire IPv6 address. This method ensures that clients are proxied to the same upstream server as long as that server is available, which is extremely helpful when the session state is of concern and not handled by shared memory of the application. This method also takes the weight parameter into consideration when distributing the hash. The directive name is ip_hash.</p>
+<ul>
+<li>&#x901A;&#x8FC7;&#x5BA2;&#x6237;&#x7AEF;&#x8BF7;&#x6C42;ip&#x8FDB;&#x884C;hash&#xFF0C;&#x518D;&#x901A;&#x8FC7;hash&#x503C;&#x9009;&#x62E9;&#x540E;&#x7AEF;server</li>
+</ul>
+<p>&#x5F53;&#x4F60;&#x670D;&#x52A1;&#x7AEF;&#x7684;&#x4E00;&#x4E2A;&#x7279;&#x5B9A;url&#x8DEF;&#x5F84;&#x4F1A;&#x88AB;&#x540C;&#x4E00;&#x4E2A;&#x7528;&#x6237;&#x8FDE;&#x7EED;&#x8BBF;&#x95EE;&#x65F6;&#xFF0C;&#x5982;&#x679C;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B56;&#x7565;&#x8FD8;&#x662F;&#x8F6E;&#x8BE2;&#x7684;&#x8BDD;&#xFF0C;&#x90A3;&#x8BE5;&#x7528;&#x6237;&#x7684;&#x591A;&#x6B21;&#x8BBF;&#x95EE;&#x4F1A;&#x88AB;&#x6253;&#x5230;&#x5404;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#xFF0C;&#x8FD9;&#x663E;&#x7136;&#x5E76;&#x4E0D;&#x9AD8;&#x6548;&#xFF08;&#x4F1A;&#x5EFA;&#x7ACB;&#x591A;&#x6B21;http&#x94FE;&#x63A5;&#x7B49;&#x95EE;&#x9898;&#xFF09;&#x3002;&#x751A;&#x81F3;&#x8003;&#x8651;&#x4E00;&#x79CD;&#x6781;&#x7AEF;&#x60C5;&#x51B5;&#xFF0C;&#x7528;&#x6237;&#x9700;&#x8981;&#x5206;&#x7247;&#x4E0A;&#x4F20;&#x6587;&#x4EF6;&#x5230;&#x670D;&#x52A1;&#x5668;&#x4E0B;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x7531;&#x670D;&#x52A1;&#x5668;&#x5C06;&#x5206;&#x7247;&#x5408;&#x5E76;&#xFF0C;&#x8FD9;&#x65F6;&#x5982;&#x679C;&#x7528;&#x6237;&#x7684;&#x8BF7;&#x6C42;&#x5230;&#x8FBE;&#x4E86;&#x4E0D;&#x540C;&#x7684;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x90A3;&#x4E48;&#x5206;&#x7247;&#x5C06;&#x5B58;&#x50A8;&#x4E8E;&#x4E0D;&#x540C;&#x7684;&#x670D;&#x52A1;&#x5668;&#x76EE;&#x5F55;&#x4E2D;&#xFF0C;&#x5BFC;&#x81F4;&#x65E0;&#x6CD5;&#x5C06;&#x5206;&#x7247;&#x5408;&#x5E76;&#x3002;&#x6240;&#x4EE5;&#xFF0C;&#x6B64;&#x7C7B;&#x573A;&#x666F;&#x53EF;&#x4EE5;&#x8003;&#x8651;&#x91C7;&#x7528;nginx&#x63D0;&#x4F9B;&#x7684;ip_hash&#x7B56;&#x7565;&#x3002;&#x65E2;&#x80FD;&#x6EE1;&#x8DB3;&#x6BCF;&#x4E2A;&#x7528;&#x6237;&#x8BF7;&#x6C42;&#x5230;&#x540C;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x53C8;&#x80FD;&#x6EE1;&#x8DB3;&#x4E0D;&#x540C;&#x7528;&#x6237;&#x4E4B;&#x95F4;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x3002;</p>
+<h4 id="url-hash">URL hash</h4>
+<p>&#x4E00;&#x822C;&#x6765;&#x8BB2;&#xFF0C;&#x8981;&#x7528;&#x5230;url hash&#xFF0C;&#x662F;&#x8981;&#x914D;&#x5408;&#x7F13;&#x5B58;&#x547D;&#x4E2D;&#x6765;&#x4F7F;&#x7528;&#x3002;&#x4E3E;&#x4E00;&#x4E2A;&#x6211;&#x9047;&#x5230;&#x7684;&#x5B9E;&#x4F8B;&#xFF1A;&#x6709;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x5668;&#x96C6;&#x7FA4;A&#xFF0C;&#x9700;&#x8981;&#x5BF9;&#x5916;&#x63D0;&#x4F9B;&#x6587;&#x4EF6;&#x4E0B;&#x8F7D;&#xFF0C;&#x7531;&#x4E8E;&#x6587;&#x4EF6;&#x4E0A;&#x4F20;&#x91CF;&#x5DE8;&#x5927;&#xFF0C;&#x6CA1;&#x6CD5;&#x5B58;&#x50A8;&#x5230;&#x670D;&#x52A1;&#x5668;&#x78C1;&#x76D8;&#x4E2D;&#xFF0C;&#x6240;&#x4EE5;&#x7528;&#x5230;&#x4E86;&#x7B2C;&#x4E09;&#x65B9;&#x4E91;&#x5B58;&#x50A8;&#x6765;&#x505A;&#x6587;&#x4EF6;&#x5B58;&#x50A8;&#x3002;&#x670D;&#x52A1;&#x5668;&#x96C6;&#x7FA4;A&#x6536;&#x5230;&#x5BA2;&#x6237;&#x7AEF;&#x8BF7;&#x6C42;&#x4E4B;&#x540E;&#xFF0C;&#x9700;&#x8981;&#x4ECE;&#x4E91;&#x5B58;&#x50A8;&#x4E2D;&#x4E0B;&#x8F7D;&#x6587;&#x4EF6;&#x7136;&#x540E;&#x8FD4;&#x56DE;&#xFF0C;&#x4E3A;&#x4E86;&#x7701;&#x53BB;&#x4E0D;&#x5FC5;&#x8981;&#x7684;&#x7F51;&#x7EDC;&#x5E26;&#x5BBD;&#x548C;&#x4E0B;&#x8F7D;&#x8017;&#x65F6;&#xFF0C;&#x5728;&#x670D;&#x52A1;&#x5668;&#x96C6;&#x7FA4;A&#x4E0A;&#x505A;&#x4E86;&#x4E00;&#x5C42;&#x4E34;&#x65F6;&#x7F13;&#x5B58;&#xFF08;&#x7F13;&#x5B58;&#x4E00;&#x4E2A;&#x6708;&#xFF09;&#x3002;&#x7531;&#x4E8E;&#x662F;&#x670D;&#x52A1;&#x5668;&#x96C6;&#x7FA4;&#xFF0C;&#x6240;&#x4EE5;&#x540C;&#x4E00;&#x4E2A;&#x8D44;&#x6E90;&#x591A;&#x6B21;&#x8BF7;&#x6C42;&#xFF0C;&#x53EF;&#x80FD;&#x4F1A;&#x5230;&#x8FBE;&#x4E0D;&#x540C;&#x7684;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#xFF0C;&#x5BFC;&#x81F4;&#x4E0D;&#x5FC5;&#x8981;&#x7684;&#x591A;&#x6B21;&#x4E0B;&#x8F7D;&#xFF0C;&#x7F13;&#x5B58;&#x547D;&#x4E2D;&#x7387;&#x4E0D;&#x9AD8;&#xFF0C;&#x4EE5;&#x53CA;&#x4E00;&#x4E9B;&#x8D44;&#x6E90;&#x65F6;&#x95F4;&#x7684;&#x6D6A;&#x8D39;&#x3002;&#x5728;&#x6B64;&#x7C7B;&#x573A;&#x666F;&#x4E0B;&#xFF0C;&#x4E3A;&#x4E86;&#x4F7F;&#x5F97;&#x7F13;&#x5B58;&#x547D;&#x4E2D;&#x7387;&#x63D0;&#x9AD8;&#xFF0C;&#x5F88;&#x9002;&#x5408;&#x4F7F;&#x7528;url_hash&#x7B56;&#x7565;&#xFF0C;&#x540C;&#x4E00;&#x4E2A;url&#xFF08;&#x4E5F;&#x5C31;&#x662F;&#x540C;&#x4E00;&#x4E2A;&#x8D44;&#x6E90;&#x8BF7;&#x6C42;&#xFF09;&#x4F1A;&#x5230;&#x8FBE;&#x540C;&#x4E00;&#x53F0;&#x673A;&#x5668;&#xFF0C;&#x4E00;&#x65E6;&#x7F13;&#x5B58;&#x4F4F;&#x4E86;&#x8D44;&#x6E90;&#xFF0C;&#x518D;&#x6B64;&#x6536;&#x5230;&#x8BF7;&#x6C42;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x4ECE;&#x7F13;&#x5B58;&#x4E2D;&#x8BFB;&#x53D6;&#xFF0C;&#x65E2;&#x51CF;&#x5C11;&#x4E86;&#x5E26;&#x5BBD;&#xFF0C;&#x4E5F;&#x51CF;&#x5C11;&#x7684;&#x4E0B;&#x8F7D;&#x65F6;&#x95F4;&#x3002;</p>
+<h2 id="tcpudp-load-balance">TCP/UDP load balance</h2>
+<p>Load balancing refers to efficiently distributing network traffic across multiple backend servers.</p>
+<p>In NGINX Plus Release 5 and later, NGINX Plus can proxy and load balance Transmission Control Protocol) (TCP) traffic. TCP is the protocol for many popular applications and services, such as LDAP, MySQL, and RTMP.</p>
+<p>In NGINX Plus Release 9 and later, NGINX Plus can proxy and load balance UDP traffic. UDP (User Datagram Protocol) is the protocol for many popular non-transactional applications, such as DNS, syslog, and RADIUS.</p>
+<h2 id="cookie--session&#xFF08;http-&#x77E5;&#x8BC6;&#x590D;&#x4E60;&#xFF09;">cookie &amp; session&#xFF08;http &#x77E5;&#x8BC6;&#x590D;&#x4E60;&#xFF09;</h2>
+<h3 id="http&#x65E0;&#x8FDE;&#x63A5;&#x6982;&#x5FF5;&#x4ECB;&#x7ECD;">http&#x65E0;&#x8FDE;&#x63A5;&#x6982;&#x5FF5;&#x4ECB;&#x7ECD;</h3>
+<p>HTTP&#x7684;&#x8BBE;&#x8BA1;&#x8005;&#x6709;&#x610F;&#x5229;&#x7528;&#x8FD9;&#x79CD;&#x7279;&#x70B9;&#x5C06;&#x534F;&#x8BAE;&#x8BBE;&#x8BA1;&#x4E3A;&#x8BF7;&#x6C42;&#x65F6;&#x5EFA;&#x8FDE;&#x63A5;&#x3001;&#x8BF7;&#x6C42;&#x5B8C;&#x91CA;&#x653E;&#x8FDE;&#x63A5;&#xFF0C;&#x4EE5;&#x5C3D;&#x5FEB;&#x5C06;&#x8D44;&#x6E90;&#x91CA;&#x653E;&#x51FA;&#x6765;&#x670D;&#x52A1;&#x5176;&#x4ED6;&#x5BA2;&#x6237;&#x7AEF;&#x3002;&#x968F;&#x7740;&#x65F6;&#x95F4;&#x7684;&#x63A8;&#x79FB;&#xFF0C;&#x7F51;&#x9875;&#x53D8;&#x5F97;&#x8D8A;&#x6765;&#x8D8A;&#x590D;&#x6742;&#xFF0C;&#x91CC;&#x9762;&#x53EF;&#x80FD;&#x5D4C;&#x5165;&#x4E86;&#x5F88;&#x591A;&#x56FE;&#x7247;&#xFF0C;&#x8FD9;&#x65F6;&#x5019;&#x6BCF;&#x6B21;&#x8BBF;&#x95EE;&#x56FE;&#x7247;&#x90FD;&#x9700;&#x8981;&#x5EFA;&#x7ACB;&#x4E00;&#x6B21; TCP &#x8FDE;&#x63A5;&#x5C31;&#x663E;&#x5F97;&#x5F88;&#x4F4E;&#x6548;&#x3002;&#x540E;&#x6765;&#xFF0C;Keep-Alive &#x88AB;&#x63D0;&#x51FA;&#x7528;&#x6765;&#x89E3;&#x51B3;&#x8FD9;&#x6548;&#x7387;&#x4F4E;&#x7684;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x77E5;&#x9053;HTTP&#x534F;&#x8BAE;&#x91C7;&#x7528;&#x201C;&#x8BF7;&#x6C42;-&#x5E94;&#x7B54;&#x201D;&#x6A21;&#x5F0F;&#xFF0C;&#x5F53;&#x4F7F;&#x7528;&#x975E;KeepAlive&#x6A21;&#x5F0F;&#x65F6;&#xFF0C;&#x6BCF;&#x4E2A;&#x8BF7;&#x6C42;/&#x5E94;&#x7B54;&#x5BA2;&#x6237;&#x548C;&#x670D;&#x52A1;&#x5668;&#x90FD;&#x8981;&#x65B0;&#x5EFA;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#xFF0C;&#x5B8C;&#x6210;&#x4E4B;&#x540E;&#x7ACB;&#x5373;&#x65AD;&#x5F00;&#x8FDE;&#x63A5;&#xFF1B;&#x5F53;&#x4F7F;&#x7528;Keep-Alive&#x6A21;&#x5F0F;&#x65F6;&#xFF0C;Keep-Alive&#x529F;&#x80FD;&#x4F7F;&#x5BA2;&#x6237;&#x7AEF;&#x5230;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x7684;&#x8FDE;&#x63A5;&#x6301;&#x7EED;&#x6709;&#x6548;&#xFF0C;&#x5F53;&#x51FA;&#x73B0;&#x5BF9;&#x670D;&#x52A1;&#x5668;&#x7684;&#x540E;&#x7EE7;&#x8BF7;&#x6C42;&#x65F6;&#xFF0C;Keep-Alive&#x529F;&#x80FD;&#x907F;&#x514D;&#x4E86;&#x5EFA;&#x7ACB;&#x6216;&#x8005;&#x91CD;&#x65B0;&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;&#x3002;</p>
+<p>http 1.0&#x4E2D;&#x9ED8;&#x8BA4;&#x662F;&#x5173;&#x95ED;&#x7684;&#xFF0C;&#x9700;&#x8981;&#x5728;http&#x5934;&#x52A0;&#x5165;&#x201D;Connection: Keep-Alive&#x201D;&#xFF0C;&#x624D;&#x80FD;&#x542F;&#x7528;Keep-Alive&#xFF1B;</p>
+<p>http 1.1&#x4E2D;&#x9ED8;&#x8BA4;&#x542F;&#x7528;Keep-Alive&#xFF0C;&#x5982;&#x679C;&#x52A0;&#x5165;&#x201D;Connection: close&#x201C;&#xFF0C;&#x624D;&#x5173;&#x95ED;&#xFF0C;&#x76EE;&#x524D;&#x5927;&#x90E8;&#x5206;&#x6D4F;&#x89C8;&#x5668;&#x90FD;&#x662F;&#x7528;http1.1&#x534F;&#x8BAE;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x8BF4;&#x9ED8;&#x8BA4;&#x90FD;&#x4F1A;&#x53D1;&#x8D77;Keep-Alive&#x7684;&#x8FDE;&#x63A5;&#x8BF7;&#x6C42;&#x4E86;&#x3002;Keep-Alive&#x4E0D;&#x4F1A;&#x6C38;&#x4E45;&#x4FDD;&#x6301;&#x8FDE;&#x63A5;&#xFF0C;&#x5B83;&#x6709;&#x4E00;&#x4E2A;&#x4FDD;&#x6301;&#x65F6;&#x95F4;&#x3002;</p>
+<h3 id="session">Session</h3>
+<p>A session creates a file in a temporary directory on the server where registered session variables and their values are stored. This data will be available to all pages on the site during that visit.</p>
+<p>A session ends when the user closes the browser or after leaving the site, the server will terminate the session after a predetermined period of time, commonly 30 minutes duration.</p>
+<h3 id="cookie">Cookie</h3>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies" target="_blank">mozilla doc of cookie</a></p>
+<p>An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to the user&apos;s web browser. The browser may store it and send it back with the next request to the same server. Typically, it&apos;s used to tell if two requests came from the same browser &#x2014; keeping a user logged-in, for example. It remembers stateful information for the <strong>stateless</strong> HTTP protocol.</p>
+<p>Cookies are mainly used for three purposes:</p>
+<ul>
+<li>Session management</li>
+</ul>
+<p>Logins, shopping carts, game scores, or anything else the server should remember</p>
+<ul>
+<li>Personalization</li>
+</ul>
+<p>User preferences, themes, and other settings</p>
+<ul>
+<li>Tracking</li>
+</ul>
+<p>Recording and analyzing user behavior</p>
+<h4 id="how-to-create-cookie">how to create cookie</h4>
+<p>When receiving an HTTP request, a server can send a <code>Set-Cookie header</code> with the response. The cookie is usually stored by the browser, and then the cookie is sent with requests made to the same server inside a <code>Cookie HTTP header</code>. An expiration date or duration can be specified, after which the cookie is no longer sent. Additionally, restrictions to a specific domain and path can be set, limiting where the cookie is sent.</p>
+<h2 id="http-health-checks&#xFF08;http&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;">HTTP Health Checks&#xFF08;HTTP&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;</h2>
+<h3 id="server-slow-start&#xFF08;&#x670D;&#x52A1;&#x6162;&#x5F00;&#x59CB;&#xFF09;">Server Slow Start&#xFF08;&#x670D;&#x52A1;&#x6162;&#x5F00;&#x59CB;&#xFF09;</h3>
+<p>A recently recovered server can be easily overwhelmed by connections, which may cause the server to be marked as unavailable again. Slow start allows an upstream server to gradually recover its weight from zero to its nominal value after it has been recovered or became available. This can be done with the slow_start parameter of the the upstream server directive:</p>
+<pre class="language-"><code class="lang-java">upstream backend <span class="token punctuation">{</span>
+    server backend1<span class="token punctuation">.</span>example<span class="token punctuation">.</span>com slow_start<span class="token operator">=</span><span class="token number">30</span>s<span class="token punctuation">;</span>
+    server backend2<span class="token punctuation">.</span>example<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
+    server <span class="token number">192.0</span><span class="token number">.0</span><span class="token number">.1</span> backup<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Note that if there is only a single server in a group, the slow_start parameter is ignored and the server is never marked unavailable. Slow start is exclusive to NGINX Plus.</p>
+<h3 id="passive-health-checks">Passive Health Checks</h3>
+<p>For passive health checks, NGINX and NGINX Plus monitor transactions as they happen, and try to resume failed connections. If the transaction still cannot be resumed, NGINX Open Source and NGINX Plus mark the server as unavailable and temporarily stop sending requests to it until it is marked active again.</p>
+<h3 id="active-health-checks">Active Health Checks</h3>
+<p>NGINX Plus can periodically check the health of upstream servers by sending special health&#x2011;check requests to each server and verifying the correct response.</p>
+<h2 id="tcp-health-checks&#xFF08;tcp&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;">TCP Health Checks&#xFF08;TCP&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF09;</h2>
+<p>NGINX and NGINX Plus can continually test your TCP upstream servers, avoid the servers that have failed, and gracefully add the recovered servers into the load&#x2011;balanced group.</p>
+<h3 id="passive-tcp-health-checks&#x88AB;&#x52A8;&#x7684;tcp&#x5065;&#x5EB7;&#x68C0;&#x67E5;">Passive TCP Health Checks(&#x88AB;&#x52A8;&#x7684;TCP&#x5065;&#x5EB7;&#x68C0;&#x67E5;)</h3>
+<p>If an attempt to connect to an upstream server times out or results in an error, NGINX Open Source or NGINX Plus can mark the server as unavailable and stop sending requests to it for a defined amount of time. To define the conditions under which NGINX considers an upstream server unavailable, include the following parameters to the server directive</p>
+<ol>
+<li><p><code>fail_timeout</code> &#x2013; The amount of time within which a specified number of connection attempts must fail for the server to be considered unavailable. Also, the amount of time that NGINX considers the server unavailable after marking it so.</p>
+</li>
+<li><p><code>max_fails</code> &#x2013; The number of failed attempts that happen during the specified time for NGINX to consider the server unavailable.</p>
+</li>
+</ol>
+<h3 id="active-tcp-health-checks&#x4E3B;&#x52A8;&#x7684;tcp&#x5065;&#x5EB7;&#x68C0;&#x67E5;">Active TCP Health Checks(&#x4E3B;&#x52A8;&#x7684;TCP&#x5065;&#x5EB7;&#x68C0;&#x67E5;)</h3>
+<p>NGINX Plus sends special health check requests to each upstream server and checks for a response that satisfies certain conditions. If a connection to the server cannot be established, the health check fails, and the server is considered unhealthy. NGINX Plus does not proxy client connections to unhealthy servers. If several health checks are configured for an upstream group, the failure of any check is enough to consider the corresponding server unhealthy.</p>
+<h3 id="fine-tuning-tcp-health-checks">Fine-Tuning TCP Health Checks</h3>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fine-tuning</td>
+<td>v.&#x8C03;&#x6574;&#xFF0C;&#x4F7F;&#x6709;&#x89C4;&#x5219;( fine-tune&#x7684;&#x73B0;&#x5728;&#x5206;&#x8BCD; )&#xFF1B;</td>
+</tr>
+</tbody>
+</table>
+<p>By default, NGINX Plus tries to connect to each server in an upstream server group every 5 seconds. If the connection cannot be established, NGINX Plus considers the health check failed, marks the server as unhealthy, and stops forwarding client connections to the server.</p>
+<ul>
+<li><p><code>interval</code> &#x2013; How often (in seconds) NGINX Plus sends health check requests (default is 5 seconds)</p>
+</li>
+<li><p><code>passes</code> &#x2013; Number of consecutive health checks the server must respond to to be considered healthy (default is 1)</p>
+</li>
+<li><p><code>fails</code> &#x2013; Number of consecutive health checks the server must fail to respond to to be considered unhealthy (default is 1)</p>
+</li>
+</ul>
+<h1 id="massively-scalable-content-caching">Massively Scalable Content Caching</h1>
+<table>
+<thead>
+<tr>
+<th>&#x5355;&#x8BCD;&#x77ED;&#x8BED;</th>
+<th>&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>massive</td>
+<td>adj.&#x5927;&#x7684;&#xFF0C;&#x91CD;&#x7684;&#xFF1B; &#x5927;&#x5757;&#x7684;&#xFF0C;&#x5927;&#x91CF;&#x7684;&#xFF1B; &#x9B41;&#x4F1F;&#x7684;&#xFF0C;&#x7ED3;&#x5B9E;&#x7684;&#xFF1B; &#x5927;&#x89C4;&#x6A21;&#x7684;</td>
+</tr>
+</tbody>
+</table>
+<p>Caching accelerates content serving by storing request responses to be served again in the future. Content caching reduces load to upstream servers, caching the full response rather than running computations and queries again for the same request. Caching increases performance and reduces load, meaning you can served faster with fewer resources. Scaling and distributing caching servers in strategic locations can have a dramatic effect on user experience. It&#x2019;s optimal to host content close to the consumer for the best performance. You can also cache your content close to your users. This is the pattern of content delivery networks, or CDNs. With NGINX you&#x2019;re able to cache your content wherever you can place an NGINX server, effectively enabling you to create your own CDN. With NGINX caching, you&#x2019;re also able to passively cache and serve cached responses in the event of an upstream failure.</p>
+<p>&#x901A;&#x8FC7;&#x5BF9;&#x8BF7;&#x6C42;&#x7684;&#x54CD;&#x5E94;&#x7ED3;&#x679C;&#x8FDB;&#x884C;&#x7F13;&#x5B58;&#xFF0C;&#x80FD;&#x591F;&#x4E3A;&#x540E;&#x7EED;&#x76F8;&#x540C;&#x8BF7;&#x6C42;&#x63D0;&#x4F9B;&#x52A0;&#x901F;&#x670D;&#x52A1;&#x3002;&#x5BF9;&#x76F8;&#x540C;&#x8BF7;&#x6C42; &#x54CD;&#x5E94;&#x5185;&#x5BB9;&#x8FDB;&#x884C;&#x5185;&#x5BB9;&#x7F13;&#x5B58;(Content Caching)&#xFF0C;&#x76F8;&#x6BD4;&#x6BCF;&#x6B21;&#x8BF7;&#x6C42;&#x90FD;&#x91CD;&#x65B0;&#x8BA1;&#x7B97;&#x548C;&#x67E5;&#x8BE2;&#x88AB;&#x4EE3;&#x7406; &#x670D;&#x52A1;&#x5668;&#xFF0C;&#x80FD;&#x6709;&#x6548;&#x964D;&#x4F4E;&#x88AB;&#x4EE3;&#x7406;&#x670D;&#x52A1;&#x5668;&#x8D1F;&#x8F7D;&#x3002;&#x5185;&#x5BB9;&#x7F13;&#x5B58;&#x80FD;&#x63D0;&#x5347;&#x670D;&#x52A1;&#x6027;&#x80FD;&#xFF0C;&#x964D;&#x4F4E;&#x670D;&#x52A1;&#x5668;&#x8D1F;&#x8F7D;&#x538B;&#x529B;&#xFF0C;&#x540C;&#x65F6;&#x610F;&#x5473;&#x7740;&#x80FD;&#x591F;&#x4F7F;&#x7528;&#x66F4;&#x5C11;&#x7684;&#x8D44;&#x6E90;&#x63D0;&#x4F9B;&#x66F4;&#x5FEB;&#x7684;&#x670D;&#x52A1;&#x3002;&#x53EF;&#x4F38;&#x7F29;&#x7684;&#x7F13;&#x5B58;&#x670D;&#x52A1;&#x4ECE;&#x67B6;&#x6784; &#x5C42;&#x9762;&#x6765;&#x8BB2;&#xFF0C;&#x80FD;&#x591F;&#x663E;&#x8457;&#x63D0;&#x5347;&#x7528;&#x6237;&#x4F53;&#x9A8C;&#xFF0C;&#x56E0;&#x4E3A;&#x54CD;&#x5E94;&#x5185;&#x5BB9;&#x7ECF;&#x8FC7;&#x66F4;&#x5C11;&#x7684;&#x8F6C;&#x53D1;&#x5C31;&#x80FD;&#x591F;&#x53D1;&#x9001;&#x7ED9;&#x7528;&#x6237;&#xFF0C;&#x540C;&#x65F6;&#x80FD;&#x63D0;&#x5347;&#x670D;&#x52A1;&#x5668;&#x6027;&#x80FD;&#x3002;</p>
+<table>
+<thead>
+<tr>
+<th>Web&#x7F13;&#x5B58;&#x7C7B;&#x578B;</th>
+<th>&#x63CF;&#x8FF0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#x6570;&#x636E;&#x5E93;&#x7F13;&#x5B58;</td>
+<td>&#x5F53;web&#x5E94;&#x7528;&#x5173;&#x7CFB;&#x590D;&#x6742;&#xFF0C;&#x6570;&#x636E;&#x8868;&#x8E6D;&#x8E6D;&#x8E6D;&#x5F80;&#x4E0A;&#x6DA8;&#x65F6;&#xFF0C;&#x53EF;&#x4EE5;&#x5C06;&#x67E5;&#x8BE2;&#x540E;&#x7684;&#x6570;&#x636E;&#x653E;&#x5230;&#x5185;&#x5B58;&#x4E2D;&#x8FDB;&#x884C;&#x7F13;&#x5B58;&#xFF0C;&#x4E0B;&#x6B21;&#x518D;&#x67E5;&#x8BE2;&#x65F6;&#xFF0C;&#x5C31;&#x76F4;&#x63A5;&#x4ECE;&#x5185;&#x5B58;&#x7F13;&#x5B58;&#x4E2D;&#x83B7;&#x53D6;&#xFF0C;&#x4ECE;&#x800C;&#x63D0;&#x9AD8;&#x54CD;&#x5E94;&#x901F;&#x5EA6;&#x3002;</td>
+</tr>
+<tr>
+<td>CDN&#x7F13;&#x5B58;</td>
+<td>&#x5F53;&#x6211;&#x4EEC;&#x53D1;&#x9001;&#x4E00;&#x4E2A;web&#x8BF7;&#x6C42;&#x65F6;&#xFF0C;CDN&#x4F1A;&#x5E2E;&#x6211;&#x4EEC;&#x8BA1;&#x7B97;&#x53BB;&#x54EA;&#x5F97;&#x5230;&#x8FD9;&#x4E9B;&#x5185;&#x5BB9;&#x7684;&#x8DEF;&#x5F84;&#x77ED;&#x4E14;&#x5FEB;&#x3002;&#x8FD9;&#x4E2A;&#x662F;&#x7F51;&#x7AD9;&#x7BA1;&#x7406;&#x5458;&#x90E8;&#x7F72;&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x4ED6;&#x4EEC;&#x4E5F;&#x53EF;&#x4EE5;&#x5C06;&#x5927;&#x5BB6;&#x7ECF;&#x5E38;&#x8BBF;&#x95EE;&#x7684;&#x5185;&#x5BB9;&#x653E;&#x5728;CDN&#x91CC;&#xFF0C;&#x4ECE;&#x800C;&#x52A0;&#x5FEB;&#x54CD;&#x5E94;&#x3002;</td>
+</tr>
+<tr>
+<td>&#x4EE3;&#x7406;&#x670D;&#x52A1;&#x5668;&#x7F13;&#x5B58;</td>
+<td>&#x4EE3;&#x7406;&#x670D;&#x52A1;&#x5668;&#x7F13;&#x5B58;&#xFF0C;&#x8DDF;&#x6D4F;&#x89C8;&#x5668;&#x7F13;&#x5B58;&#x6027;&#x8D28;&#x7C7B;&#x4F3C;&#xFF0C;&#x4F46;&#x662F;&#x4EE3;&#x7406;&#x670D;&#x52A1;&#x5668;&#x7F13;&#x5B58;&#x9762;&#x5411;&#x7684;&#x7FA4;&#x4F53;&#x66F4;&#x5E7F;&#xFF0C;&#x89C4;&#x6A21;&#x66F4;&#x5927;&#x3002;&#x5B83;&#x4E0D;&#x53EA;&#x4E3A;&#x4E00;&#x4E2A;&#x7528;&#x6237;&#x670D;&#x52A1;&#xFF0C;&#x4E00;&#x822C;&#x4E3A;&#x5927;&#x91CF;&#x7528;&#x6237;&#x63D0;&#x4F9B;&#x670D;&#x52A1;&#xFF0C;&#x540C;&#x4E00;&#x4E2A;&#x526F;&#x672C;&#x4F1A;&#x88AB;&#x91CD;&#x7528;&#x591A;&#x6B21;,&#x56E0;&#x6B64;&#x5728;&#x51CF;&#x5C11;&#x54CD;&#x5E94;&#x65F6;&#x95F4;&#x548C;&#x5E26;&#x5BBD;&#x4F7F;&#x7528;&#x65B9;&#x9762;&#x5F88;&#x6709;&#x6548;&#x3002;</td>
+</tr>
+<tr>
+<td>&#x6D4F;&#x89C8;&#x5668;&#x7F13;&#x5B58;</td>
+<td>&#x6BCF;&#x4E2A;&#x6D4F;&#x89C8;&#x5668;&#x90FD;&#x5B9E;&#x73B0;&#x4E86; HTTP &#x7F13;&#x5B58;&#xFF0C;&#x6211;&#x4EEC;&#x901A;&#x8FC7;&#x6D4F;&#x89C8;&#x5668;&#x4F7F;&#x7528;HTTP&#x534F;&#x8BAE;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x4EA4;&#x4E92;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x6D4F;&#x89C8;&#x5668;&#x5C31;&#x4F1A;&#x6839;&#x636E;&#x4E00;&#x5957;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x7EA6;&#x5B9A;&#x7684;&#x89C4;&#x5219;&#x8FDB;&#x884C;&#x7F13;&#x5B58;&#x5DE5;&#x4F5C;&#x3002;&#x5F53;&#x6211;&#x4EEC;&#x5728;&#x6D4F;&#x89C8;&#x5668;&#x4E2D;&#x70B9;&#x51FB;&#x524D;&#x8FDB;&#x548C;&#x540E;&#x9000; &#x6309;&#x94AE;&#x65F6;&#xFF0C;&#x5229;&#x7528;&#x7684;&#x4FBF;&#x662F;&#x6D4F;&#x89C8;&#x5668;&#x7684;&#x7F13;&#x5B58;&#x673A;&#x5236;&#x3002;</td>
+</tr>
+</tbody>
+</table>
+<footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
+2020-06-28 23:25:23
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+                <a href="rpc.html" class="navigation navigation-next navigation-unique" aria-label="Next page: rpc">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"nginx基础","layout":"page","date":"2019-06-07 00:00","level":"1.10.1","depth":2,"next":{"title":"rpc","level":"1.10.2","depth":2,"path":"content/distributed_design/rpc.md","ref":"./content/distributed_design/rpc.md","articles":[]},"previous":{"title":"[9 I/O & 网络 & 分布式]","level":"1.10","depth":1,"ref":"","articles":[{"title":"nginx基础","level":"1.10.1","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"rpc","level":"1.10.2","depth":2,"path":"content/distributed_design/rpc.md","ref":"./content/distributed_design/rpc.md","articles":[]},{"title":"tomcat","level":"1.10.3","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]},{"title":"分布式","level":"1.10.4","depth":2,"path":"content/distributed_design/distribute.md","ref":"./content/distributed_design/distribute.md","articles":[]},{"title":"设计模式","level":"1.10.5","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"[I/O与网络]","level":"1.10.6","depth":2,"ref":"","articles":[{"title":"IO和中断","level":"1.10.6.1","depth":3,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"http & tcp","level":"1.10.6.2","depth":3,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"IO基础","level":"1.10.6.3","depth":3,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[]},{"title":"nio","level":"1.10.6.4","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从io到epoll","level":"1.10.6.5","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/distributed_design/nginx.md","mtime":"2020-06-28T15:25:23.745Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-18T11:56:34.961Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
