@@ -98,20 +98,19 @@ date: 2019-03-18 00:00
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/vfs.png)
 
-# IO模型：同步/阻塞概念
+# I/O模型：同步/阻塞概念
 
-## 阻塞与非阻塞(等待IO时的状态)
+## 阻塞与非阻塞(等待I/O时的状态)
 
-函数或方法（用户线程调用内核IO操作）的实现方式：
+函数或方法（用户线程调用内核I/O操作）的实现方式：
 
-* 阻塞是指IO操作需要彻底完成后才返回到用户空间
-* 非阻塞是指IO操作被调用后立即返回给用户一个状态值，无需等到IO操作彻底完成。
+* 阻塞是指I/O操作需要彻底完成后才返回到用户空间
+* 非阻塞是指I/O操作被调用后立即返回给用户一个状态值，无需等到I/O操作彻底完成。
 
 ## 同步与异步（用户线程与内核的消息交互方式）
 
-* 同步指用户线程发起IO请求后需要等待或者轮询内核IO操作完成后才能继续执行；同步有阻塞，非阻塞之分
-
-* 异步是指用户线程发起IO请求后仍然继续执行，当**内核IO操作完成后会通知用户线程**，或者调用用户线程注册的回调函数。异步一定是非阻塞的（内核会通过函数回调或者信号机制通知用户进程；类似观察者模式）
+* 同步指用户线程发起I/O请求后需要等待或者**轮询内核I/O操作**完成后才能继续执行；同步有阻塞，非阻塞之分
+* 异步是指用户线程发起I/O请求后仍然继续执行，当**内核I/O操作完成后会通知用户线程**，或者调用用户线程注册的回调函数。异步一定是非阻塞的（内核会通过函数回调或者信号机制通知用户进程；类似观察者模式）
 
 ## 用水壶烧水的例子说明[同步/阻塞]
 
@@ -125,7 +124,7 @@ date: 2019-03-18 00:00
 * 同步非阻塞
 
 1. 点火(发消息)
-2. 去看会儿电视，时不时过来(轮询)看水壶烧开水没有（非阻塞);水开后接着处理
+2. 去看会儿电视，时不时过来(轮询)看水壶烧开水没有（非阻塞)；水开后接着处理
 
 用户线程每次IO请求都能立刻返回，但需要通过轮询去判断数据是否返回，会无谓地消耗大量的CPU
 
@@ -145,7 +144,7 @@ date: 2019-03-18 00:00
 
 ### 传统的`BIO`(Blocking I/O 阻塞IO)
 
-* server
+* BIO server
 
 ```java
 public class Server {
@@ -197,7 +196,7 @@ public class Client {
 ```
 
 * Server端的`accept`方法是阻塞的，等待客户端来连接
-* 用一个线程建立连接后，输入/输出流的读写过程是阻塞的
+* 用一个线程建立连接后，输入/输出流的读写过程是阻塞的（内核操作阻塞）
 
 <font color='red'>效率低，并发不高，线程开销大</font>
 
@@ -205,9 +204,20 @@ public class Client {
 
 <font color='red'>不同的事情(有客户端来连接，有输入/输出的读写事件)进行轮训监听，该线程负责所有的这些工作</font>
 
-* Server
+* NIO Server
 
 ```java
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
+
+
 public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocketChannel ssc = ServerSocketChannel.open();

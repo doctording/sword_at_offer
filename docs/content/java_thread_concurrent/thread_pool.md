@@ -171,7 +171,7 @@ public ThreadPoolExecutor(int corePoolSize,
 
 当任务添加到线程池中之所以被拒绝，可能是由于：第一，线程池异常关闭。第二，任务数量超过线程池的最大限制,并设置有界的`workeQueue`
 
-1. `ThreadPoolExecutor.AbortPolicy`:丢弃任务并抛出RejectedExecutionException异常。（默认）
+1. `ThreadPoolExecutor.AbortPolicy`:丢弃任务并抛出RejectedExecutionException异常。（**默认**）
 2. `ThreadPoolExecutor.DiscardPolicy`：丢弃任务，但是不抛出异常。
 3. `ThreadPoolExecutor.DiscardOldestPolicy`：丢弃队列最前面的任务，然后重新提交被拒绝的任务
 4. `ThreadPoolExecutor.CallerRunsPolicy`：由调用线程（提交任务的线程）处理该任务

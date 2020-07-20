@@ -10,7 +10,7 @@ date: 2020-06-27 00:00
 
 一台典型的个人PC中，中断结构如下图：
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/interrupt.png)
+![](../../content/java_io_net/imgs/interrupt.png)
 
 设备完成工作，产生一个中断，他是通过在分配给它的一条总线信号线上置起信号而产生中断的。该信号主板上的中断控制器芯片检测到，由中断控制器芯片决定做什么。
 
@@ -45,7 +45,7 @@ date: 2020-06-27 00:00
 
 * 中断处理过程
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/interrupt_deal.png)
+![](../../content/java_io_net/imgs/interrupt_deal.png)
 
 问题1: 中断向量表用于保存：**服务程序的入口地址**
 
@@ -87,13 +87,19 @@ CPU：`轮询`，`忙等待`
 
 每次的IO中断，都带来CPU的上下文切换
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_way_interrupt.png)
+![](../../content/java_io_net/imgs/io_way_interrupt.png)
 
 ### DMA（Direct Memory Access）
 
 允许不同速度的硬件装置来沟通，而不需要依赖于CPU的大量中断负载。DMA控制器接管了数据读写请求，减少CPU的负担。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_way_dma.png)
+![](../../content/java_io_net/imgs/io_way_dma.png)
+
+* DMA向CPU申请权限，让DMA进行I/O操作；CPU不需要在负责大量的I/O操作而无法处理其它事情了，此处有DMA总线
+
+* 传统I/O流即类似DMA方式
+
+如果大量I/O请求，DMA申请多，DMA总线冲突，一样有问题？
 
 ## i/o zero copy
 
@@ -112,7 +118,7 @@ mmap将一个文件或者其它对象映射进内存。文件被映射到多个�
 
 使用内存映射文件处理存储于磁盘上的文件时，将不必再对文件执行I/O操作，这意味着在对文件进行处理时将不必再为文件申请并分配缓存，所有的文件缓存操作均由系统直接管理，由于取消了将文件数据加载到内存、数据从内存到文件的回写以及释放内存块等步骤，使得内存映射文件在处理大数据量的文件时能起到相当重要的作用。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/mem_file.png)
+![](../../content/java_io_net/imgs/mem_file.png)
 
 好处：
 
