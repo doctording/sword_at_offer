@@ -8,7 +8,11 @@ date: 2020-05-18 00:00
 
 # rpc(Remote Procedure Call)
 
-问题引入：两台不同的主机进程要进行通信？
+Remote Procedure Call (RPC) is a powerful technique for constructing distributed, client-server based applications. It is based on extending the conventional local procedure calling so that the called procedure need not exist in the same address space as the calling procedure. The two processes may be on the same system, or they may be on different systems with a network connecting them.
+
+## rpc 问题引入
+
+两台不同的主机进程要进行通信？
 
 最易想到的最原始做法：tcp/ip通信，二进制数据传输
 
@@ -21,7 +25,7 @@ date: 2020-05-18 00:00
 * 代理模式/动态代理
 * 序列化
 
-## eg:传统的socket编程
+## 传统的socket编程
 
 * User
 
@@ -189,7 +193,7 @@ public class Client {
 
 ## `Stub`代理类屏蔽网络细节
 
-client 访问太复杂， 网络这部分非得了解不可
+client 访问太复杂，且网络这部分非得了解不可
 
 * 一个代理`Stub`类，把网络这部分给封装下，客户端轻松点
 

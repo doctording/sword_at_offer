@@ -87,17 +87,19 @@
     * [CPU,缓存](./content/java_thread_concurrent/cpu_cache.md)
 * [8 数据库]
     * [数据库/表/查询](./content/db_cache/mysql.md)
-* [9 I/O & 网络 & 分布式]
-    * [I/O与网络]
-        * [IO和中断](./content/java_io_net/io_interrupte.md)
-        * [http & tcp](./content/java_io_net/http_tcp.md)
-        * [IO基础](./content/java_io_net/io_basic.md)
+* [9 I/O & 网络]
+    * [IO和中断](./content/java_io_net/io_interrupte.md)
+    * [IO基础](./content/java_io_net/io_basic.md)
         * [nio](./content/java_io_net/nio_basic.md)
         * [从io到epoll](./content/java_io_net/from_io_to_epoll.md)
+    * [http & tcp](./content/java_io_net/http_tcp.md)
     * [nginx基础](./content/distributed_design/nginx.md)
-    * [rpc](./content/distributed_design/rpc.md)
     * [tomcat](./content/distributed_design/tomcat.md)
-    * [分布式](./content/distributed_design/distribute.md)
+* [10 分布式]
+    * [分布式基础](./content/distributed_design/distribute.md)
+        * [分布式事务](./content/distributed_design/distribute_tx.md)
+        * [分布式锁](./content/distributed_design/distribute_lock.md)
+    * [rpc](./content/distributed_design/rpc.md)
     * [网络设计模式](./content/distributed_design/design.md)
-* [10 剑指offer]
+* [11 剑指offer]
     * [剑指Offer解题思路(全)](./content/thought_of_solve/thought.md)

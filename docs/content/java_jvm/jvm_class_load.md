@@ -80,8 +80,7 @@ Class文件中不会保存各个方法、字段的最终内存布局信息；因
 ## 堆(heap)
 
 主要用于存放`对象`；Java8之前有【方法区】的大部分被移到堆中了，所以，堆中还放有：`运行时常量池`,`字符串常量池`
-
-## 元空间（不属于JVM，使用直接内存）(metaspace)
+## 元空间(metaspace)（不属于JVM，使用堆外内存）
 
 类的元数据，如方法、字段、类、包的描述信息，这些信息可以用于创建文档、跟踪代码中的依赖性、执行编译时检查
 
@@ -141,8 +140,8 @@ Java(TM) SE Runtime Environment (build 1.8.0_171-b11)
 Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)
 ```
 
-* +UseCompressedClassPointers：64bit机器，一个指针8个字节，使用压缩会只有4个字节
-* -XX:+UseCompressedOops： 普通对象指针，压缩也是4个字节
+* +UseCompressedClassPointers：64bit机器，一个指针8个字节，如果使用压缩会只有4个字节
+* -XX:+UseCompressedOops：普通对象指针，如果压缩也是4个字节
 
 ```java
 
@@ -166,7 +165,7 @@ Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
 markword:8个字节
 _kclass:4个字节
 没有成员变量：instance data:0字节
-对其使用4个字节,进阶着上4个字节，凑成8个字节
+紧接着4个字节，是对齐要使用4个字节，即凑成8个字节
 
 即共16个字节
 */

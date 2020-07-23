@@ -8,7 +8,7 @@ date: 2019-02-15 00:00
 
 # Java7堆内存划分
 
-## 图书《深入理解java虚拟机》堆的描述
+参考图书《深入理解java虚拟机》堆的描述
 
 1. Java堆（Java Heap）是java虚拟机所管理的内存中最大的一块
 2. Java堆被所有线程共享的一块内存区域
@@ -150,7 +150,7 @@ JVM stack, native method stack, run-time constant pool, static references in met
 
 参考：<a href="https://www.geeksforgeeks.org/types-references-java/">https://www.geeksforgeeks.org/types-references-java/</a>
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/reference.png)
+![](../../content/java_jvm/imgs/reference.png)
 
 ### 强引用
 
@@ -323,7 +323,7 @@ The objects which are being referenced by phantom references are eligible for ga
 * 虚引用与GC
 
 * 虚引用get不到,因为get方法是直接返回的null
-* 虚引用放到队列中，不断的从队列中取出来看是否被回收了
+* 虚引用放到队列(`java.lang.ref.ReferenceQueue`)中，不断的从队列中取出来看是否被回收了
 
 ```java
 static final List<Object> LIST = new LinkedList<>();
@@ -360,8 +360,8 @@ public static void main(String[] args) throws Exception{
 
 管理堆外内存：
 
-1.jvm对象用虚引用，指向堆外内存
-2.jvm 堆 里面把引用回收掉，然后堆外也回收掉
+1. jvm对象用虚引用，指向堆外内存
+2. jvm 堆 里面把引用回收掉，然后堆外也回收掉
 
 ## 对象是生存还是死亡的？
 
@@ -371,9 +371,9 @@ public static void main(String[] args) throws Exception{
 =》没有GC Roots的引用链 =》 判断对象是否有必要执行`finalize()`方法
 ```
 
-**第一次**：通过GC roots遍历，找到不在引用链内的对象。并检查是否需要执行finalize()方法。（如果没重写finalize()则只需要标记一次，然后就可以进行GC）
+**第一次**：通过GC roots遍历，找到不在引用链内的对象。并检查是否需要执行finalize()方法。（如果没重写finalize()则只需要标记一次，然后就可以进行gc掉）
 
-在第一次标记中有`finalize()`需要被执行的对象，会被丢到一个优先级较低的队列(`F-Queue`)中执行，但不保证能被执行(因为是由低优先级的**`Finalizer线程`去处理的，试想低优先级线程不被执行到，那么重写了`finalize()`的对象就永久在堆中不被gc掉，即`java.lang.ref.Finalizer`对象会占用很大的堆空间，甚至溢出)
+在第一次标记中有`finalize()`需要被执行的对象，会被丢到一个优先级较低的队列(`F-Queue`:`java.lang.ref.Finalizer.ReferenceQueue`)中执行，但不保证能被执行(因为是由低优先级的**`Finalizer线程`去处理的，试想低优先级线程不被执行到，那么重写了`finalize()`的对象就永久在堆中不能被gc掉，即`java.lang.ref.Finalizer`对象会占用很大的堆空间，甚至溢出)
 
 **第二次**：对队列(`F-Queue`)中的对象再遍历一次，看是否有自救，没有则进行GC
 

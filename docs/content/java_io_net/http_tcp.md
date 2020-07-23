@@ -6,7 +6,9 @@ date: 2020-03-08 18:00
 
 [TOC]
 
-# TCP
+# 网络相关
+
+## TCP
 
 面向字节流/全双工
 
@@ -18,7 +20,7 @@ IP层必须以分组为单位发送数据，而不是字节流，所以TCP把若
 
 参考：<a href="https://blog.csdn.net/qq_26437925/article/details/52100293" target="_blank">tcp三次握手，Wireshark实践</a>
 
-## 流量控制
+### 流量控制
 
 Sender won’t overflow receiver’s buffer by transmitting too much, too fast.
 
@@ -53,7 +55,7 @@ ps：在TCP的首部中，有一个16为窗口字段，此字段就是用来存�
 
 ![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io/imgs/slide_window.png)
 
-## 拥塞控制
+### 拥塞控制
 
 拥塞控制就是防止过多的数据注入到网络中，这样可以使网络中的路由器或链路不致过载。拥塞控制所要做的都有一个前提，就是网络能承受现有的网络负荷。拥塞问题是一个全局性的问题,涉及到所有的主机、所有的路由器、以及与降低网络传输性能有关的所有因素
 
@@ -65,3 +67,5 @@ ps：在TCP的首部中，有一个16为窗口字段，此字段就是用来存�
 * 拥塞避免（Congestion Avoidance)
 * 快重传（Fast Restrangsmit)
 * 快恢复（Fast Recovery）
+
+## 网络抖动？
