@@ -1517,6 +1517,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.11.1.3" data-path="../distributed_design/distribute_id.html">
+            
+                <a href="../distributed_design/distribute_id.html">
+            
+                    
+                    分布式ID
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1535,7 +1548,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/rpc.html">
+            
+                <a href="../distributed_design/rpc.html">
+            
+                    
+                    rpc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.4" data-path="../distributed_design/design.html">
             
                 <a href="../distributed_design/design.html">
             
@@ -1679,7 +1705,7 @@
 <li><div><a href="#&#x7EBF;&#x7A0B;id">&#x7EBF;&#x7A0B;ID</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;threadcurrentthread">&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;(Thread.currentThread())</a><i></i></div></li>
-<li><div><a href="#&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;-todo">&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668; //TODO</a><i></i></div></li>
+<li><div><a href="#&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;">&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;</a><i></i></div></li>
 </ul></li>
 <li><div><a href="#&#x7EBF;&#x7A0B;interrupt-&#x548C;-&#x53EF;&#x4E2D;&#x65AD;&#x65B9;&#x6CD5;">&#x7EBF;&#x7A0B;interrupt &#x548C; &#x53EF;&#x4E2D;&#x65AD;&#x65B9;&#x6CD5;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
@@ -1726,7 +1752,7 @@
 <li>&#x663E;&#x7136;&#x53EF;&#x4EE5;&#x5229;&#x7528;<code>Java8 lambda</code></li>
 <li>&#x5176;&#x6B21;&#x4E00;&#x4E2A;&#x7C7B;&#x5B9E;&#x73B0;&#x4E86;<code>Runnable</code>&#x63A5;&#x53E3;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x7EE7;&#x627F;<code>Thread</code>, &#x90A3;&#x4E48;&#x5176;&#x53EA;&#x662F;&#x6709;<code>run()</code>&#x65B9;&#x6CD5;&#xFF0C;&#x6CA1;&#x6709;&#x6240;&#x8C13;&#x7684;<code>start()</code>&#x65B9;&#x6CD5;</li>
 </ol>
-<p>&#x7EBF;&#x7A0B;&#x771F;&#x6B63;&#x7684;&#x6267;&#x884C;&#x903B;&#x8F91;&#x662F;&#x5728;<code>run()</code>, &#x901A;&#x5E38;&#x79F0;&#x4E3A;&#x7EBF;&#x7A0B;&#x7684;&#x6267;&#x884C;&#x5355;&#x5143;</p>
+<p>&#x7EBF;&#x7A0B;&#x771F;&#x6B63;&#x7684;&#x6267;&#x884C;&#x903B;&#x8F91;&#x662F;&#x5728;<code>run()</code>, &#x901A;&#x5E38;&#x79F0;&#x4E3A;<code>&#x7EBF;&#x7A0B;&#x7684;&#x6267;&#x884C;&#x5355;&#x5143;</code></p>
 <h2 id="class-thread-&#x6E90;&#x7801;"><code>class Thread</code> &#x6E90;&#x7801;</h2>
 <pre class="language-"><code class="lang-java"><span class="token keyword">class</span> <span class="token class-name">Thread</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
 
@@ -1888,7 +1914,7 @@
 <h4 id="&#x9700;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x70B9;">&#x9700;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x70B9;</h4>
 <ol>
 <li><code>start</code>&#x65B9;&#x6CD5;&#x7528;<code>synchronized</code>&#x4FEE;&#x9970;&#xFF0C;&#x4E3A;&#x540C;&#x6B65;&#x65B9;&#x6CD5;&#xFF1B;&#x8868;&#x793A;&#x771F;&#x6B63;&#x7684;&#x53BB;&#x6267;&#x884C;&#x7EBF;&#x7A0B;</li>
-<li>&#x867D;&#x7136;&#x4E3A;&#x540C;&#x6B65;&#x65B9;&#x6CD5;&#xFF0C;&#x4F46;&#x4E0D;&#x80FD;&#x907F;&#x514D;&#x591A;&#x6B21;&#x8C03;&#x7528;&#x95EE;&#x9898;&#xFF0C;&#x7528;threadStatus&#x6765;&#x8BB0;&#x5F55;&#x7EBF;&#x7A0B;&#x72B6;&#x6001;&#xFF0C;&#x5982;&#x679C;&#x7EBF;&#x7A0B;&#x88AB;<strong>&#x591A;&#x6B21;start&#x8C03;&#x7528;&#x4F1A;&#x629B;&#x51FA;&#x5F02;&#x5E38;</strong>&#xFF1B;threadStatus&#x7684;&#x72B6;&#x6001;&#x7531;JVM&#x63A7;&#x5236;&#x3002;</li>
+<li>&#x867D;&#x7136;&#x4E3A;&#x540C;&#x6B65;&#x65B9;&#x6CD5;&#xFF0C;&#x4F46;&#x4E0D;&#x80FD;&#x907F;&#x514D;&#x591A;&#x6B21;&#x8C03;&#x7528;&#x95EE;&#x9898;&#xFF1B;&#x6240;&#x4EE5;&#x7528;threadStatus&#x6765;&#x8BB0;&#x5F55;&#x7EBF;&#x7A0B;&#x72B6;&#x6001;&#xFF0C;&#x5982;&#x679C;&#x7EBF;&#x7A0B;&#x88AB;<strong>&#x591A;&#x6B21;start&#x8C03;&#x7528;&#x4F1A;&#x629B;&#x51FA;&#x5F02;&#x5E38;</strong>&#xFF1B;threadStatus&#x7684;&#x72B6;&#x6001;&#x7531;JVM&#x63A7;&#x5236;&#x3002;</li>
 <li>&#x4F7F;&#x7528;Runnable&#x65F6;&#xFF0C;&#x4E3B;&#x7EBF;&#x7A0B;&#x65E0;&#x6CD5;&#x6355;&#x83B7;&#x5B50;&#x7EBF;&#x7A0B;&#x4E2D;&#x7684;&#x5F02;&#x5E38;&#x72B6;&#x6001;&#x3002;&#x7EBF;&#x7A0B;&#x7684;&#x5F02;&#x5E38;&#xFF0C;&#x5E94;&#x5728;&#x7EBF;&#x7A0B;&#x5185;&#x90E8;&#x89E3;&#x51B3;&#x3002;</li>
 </ol>
 <p>&#x533A;&#x522B;&#xFF1A;<font color="red"><code>start()</code>&#x662F;&#x8BA9;&#x53E6;&#x4E00;&#x4E2A;&#x65B0;&#x7EBF;&#x7A0B;&#x5F00;&#x542F;&#xFF0C;&#x5E76;&#x6267;&#x884C;&#x5176;&#x4E2D;&#x7684;run&#x65B9;&#x6CD5;&#xFF1B;<code>run()</code>&#x662F;&#x76F4;&#x63A5;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x6267;&#x884C;&#x5176;run&#x65B9;&#x6CD5;.run&#x65B9;&#x6CD5;&#x4E00;&#x822C;&#x79F0;&#x4E3A;&#x7EBF;&#x7A0B;&#x7684;&#x6267;&#x884C;&#x5355;&#x5143;</font></p>
@@ -1898,7 +1924,7 @@
 <li><p>call run() method directly no new thread will be created and code inside run() will execute in the current thread directly.</p>
 </li>
 </ul>
-<p>native&#x65B9;&#x6CD5;<code>start0()</code></p>
+<p>native&#x65B9;&#x6CD5;<code>start0()</code>:&#x8C03;&#x7528;JVM&#x65B9;&#x6CD5;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x672C;&#x5730;&#x7EBF;&#x7A0B;&#xFF0C;&#x5E76;&#x5904;&#x4E8E;&#x53EF;&#x8FD0;&#x884C;&#x72B6;&#x6001;&#xFF1B;&#x83B7;&#x53D6;&#x5230;CPU&#x65F6;&#x95F4;&#x7247;&#x5C31;&#x80FD;&#x6267;&#x884C;run&#x65B9;&#x6CD5;</p>
 <p>start0(); method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.</p>
 <h2 id="stacksize&#x7EBF;&#x7A0B;&#x6240;&#x9700;&#x6808;&#x7A7A;&#x95F4;">stackSize(&#x7EBF;&#x7A0B;&#x6240;&#x9700;&#x6808;&#x7A7A;&#x95F4;)</h2>
 <pre class="language-"><code class="lang-java"><span class="token comment">/*
@@ -1911,7 +1937,7 @@
 <ul>
 <li><p>&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x5BF9;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x7684;&#x6700;&#x5927;&#x5185;&#x5B58;&#x662F;&#x6709;&#x9650;&#x5236;&#x7684;</p>
 </li>
-<li><p>&#x865A;&#x62DF;&#x673A;&#x6808;&#x662F;&#x7EBF;&#x7A0B;&#x79C1;&#x6709;&#x7684;&#xFF0C;&#x5373;&#x6BCF;&#x4E2A;&#x7EBF;&#x7A0B;&#x90FD;&#x4F1A;&#x5360;&#x6709;&#x6307;&#x5B9A;&#x5927;&#x5C0F;&#x7684;&#x5185;&#x5B58;</p>
+<li><p>&#x865A;&#x62DF;&#x673A;&#x6808;&#x662F;&#x7EBF;&#x7A0B;&#x79C1;&#x6709;&#x7684;&#xFF0C;&#x5373;&#x6BCF;&#x4E2A;&#x7EBF;&#x7A0B;&#x90FD;&#x4F1A;&#x5360;&#x6709;&#x6307;&#x5B9A;&#x5927;&#x5C0F;&#x7684;&#x5185;&#x5B58;(<code>-Xss</code>&#xFF0C;&#x9ED8;&#x8BA4;1M)</p>
 </li>
 <li><p>JVM&#x80FD;&#x521B;&#x5EFA;&#x591A;&#x5C11;&#x4E2A;&#x7EBF;&#x7A0B;&#xFF0C;&#x4E0E;&#x5806;&#x5185;&#x5B58;&#xFF0C;&#x6808;&#x5185;&#x5B58;&#x7684;&#x5927;&#x5C0F;&#x6709;&#x76F4;&#x63A5;&#x7684;&#x5173;&#x7CFB;&#xFF0C;&#x53EA;&#x4E0D;&#x8FC7;&#x6808;&#x5185;&#x5B58;&#x66F4;&#x660E;&#x663E;&#x4E00;&#x4E9B;&#xFF1B; &#x7EBF;&#x7A0B;&#x6570;&#x76EE;&#x8FD8;&#x4E0E;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7684;&#x4E00;&#x4E9B;&#x5185;&#x6838;&#x914D;&#x7F6E;&#x6709;&#x5F88;&#x5927;&#x7684;&#x5173;&#x7CFB;&#xFF1B;&#x751F;&#x4EA7;&#x4E0A;&#x8981;&#x76D1;&#x63A7;&#x7EBF;&#x7A0B;&#x6570;&#x91CF;&#xFF0C;&#x53EF;&#x80FD;&#x4F1A;&#x7531;&#x4E8E;bug&#x5BFC;&#x81F4;&#x7EBF;&#x7A0B;&#x6570;&#x5F02;&#x5E38;&#x589E;&#x591A;&#xFF0C;&#x5F15;&#x53D1;&#x5FC3;&#x8DF3;,OutOfMemory&#x544A;&#x8B66;</p>
 </li>
@@ -2028,7 +2054,7 @@
         TERMINATED<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 </code></pre>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_state.jpg" alt=""></p>
+<p><img src="imgs/thread_state.jpg" alt=""></p>
 <ul>
 <li><p>&#x963B;&#x585E;(blocked)&#xFF1A;&#x963B;&#x585E;&#x72B6;&#x6001;&#x662F;&#x6307;&#x7EBF;&#x7A0B;&#x56E0;&#x4E3A;&#x67D0;&#x79CD;&#x539F;&#x56E0;&#x653E;&#x5F03;&#x4E86;cpu&#x4F7F;&#x7528;&#x6743;&#xFF0C;&#x4E5F;&#x5373;&#x8BA9;&#x51FA;&#x4E86;cpu&#x65F6;&#x95F4;&#x7247;&#xFF0C;&#x6682;&#x65F6;&#x505C;&#x6B62;&#x8FD0;&#x884C;&#x3002;&#x76F4;&#x5230;&#x7EBF;&#x7A0B;&#x8FDB;&#x5165;&#x53EF;&#x8FD0;&#x884C;(runnable)&#x72B6;&#x6001;&#xFF0C;&#x624D;&#x6709;&#x673A;&#x4F1A;&#x518D;&#x6B21;&#x83B7;&#x5F97;cpu&#x65F6;&#x95F4;&#x7247;&#xFF0C;&#x8F6C;&#x5230;&#x8FD0;&#x884C;(running)&#x72B6;&#x6001;&#x3002;&#x963B;&#x585E;&#x7684;&#x60C5;&#x51B5;&#x5206;&#x4E09;&#x79CD;&#xFF1A;</p>
 </li>
@@ -2116,12 +2142,12 @@ t5 status<span class="token operator">:</span>WAITING
 t6 status<span class="token operator">:</span>BLOCKED
 </code></pre>
 <h4 id="jvisualvm&#x7684;&#x7EBF;&#x7A0B;&#x72B6;&#x6001;"><code>jvisualvm</code>&#x7684;&#x7EBF;&#x7A0B;&#x72B6;&#x6001;</h4>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/vm_thread_state.png" alt=""></p>
+<p><img src="imgs/vm_thread_state.png" alt=""></p>
 <h2 id="&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x5B9A;&#x4E49;&#x7EBF;&#x7A0B;&#x7684;5&#x79CD;&#x72B6;&#x6001;">&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x5B9A;&#x4E49;&#x7EBF;&#x7A0B;&#x7684;5&#x79CD;&#x72B6;&#x6001;</h2>
 <ol>
 <li>&#x521D;&#x59CB;&#x72B6;&#x6001;&#xFF08;new&#xFF09;</li>
 <li>&#x53EF;&#x8FD0;&#x884C;&#x72B6;&#x6001;/&#x5C31;&#x7EEA;&#x72B6;&#x6001;&#xFF08;&#x4E0E;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x5173;&#x8054;&#xFF0C;&#x6709;&#x4E86;CPU&#x65F6;&#x95F4;&#x7247;&#x5C31;&#x53EF;&#x4EE5;&#x8FD0;&#x884C;&#x8D77;&#x6765;&#xFF0C;&#x51C6;&#x5907;&#x5C31;&#x7EEA;&#x4E2D;&#xFF09;</li>
-<li>&#x8FD0;&#x884C;&#x72B6;&#x6001;&#xFF08;&#x6709;&#x4E86;CPU&#x65F6;&#x95F4;&#x7247;&#xFF0C;&#x5728;&#x8FD0;&#x884C;&#x4E2D;;CPU&#x65F6;&#x95F4;&#x7247;&#x7528;&#x5B8C;&#x4F1A;&#x53D8;&#x6210;[&#x53EF;&#x8FD0;&#x884C;&#x72B6;&#x6001;]&#xFF09;</li>
+<li>&#x8FD0;&#x884C;&#x72B6;&#x6001;&#xFF08;&#x83B7;&#x53D6;&#x5230;CPU&#x65F6;&#x95F4;&#x7247;&#xFF0C;&#x5219;&#x5728;&#x8FD0;&#x884C;&#x4E2D;&#xFF1B;&#x5982;&#x679C;CPU&#x65F6;&#x95F4;&#x7247;&#x7528;&#x5B8C;&#xFF0C;&#x5219;&#x4F1A;&#x53D8;&#x6210;[&#x53EF;&#x8FD0;&#x884C;&#x72B6;&#x6001;]&#xFF09;</li>
 <li>&#x963B;&#x585E;&#x72B6;&#x6001;&#xFF08;&#x7B49;&#x5F85;/&#x963B;&#x585E;/&#x7761;&#x7720;&#xFF0C;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x4E0D;&#x8003;&#x8651;&#x7ED9;&#x8FD9;&#x79CD;&#x72B6;&#x6001;&#x7EBF;&#x7A0B;&#x5206;&#x914D;CPU&#x65F6;&#x95F4;&#x7247;&#xFF0C;&#x5524;&#x9192;&#x540E;&#x53D8;&#x6210;[&#x53EF;&#x8FD0;&#x884C;&#x72B6;&#x6001;]&#xFF09;</li>
 <li>&#x7EC8;&#x6B62;&#x72B6;&#x6001;&#xFF08;&#x7ED3;&#x675F;&#xFF09;</li>
 </ol>
@@ -2133,10 +2159,10 @@ t6 status<span class="token operator">:</span>BLOCKED
 <li>&#x6709;&#x6BD4;&#x8BE5;&#x7EBF;&#x7A0B;&#x66F4;&#x9AD8;&#x4F18;&#x5148;&#x7EA7;&#x7684;&#x7EBF;&#x7A0B;&#x9700;&#x8981;&#x8FD0;&#x884C;</li>
 <li>&#x7EBF;&#x7A0B;&#x8C03;&#x7528;&#x4E86;sleep,yield,wait,join,park,synchronized,lock&#x7B49;&#x65B9;&#x6CD5;&#x5BFC;&#x81F4;&#x7B49;&#x5F85;/&#x963B;&#x585E;&#x7B49;</li>
 </ol>
-<p>&#x5F53;<code>Context Switch</code>&#x53D1;&#x751F;&#x65F6;&#xFF0C;&#x9700;&#x8981;&#x6709;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x4FDD;&#x5B58;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x7684;&#x72B6;&#x6001;&#xFF0C;&#x5E76;&#x6062;&#x590D;&#x53E6;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x7684;&#x72B6;&#x6001;&#xFF0C;Javazh&#x4E2D;&#x6709;&#x7A0B;&#x5E8F;&#x8BA1;&#x6570;&#x5668;&#xFF08;Program Counter Register&#xFF09;,&#x5B83;&#x7684;&#x4F5C;&#x7528;&#x662F;&#x8BB0;&#x4F4F;&#x4E0B;&#x4E00;&#x6761;JVM&#x6307;&#x4EE4;&#x7684;&#x5730;&#x5740;&#xFF0C;PC&#x8BA1;&#x6570;&#x5668;&#x662F;&#x7EBF;&#x7A0B;&#x72EC;&#x6709;&#x7684;</p>
+<p>&#x5F53;<code>Context Switch</code>&#x53D1;&#x751F;&#x65F6;&#xFF0C;&#x9700;&#x8981;&#x6709;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x4FDD;&#x5B58;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x7684;&#x72B6;&#x6001;&#xFF0C;&#x5E76;&#x6062;&#x590D;&#x53E6;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x7684;&#x72B6;&#x6001;&#xFF1B;&#x6BCF;&#x4E2A;&#x7EBF;&#x7A0B;&#x90FD;&#x6709;&#x4E00;&#x4E2A;&#x7A0B;&#x5E8F;&#x8BA1;&#x6570;&#x5668;&#xFF08;Program Counter Register&#xFF09;,&#x5B83;&#x7684;&#x4F5C;&#x7528;&#x662F;&#x8BB0;&#x4F4F;&#x4E0B;&#x4E00;&#x6761;JVM&#x6307;&#x4EE4;&#x7684;&#x5730;&#x5740;&#xFF0C;&#x8FD9;&#x4E2A;&#x7A0B;&#x5E8F;&#x8BA1;&#x6570;&#x5668;&#x662F;&#x7EBF;&#x7A0B;&#x72EC;&#x6709;&#x7684;</p>
 <ol>
 <li>&#x72B6;&#x6001;&#x5305;&#x62EC;&#x7A0B;&#x5E8F;&#x8BA1;&#x6570;&#x5668;&#xFF0C;&#x865A;&#x62DF;&#x673A;&#x6808;&#x4E2D;&#x6BCF;&#x4E2A;&#x7EBF;&#x7A0B;&#x6808;&#x5E27;&#x7684;&#x4FE1;&#x606F;&#xFF0C;&#x5982;&#x5C40;&#x90E8;&#x53D8;&#x91CF;&#xFF0C;&#x64CD;&#x4F5C;&#x6570;&#x6808;&#xFF0C;&#x8FD4;&#x56DE;&#x5730;&#x5740;&#x7B49;</li>
-<li>Context Switch&#x9891;&#x7E41;&#x53D1;&#x751F;&#x4F1A;&#x5F71;&#x54CD;&#x6027;&#x80FD;</li>
+<li><code>Context Switch</code>&#x9891;&#x7E41;&#x53D1;&#x751F;&#x4F1A;&#x5F71;&#x54CD;&#x6027;&#x80FD;</li>
 </ol>
 <h1 id="monitor">Monitor</h1>
 <p><a href="https://www.programcreek.com/2011/12/monitors-java-synchronization-mechanism/" target="_blank">Monitors &#x2013; The Basic Idea of Java Synchronization</a></p>
@@ -2205,19 +2231,19 @@ main continue
 <h2 id="wait&#x65B9;&#x6CD5;&#x7684;&#x5E95;&#x5C42;&#x539F;&#x7406;">wait&#x65B9;&#x6CD5;&#x7684;&#x5E95;&#x5C42;&#x539F;&#x7406;</h2>
 <ul>
 <li>Java&#x4E2D;&#x6BCF;&#x4E00;&#x4E2A;&#x5BF9;&#x8C61;&#x90FD;&#x53EF;&#x4EE5;&#x6210;&#x4E3A;&#x4E00;&#x4E2A;&#x76D1;&#x89C6;&#x5668;&#xFF08;Monitor&#xFF09;, &#x8BE5;Monitor&#x7531;&#x4E00;&#x4E2A;&#x9501;(lock), &#x4E00;&#x4E2A;&#x7B49;&#x5F85;&#x961F;&#x5217;(WaitingQueue&#xFF0C;&#x963B;&#x585E;&#x72B6;&#x6001;&#xFF0C;&#x7B49;&#x5F85;&#x88AB;&#x5524;&#x9192;&#x8C03;&#x5EA6;), &#x4E00;&#x4E2A;&#x5165;&#x53E3;&#x961F;&#x5217;(EntryQueue,&#x8981;&#x53BB;&#x7ADE;&#x4E89;&#x83B7;&#x53D6;&#x9501;).</li>
-<li><code>waiting</code>&#x8FDB;&#x5165;<code>_waitSet</code>&#x7B49;&#x5F85;&#x4E2D;&#xFF0C;&#x662F;&#x963B;&#x585E;&#x72B6;&#x6001;&#xFF0C;&#x4E0D;&#x4F1A;&#x5360;&#x7528;CPU</li>
-<li><code>waiting</code>&#x88AB;&#x5524;&#x9192;&#x540E;&#xFF0C;&#x4E0D;&#x662F;&#x76F4;&#x63A5;&#x6267;&#x884C;&#xFF0C;&#x800C;&#x662F;&#x8FDB;&#x5165;<code>_EntryList</code>&#xFF0C;&#x53BB;&#x7ADE;&#x4E89;<code>monitor</code>&#x6765;&#x83B7;&#x5F97;&#x673A;&#x4F1A;&#x53BB;&#x6267;&#x884C;</li>
-<li>&#x5176;&#x4E2D;<code>_EntryList</code>&#x662F;&#x6CA1;&#x6709;&#x83B7;&#x53D6;&#x5230;&#x9501;&#x7684;Blocking&#x72B6;&#x6001;&#xFF0C;&#x8981;&#x7EE7;&#x7EED;&#x7ADE;&#x4E89;&#x9501;</li>
+<li><code>waiting</code>&#x8FDB;&#x5165;<code>_waitSet</code>&#x7B49;&#x5F85;&#x4E2D;(&#x5E95;&#x5C42;&#x901A;&#x8FC7;&#x6267;&#x884C;<code>thread_ParkEvent-&gt;park</code>&#x6765;&#x6302;&#x8D77;&#x7EBF;&#x7A0B;)&#xFF0C;&#x7B49;&#x5F85;&#x88AB;&#x5524;&#x9192;&#xFF0C;&#x4E0D;&#x4F1A;&#x5360;&#x7528;CPU</li>
+<li><code>waiting</code>&#x88AB;&#x5524;&#x9192;&#x540E;&#xFF0C;&#x4E0D;&#x662F;&#x76F4;&#x63A5;&#x6267;&#x884C;&#xFF0C;&#x800C;&#x662F;&#x8FDB;&#x5165;<code>_EntryList</code>(&#x6CA1;&#x6709;&#x83B7;&#x53D6;&#x5230;&#x9501;&#x7684;Blocking&#x72B6;&#x6001;&#xFF0C;&#x8981;&#x7EE7;&#x7EED;&#x7ADE;&#x4E89;&#x9501;)&#xFF0C;&#x53BB;&#x7ADE;&#x4E89;<code>monitor</code>&#x6765;&#x83B7;&#x5F97;&#x673A;&#x4F1A;&#x53BB;&#x6267;&#x884C;</li>
 </ul>
+<p><img src="imgs/wait_set.png" alt=""></p>
 <h2 id="wait-&#x548C;-sleep-&#x7684;&#x533A;&#x522B;&#xFF1F;"><code>wait</code> &#x548C; <code>sleep</code> &#x7684;&#x533A;&#x522B;&#xFF1F;</h2>
 <ol>
 <li><p>wait()&#x65B9;&#x6CD5;&#x5C5E;&#x4E8E;Object&#x7C7B;,sleep()&#x5C5E;&#x4E8E;Thread&#x7C7B;&#xFF1B;</p>
 </li>
-<li><p>wait()&#x65B9;&#x6CD5;&#x8BA9;&#x81EA;&#x5DF1;&#x8BA9;&#x51FA;&#x9501;&#x8D44;&#x6E90;&#x8FDB;&#x5165;&#x7B49;&#x5F85;&#x6C60;&#x7B49;&#x5F85;&#xFF0C;&#x8BA9;&#x51FA;CPU&#xFF1B;sleep&#x662F;&#x5360;&#x7528;&#x9501;&#x8D44;&#x6E90;&#x4E0D;&#x91CA;&#x653E;&#x653E;&#xFF0C;&#x5904;&#x4E8E;&#x963B;&#x585E;&#x72B6;&#x6001;&#xFF0C;&#x8BA9;&#x51FA;CPU&#xFF1B;</p>
+<li><p>wait()&#x65B9;&#x6CD5;&#x8BA9;&#x81EA;&#x5DF1;<strong>&#x8BA9;&#x51FA;&#x9501;</strong>&#x8D44;&#x6E90;&#x8FDB;&#x5165;&#x7B49;&#x5F85;&#x6C60;&#x7B49;&#x5F85;&#xFF0C;&#x4F1A;&#x8BA9;&#x51FA;CPU&#xFF1B;sleep&#x662F;&#x7EE7;&#x7EED;&#x5360;&#x7528;&#x9501;(&#x4F9D;&#x8D56;&#x4E8E;&#x7CFB;&#x7EDF;&#x65F6;&#x949F;&#x548C;CPU&#x8C03;&#x5EA6;&#x673A;&#x5236;)&#xFF0C;&#x5904;&#x4E8E;&#x963B;&#x585E;&#x72B6;&#x6001;&#xFF0C;&#x4F1A;&#x8BA9;&#x51FA;CPU&#xFF1B;</p>
 </li>
 <li><p>sleep()&#x5FC5;&#x987B;&#x6307;&#x5B9A;&#x65F6;&#x95F4;&#xFF0C;wait()&#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x65F6;&#x95F4;&#x4E5F;&#x53EF;&#x4EE5;&#x4E0D;&#x6307;&#x5B9A;&#xFF1B;sleep()&#x65F6;&#x95F4;&#x5230;&#xFF0C;&#x7EBF;&#x7A0B;&#x5904;&#x4E8E;&#x963B;&#x585E;&#x6216;&#x53EF;&#x8FD0;&#x884C;&#x72B6;&#x6001;&#xFF1B;</p>
 </li>
-<li><p>wait()&#x65B9;&#x6CD5;&#x4F1A;&#x91CA;&#x653E;&#x6301;&#x6709;&#x7684;&#x9501;&#xFF0C;&#x4E0D;&#x7136;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x4E0D;&#x80FD;&#x8FDB;&#x5165;&#x540C;&#x6B65;&#x65B9;&#x6CD5;&#x6216;&#x540C;&#x6B65;&#x5757;&#xFF0C;&#x4ECE;&#x800C;&#x4E0D;&#x80FD;&#x8C03;&#x7528;notify(),notifyAll()&#x65B9;&#x6CD5;&#x6765;&#x5524;&#x9192;&#x7EBF;&#x7A0B;&#xFF0C;&#x4EA7;&#x751F;&#x6B7B;&#x9501;&#xFF1B;&#x6240;&#x4EE5;&#x91CA;&#x653E;&#x9501;&#xFF0C;&#x8BA9;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x53EF;&#x4EE5;&#x8FDB;&#x5165;synchronized&#x540C;&#x6B65;&#x5757;&#xFF0C;&#x53EF;&#x4EE5;&#x6267;&#x884C;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x5524;&#x9192;&#x81EA;&#x5DF1;&#xFF1B;&#x53EA;&#x662F;&#x8BBE;&#x7F6E;&#x505C;&#x6B62;&#x81EA;&#x5DF1;&#x7684;&#x65F6;&#x95F4;&#x65F6;&#x4E0D;&#x786E;&#x5B9A;&#x7684;&#xFF1B;sleep&#x65B9;&#x6CD5;&#x4E0D;&#x4F1A;&#x91CA;&#x653E;&#x6301;&#x6709;&#x7684;&#x9501;&#xFF0C;&#x8BBE;&#x7F6E;sleep&#x7684;&#x65F6;&#x95F4;&#x662F;&#x786E;&#x5B9A;&#x7684;&#x4F1A;&#x6309;&#x65F6;&#x6267;&#x884C;&#x7684;&#xFF1B;</p>
+<li><p>wait()&#x65B9;&#x6CD5;&#x4F1A;&#x91CA;&#x653E;&#x6301;&#x6709;&#x7684;&#x9501;&#xFF0C;&#x8C03;&#x7528;notify(),notifyAll()&#x65B9;&#x6CD5;&#x6765;&#x5524;&#x9192;&#x7EBF;&#x7A0B;&#xFF1B;sleep&#x65B9;&#x6CD5;&#x4E0D;&#x4F1A;&#x91CA;&#x653E;&#x6301;&#x6709;&#x7684;&#x9501;&#xFF0C;&#x8BBE;&#x7F6E;sleep&#x7684;&#x65F6;&#x95F4;&#x662F;&#x786E;&#x5B9A;&#x7684;&#x4F1A;&#x6309;&#x65F6;&#x6267;&#x884C;&#x7684;&#xFF0C;&#x8D85;&#x65F6;&#x6216;&#x8005;<code>interrupt()</code>&#x80FD;&#x5524;&#x9192;</p>
 </li>
 <li><p>wait()&#x65B9;&#x6CD5;&#x53EA;&#x80FD;&#x5728;&#x540C;&#x6B65;&#x65B9;&#x6CD5;&#x6216;&#x540C;&#x6B65;&#x4EE3;&#x7801;&#x5757;&#x4E2D;&#x8C03;&#x7528;&#xFF0C;&#x5426;&#x5219;&#x4F1A;&#x62A5;<code>illegalMonitorStateException</code>&#x5F02;&#x5E38;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x8BBE;&#x5B9A;&#x65F6;&#x95F4;&#xFF0C;&#x4F7F;&#x7528;<code>notify()</code>&#x6765;&#x5524;&#x9192;&#xFF1B;&#x800C;<code>sleep()</code>&#x80FD;&#x5728;&#x4EFB;&#x4F55;&#x5730;&#x65B9;&#x8C03;&#x7528;&#xFF1B;</p>
 </li>
@@ -2513,11 +2539,12 @@ id<span class="token operator">:</span><span class="token number">1</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h3 id="&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;-todo">&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668; //TODO</h3>
+<h3 id="&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;">&#x8BBE;&#x7F6E;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;</h3>
 <pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setContextClassLoader</span><span class="token punctuation">(</span><span class="token class-name">ClassLoader</span> cl<span class="token punctuation">)</span>
 
 <span class="token keyword">public</span> <span class="token class-name">ClassLoader</span> <span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 </code></pre>
+<p>&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#x7834;&#x574F;&#x4E86;<code>&#x53CC;&#x4EB2;&#x59D4;&#x6D3E;&#x6A21;&#x578B;</code>&#xFF0C;&#x4F8B;&#x5982;<code>com.mysql.jdbc.Driver</code></p>
 <h2 id="&#x7EBF;&#x7A0B;interrupt-&#x548C;-&#x53EF;&#x4E2D;&#x65AD;&#x65B9;&#x6CD5;">&#x7EBF;&#x7A0B;<code>interrupt</code> &#x548C; <code>&#x53EF;&#x4E2D;&#x65AD;&#x65B9;&#x6CD5;</code></h2>
 <p>&#x5982;&#x4E0B;&#x65B9;&#x6CD5;&#x7684;&#x8C03;&#x7528;&#x4F1A;&#x4F7F;&#x5F97;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x8FDB;&#x5165;&#x963B;&#x585E;&#x72B6;&#x6001;&#xFF0C;&#x800C;&#x53E6;&#x5916;&#x7684;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x8C03;&#x7528;&#x88AB;&#x963B;&#x585E;&#x7EBF;&#x7A0B;&#x7684;<code>interrupt</code>&#x65B9;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x6253;&#x65AD;&#x8FD9;&#x79CD;&#x963B;&#x585E;&#x3002;&#x8FD9;&#x4E9B;&#x65B9;&#x6CD5;&#x6709;&#x65F6;&#x4F1A;&#x88AB;&#x79F0;&#x4E3A;<code>&#x53EF;&#x4E2D;&#x65AD;&#x65B9;&#x6CD5;</code></p>
 <pre class="language-"><code class="lang-java">wait
@@ -2590,8 +2617,8 @@ Interrupted
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="join&#x7EBF;&#x7A0B;&#x7684;join&#x65B9;&#x6CD5;">join(&#x7EBF;&#x7A0B;&#x7684;join&#x65B9;&#x6CD5;)</h2>
-<p>&#x4E0E;<code>sleep</code>&#x4E00;&#x6837;&#x4E5F;&#x662F;&#x4E00;&#x4E2A;&#x53EF;&#x4E2D;&#x65AD;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x5E95;&#x5C42;&#x662F;&#x5BF9;&#x8C61;&#x7684;<code>wait</code>&#x65B9;&#x6CD5;</p>
-<p>&#x7EBF;&#x7A0B;B<code>join</code>&#x7EBF;&#x7A0B;A&#xFF0C;&#x4F1A;&#x4F7F;&#x5F97;<code>&#x5F53;&#x524D;&#x7EBF;&#x7A0B;B&#x8FDB;&#x5165;&#x7B49;&#x5F85;</code>&#xFF0C;&#x76F4;&#x5230;&#x7EBF;&#x7A0B;A&#x7ED3;&#x675F;&#x751F;&#x547D;&#x5468;&#x671F;&#xFF0C;&#x6216;&#x8005;&#x5230;&#x8FBE;&#x7ED9;&#x5B9A;&#x7684;&#x65F6;&#x95F4;&#xFF0C;&#x5728;&#x6B64;&#x671F;&#x95F4;B&#x7EBF;&#x7A0B;&#x662F;&#x5904;&#x4E8E;<code>Blocked</code>&#x7684;</p>
+<p>&#x4E0E;<code>sleep</code>&#x4E00;&#x6837;&#x4E5F;&#x662F;&#x4E00;&#x4E2A;&#x53EF;&#x4E2D;&#x65AD;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x5E95;&#x5C42;&#x662F;&#x8C03;&#x7528;&#x5BF9;&#x8C61;&#x7684;<code>wait</code>&#x65B9;&#x6CD5;</p>
+<p>&#x7EBF;&#x7A0B;B<code>join</code>&#x7EBF;&#x7A0B;A&#xFF0C;&#x4F1A;&#x4F7F;&#x5F97;<code>&#x5F53;&#x524D;&#x7EBF;&#x7A0B;B&#x8FDB;&#x5165;&#x7B49;&#x5F85;</code>&#xFF0C;&#x76F4;&#x5230;<code>&#x7EBF;&#x7A0B;A&#x7ED3;&#x675F;&#x751F;&#x547D;&#x5468;&#x671F;</code>&#x6216;&#x8005;<code>&#x5230;&#x8FBE;&#x7ED9;&#x5B9A;&#x7684;&#x65F6;&#x95F4;</code>&#xFF0C;&#x5728;&#x6B64;&#x671F;&#x95F4;B&#x7EBF;&#x7A0B;&#x662F;&#x5904;&#x4E8E;<code>Blocked</code>&#x7684;</p>
 <h3 id="join&#x6E90;&#x7801;&#x5206;&#x6790;">join&#x6E90;&#x7801;&#x5206;&#x6790;</h3>
 <p>&#x5224;&#x65AD;&#x7EBF;&#x7A0B;&#x662F;&#x5426;alive,&#x5426;&#x5219;&#x4E00;&#x76F4;<code>wait()</code></p>
 <pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
@@ -2661,7 +2688,7 @@ Interrupted
 <h3 id="&#x5F02;&#x5E38;&#x9000;&#x51FA;">&#x5F02;&#x5E38;&#x9000;&#x51FA;</h3>
 <h3 id="&#x8FDB;&#x7A0B;&#x5047;&#x6B7B;">&#x8FDB;&#x7A0B;&#x5047;&#x6B7B;</h3>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-06-24 20:50:09
+2020-07-25 10:00:04
 </span></footer>
                                 
                                 </section>
@@ -2701,7 +2728,7 @@ Interrupted
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"线程基础","layout":"page","date":"2019-02-15 00:00","level":"1.5.1","depth":2,"next":{"title":"多线程设计模式","level":"1.5.1.1","depth":3,"path":"content/java_thread_concurrent/thread_design.md","ref":"./content/java_thread_concurrent/thread_design.md","articles":[]},"previous":{"title":"[4 Java多线程 & 并发基础]","level":"1.5","depth":1,"ref":"","articles":[{"title":"线程基础","level":"1.5.1","depth":2,"path":"content/java_thread_concurrent/thread_basic.md","ref":"./content/java_thread_concurrent/thread_basic.md","articles":[{"title":"多线程设计模式","level":"1.5.1.1","depth":3,"path":"content/java_thread_concurrent/thread_design.md","ref":"./content/java_thread_concurrent/thread_design.md","articles":[]},{"title":"Hook线程","level":"1.5.1.2","depth":3,"path":"content/java_thread_concurrent/hook_thread.md","ref":"./content/java_thread_concurrent/hook_thread.md","articles":[]}]},{"title":"线程池","level":"1.5.2","depth":2,"path":"content/java_thread_concurrent/thread_pool.md","ref":"./content/java_thread_concurrent/thread_pool.md","articles":[{"title":"常见的多线程题目","level":"1.5.2.1","depth":3,"path":"content/java_thread_concurrent/concurrency_problems.md","ref":"./content/java_thread_concurrent/concurrency_problems.md","articles":[]},{"title":"自定义线程池","level":"1.5.2.2","depth":3,"path":"content/java_thread_concurrent/thread_pool_self.md","ref":"./content/java_thread_concurrent/thread_pool_self.md","articles":[]}]},{"title":"CAS(Conmpare And Swap/Exchange) & unsafe","level":"1.5.3","depth":2,"path":"content/java_thread_concurrent/cas.md","ref":"./content/java_thread_concurrent/cas.md","articles":[]},{"title":"AQS","level":"1.5.4","depth":2,"path":"content/java_thread_concurrent/aqs.md","ref":"./content/java_thread_concurrent/aqs.md","articles":[]},{"title":"[常见关键字和类]","level":"1.5.5","depth":2,"ref":"","articles":[{"title":"CountDownLatch & CyclicBarrier","level":"1.5.5.1","depth":3,"path":"content/java_thread_concurrent/countdownlatch_cyclicBarrier.md","ref":"./content/java_thread_concurrent/countdownlatch_cyclicBarrier.md","articles":[]},{"title":"LongAdder","level":"1.5.5.2","depth":3,"path":"content/java_thread_concurrent/longAdder.md","ref":"./content/java_thread_concurrent/longAdder.md","articles":[]},{"title":"Semaphore","level":"1.5.5.3","depth":3,"path":"content/java_thread_concurrent/semaphore.md","ref":"./content/java_thread_concurrent/semaphore.md","articles":[]},{"title":"volatile 关键字","level":"1.5.5.4","depth":3,"path":"content/java_thread_concurrent/volatile.md","ref":"./content/java_thread_concurrent/volatile.md","articles":[]},{"title":"synchronized 关键字","level":"1.5.5.5","depth":3,"path":"content/java_thread_concurrent/synchronized.md","ref":"./content/java_thread_concurrent/synchronized.md","articles":[]}]},{"title":"Java Lock","level":"1.5.6","depth":2,"path":"content/java_thread_concurrent/thread_lock.md","ref":"./content/java_thread_concurrent/thread_lock.md","articles":[{"title":"Java Lock 分类","level":"1.5.6.1","depth":3,"path":"content/java_thread_concurrent/thread_lock_type.md","ref":"./content/java_thread_concurrent/thread_lock_type.md","articles":[]},{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]}]},{"title":"ThreadLocal","level":"1.5.7","depth":2,"path":"content/java_thread_concurrent/threadLocal.md","ref":"./content/java_thread_concurrent/threadLocal.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/thread_basic.md","mtime":"2020-06-24T12:50:09.027Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-24T01:22:04.607Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"线程基础","layout":"page","date":"2019-02-15 00:00","level":"1.5.1","depth":2,"next":{"title":"多线程设计模式","level":"1.5.1.1","depth":3,"path":"content/java_thread_concurrent/thread_design.md","ref":"./content/java_thread_concurrent/thread_design.md","articles":[]},"previous":{"title":"[4 Java多线程 & 并发基础]","level":"1.5","depth":1,"ref":"","articles":[{"title":"线程基础","level":"1.5.1","depth":2,"path":"content/java_thread_concurrent/thread_basic.md","ref":"./content/java_thread_concurrent/thread_basic.md","articles":[{"title":"多线程设计模式","level":"1.5.1.1","depth":3,"path":"content/java_thread_concurrent/thread_design.md","ref":"./content/java_thread_concurrent/thread_design.md","articles":[]},{"title":"Hook线程","level":"1.5.1.2","depth":3,"path":"content/java_thread_concurrent/hook_thread.md","ref":"./content/java_thread_concurrent/hook_thread.md","articles":[]}]},{"title":"线程池","level":"1.5.2","depth":2,"path":"content/java_thread_concurrent/thread_pool.md","ref":"./content/java_thread_concurrent/thread_pool.md","articles":[{"title":"常见的多线程题目","level":"1.5.2.1","depth":3,"path":"content/java_thread_concurrent/concurrency_problems.md","ref":"./content/java_thread_concurrent/concurrency_problems.md","articles":[]},{"title":"自定义线程池","level":"1.5.2.2","depth":3,"path":"content/java_thread_concurrent/thread_pool_self.md","ref":"./content/java_thread_concurrent/thread_pool_self.md","articles":[]}]},{"title":"CAS(Conmpare And Swap/Exchange) & unsafe","level":"1.5.3","depth":2,"path":"content/java_thread_concurrent/cas.md","ref":"./content/java_thread_concurrent/cas.md","articles":[]},{"title":"AQS","level":"1.5.4","depth":2,"path":"content/java_thread_concurrent/aqs.md","ref":"./content/java_thread_concurrent/aqs.md","articles":[]},{"title":"[常见关键字和类]","level":"1.5.5","depth":2,"ref":"","articles":[{"title":"CountDownLatch & CyclicBarrier","level":"1.5.5.1","depth":3,"path":"content/java_thread_concurrent/countdownlatch_cyclicBarrier.md","ref":"./content/java_thread_concurrent/countdownlatch_cyclicBarrier.md","articles":[]},{"title":"LongAdder","level":"1.5.5.2","depth":3,"path":"content/java_thread_concurrent/longAdder.md","ref":"./content/java_thread_concurrent/longAdder.md","articles":[]},{"title":"Semaphore","level":"1.5.5.3","depth":3,"path":"content/java_thread_concurrent/semaphore.md","ref":"./content/java_thread_concurrent/semaphore.md","articles":[]},{"title":"volatile 关键字","level":"1.5.5.4","depth":3,"path":"content/java_thread_concurrent/volatile.md","ref":"./content/java_thread_concurrent/volatile.md","articles":[]},{"title":"synchronized 关键字","level":"1.5.5.5","depth":3,"path":"content/java_thread_concurrent/synchronized.md","ref":"./content/java_thread_concurrent/synchronized.md","articles":[]}]},{"title":"Java Lock","level":"1.5.6","depth":2,"path":"content/java_thread_concurrent/thread_lock.md","ref":"./content/java_thread_concurrent/thread_lock.md","articles":[{"title":"Java Lock 分类","level":"1.5.6.1","depth":3,"path":"content/java_thread_concurrent/thread_lock_type.md","ref":"./content/java_thread_concurrent/thread_lock_type.md","articles":[]},{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]}]},{"title":"ThreadLocal","level":"1.5.7","depth":2,"path":"content/java_thread_concurrent/threadLocal.md","ref":"./content/java_thread_concurrent/threadLocal.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/thread_basic.md","mtime":"2020-07-25T02:00:04.449Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-25T02:08:25.980Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
