@@ -21,9 +21,9 @@ LongAdder内部将一个long分成多个cell，每个线程可以对一个cell�
  *
 ```
 
-* 只能做累加，或者自增自减操作，不能做其他操作
-* 用一个Cell数组来存放分段数据值大小，Cell数组中很简单只有一个value表示存放的值
-* sum方法用于返回当前计数值，返回所有Cell中value的和
+* 只能做累加，或者自增自减操作，不能做其它操作
+* 用一个`Cell`数组来存放分段数据值大小，Cell数组元素只有一个`volatile long value`表示存放的值
+* `sum方法`用于返回当前计数值，返回所有Cell中value的和
 * 多个线程会进行hash，对不同的Cell元素进行操作
 * 内部有扩容方法，增加更多的Cell元素
 
@@ -168,6 +168,6 @@ public long sum() {
 }
 ```
 
-### LongAdder和AtomicLong
+### `LongAdder`和`AtomicLong`
 
 <a href="http://blog.palominolabs.com/2014/02/10/java-8-performance-improvements-longadder-vs-atomiclong/" target="_blank">性能对比</a>

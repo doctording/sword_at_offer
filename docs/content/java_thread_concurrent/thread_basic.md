@@ -33,7 +33,7 @@ public interface Runnable {
 1. 显然可以利用`Java8 lambda`
 2. 其次一个类实现了`Runnable`接口，而不是继承`Thread`, 那么其只是有`run()`方法，没有所谓的`start()`方法
 
-线程真正的执行逻辑是在`run()`, 通常称为线程的执行单元
+线程真正的执行逻辑是在`run()`, 通常称为`线程的执行单元`
 
 ## `class Thread` 源码
 
@@ -204,7 +204,7 @@ private native void start0();
 #### 需要注意的点
 
 1. `start`方法用`synchronized`修饰，为同步方法；表示真正的去执行线程
-2. 虽然为同步方法，但不能避免多次调用问题，用threadStatus来记录线程状态，如果线程被**多次start调用会抛出异常**；threadStatus的状态由JVM控制。
+2. 虽然为同步方法，但不能避免多次调用问题；所以用threadStatus来记录线程状态，如果线程被**多次start调用会抛出异常**；threadStatus的状态由JVM控制。
 3. 使用Runnable时，主线程无法捕获子线程中的异常状态。线程的异常，应在线程内部解决。
 
 区别：<font color='red'>`start()`是让另一个新线程开启，并执行其中的run方法；`run()`是直接当前线程执行其run方法.run方法一般称为线程的执行单元</font>
@@ -213,7 +213,7 @@ private native void start0();
 
 * call run() method directly no new thread will be created and code inside run() will execute in the current thread directly.
 
-native方法`start0()`
+native方法`start0()`:调用JVM方法创建一个本地线程，并处于可运行状态；获取到CPU时间片就能执行run方法
 
 start0(); method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.
 
@@ -230,7 +230,7 @@ private long stackSize;
 
 * 操作系统对一个进程的最大内存是有限制的
 
-* 虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存
+* 虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存(`-Xss`，默认1M)
 
 * JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系；生产上要监控线程数量，可能会由于bug导致线程数异常增多，引发心跳,OutOfMemory告警
 
@@ -348,7 +348,7 @@ private long stackSize;
     }
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_state.jpg)
+![](../../content/java_thread_concurrent/imgs/thread_state.jpg)
 
 * 阻塞(blocked)：阻塞状态是指线程因为某种原因放弃了cpu使用权，也即让出了cpu时间片，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu时间片，转到运行(running)状态。阻塞的情况分三种：
 
@@ -440,13 +440,13 @@ t6 status:BLOCKED
 
 #### `jvisualvm`的线程状态
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/vm_thread_state.png)
+![](../../content/java_thread_concurrent/imgs/vm_thread_state.png)
 
 ## 操作系统定义线程的5种状态
 
 1. 初始状态（new）
 2. 可运行状态/就绪状态（与操作系统关联，有了CPU时间片就可以运行起来，准备就绪中）
-3. 运行状态（有了CPU时间片，在运行中;CPU时间片用完会变成[可运行状态]）
+3. 运行状态（获取到CPU时间片，则在运行中；如果CPU时间片用完，则会变成[可运行状态]）
 4. 阻塞状态（等待/阻塞/睡眠，操作系统不考虑给这种状态线程分配CPU时间片，唤醒后变成[可运行状态]）
 5. 终止状态（结束）
 
@@ -459,10 +459,10 @@ t6 status:BLOCKED
 3. 有比该线程更高优先级的线程需要运行
 4. 线程调用了sleep,yield,wait,join,park,synchronized,lock等方法导致等待/阻塞等
 
-当`Context Switch`发生时，需要有操作系统保存当前线程的状态，并恢复另一个线程的状态，Javazh中有程序计数器（Program Counter Register）,它的作用是记住下一条JVM指令的地址，PC计数器是线程独有的
+当`Context Switch`发生时，需要有操作系统保存当前线程的状态，并恢复另一个线程的状态；每个线程都有一个程序计数器（Program Counter Register）,它的作用是记住下一条JVM指令的地址，这个程序计数器是线程独有的
 
 1. 状态包括程序计数器，虚拟机栈中每个线程栈帧的信息，如局部变量，操作数栈，返回地址等
-2. Context Switch频繁发生会影响性能
+2. `Context Switch`频繁发生会影响性能
 
 # Monitor
 
@@ -537,19 +537,20 @@ main continue
 ## wait方法的底层原理
 
 * Java中每一个对象都可以成为一个监视器（Monitor）, 该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒调度), 一个入口队列(EntryQueue,要去竞争获取锁).
-* `waiting`进入`_waitSet`等待中，是阻塞状态，不会占用CPU
-* `waiting`被唤醒后，不是直接执行，而是进入`_EntryList`，去竞争`monitor`来获得机会去执行
-* 其中`_EntryList`是没有获取到锁的Blocking状态，要继续竞争锁
+* `waiting`进入`_waitSet`等待中(底层通过执行`thread_ParkEvent->park`来挂起线程)，等待被唤醒，不会占用CPU
+* `waiting`被唤醒后，不是直接执行，而是进入`_EntryList`(没有获取到锁的Blocking状态，要继续竞争锁)，去竞争`monitor`来获得机会去执行
+
+![](../../content/java_thread_concurrent/imgs/wait_set.png)
 
 ## `wait` 和 `sleep` 的区别？
 
 1. wait()方法属于Object类,sleep()属于Thread类；
 
-2. wait()方法让自己让出锁资源进入等待池等待，让出CPU；sleep是占用锁资源不释放放，处于阻塞状态，让出CPU；
+2. wait()方法让自己**让出锁**资源进入等待池等待，会让出CPU；sleep是继续占用锁(依赖于系统时钟和CPU调度机制)，处于阻塞状态，会让出CPU；
 
 3. sleep()必须指定时间，wait()可以指定时间也可以不指定；sleep()时间到，线程处于阻塞或可运行状态；
 
-4. wait()方法会释放持有的锁，不然其它线程不能进入同步方法或同步块，从而不能调用notify(),notifyAll()方法来唤醒线程，产生死锁；所以释放锁，让其它线程可以进入synchronized同步块，可以执行其它线程，也可以唤醒自己；只是设置停止自己的时间时不确定的；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的；
+4. wait()方法会释放持有的锁，调用notify(),notifyAll()方法来唤醒线程；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的，超时或者`interrupt()`能唤醒
 
 5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用`notify()`来唤醒；而`sleep()`能在任何地方调用；
 
@@ -886,13 +887,15 @@ class MyThread extends Thread {
 }
 ```
 
-### 设置线程上下文类加载器 //TODO
+### 设置线程上下文类加载器
 
 ```java
 public void setContextClassLoader(ClassLoader cl)
 
 public ClassLoader getContextClassLoader()
 ```
+
+线程上下文类加载器破坏了`双亲委派模型`，例如`com.mysql.jdbc.Driver`
 
 ## 线程`interrupt` 和 `可中断方法`
 
@@ -978,9 +981,9 @@ public class Main {
 
 ## join(线程的join方法)
 
-与`sleep`一样也是一个可中断的方法，底层是对象的`wait`方法
+与`sleep`一样也是一个可中断的方法，底层是调用对象的`wait`方法
 
-线程B`join`线程A，会使得`当前线程B进入等待`，直到线程A结束生命周期，或者到达给定的时间，在此期间B线程是处于`Blocked`的
+线程B`join`线程A，会使得`当前线程B进入等待`，直到`线程A结束生命周期`或者`到达给定的时间`，在此期间B线程是处于`Blocked`的
 
 ### join源码分析
 

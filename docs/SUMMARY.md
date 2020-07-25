@@ -99,6 +99,8 @@
     * [分布式基础](./content/distributed_design/distribute.md)
         * [分布式事务](./content/distributed_design/distribute_tx.md)
         * [分布式锁](./content/distributed_design/distribute_lock.md)
+        * [分布式ID](./content/distributed_design/distribute_id.md)
+    * [rpc](./content/distributed_design/rpc.md)
     * [rpc](./content/distributed_design/rpc.md)
     * [网络设计模式](./content/distributed_design/design.md)
 * [11 剑指offer]
