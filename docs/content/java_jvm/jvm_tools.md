@@ -282,7 +282,7 @@ mubi@mubideMacBook-Pro Downloads $
 
 ### Native Memory Tracking(简称:NMT) 分析
 
-参考文档见：<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/tooldescr007.html">NMT</a>
+参考文档见：<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/tooldescr007.html" target="_blank">NMT</a>
 
 ```java
 22553:
@@ -388,16 +388,18 @@ Virtual memory map:
 
 ## linux pmap 命令(查看进程的内存映像信息)
 
-参考文档见：<a href="https://linux.die.net/man/1/pmap">linux pmap 帮助文档</a>
+参考文档见：<a href="https://linux.die.net/man/1/pmap" target='_blank'>linux pmap 帮助文档</a>
 
 The pmap command reports the memory map of a process or processes.
 
 * 参数
 
+```java
 -x	extended	Show the extended format.(显示扩展格式)
 -d	device	Show the device format.(显示设备格式)
 -q	quiet	Do not display some header/footer lines.(不显示头尾行)
 -V	show version	Displays version of program.(显示版本)
+```
 
 * 字段说明
 
@@ -412,7 +414,7 @@ The pmap command reports the memory map of a process or processes.
 
 ## linux strace 命令(追踪进程执行时的系统调用和所接收的信号)
 
-参考文档见：<a href="https://linux.die.net/man/1/pmap">linux strace 帮助文档</a>
+参考文档见：<a href="https://linux.die.net/man/1/pmap" target='_blank'>linux strace 帮助文档</a>
 
 ```java
 -p pid

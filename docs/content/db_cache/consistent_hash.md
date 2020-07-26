@@ -24,13 +24,13 @@ date: 2020-03-31 00:00
 
 将数据key使用相同的函数Hash计算出哈希值，并确定此数据在环上的位置，从此位置沿环顺时针“行走”，第一台遇到的服务器就是其应该定位到的服务器。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/db_cache/imgs/consistent_hash.png)
+![](../../content/db_cache/imgs/consistent_hash.png)
 
 现假设Node C不幸宕机，可以看到此时对象A、B、D不会受到影响，只有C对象被重定位到Node D。一般的，在一致性哈希算法中，如果一台服务器不可用，则受影响的数据仅仅是此服务器到其环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务器）之间数据，其它不会受到影响。
 
 现假设新增了服务器X，可以看到此时对象A、B、D不会受到影响，只有C对象被重定位到Node X，则受影响的数据仅仅是新服务器到其环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务器）之间数据，其它数据也不会受到影响。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/db_cache/imgs/consistent_hash2.png)
+![](../../content/db_cache/imgs/consistent_hash2.png)
 
 ### 节点少，数据倾斜问题
 

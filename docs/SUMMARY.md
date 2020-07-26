@@ -101,7 +101,6 @@
         * [分布式锁](./content/distributed_design/distribute_lock.md)
         * [分布式ID](./content/distributed_design/distribute_id.md)
     * [rpc](./content/distributed_design/rpc.md)
-    * [rpc](./content/distributed_design/rpc.md)
     * [网络设计模式](./content/distributed_design/design.md)
 * [11 剑指offer]
     * [剑指Offer解题思路(全)](./content/thought_of_solve/thought.md)

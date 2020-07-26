@@ -8,13 +8,11 @@ date: 2020-03-08 18:00
 
 # MySQL
 
-<a href="https://dev.mysql.com/doc/">官方文档</a>
+<a href='https://dev.mysql.com/doc/' target='_blank'>官方文档</a>
 
-<a href="https://dev.mysql.com/doc/refman/5.6/en/">mysql 5.6</a>
+<a href='https://dev.mysql.com/doc/refman/5.6/en/' target='_blank'>mysql 5.6</a>
 
-<a href="https://blog.csdn.net/qq_26437925/category_5779305.html">我个博客专题</a>
-
-本文主要补充一些常考笔试，面试题
+<a href='https://blog.csdn.net/qq_26437925/category_5779305.html' target='_blank'>我的博客专题</a>
 
 ## mysql的数据库引擎有哪些？
 
@@ -33,11 +31,11 @@ date: 2020-03-08 18:00
 
 每个属性都不可再分
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/1nf.png)
+![](../../content/db_cache/imgs/1nf.png)
 
 ### 第二范式
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/bug.png)
+![](../../content/db_cache/imgs/bug.png)
 
 1. 每一名学生的学号、姓名、系名、系主任这些数据重复多次。每个系与对应的系主任的数据也重复多次——数据冗余过大
 
@@ -78,7 +76,7 @@ date: 2020-03-08 18:00
 * 学生（学号，姓名，系名）
 * 系（系名，系主任）
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/3nf.png)
+![](../../content/db_cache/imgs/3nf.png)
 
 ### BCNF范式
 
@@ -140,7 +138,6 @@ hash join仅仅在join的字段上`没有索引`时才起作用，在此之前�
 merge join第一个步骤是确保两个关联表都是按照关联的字段进行排序。如果关联字段有可用的索引，并且排序一致，则可以直接进行merge join操作；
 
 两个表都按照关联字段排序好之后，merge join操作从每个表取一条记录开始匹配，如果符合关联条件，则放入结果集中；否则，将关联字段值较小的记录抛弃，从这条记录对应的表中取下一条记录继续进行匹配，直到整个循环结束。
-
 
 ```java
  function sortMerge(relation left, relation right, attribute a)

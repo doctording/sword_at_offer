@@ -309,7 +309,7 @@ public static void testStringBuffer () {
 
 适用于单线程下在字符缓冲区进行大量操作的情况
 
-### append字符串 对比 string +
+### append字符串 对比 String +
 
 ```java
 // 对于String，会不断的创建、回收对象，速度会很慢。

@@ -48,18 +48,18 @@ Class文件中不会保存各个方法、字段的最终内存布局信息；因
 
 # JVM运行时各内存区域
 
-* Java7
+## Java7
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/java7.jpeg)
+![](../../content/java_jvm/imgs/java7.jpeg)
 
-* Java8
+## Java8
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/java8.jpeg)
+![](../../content/java_jvm/imgs/java8.jpeg)
 
 ## 程序计数器(PC)
 
-指向下一条需要执行的字节码；记录当前线程的位置便于线程切换与恢复；
-唯一 一个不会出现 OOM 的区域
+* 指向下一条需要执行的字节码；记录当前线程的位置便于线程切换与恢复；
+* 唯一 一个不会出现 `OOM` 的区域
 
 ## 虚拟机栈（线程stack）
 
@@ -113,7 +113,7 @@ String的`intern()`方法会查找在常量池中是否存在一份equal相等�
 
 * 对象在内存中存储的布局可以分为3块区域：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/hotspot_obj.png)
+![](../../content/java_jvm/imgs/hotspot_obj.png)
 
 <a href="http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html" target="_blank">hotspot 相关术语表</a>
 
@@ -175,7 +175,7 @@ _kclass:4个字节
 
 markword 8个字节，64bit
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/hotspot_markword.png)
+![](../../content/java_jvm/imgs/hotspot_markword.png)
 
 * 无锁例子
 
@@ -241,15 +241,15 @@ markword 64bit，如下
             => 卸载
 ```
 
-### 加载
+### 1 加载
 
 这是由类加载器（ClassLoader）执行的。通过一个类的`全限定名`来获取其定义的`二进制字节流`（Class字节码），将这个字节流所代表的静态存储结构转化为运行时(Runtime data area)区域的入口，根据字节码在Java`堆`中生成一个代表这个类的`java.lang.Class`对象。
 
-### 连接：验证（class字节流的校验）
+### 2-1 连接：验证（class字节流的校验）
 
 验证是链接阶段的第一步，这一步主要的目的是确保`class`文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身安全。验证阶段主要包括四个检验过程：文件格式验证、元数据验证、字节码验证和符号引用验证。
 
-### 连接：准备（分配内存，初始化默认值）
+### 2-2 连接：准备（分配内存，初始化默认值）
 
 准备阶段是正式为类变量分配内存并设置类变量的初始值阶段，即在方法区中分配这些变量所使用的内存空间。
 
@@ -267,13 +267,13 @@ public static final int value = 123;
 
 编译时javac将会为value生成ConstantValue属性，在准备阶段虚拟机就会根据ConstantValue的设置将value设置为123。
 
-### 连接：解析
+### 2-3 连接：解析
 
 解析阶段是虚拟机常量池内的符号引用替换为直接引用的过程。
 
 直接引用可以是指向目标的指针，相对偏移量或是一个能间接定位到目标的句柄。如果有了直接引用，那引用的目标必定已经在内存中存在。
 
-### 初始化（执行类构造器`<client>`）
+### 3 初始化（执行类构造器`<client>`）
 
 初始化阶段是类加载最后一个阶段，前面的类加载阶段之后，除了在加载阶段可以自定义类加载器以外，其它操作都**由JVM主导**。到了初始阶段，才开始真正执行类中定义的Java程序代码。
 
@@ -281,11 +281,11 @@ public static final int value = 123;
 
 `<client>`方法是由编译器自动收集类中的**类变量的赋值操作和静态语句块**中的语句合并而成的。虚拟机会保证`<client>`方法执行之前，父类的`<client>`方法已经执行完毕。
 
-#### 什么时候需要对类进行初始化
+#### 什么时候需要对类进行初始化?
 
 1. 使用`new`该类实例化对象的时候
-2. 读取或设置`类静态字段`的时候（但被final修饰的字段，在编译器时就被放入常量池(static final)的静态字段除外）
-3. 调用`类静态方法`的时候
+2. 读取或设置`类静态字段`的时候（但被final修饰的字段，在编译器时就被放入常量池,所以(`static final`)的静态字段除外）
+3. 调用`类的静态方法`的时候
 4. 使用反射`Class.forName("xxx")`对类进行反射调用的时候，该类需要初始化；
 5. 初始化一个类的时候，有父类，`先初始化父类`（注：1. 接口除外，父接口在调用的时候才会被初始化；2.子类引用父类静态字段，只会引发父类初始化）；
 6. 被标明为启动类的类（即包含`main()方法`的类）要初始化；
@@ -299,7 +299,7 @@ public static final int value = 123;
 
 * 如果超类还没有被初始化，那么优先对超类初始化，但在`<clinit>`方法内部不会显示调用超类的`<clinit>`方法，由JVM负责保证一个类的`<clinit>`方法执行之前，它的超类`<clinit>`方法已经被执行。
 
-* JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，**仅仅只能允许其中一个线程对其执行初始化操作**，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其他线程。(所以可以利用静态内部类实现线程安全的单例模式)
+* JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，**仅仅只能允许其中一个线程对其执行初始化操作**，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其它线程。(<font color='red'>所以可以利用静态内部类实现线程安全的单例模式</font>)
 
 * 如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类`<clinit>`方法；
 
@@ -952,4 +952,4 @@ private static boolean isDriverAllowed(Driver driver, ClassLoader classLoader) {
 
 数据库驱动加载接口被作为JDK核心标准类库的一部分，由于JVM类加载的双亲委托(`parents delegate`)机制的限制，启动类加载器不可能加载得到第三方厂商提供的具体实现。如何解决？
 
-线程上下文类加载器：有了线程上下文类加载器，启动类加载器(根加载器)反倒需要委托子类加载器去加载厂商提供的对JDK定义的SPI的实现
+线程上下文类加载器：有了线程上下文类加载器，启动类加载器(根加载器)反倒需要委托子类加载器去加载厂商提供的对JDK定义的SPI(Service Provider Interface)的实现

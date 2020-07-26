@@ -13,7 +13,7 @@ date: 2020-03-30 18:00
 penetration | n. 穿透; 渗透; 进入; 插入
 avalanche | n. 雪崩; 山崩;
 
-<a href="https://medium.com/@mena.meseha/3-major-problems-and-solutions-in-the-cache-world-155ecae41d4f">3 major problems and solutions in the cache world</a>
+<a href='https://medium.com/@mena.meseha/3-major-problems-and-solutions-in-the-cache-world-155ecae41d4f' target='_blank'>3 major problems and solutions in the cache world</a>
 
 ## 缓存的使用
 
@@ -25,11 +25,11 @@ In most Internet applications:
 
 ```java
 业务查询 =》 判断缓存命中 =》 直接返回数据结果
-                      否则： 查询数据库并更新缓存，然后返回数据结果
+            否则： 查询数据库并更新缓存，然后返回数据结果
 ```
 
 * 缓存分担部分请求压力
-* 但缓存不可能把所有的数据都缓存起来(需要有过期时间和删除策略）
+* 但缓存不可能把所有的数据都缓存起来(<font color='red'>需要有过期时间和删除策略</font>）
 
 ## 缓存穿透
 
@@ -84,7 +84,7 @@ It needs to add a barrier（n.障碍； 屏障； 栅栏； 分界线vt.把…�
 
 将数据库中所有的查询条件，放入布隆过滤器中；当一个查询请求过来时，先经过布隆过滤器进行查，如果判断请求查询值存在，则继续查；如果判断请求查询不存在，则直接丢弃。
 
-<a href="https://github.com/doctording/springboot_gradle_demos/tree/master/code/demo">springboot demo项目</a>
+<a href="https://github.com/doctording/springboot_gradle_demos/tree/master/code/demo" target='_blank'>springboot demo项目</a>
 
 * 低并发,定时任务去每天更新bloomFilter,维护每天的一个bloomFilter
 * 初始预热，动态新增
@@ -185,7 +185,7 @@ When a hotspot data fails, only the first database query request is sent to the 
 
 * 第一个获取到锁，当更新或者从数据库获取完成后再释放锁，**其它的请求只需要牺牲一定的等待时间**，即可直接从缓存中继续获取数据。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/cache_mutex.png)
+![](../../content/db_cache/imgs/cache_mutex.png)
 
 Mutex locks can avoid the problem of database corruption caused by the failure of ahotspot data. In actual business, there are often scenes where a batch of hotspot data fails at the same time. So how do you prevent database overload for this scenario?
 

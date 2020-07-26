@@ -6,7 +6,9 @@ date: 2019-02-15 00:00
 
 [TOC]
 
-# Java7堆内存划分
+# 堆内存
+
+## Java7堆内存划分
 
 参考图书《深入理解java虚拟机》堆的描述
 
@@ -19,7 +21,7 @@ date: 2019-02-15 00:00
 7. Java堆的大小是可扩展的， 通过`-Xms`和`-Xmx`控制。
 8. 如果堆内存不够分配实例对象， 并且对也无法在扩展时， 将会抛出outOfMemoryError异常。
 
-## 堆区域
+## 堆区域与分代
 
 * 堆大小 = 新生代 + 老年代（默认：新生代:老年代=`1:2`，即`1/3`的新生代，`2/3`的老年代）。堆大小设置参数：`–Xms`（堆的初始容量）、`-Xmx`（堆的最大容量）
 * 其中，新生代 (`Young`) 被细分为`Eden`和两个`Survivor`区域，这两个`Survivor`区域分别被命名为`from`和`to`，以示区分。默认的，`Edem : from : to = 8 : 1 : 1`。(可以通过参数`–XX:SurvivorRatio`来设定 。即： Eden = 8/10 的新生代空间大小，from = to = 1/10 的新生代空间大小。
@@ -55,7 +57,7 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
 * FGCT – 从应用程序启动到采样时 Full GC 所用的时间(单位秒)
 * GCT  — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/java7_heap.png)
+![](../../content/java_jvm/imgs/java7_heap.png)
 
 ### Java7永久代(Perm space)
 
@@ -65,7 +67,7 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
 
 * 这个区域的内存回收目标主要是针对常量池的回收和对类型的卸载
 
-# Java8 内存区域
+## Java8 内存区域
 
 ```java
 // java7
@@ -104,7 +106,7 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
 * FGCT – 从应用程序启动到采样时 Full GC 所用的时间(单位秒)
 * GCT  — 从应用程序启动到采样时用于垃圾回收的总时间(单位秒)
 
-## Java8元空间(元数据区)
+### Java8元空间(元数据区)
 
 参考学习1: <a target='_blank' href='http://openjdk.java.net/jeps/122'>openjdk相关文档</a>
 
@@ -120,17 +122,17 @@ Class metadata, interned Strings and class static variables will be moved from t
 
 ## 三个问题
 
-1.哪些内存需要回收
+1. 哪些内存需要回收
 
-2.什么时候进行回收
+2. 什么时候进行回收
 
-3.如何回收
+3. 如何回收
 
 ## 通过`可达性分析`来判定对象是否存活(什么是垃圾?)
 
 算法的基本思路就是通过一系列的称为`GC Roots`的对象作为起始点，从这些节点向下搜索，搜索所走过的路径称为`引用链(Reference Chain)`,当一个对象到`GC Roots`没有任何引用链相连(用图论的话来说，就是`GC Roots`到这个对象不可达)时，则证明此对象是不可用的。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/gc_roots.png)
+![](../../content/java_jvm/imgs/gc_roots.png)
 
 ### Java中可作为`GC Roots`的对象包括
 
@@ -188,53 +190,6 @@ static void testM(){
     m = null;
     System.gc();
     System.out.println(m);
-}
-```
-
-### 弱引用(`WeakReference`)
-
-```java
-// Strong Reference
-Gfg g = new Gfg();
-g.x();
-
-// Creating Weak Reference to Gfg-type object to which 'g'  
-// is also pointing.
-WeakReference<Gfg> weakref = new WeakReference<Gfg>(g);
-
-//Now, Gfg-type object to which 'g' was pointing earlier
-//is available for garbage collection.
-//But, it will be garbage collected only when JVM needs memory.
-g = null;  
-
-// You can retrieve back the object which
-// has been weakly referenced.
-// It successfully calls the method.
-g = weakref.get();  
-
-g.x();
-```
-
-* This type of reference is used in WeakHashMap to reference the entry objects .
-* If JVM detects an object with only weak references (i.e. no strong or soft references linked to any object object), this object will be marked for garbage collection.
-* To create such references java.lang.ref.WeakReference class is used.
-* These references are used in real time applications while establishing a DBConnection which might be cleaned up by Garbage Collector when the application using the database gets closed.
-
-* 弱引用与GC
-
-```java
-/**
-    * 只要有垃圾回收线程执行，弱引用直接会被回收
-    * 输出如下：
-    * Main$M@736e9adb
-    * null
-    * finalize
-    */
-static void testWeakReference(){
-    WeakReference<M> m = new WeakReference<>(new M());
-    System.out.println(m.get());
-    System.gc();
-    System.out.println(m.get());
 }
 ```
 
@@ -308,6 +263,53 @@ static void testSoftReference() throws Exception{
 
     // 由于强引用申请空间不够，必须要清除软引用了
     System.out.println(mSoft.get());
+}
+```
+
+### 弱引用(`WeakReference`)
+
+```java
+// Strong Reference
+Gfg g = new Gfg();
+g.x();
+
+// Creating Weak Reference to Gfg-type object to which 'g'  
+// is also pointing.
+WeakReference<Gfg> weakref = new WeakReference<Gfg>(g);
+
+//Now, Gfg-type object to which 'g' was pointing earlier
+//is available for garbage collection.
+//But, it will be garbage collected only when JVM needs memory.
+g = null;  
+
+// You can retrieve back the object which
+// has been weakly referenced.
+// It successfully calls the method.
+g = weakref.get();  
+
+g.x();
+```
+
+* This type of reference is used in WeakHashMap to reference the entry objects .
+* If JVM detects an object with only weak references (i.e. no strong or soft references linked to any object object), this object will be marked for garbage collection.
+* To create such references java.lang.ref.WeakReference class is used.
+* These references are used in real time applications while establishing a DBConnection which might be cleaned up by Garbage Collector when the application using the database gets closed.
+
+* 弱引用与GC
+
+```java
+/**
+    * 只要有垃圾回收线程执行，弱引用直接会被回收
+    * 输出如下：
+    * Main$M@736e9adb
+    * null
+    * finalize
+    */
+static void testWeakReference(){
+    WeakReference<M> m = new WeakReference<>(new M());
+    System.out.println(m.get());
+    System.gc();
+    System.out.println(m.get());
 }
 ```
 
@@ -610,7 +612,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)
 mubi@mubideMacBook-Pro ~ $
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/gc_fen_dai.png)
+![](../../content/java_jvm/imgs/gc_fen_dai.png)
 
 -|新生代(别名)|老年代|JVM 参数
 :---:|:---:|:---:|:---:
@@ -623,7 +625,7 @@ mubi@mubideMacBook-Pro ~ $
 
 * `new object`的gc生命周期
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/gc_fen_dai_2.png)
+![](../../content/java_jvm/imgs/gc_fen_dai_2.png)
 
 ## CMS(Concurrent Mark Sweep)垃圾回收器
 
@@ -637,7 +639,7 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 ### CMS处理的4个步骤
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/cms_deal_flow.png)
+![](../../content/java_jvm/imgs/cms_deal_flow.png)
 
 1. 初始标记（CMS initial mark)，需要:`Stop The World`
 
@@ -696,7 +698,7 @@ objE.fieldG = null;  // 灰色E 断开引用 白色G
 objD.fieldG = G;  // 黑色D 引用 白色G
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/cms_color.png)
+![](../../content/java_jvm/imgs/cms_color.png)
 
 此时切回GC线程继续跑，因为E已经没有对G的引用了，所以不会将G放到灰色集合；尽管因为D重新引用了G，但因为D已经是黑色了，是不会再重新做遍历处理。最终结局就是：G会一直停留在白色集合中，最后被当作垃圾进行清除。但是G显然是不能被回收的，这种情况影响到了应用程序的正确性，是不可接受的。
 
@@ -745,7 +747,7 @@ objD.fieldG = G;     // 3.写，写屏障
 
 ### G1 内存区域分布图和概念介绍
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/g1.png)
+![](../../content/java_jvm/imgs/g1.png)
 
 * 整个堆被分为一个大小相等的region集合，每个reagion是逻辑上连续的虚拟内存区域；
 
@@ -897,7 +899,7 @@ If empty regions are found (as denoted by the "X"), they are removed immediately
 2. <font color='gray'>灰色</font>： 自身被标记，成员未被标记
 3. <font color='black'>黑色</font>： 自身被和成员都被标记完成了
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/three_color.png)
+![](../../content/java_jvm/imgs/three_color.png)
 
 从左边变成右边的状态,两个变化
 1. B->D 引用消失
@@ -1318,23 +1320,21 @@ Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
 	at java7.HeapOOM.main(HeapOOM.java:17)
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/stream_operate.png)
-
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/oom_analyse.png)
+![](../../content/java_jvm/imgs/oom_analyse.png)
 
 * Shallow heap是一个对象消费的内存数量。每个对象的引用需要32（或者64 bits，基于CPU架构）。
 
 * Retained Heap显示的是那些当垃圾回收时候会清理的所有对象的Shallow Heap的总和。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_jvm/imgs/histogram.png)
+![](../../content/java_jvm/imgs/oom_histogram.png)
 
 * 参考
 
 1. 《Java 虚拟机》（第二版）
 
-2. https://www.cnblogs.com/cnmenglang/p/6261435.html
+2. <a href="https://www.cnblogs.com/cnmenglang/p/6261435.html" target="_blank">参考1</a>
 
-3. https://www.jianshu.com/p/759e02c1feee
+3. <a href="https://www.jianshu.com/p/759e02c1feee" target="_blank">参考2</a>
 
 ## 虚拟机栈和本地方法栈溢出
 
@@ -1389,7 +1389,7 @@ Exception in thread "main" java.lang.StackOverflowError
 
 参考：
 
-1. https://blog.csdn.net/z69183787/article/details/79228215
+1. <a href="https://blog.csdn.net/z69183787/article/details/79228215" target="_blank">参考blog</a>
 
 ## 方法区和运行时常量池溢出
 
@@ -1455,7 +1455,7 @@ Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
 
 参考：
 
-1. https://blog.csdn.net/tlk20071/article/details/77841841
+1. <a href="https://blog.csdn.net/tlk20071/article/details/77841841">参考blog</a>
 
 ## 直接内存溢出
 
