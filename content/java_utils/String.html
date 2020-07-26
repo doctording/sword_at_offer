@@ -1550,20 +1550,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/rpc.html">
-            
-                <a href="../distributed_design/rpc.html">
-            
-                    
-                    rpc
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.4" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
             
                 <a href="../distributed_design/design.html">
             
@@ -1670,7 +1657,7 @@
 <li><div><a href="#stringbuilder--stringbuffer--string">StringBuilder  StringBuffer  String</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x975E;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;">&#x975E;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;</a><i></i></div></li>
-<li><div><a href="#append&#x5B57;&#x7B26;&#x4E32;-&#x5BF9;&#x6BD4;-string-">append&#x5B57;&#x7B26;&#x4E32; &#x5BF9;&#x6BD4; string +</a><i></i></div></li>
+<li><div><a href="#append&#x5B57;&#x7B26;&#x4E32;-&#x5BF9;&#x6BD4;-string-">append&#x5B57;&#x7B26;&#x4E32; &#x5BF9;&#x6BD4; String +</a><i></i></div></li>
 </ul></li>
 <li><div><a href="#java-string&#x7C7B;&#x4E3A;&#x4EC0;&#x4E48;&#x662F;final&#x7684;&#xFF1F;">Java String&#x7C7B;&#x4E3A;&#x4EC0;&#x4E48;&#x662F;final&#x7684;&#xFF1F;</a><i></i></div></li>
 </ul></li>
@@ -1956,7 +1943,7 @@
 <h2 id="stringbuilder--stringbuffer--string">StringBuilder &gt; StringBuffer &gt; String</h2>
 <h3 id="&#x975E;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;">&#x975E;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;</h3>
 <p>&#x9002;&#x7528;&#x4E8E;&#x5355;&#x7EBF;&#x7A0B;&#x4E0B;&#x5728;&#x5B57;&#x7B26;&#x7F13;&#x51B2;&#x533A;&#x8FDB;&#x884C;&#x5927;&#x91CF;&#x64CD;&#x4F5C;&#x7684;&#x60C5;&#x51B5;</p>
-<h3 id="append&#x5B57;&#x7B26;&#x4E32;-&#x5BF9;&#x6BD4;-string-">append&#x5B57;&#x7B26;&#x4E32; &#x5BF9;&#x6BD4; string +</h3>
+<h3 id="append&#x5B57;&#x7B26;&#x4E32;-&#x5BF9;&#x6BD4;-string-">append&#x5B57;&#x7B26;&#x4E32; &#x5BF9;&#x6BD4; String +</h3>
 <pre class="language-"><code class="lang-java"><span class="token comment">// &#x5BF9;&#x4E8E;String&#xFF0C;&#x4F1A;&#x4E0D;&#x65AD;&#x7684;&#x521B;&#x5EFA;&#x3001;&#x56DE;&#x6536;&#x5BF9;&#x8C61;&#xFF0C;&#x901F;&#x5EA6;&#x4F1A;&#x5F88;&#x6162;&#x3002;</span>
 <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">testStringAdd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
     <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">10000</span><span class="token punctuation">;</span>
@@ -2005,7 +1992,7 @@
 </ol>
 <p>&#x56E0;&#x4E3A;&#x5B57;&#x7B26;&#x4E32;&#x662F;&#x4E0D;&#x53EF;&#x53D8;&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x5728;&#x5B83;&#x521B;&#x5EFA;&#x7684;&#x65F6;&#x5019;HashCode&#x5C31;&#x88AB;&#x7F13;&#x5B58;&#x4E86;&#xFF0C;&#x4E0D;&#x9700;&#x8981;&#x91CD;&#x65B0;&#x8BA1;&#x7B97;&#x3002;&#x8FD9;&#x5C31;&#x4F7F;&#x5F97;&#x5B57;&#x7B26;&#x4E32;&#x5F88;&#x9002;&#x5408;&#x4F5C;&#x4E3A;Map&#x4E2D;&#x7684;&#x952E;&#xFF0C;&#x5B57;&#x7B26;&#x4E32;&#x7684;&#x5904;&#x7406;&#x901F;&#x5EA6;&#x8981;&#x5FEB;&#x8FC7;&#x5176;&#x5B83;&#x7684;&#x952E;&#x5BF9;&#x8C61;&#x3002;&#x8FD9;&#x5C31;&#x662F;HashMap&#x4E2D;&#x7684;&#x952E;&#x5F80;&#x5F80;&#x90FD;&#x4F7F;&#x7528;&#x5B57;&#x7B26;&#x4E32;&#x3002;</p>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-10 21:00:51
+2020-07-26 20:29:17
 </span></footer>
                                 
                                 </section>
@@ -2049,7 +2036,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"String,StringBuffer,StringBuilder","layout":"page","date":"2018-11-24 00:00","level":"1.4.7","depth":2,"next":{"title":"反射机制","level":"1.4.8","depth":2,"path":"content/java_utils/reflect.md","ref":"./content/java_utils/reflect.md","articles":[]},"previous":{"title":"Java异常&错误","level":"1.4.6","depth":2,"path":"content/java_utils/exception.md","ref":"./content/java_utils/exception.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/String.md","mtime":"2020-07-10T13:00:51.572Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-25T04:41:57.751Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"String,StringBuffer,StringBuilder","layout":"page","date":"2018-11-24 00:00","level":"1.4.7","depth":2,"next":{"title":"反射机制","level":"1.4.8","depth":2,"path":"content/java_utils/reflect.md","ref":"./content/java_utils/reflect.md","articles":[]},"previous":{"title":"Java异常&错误","level":"1.4.6","depth":2,"path":"content/java_utils/exception.md","ref":"./content/java_utils/exception.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/String.md","mtime":"2020-07-26T12:29:17.114Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-26T13:12:15.689Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

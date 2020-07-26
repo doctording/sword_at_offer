@@ -1550,20 +1550,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/rpc.html">
-            
-                <a href="../distributed_design/rpc.html">
-            
-                    
-                    rpc
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.4" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
             
                 <a href="../distributed_design/design.html">
             
@@ -1685,14 +1672,14 @@
 </ol>
 <p>&#x6570;&#x636E;&#x5982;&#x4F55;&#x5B9A;&#x4F4D;&#x5230;&#x670D;&#x52A1;&#x5668;&#xFF1F;</p>
 <p>&#x5C06;&#x6570;&#x636E;key&#x4F7F;&#x7528;&#x76F8;&#x540C;&#x7684;&#x51FD;&#x6570;Hash&#x8BA1;&#x7B97;&#x51FA;&#x54C8;&#x5E0C;&#x503C;&#xFF0C;&#x5E76;&#x786E;&#x5B9A;&#x6B64;&#x6570;&#x636E;&#x5728;&#x73AF;&#x4E0A;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x4ECE;&#x6B64;&#x4F4D;&#x7F6E;&#x6CBF;&#x73AF;&#x987A;&#x65F6;&#x9488;&#x201C;&#x884C;&#x8D70;&#x201D;&#xFF0C;&#x7B2C;&#x4E00;&#x53F0;&#x9047;&#x5230;&#x7684;&#x670D;&#x52A1;&#x5668;&#x5C31;&#x662F;&#x5176;&#x5E94;&#x8BE5;&#x5B9A;&#x4F4D;&#x5230;&#x7684;&#x670D;&#x52A1;&#x5668;&#x3002;</p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/db_cache/imgs/consistent_hash.png" alt=""></p>
+<p><img src="imgs/consistent_hash.png" alt=""></p>
 <p>&#x73B0;&#x5047;&#x8BBE;Node C&#x4E0D;&#x5E78;&#x5B95;&#x673A;&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x6B64;&#x65F6;&#x5BF9;&#x8C61;A&#x3001;B&#x3001;D&#x4E0D;&#x4F1A;&#x53D7;&#x5230;&#x5F71;&#x54CD;&#xFF0C;&#x53EA;&#x6709;C&#x5BF9;&#x8C61;&#x88AB;&#x91CD;&#x5B9A;&#x4F4D;&#x5230;Node D&#x3002;&#x4E00;&#x822C;&#x7684;&#xFF0C;&#x5728;&#x4E00;&#x81F4;&#x6027;&#x54C8;&#x5E0C;&#x7B97;&#x6CD5;&#x4E2D;&#xFF0C;&#x5982;&#x679C;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0D;&#x53EF;&#x7528;&#xFF0C;&#x5219;&#x53D7;&#x5F71;&#x54CD;&#x7684;&#x6570;&#x636E;&#x4EC5;&#x4EC5;&#x662F;&#x6B64;&#x670D;&#x52A1;&#x5668;&#x5230;&#x5176;&#x73AF;&#x7A7A;&#x95F4;&#x4E2D;&#x524D;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#xFF08;&#x5373;&#x6CBF;&#x7740;&#x9006;&#x65F6;&#x9488;&#x65B9;&#x5411;&#x884C;&#x8D70;&#x9047;&#x5230;&#x7684;&#x7B2C;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#xFF09;&#x4E4B;&#x95F4;&#x6570;&#x636E;&#xFF0C;&#x5176;&#x5B83;&#x4E0D;&#x4F1A;&#x53D7;&#x5230;&#x5F71;&#x54CD;&#x3002;</p>
 <p>&#x73B0;&#x5047;&#x8BBE;&#x65B0;&#x589E;&#x4E86;&#x670D;&#x52A1;&#x5668;X&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x6B64;&#x65F6;&#x5BF9;&#x8C61;A&#x3001;B&#x3001;D&#x4E0D;&#x4F1A;&#x53D7;&#x5230;&#x5F71;&#x54CD;&#xFF0C;&#x53EA;&#x6709;C&#x5BF9;&#x8C61;&#x88AB;&#x91CD;&#x5B9A;&#x4F4D;&#x5230;Node X&#xFF0C;&#x5219;&#x53D7;&#x5F71;&#x54CD;&#x7684;&#x6570;&#x636E;&#x4EC5;&#x4EC5;&#x662F;&#x65B0;&#x670D;&#x52A1;&#x5668;&#x5230;&#x5176;&#x73AF;&#x7A7A;&#x95F4;&#x4E2D;&#x524D;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#xFF08;&#x5373;&#x6CBF;&#x7740;&#x9006;&#x65F6;&#x9488;&#x65B9;&#x5411;&#x884C;&#x8D70;&#x9047;&#x5230;&#x7684;&#x7B2C;&#x4E00;&#x53F0;&#x670D;&#x52A1;&#x5668;&#xFF09;&#x4E4B;&#x95F4;&#x6570;&#x636E;&#xFF0C;&#x5176;&#x5B83;&#x6570;&#x636E;&#x4E5F;&#x4E0D;&#x4F1A;&#x53D7;&#x5230;&#x5F71;&#x54CD;&#x3002;</p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/db_cache/imgs/consistent_hash2.png" alt=""></p>
+<p><img src="imgs/consistent_hash2.png" alt=""></p>
 <h3 id="&#x8282;&#x70B9;&#x5C11;&#xFF0C;&#x6570;&#x636E;&#x503E;&#x659C;&#x95EE;&#x9898;">&#x8282;&#x70B9;&#x5C11;&#xFF0C;&#x6570;&#x636E;&#x503E;&#x659C;&#x95EE;&#x9898;</h3>
 <p>&#x5F15;&#x5165;&#x865A;&#x62DF;&#x8282;&#x70B9;</p>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-05-21 22:23:03
+2020-07-26 21:02:14
 </span></footer>
                                 
                                 </section>
@@ -1736,7 +1723,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"一致性Hash","layout":"page","date":"2020-03-31 00:00","level":"1.8.3","depth":2,"next":{"title":"布隆过滤器","level":"1.8.4","depth":2,"path":"content/db_cache/bloom.md","ref":"./content/db_cache/bloom.md","articles":[]},"previous":{"title":"LRU","level":"1.8.2","depth":2,"path":"content/db_cache/LRU.md","ref":"./content/db_cache/LRU.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/consistent_hash.md","mtime":"2020-05-21T14:23:03.264Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-25T04:41:57.751Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"一致性Hash","layout":"page","date":"2020-03-31 00:00","level":"1.8.3","depth":2,"next":{"title":"布隆过滤器","level":"1.8.4","depth":2,"path":"content/db_cache/bloom.md","ref":"./content/db_cache/bloom.md","articles":[]},"previous":{"title":"LRU","level":"1.8.2","depth":2,"path":"content/db_cache/LRU.md","ref":"./content/db_cache/LRU.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/consistent_hash.md","mtime":"2020-07-26T13:02:14.711Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-26T13:12:15.689Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
