@@ -1743,18 +1743,18 @@ strace <span class="token operator">-</span>ff <span class="token operator">-</s
 <li>listen&#xFF0C;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;</li>
 <li>accept(&#x963B;&#x585E;&#x72B6;&#x6001;), &#x6709;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;&#x5F97;&#x5230;&#x65B0;&#x7684;socket, &#x4EA7;&#x751F;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26; &#x5982; fd6&#xFF0C;fd7</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_0.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_2.png" alt=""></p>
+<p><img src="imgs/linux_io_0.png" alt=""></p>
+<p><img src="imgs/linux_io_2.png" alt=""></p>
 <ul>
 <li><font color="red">&#x5C0F;&#x77E5;&#x8BC6;</font>&#xFF1A;&#x901A;&#x8FC7;&#x8FDB;&#x7A0B;ID&#x53F7;&#x80FD;&#x77E5;&#x9053;&#x6709;&#x591A;&#x5C11;&#x4E2A;&#x7EBF;&#x7A0B;(<code>/proc/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pid</span><span class="token punctuation">&gt;</span></span>/task</code>)</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/proc_task_threads.png" alt=""></p>
+<p><img src="imgs/proc_task_threads.png" alt=""></p>
 <p>&#x8865;&#x5145;&#xFF1A;linux&#x521B;&#x5EFA;&#x7EBF;&#x7A0B;&#xFF0C;&#x8D70;&#x7684;clone&#x7CFB;&#x7EDF;&#x8C03;&#x7528;&#xFF0C;eg&#xFF1A;</p>
 <pre class="language-"><code class="lang-java"><span class="token function">clone</span><span class="token punctuation">(</span>child_stack<span class="token operator">=</span><span class="token number">0x7fd8d8508ff0</span><span class="token punctuation">,</span> flags<span class="token operator">=</span>CLONE_VM<span class="token operator">|</span>CLONE_FS<span class="token operator">|</span>CLONE_FILES<span class="token operator">|</span>CLONE_SIGHAND<span class="token operator">|</span>CLONE_THREAD<span class="token operator">|</span>CLONE_SYSVSEM<span class="token operator">|</span>CLONE_SETTLS<span class="token operator">|</span>CLONE_     PARENT_SETTID<span class="token operator">|</span>CLONE_CHILD_CLEARTID<span class="token punctuation">,</span> parent_tidptr<span class="token operator">=</span><span class="token number">0x7fd8d85099d0</span><span class="token punctuation">,</span> tls<span class="token operator">=</span><span class="token number">0x7fd8d8509700</span><span class="token punctuation">,</span> child_tidptr<span class="token operator">=</span><span class="token number">0x7fd8d85099d0</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">4787</span>
 </code></pre>
 <h4 id="netstat&#x67E5;&#x770B;tcp&#x76F8;&#x5173;">netstat&#x67E5;&#x770B;tcp&#x76F8;&#x5173;</h4>
 <p>&#x6709;<code>Listen</code>,<code>ESTABLISHED</code>&#x72B6;&#x6001;&#x7684;TCP</p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_3.png" alt=""></p>
+<p><img src="imgs/linux_io_3.png" alt=""></p>
 <h4 id="&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x67E5;&#x770B;">&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x67E5;&#x770B;</h4>
 <p>&#x5728;&#x5DE5;&#x4F5C;&#x76EE;&#x5F55;&#x4F1A;&#x770B;&#x5230;&#x5F88;&#x591A;stracefile,&#x4EE5;.&#x7EBF;&#x7A0B;id&#x7ED3;&#x5C3E;&#xFF1B;<code>56544</code>&#x7AEF;&#x53E3;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;&#xFF0C;<code>vim stracefile.4772</code>(4772&#x662F;&#x670D;&#x52A1;&#x7AEF;&#x5F00;&#x542F;&#x7684;&#x7EBF;&#x7A0B;)&#xFF0C;&#x53EF;&#x4EE5;&#x627E;&#x5230;&#x5982;&#x4E0B;&#x4E00;&#x53E5;</p>
 <pre class="language-"><code class="lang-java"><span class="token function">accept</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>sa_family<span class="token operator">=</span>AF_INET6<span class="token punctuation">,</span> sin6_port<span class="token operator">=</span><span class="token function">htons</span><span class="token punctuation">(</span><span class="token number">56544</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">inet_pton</span><span class="token punctuation">(</span>AF_INET6<span class="token punctuation">,</span> <span class="token string">&quot;::ffff:127.0.0.1&quot;</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>sin6_addr<span class="token punctuation">)</span><span class="token punctuation">,</span> sin6_flowinfo<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> sin6_scope_id<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">28</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">6</span>
@@ -1771,7 +1771,7 @@ strace <span class="token operator">-</span>ff <span class="token operator">-</s
        <span class="token class-name">On</span> success<span class="token punctuation">,</span> these system calls <span class="token keyword">return</span> a nonnegative integer that is a descriptor <span class="token keyword">for</span> the accepted socket<span class="token punctuation">.</span>  <span class="token class-name">On</span> error<span class="token punctuation">,</span>  <span class="token operator">-</span><span class="token number">1</span>  is returned<span class="token punctuation">,</span> and errno is set appropriately<span class="token punctuation">.</span>
 </code></pre>
 <p>&#x4ECE;&#x4E0A;&#x53EF;&#x4EE5;&#x770B;&#x51FA;&#x662F;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;<code>6</code>&#x7684;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;,&#x5373;&#x4EE3;&#x8868;&#x4E86;&#x8FDE;&#x63A5;&#x4E0A;&#x7684;socket&#xFF1A;</p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_1.png" alt=""></p>
+<p><img src="imgs/linux_io_1.png" alt=""></p>
 <ul>
 <li>strace&#x7ED9;&#x5BA2;&#x6237;&#x7AEF;&#x8D77;&#x7684;&#x7EBF;&#x7A0B;&#xFF0C;&#x4F1A;&#x963B;&#x585E;&#x5728;<code>recvfrom</code>&#x63A5;&#x6536;&#x6570;&#x636E;&#x4E0A;</li>
 </ul>
@@ -1831,7 +1831,7 @@ strace <span class="token operator">-</span>ff <span class="token operator">-</s
 </li>
 <li>&#x5185;&#x6838;&#x68C0;&#x67E5;fd&#x662F;&#x5426;&#x51C6;&#x5907;&#x597D;,&#x91C7;&#x7528;&#x4E8B;&#x4EF6;&#x901A;&#x77E5;&#x65B9;&#x5F0F;</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png" alt=""></p>
+<p><img src="imgs/epoll.png" alt=""></p>
 <h4 id="epoll-&#x4E09;&#x4E2A;&#x51FD;&#x6570;">epoll &#x4E09;&#x4E2A;&#x51FD;&#x6570;</h4>
 <h5 id="epollcreate">epoll_create</h5>
 <p><code>int epoll_create(int size)</code></p>
@@ -1854,7 +1854,7 @@ maxevents:&#x6BCF;&#x6B21;&#x80FD;&#x5904;&#x7406;&#x7684;&#x4E8B;&#x4EF6;&#x657
 timeout:&#x7B49;&#x5F85;I/O&#x4E8B;&#x4EF6;&#x53D1;&#x751F;&#x7684;&#x8D85;&#x65F6;&#x503C;&#xFF08;ms&#xFF09;&#xFF1B;-1&#x6C38;&#x4E0D;&#x8D85;&#x65F6;&#xFF0C;&#x76F4;&#x5230;&#x6709;&#x4E8B;&#x4EF6;&#x4EA7;&#x751F;&#x624D;&#x89E6;&#x53D1;&#xFF0C;0&#x7ACB;&#x5373;&#x8FD4;&#x56DE;&#x3002;</p>
 <p>&#x8BE5;&#x51FD;&#x6570;&#x8FD4;&#x56DE;&#x53D1;&#x751F;&#x4E8B;&#x4EF6;&#x6570;&#x3002;-1&#x6709;&#x9519;&#x8BEF;&#x3002;</p>
 <h2 id="io&#x5B58;&#x50A8;&#x91D1;&#x5B57;&#x5854;">I/O&#x5B58;&#x50A8;&#x91D1;&#x5B57;&#x5854;</h2>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/disk.png" alt=""></p>
+<p><img src="imgs/disk.png" alt=""></p>
 <h2 id="&#x9644;&#xFF1A;linux&#x76F8;&#x5173;&#x64CD;&#x4F5C;">&#x9644;&#xFF1A;Linux&#x76F8;&#x5173;&#x64CD;&#x4F5C;</h2>
 <h3 id="man&#x547D;&#x4EE4;&#x7684;&#x4F7F;&#x7528;">man&#x547D;&#x4EE4;&#x7684;&#x4F7F;&#x7528;</h3>
 <ol>
@@ -1908,7 +1908,7 @@ cat <span class="token operator">/</span>proc<span class="token operator">/</spa
 <li>2&#xFF1A; &#x6807;&#x51C6;&#x9519;&#x8BEF;&#xFF08;stderr&#xFF09;&#xFF0C;&#x901A;&#x5E38;&#x5BF9;&#x5E94;&#x7EC8;&#x7AEF;&#x7684;&#x5C4F;&#x5E55;</li>
 </ul>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-20 18:37:43
+2020-07-28 10:11:21
 </span></footer>
                                 
                                 </section>
@@ -1952,7 +1952,7 @@ cat <span class="token operator">/</span>proc<span class="token operator">/</spa
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"从io到epoll","layout":"page","date":"2020-06-26 00:00","level":"1.10.2.2","depth":3,"next":{"title":"http & tcp","level":"1.10.3","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},"previous":{"title":"nio","level":"1.10.2.1","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_io_net/from_io_to_epoll.md","mtime":"2020-07-20T10:37:43.059Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-26T13:12:15.689Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"从io到epoll","layout":"page","date":"2020-06-26 00:00","level":"1.10.2.2","depth":3,"next":{"title":"http & tcp","level":"1.10.3","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},"previous":{"title":"nio","level":"1.10.2.1","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_io_net/from_io_to_epoll.md","mtime":"2020-07-28T02:11:21.969Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

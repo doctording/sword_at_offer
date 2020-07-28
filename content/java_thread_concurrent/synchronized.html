@@ -1922,7 +1922,7 @@ javap <span class="token operator">-</span>c <span class="token class-name">Sync
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/jconsole.png" alt=""></p>
+<p><img src="../java8/imgs/jconsole.png" alt=""></p>
 <p><code>synchronized</code>&#x5B58;&#x5728;&#x6392;&#x5B83;&#x6027;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x7EBF;&#x7A0B;&#x5FC5;&#x987B;&#x4E32;&#x884C;&#x7684;&#x7ECF;&#x8FC7;<code>synchronized</code>&#x4FDD;&#x62A4;&#x7684;&#x5171;&#x4EAB;&#x533A;&#x57DF;&#xFF1B;<code>synchronized</code>&#x4F5C;&#x7528;&#x57DF;&#x8D8A;&#x5927;&#xFF0C;&#x5219;&#x4EE3;&#x8868;&#x7740;&#x5176;&#x6548;&#x7387;&#x8D8A;&#x4F4E;&#xFF0C;&#x751A;&#x81F3;&#x8FD8;&#x4F1A;&#x4E27;&#x5931;&#x5E76;&#x53D1;&#x7684;&#x4F18;&#x52BF;</p>
 <p>&#x6CE8;&#x610F;&#x5230; Mutex &#x662F;&#x5982;&#x4E0B;&#x5B9A;&#x4E49;&#x7684;&#xFF0C;<code>static</code>&#x7684;, &#x5982;&#x679C;&#x975E;static&#x5219;&#x6839;&#x672C;&#x4E0D;&#x662F;&#x4E00;&#x4E2A;&#x5171;&#x4EAB;&#x533A;&#x57DF;</p>
 <pre class="language-"><code class="lang-java"><span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token keyword">static</span> <span class="token class-name">Object</span> <span class="token class-name">Mutex</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1990,9 +1990,9 @@ javap <span class="token operator">-</span>c <span class="token class-name">Sync
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_1.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_2.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_3.png" alt=""></p>
+<p><img src="../java8/imgs/death_1.png" alt=""></p>
+<p><img src="../java8/imgs/death_2.png" alt=""></p>
+<p><img src="../java8/imgs/death_3.png" alt=""></p>
 <h2 id="this-monitor">this monitor</h2>
 <pre class="language-"><code class="lang-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>thread</span><span class="token punctuation">;</span>
 
@@ -2034,8 +2034,7 @@ javap <span class="token operator">-</span>c <span class="token class-name">Sync
 </ul>
 <pre class="language-"><code class="lang-js"><span class="token constant">T1</span> enter to method <span class="token number">1</span>
 </code></pre>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/
-monitor_jstack.png" alt=""></p>
+<p><img src="../java8/imgs/monitor_jstack.png" alt=""></p>
 <p>&#x4E24;&#x4E2A;<code>synchronized</code>&#x65B9;&#x6CD5;&#x6323;&#x62A2;&#x7684;&#x662F;&#x540C;&#x4E00;&#x4E2A;<code>monitor</code>&#x7684;<code>lock</code>,&#x800C;&#x4E0E;&#x4E4B;&#x5173;&#x8054;&#x7684;&#x5F15;&#x7528;&#x5219;&#x662F;<code>This Monitor</code>&#x7684;&#x5B9E;&#x4F8B;&#x5F15;&#x7528;</p>
 <p>&#x65B9;&#x6CD5;2&#x7B49;&#x540C;&#x5982;&#x4E0B;&#xFF1A;</p>
 <pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">method2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
@@ -2158,7 +2157,7 @@ monitor_jstack.png" alt=""></p>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p><code>synchronized</code>&#x662F;&#x57FA;&#x4E8E;JVM&#x5C42;&#x9762;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x4E00;&#x4E2A;&#x4EE3;&#x7801;&#x5757;&#x88AB;synchronized&#x4FEE;&#x9970;&#x4E86;&#xFF0C;&#x5F53;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x83B7;&#x53D6;&#x4E86;&#x5BF9;&#x5E94;&#x7684;&#x9501;&#xFF0C;&#x5E76;&#x6267;&#x884C;&#x8BE5;&#x4EE3;&#x7801;&#x5757;&#x65F6;&#xFF0C;&#x5176;&#x4ED6;&#x7EBF;&#x7A0B;&#x4FBF;&#x53EA;&#x80FD;&#x4E00;&#x76F4;&#x7B49;&#x5F85;&#xFF0C;&#x7B49;&#x5F85;&#x83B7;&#x53D6;&#x9501;&#x7684;&#x7EBF;&#x7A0B;&#x91CA;&#x653E;&#x9501;&#xFF0C;&#x800C;&#x8FD9;&#x91CC;&#x83B7;&#x53D6;&#x9501;&#x7684;&#x7EBF;&#x7A0B;&#x91CA;&#x653E;&#x9501;&#x4F1A;&#x6709;&#x4E09;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;</p>
+<p><code>synchronized</code>&#x662F;&#x57FA;&#x4E8E;JVM&#x5C42;&#x9762;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x4E00;&#x4E2A;&#x4EE3;&#x7801;&#x5757;&#x88AB;<code>synchronized</code>&#x4FEE;&#x9970;&#x4E86;&#xFF0C;&#x5F53;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x83B7;&#x53D6;&#x4E86;&#x5BF9;&#x5E94;&#x7684;&#x9501;&#xFF0C;&#x5E76;&#x6267;&#x884C;&#x8BE5;&#x4EE3;&#x7801;&#x5757;&#x65F6;&#xFF0C;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x4FBF;&#x53EA;&#x80FD;&#x4E00;&#x76F4;&#x7B49;&#x5F85;&#xFF0C;&#x7B49;&#x5F85;&#x83B7;&#x53D6;&#x9501;&#x7684;&#x7EBF;&#x7A0B;&#x91CA;&#x653E;&#x9501;&#xFF0C;&#x800C;&#x8FD9;&#x91CC;&#x83B7;&#x53D6;&#x9501;&#x7684;&#x7EBF;&#x7A0B;&#x91CA;&#x653E;&#x9501;&#x4F1A;&#x6709;&#x4E09;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;</p>
 <ol>
 <li>&#x83B7;&#x53D6;&#x9501;&#x7684;&#x7EBF;&#x7A0B;&#x6267;&#x884C;&#x5B8C;&#x4E86;&#x8BE5;&#x4EE3;&#x7801;&#x5757;&#xFF0C;&#x7136;&#x540E;&#x7EBF;&#x7A0B;&#x91CA;&#x653E;&#x5BF9;&#x9501;&#x7684;&#x5360;&#x6709;&#xFF1B;</li>
 <li>&#x7EBF;&#x7A0B;&#x6267;&#x884C;&#x53D1;&#x751F;&#x5F02;&#x5E38;&#xFF0C;&#x6B64;&#x65F6;JVM&#x4F1A;&#x8BA9;&#x7EBF;&#x7A0B;&#x81EA;&#x52A8;&#x91CA;&#x653E;&#x9501;&#x3002;</li>
@@ -2310,7 +2309,7 @@ monitor_jstack.png" alt=""></p>
 </li>
 </ul>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-05-31 09:41:26
+2020-07-28 10:19:00
 </span></footer>
                                 
                                 </section>
@@ -2354,7 +2353,7 @@ monitor_jstack.png" alt=""></p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"synchronized 关键字","layout":"page","date":"2019-03-09 00:00","level":"1.5.5.5","depth":3,"next":{"title":"Java Lock","level":"1.5.6","depth":2,"path":"content/java_thread_concurrent/thread_lock.md","ref":"./content/java_thread_concurrent/thread_lock.md","articles":[{"title":"Java Lock 分类","level":"1.5.6.1","depth":3,"path":"content/java_thread_concurrent/thread_lock_type.md","ref":"./content/java_thread_concurrent/thread_lock_type.md","articles":[]},{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]}]},"previous":{"title":"volatile 关键字","level":"1.5.5.4","depth":3,"path":"content/java_thread_concurrent/volatile.md","ref":"./content/java_thread_concurrent/volatile.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/synchronized.md","mtime":"2020-05-31T01:41:26.216Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-26T13:12:15.689Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"synchronized 关键字","layout":"page","date":"2019-03-09 00:00","level":"1.5.5.5","depth":3,"next":{"title":"Java Lock","level":"1.5.6","depth":2,"path":"content/java_thread_concurrent/thread_lock.md","ref":"./content/java_thread_concurrent/thread_lock.md","articles":[{"title":"Java Lock 分类","level":"1.5.6.1","depth":3,"path":"content/java_thread_concurrent/thread_lock_type.md","ref":"./content/java_thread_concurrent/thread_lock_type.md","articles":[]},{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]}]},"previous":{"title":"volatile 关键字","level":"1.5.5.4","depth":3,"path":"content/java_thread_concurrent/volatile.md","ref":"./content/java_thread_concurrent/volatile.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/synchronized.md","mtime":"2020-07-28T02:19:00.447Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
