@@ -18,7 +18,7 @@ date: 2019-03-15 00:00
 
 既然用锁或`synchronized`关键字可以实现原子操作，那么为什么还要用`CAS`呢，因为加锁或使用`synchronized`关键字带来的性能损耗较大，而用`CAS`可以实现乐观锁，它实际上是直接利用了`CPU`层面的指令(由现代CPU在硬件级实现的原子指令，允许进行无阻塞，多线程的数据操作同时兼顾了安全性以及效率)，所以性能稍高。
 
-`synchronized`关键字会让没有得到锁资源的线程进入`BLOCKED`状态，而后在争夺到锁资源后恢复为`RUNNABLE`状态，这个过程中涉及到操作系统用户模式和内核模式的转换，代价比较高。
+`synchronized`关键字会让没有得到锁资源的线程进入`BLOCKED`状态，而后在争夺到锁资源后恢复为`RUNNABLE`状态，这个过程中涉及到`操作系统`用户模式和内核模式的转换，代价比较高。
 
 * `synchronized`属于**悲观锁**，悲观地认为程序中的并发情况严重，所以严防死守
 * `CAS`属于乐观锁，乐观地认为程序中的并发情况不那么严重，所以让线程不断去尝试更新
@@ -27,7 +27,7 @@ date: 2019-03-15 00:00
 
 ### 乐观锁
 
-乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去读数据的时候都认为别人不会修改，所以**不会上锁**，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。eg: CAS
+乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去读数据的时候都认为别人不会修改，所以**不会上锁**，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复：读-比较-写的操作。eg: CAS
 
 ### 悲观锁
 
@@ -109,7 +109,7 @@ public class Solution {
 }
 ```
 
-由于自旋锁只是将当前线程不停地执行循环体，**不进行线程状态的改变**，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，**占用CPU时间**。如果线程竞争不激烈，并且保持锁的时间短，则适合使用自旋锁。
+由于自旋锁只是将当前线程不停地执行循环体，**不进行线程状态的改变**，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行类似一个空for循环，**占用CPU时间**。如果线程竞争不激烈，并且保持锁的时间短，则适合使用自旋锁。
 
 In software engineering, a spinlock is a lock which causes a thread trying to acquire it to simply wait in a loop ("spin") while repeatedly checking if the lock is available. Since the thread remains active but is not performing a useful task, the use of such a lock is a kind of busy waiting. Once acquired, spinlocks will usually be held until they are explicitly released, although in some implementations they may be automatically released if the thread being waited on (the one which holds the lock) blocks, or "goes to sleep".
 
@@ -344,20 +344,21 @@ public class Main {
 ```
 
 ReentrantLock继承父类AQS（AQS内部维护了一个同步状态status来计数重入次数，初始为0）
+
 * 当线程尝试获取锁时，可重入锁先尝试获取并更新`state`值，如果`state == 0`表示没有其它线程在执行同步代码，则将`state`设置为1,当前线程开始执行；非可重入锁同
 * 如果`state > 0`，则判断当前线程是否是获取到这个锁的线程，如果是则`state = state + 1`；如果是非重入锁，则直接去获取并更新当前status，此时如果`state > 0`则会导致其获取锁失败，当前线程会阻塞
 
 * 可重前`state == 1`
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state.png)
+![](../../content/java_thread_concurrent/imgs/lock_sync_state.png)
 
 * 可重入操作，`state = state + 1`
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state_2.png)
+![](../../content/java_thread_concurrent/imgs/lock_sync_state_2.png)
 
 * 可重入后 `state = state - 1`
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/lock_sync_state_3.png)
+![](../../content/java_thread_concurrent/imgs/lock_sync_state_3.png)
 
 ### 公平锁
 
@@ -418,7 +419,7 @@ static final class FairSync extends Sync {
 
 `ReentrantLock`默认的构造函数是创建的`非公平锁`，可以通过参数`true`设为`公平锁`，但公平锁表现的性能不是很好。
 
-`synchronized`是非公平锁（因为`synchronized`是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了`synchronized`吞吐率），可以重入
+`synchronized`是非公平锁（因为`synchronized`是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了`synchronized`吞吐率）;`synchronized`是可以重入
 
 * 锁绑定多个条件
 

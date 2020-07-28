@@ -111,7 +111,7 @@ Java NIO的非阻塞模式，使一个线程从某通道发送请求读取数据
 
 ### 通道 Channel
 
-<font color='red'>通道：专门处理I/O（跟DMA处理差不多）,是完全独立的处理器(不向DMA还要向CPU申请)，附属于CPU，提高CPU利用率</red>
+<font color='red'>通道：专门处理I/O（跟DMA处理差不多）,是完全独立的处理器(不像DMA还要向CPU申请)，附属于CPU，提高CPU利用率</red>
 
 ---
 

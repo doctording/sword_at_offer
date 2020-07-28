@@ -69,13 +69,13 @@ strace -ff -o ./stracefile java TestSocket
 3. listen，文件描述符
 4. accept(阻塞状态), 有客户端连接得到新的socket, 产生文件描述符 如 fd6，fd7
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_0.png)
+![](../../content/java_io_net/imgs/linux_io_0.png)
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_2.png)
+![](../../content/java_io_net/imgs/linux_io_2.png)
 
 * <font color='red'>小知识</font>：通过进程ID号能知道有多少个线程(`/proc/<pid>/task`)
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/proc_task_threads.png)
+![](../../content/java_io_net/imgs/proc_task_threads.png)
 
 补充：linux创建线程，走的clone系统调用，eg：
 
@@ -87,7 +87,7 @@ clone(child_stack=0x7fd8d8508ff0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGH
 
 有`Listen`,`ESTABLISHED`状态的TCP
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_3.png)
+![](../../content/java_io_net/imgs/linux_io_3.png)
 
 #### 文件描述符的查看
 
@@ -113,7 +113,7 @@ RETURN VALUE
 
 从上可以看出是文件描述符`6`的一个文件,即代表了连接上的socket：
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/linux_io_1.png)
+![](../../content/java_io_net/imgs/linux_io_1.png)
 
 * strace给客户端起的线程，会阻塞在`recvfrom`接收数据上
 
@@ -175,7 +175,7 @@ BIO的问题解决,可以把所有fd放到一个集合(select)中，一次性的
 1. 无需fd拷贝到内核
 2. 内核检查fd是否准备好,采用事件通知方式
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/epoll.png)
+![](../../content/java_io_net/imgs/epoll.png)
 
 #### epoll 三个函数
 
@@ -213,7 +213,7 @@ timeout:等待I/O事件发生的超时值（ms）；-1永不超时，直到有�
 
 ## I/O存储金字塔
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/disk.png)
+![](../../content/java_io_net/imgs/disk.png)
 
 ## 附：Linux相关操作
 

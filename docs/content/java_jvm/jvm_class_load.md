@@ -273,18 +273,18 @@ public static final int value = 123;
 
 直接引用可以是指向目标的指针，相对偏移量或是一个能间接定位到目标的句柄。如果有了直接引用，那引用的目标必定已经在内存中存在。
 
-### 3 初始化（执行类构造器`<client>`）
+### 3 初始化
 
 初始化阶段是类加载最后一个阶段，前面的类加载阶段之后，除了在加载阶段可以自定义类加载器以外，其它操作都**由JVM主导**。到了初始阶段，才开始真正执行类中定义的Java程序代码。
 
 初始化阶段是执行类构造器`<client>`方法的过程。
 
-`<client>`方法是由编译器自动收集类中的**类变量的赋值操作和静态语句块**中的语句合并而成的。虚拟机会保证`<client>`方法执行之前，父类的`<client>`方法已经执行完毕。
+<font color='red'>`client`方法是由编译器自动收集类中的**类静态变量的赋值操作和静态语句块**中的语句合并而成的。JVM会保证`client`方法执行之前，父类的`client`方法已经执行完毕。</font>
 
 #### 什么时候需要对类进行初始化?
 
 1. 使用`new`该类实例化对象的时候
-2. 读取或设置`类静态字段`的时候（但被final修饰的字段，在编译器时就被放入常量池,所以(`static final`)的静态字段除外）
+2. 读取或设置`类静态字段`的时候（但被final修饰的字段，在编译时就被放入常量池；连接-准备阶段会赋予变量常量值；所以(`static final`)的静态字段除外）
 3. 调用`类的静态方法`的时候
 4. 使用反射`Class.forName("xxx")`对类进行反射调用的时候，该类需要初始化；
 5. 初始化一个类的时候，有父类，`先初始化父类`（注：1. 接口除外，父接口在调用的时候才会被初始化；2.子类引用父类静态字段，只会引发父类初始化）；
@@ -293,7 +293,7 @@ public static final int value = 123;
 
 以上情况称为对一个类进行主动引用，且有且只要以上几种情况是需要对类进行初始化：
 
-* 所有类变量初始化语句和静态代码块都会在编译时被前端编译器放在收集器里头，存放到一个特殊的方法中，这个方法就是`<clinit>`方法，即类/接口初始化方法，该方法只能在类加载的过程中由JVM调用；
+* 所有类变量静态初始化语句和静态代码块都会在编译时被前端编译器放在收集器里头，存放到一个特殊的方法中，这个方法就是`<clinit>`方法，即类/接口初始化方法，该方法只能在类加载的过程中由JVM调用；
 
 * 编译器收集的顺序是由语句在源文件中出现的顺序所决定的，静态语句块中只能访问到定义在静态语句块之前的变量；
 
@@ -301,7 +301,17 @@ public static final int value = 123;
 
 * JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，**仅仅只能允许其中一个线程对其执行初始化操作**，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其它线程。(<font color='red'>所以可以利用静态内部类实现线程安全的单例模式</font>)
 
-* 如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类`<clinit>`方法；
+* 如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类`<client>`方法；
+
+#### 附：类实例初始化过程？
+
+* 实例初始化就是执行<init>()方法
+* <init>()方法可能重载有多个，有几个构造器就有几个<init>()方法
+* <init>()方法由非静态实例变量显示赋值代码、非静态代码块、对应构造器代码组成
+* 非静态实例变量显示赋值代码和非静态代码块代码从上到下顺序执行，而对应构造器代码最后执行
+* 每次创建实例对象，调用对应构造器，执行的就是对应的<init>方法
+* <init>方法的首行是super()或super(实参)，对应父类的<init>方法，即先执行父类实例初始化
+* 实例创建了几次，初始化就执行了几次
 
 ### 类加载器分类
 
@@ -321,7 +331,7 @@ public static final int value = 123;
 
 负责加载用户类路径(ClassPath)上所指定的类库,开发者可直接使用。
 
-#### 4. 自定义类加载器
+#### 4. 自定义类加载器`Custom CLassLoader`
 
 所有自定义类加载器都是`CLassLoader`的直接子类或者间接子类（java.lang.ClassLoader是一个抽象类）
 
@@ -784,6 +794,54 @@ method return:null
 method return: class java.lang.Integer
 */
 ```
+
+### MyClassLoader实现热加载
+
+```java
+public static void testHotDeploy() throws Exception{
+    while (true){
+        String rootPath = "/Users/mubi/git_workspace/java8/java8-api/src/main/java";
+        MyComOtherClassLoader myClassLoader = new MyComOtherClassLoader();
+        myClassLoader.path = rootPath;
+        Class clazz = myClassLoader.loadClass("com.hotload.Test");
+        Object obj = clazz.newInstance();
+        String helloRs = (String)clazz.getMethod("hello").invoke(obj);
+        System.out.println("Test:hello() return:" + helloRs);
+
+        TimeUnit.SECONDS.sleep(2);
+    }
+}
+```
+
+只需要修改Test.class文件，即可自动加载，而不需要重新部署项目
+
+```java
+mubi@mubideMacBook-Pro hotload $ ll
+total 32
+-rw-r--r--  1 mubi  staff   1.6K  7 27 09:13 LoadTestMain.java
+-rw-r--r--  1 mubi  staff   3.2K  7 27 08:58 MyComOtherClassLoader.java
+-rw-r--r--  1 mubi  staff   300B  7 27 09:01 Test.class
+-rw-r--r--  1 mubi  staff   198B  7 27 08:58 Test.java
+mubi@mubideMacBook-Pro hotload $ vim Test.java
+mubi@mubideMacBook-Pro hotload $ javac Test.java
+mubi@mubideMacBook-Pro hotload $
+```
+
+![](../../content/java_jvm/imgs/jvm_classload.png)
+
+### 如何改变 new 的类加载器？
+
+1. 双亲委派
+
+保证被加载类只会加载一次；自定义类加载器可打破双亲委派
+
+2. 全盘委托
+
+当一个classloader加载一个Class的时候，这个Class所依赖的和引用的其它Class通常也由这个classloader负责载入。
+
+3. 类加载还采用了cache机制
+
+如果cache中保存了这个Class就直接返回它，如果没有才从文件中读取和转换成Class，并存入cache，这就是为什么修改了Class但是必须重新启动JVM才能生效，并且类只加载一次的原因
 
 ## 自定义类加载器的优缺点 // TODO
 

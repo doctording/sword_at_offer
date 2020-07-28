@@ -30,7 +30,7 @@ CAS通过调用JNI(java native interface)的代码来操作底层指令来实现
 
 * 乐观锁
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/cas.png)
+![](../../content/java8/imgs/cas.png)
 
 ## CAS 的缺点
 
@@ -215,7 +215,7 @@ JVM的实现可以自由选择如何实现Java对象的"布局"，也就是在�
 
 作者：世界屋顶
 来源：CSDN
-原文：<a href="https://blog.csdn.net/blogs_broadcast/article/details/80672515">url地址</a>
+原文：<a href="https://blog.csdn.net/blogs_broadcast/article/details/80672515" target='_blank'>url地址</a>
 
 ### compareAndSwapInt
 

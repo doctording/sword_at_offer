@@ -336,7 +336,7 @@ redis无法保证强一致性？zookeeper解决，但是zk性能不如redis
 
 ![](../../content/distributed_design/imgs/zk-02.png)
 
-1. 首先需要创建一个父节点，尽量是持久节点（PERSISTENT类型
+1. 首先需要创建一个父节点，尽量是持久节点（PERSISTENT类型)
 
 2. 每个要获得锁的线程都会在这个节点下创建个临时顺序节点，
 

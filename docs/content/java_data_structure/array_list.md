@@ -107,6 +107,41 @@ public E remove(int index) {
 }
 ```
 
+### 迭代器remove报错`ConcurrentModificationException`
+
+```java
+mubi@mubideMacBook-Pro hotload $ vim Solution.java
+mubi@mubideMacBook-Pro hotload $ javac Solution.java
+注: Solution.java使用了未经检查或不安全的操作。
+注: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+mubi@mubideMacBook-Pro hotload $ java Solution
+Exception in thread "main" java.util.ConcurrentModificationException
+	at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:909)
+	at java.util.ArrayList$Itr.next(ArrayList.java:859)
+	at Solution.main(Solution.java:13)
+mubi@mubideMacBook-Pro hotload $ cat Solution
+cat: Solution: No such file or directory
+mubi@mubideMacBook-Pro hotload $ cat Solution.java
+import java.util.*;
+
+class Solution {
+
+    public static void main(String[] args) {
+        List<String> list = new ArrayList() {{
+            add("Java");
+            add("Scalar");
+            add("Kotlin");
+            add("Groovy");
+        }};
+
+        for (String item : list) {
+            list.remove(item);
+        }
+    }
+
+}
+```
+
 * `System.arraycopy`移动元素
 
 # LinkedList（链表）

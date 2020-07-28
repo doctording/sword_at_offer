@@ -275,7 +275,7 @@ public class Main {
 
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/jconsole.png)
+![](../../content/java8/imgs/jconsole.png)
 
 `synchronized`存在排它性，所有的线程必须串行的经过`synchronized`保护的共享区域；`synchronized`作用域越大，则代表着其效率越低，甚至还会丧失并发的优势
 
@@ -351,11 +351,11 @@ public class Main {
 }
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_1.png)
+![](../../content/java8/imgs/death_1.png)
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_2.png)
+![](../../content/java8/imgs/death_2.png)
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/death_3.png)
+![](../../content/java8/imgs/death_3.png)
 
 ## this monitor
 
@@ -400,11 +400,9 @@ public class Main {
 
 ```js
 T1 enter to method 1  
-
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/
-monitor_jstack.png)
+![](../../content/java8/imgs/monitor_jstack.png)
 
 两个`synchronized`方法挣抢的是同一个`monitor`的`lock`,而与之关联的引用则是`This Monitor`的实例引用
 
@@ -540,7 +538,7 @@ public class Main {
 }
 ```
 
-`synchronized`是基于JVM层面实现的，如果一个代码块被synchronized修饰了，当一个线程获取了对应的锁，并执行该代码块时，其他线程便只能一直等待，等待获取锁的线程释放锁，而这里获取锁的线程释放锁会有三种情况：
+`synchronized`是基于JVM层面实现的，如果一个代码块被`synchronized`修饰了，当一个线程获取了对应的锁，并执行该代码块时，其它线程便只能一直等待，等待获取锁的线程释放锁，而这里获取锁的线程释放锁会有三种情况：
 
 1. 获取锁的线程执行完了该代码块，然后线程释放对锁的占有；
 2. 线程执行发生异常，此时JVM会让线程自动释放锁。
