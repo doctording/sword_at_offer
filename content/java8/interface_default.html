@@ -1390,12 +1390,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/nio_basic.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
             
-                <a href="../java_io_net/nio_basic.html">
+                <a href="../java_io_net/server_socket_channel.html">
             
                     
-                    nio
+                    ServerSocketChannel
             
                 </a>
             
@@ -1403,12 +1403,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/from_io_to_epoll.html">
+        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    NIO & BIO问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../java_io_net/from_io_to_epoll.html">
             
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从io到epoll
+                    从BIO到epoll
             
                 </a>
             
@@ -1421,7 +1434,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_io_net/http_tcp.html">
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_io_net/http_tcp.html">
             
                 <a href="../java_io_net/http_tcp.html">
             
@@ -1434,7 +1460,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/nginx.html">
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/nginx.html">
             
                 <a href="../distributed_design/nginx.html">
             
@@ -1447,7 +1473,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/tomcat.html">
+        <li class="chapter " data-level="1.10.6" data-path="../distributed_design/tomcat.html">
             
                 <a href="../distributed_design/tomcat.html">
             
@@ -1550,12 +1576,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/soa.html">
             
-                <a href="../distributed_design/design.html">
+                <a href="../distributed_design/soa.html">
             
                     
-                    网络设计模式
+                    微服务
             
                 </a>
             
@@ -1573,7 +1599,7 @@
                 <span>
             
                     
-                    [11 剑指offer]
+                    [11 剑指Offer]
             
                 </span>
             
@@ -1646,7 +1672,7 @@
                                 <section class="normal markdown-section">
                                 
                                 <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
-<li><div><a href="#java8-interface-default-static">Java8 interface default static</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<li><div><a href="#java8-interface-default--static">Java8 interface default &amp; static</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x5B9E;&#x4F8B;1">&#x5B9E;&#x4F8B;1</a><i></i></div></li>
 <li><div><a href="#&#x5B9E;&#x4F8B;2">&#x5B9E;&#x4F8B;2</a><i></i></div></li>
@@ -1658,7 +1684,8 @@
 
 
 <p>[TOC]</p>
-<h1 id="java8-interface-default-static">Java8 interface default static</h1>
+<h1 id="java8-interface-default--static">Java8 interface default &amp; static</h1>
+<p>Java8&#x4E2D;&#x4E3A;&#x63A5;&#x53E3;&#x65B0;&#x589E;&#x4E86;&#x4E00;&#x9879;&#x529F;&#x80FD;&#xFF1A;&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;&#x6216;&#x8005;&#x66F4;&#x591A;&#x4E2A;&#x9759;&#x6001;&#x65B9;&#x6CD5;&#x3002;&#x7528;&#x6CD5;&#x548C;&#x666E;&#x901A;&#x7684;static&#x65B9;&#x6CD5;&#x4E00;&#x6837;&#x3002;</p>
 <h2 id="&#x5B9E;&#x4F8B;1">&#x5B9E;&#x4F8B;1</h2>
 <ul>
 <li>interface Animal</li>
@@ -1929,7 +1956,7 @@ A:I&apos;m E
  */</span>
 </code></pre>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-06-10 10:16:05
+2020-07-31 10:25:16
 </span></footer>
                                 
                                 </section>
@@ -1973,7 +2000,7 @@ A:I&apos;m E
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"interface defalt static","layout":"page","date":"2019-03-21 13:00","level":"1.6.3","depth":2,"next":{"title":"Java8 jvm内存结构","level":"1.6.4","depth":2,"path":"content/java8/java8_mem.md","ref":"./content/java8/java8_mem.md","articles":[]},"previous":{"title":"Future","level":"1.6.2","depth":2,"path":"content/java8/java8_future.md","ref":"./content/java8/java8_future.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java8/interface_default.md","mtime":"2020-06-10T02:16:05.760Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"interface defalt static","layout":"page","date":"2019-03-21 13:00","level":"1.6.3","depth":2,"next":{"title":"Java8 jvm内存结构","level":"1.6.4","depth":2,"path":"content/java8/java8_mem.md","ref":"./content/java8/java8_mem.md","articles":[]},"previous":{"title":"Future","level":"1.6.2","depth":2,"path":"content/java8/java8_future.md","ref":"./content/java8/java8_future.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java8/interface_default.md","mtime":"2020-07-31T02:25:16.638Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-01T07:47:02.574Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

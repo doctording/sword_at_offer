@@ -1390,12 +1390,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/nio_basic.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
             
-                <a href="../java_io_net/nio_basic.html">
+                <a href="../java_io_net/server_socket_channel.html">
             
                     
-                    nio
+                    ServerSocketChannel
             
                 </a>
             
@@ -1403,12 +1403,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/from_io_to_epoll.html">
+        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    NIO & BIO问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../java_io_net/from_io_to_epoll.html">
             
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从io到epoll
+                    从BIO到epoll
             
                 </a>
             
@@ -1421,7 +1434,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_io_net/http_tcp.html">
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_io_net/http_tcp.html">
             
                 <a href="../java_io_net/http_tcp.html">
             
@@ -1434,7 +1460,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/nginx.html">
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/nginx.html">
             
                 <a href="../distributed_design/nginx.html">
             
@@ -1447,7 +1473,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/tomcat.html">
+        <li class="chapter " data-level="1.10.6" data-path="../distributed_design/tomcat.html">
             
                 <a href="../distributed_design/tomcat.html">
             
@@ -1550,12 +1576,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/soa.html">
             
-                <a href="../distributed_design/design.html">
+                <a href="../distributed_design/soa.html">
             
                     
-                    网络设计模式
+                    微服务
             
                 </a>
             
@@ -1573,7 +1599,7 @@
                 <span>
             
                     
-                    [11 剑指offer]
+                    [11 剑指Offer]
             
                 </span>
             
@@ -1755,7 +1781,6 @@
 </code></pre>
 <h2 id="holder&#x65B9;&#x5F0F;&#xFF08;&#x9759;&#x6001;&#x5185;&#x90E8;&#x7C7B;&#xFF1A;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;--&#x61D2;&#x6C49;&#x5F0F;&#xFF09;">Holder&#x65B9;&#x5F0F;&#xFF08;&#x9759;&#x6001;&#x5185;&#x90E8;&#x7C7B;&#xFF1A;&#x7EBF;&#x7A0B;&#x5B89;&#x5168; &amp; &#x61D2;&#x6C49;&#x5F0F;&#xFF09;</h2>
 <pre class="language-"><code class="lang-java"><span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Singleton</span><span class="token punctuation">{</span>
-    <span class="token keyword">private</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
     <span class="token keyword">private</span> <span class="token class-name">Singleton</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
     <span class="token punctuation">}</span>
@@ -1803,7 +1828,7 @@
 <h2 id="&#x679A;&#x4E3E;">&#x679A;&#x4E3E;</h2>
 <p>&#x679A;&#x4E3E;&#x7C7B;&#x578B;&#x4E0D;&#x5141;&#x8BB8;&#x88AB;&#x7EE7;&#x627F;&#xFF0C;&#x540C;&#x6837;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x7684;&#x4E14;&#x53EA;&#x80FD;&#x88AB;&#x5B9E;&#x4F8B;&#x5316;&#x4E00;&#x6B21;&#xFF0C;&#x4F46;&#x662F;&#x679A;&#x4E3E;&#x7C7B;&#x578B;&#x4E0D;&#x80FD;&#x591F;&#x5B9E;&#x73B0;&#x61D2;&#x52A0;&#x8F7D;</p>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-28 14:44:44
+2020-07-30 17:58:34
 </span></footer>
                                 
                                 </section>
@@ -1847,7 +1872,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"单例模式","layout":"page","date":"2019-03-20 00:00","level":"1.2.2","depth":2,"next":{"title":"工厂模式","level":"1.2.3","depth":2,"path":"content/design_pattern/factory.md","ref":"./content/design_pattern/factory.md","articles":[]},"previous":{"title":"代理模式","level":"1.2.1","depth":2,"path":"content/design_pattern/proxy.md","ref":"./content/design_pattern/proxy.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/design_pattern/singleton.md","mtime":"2020-07-28T06:44:44.967Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"单例模式","layout":"page","date":"2019-03-20 00:00","level":"1.2.2","depth":2,"next":{"title":"工厂模式","level":"1.2.3","depth":2,"path":"content/design_pattern/factory.md","ref":"./content/design_pattern/factory.md","articles":[]},"previous":{"title":"代理模式","level":"1.2.1","depth":2,"path":"content/design_pattern/proxy.md","ref":"./content/design_pattern/proxy.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/design_pattern/singleton.md","mtime":"2020-07-30T09:58:34.953Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-01T07:47:02.574Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

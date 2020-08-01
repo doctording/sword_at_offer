@@ -1386,12 +1386,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/nio_basic.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
             
-                <a href="../java_io_net/nio_basic.html">
+                <a href="../java_io_net/server_socket_channel.html">
             
                     
-                    nio
+                    ServerSocketChannel
             
                 </a>
             
@@ -1399,12 +1399,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/from_io_to_epoll.html">
+        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    NIO & BIO问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../java_io_net/from_io_to_epoll.html">
             
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从io到epoll
+                    从BIO到epoll
             
                 </a>
             
@@ -1417,7 +1430,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_io_net/http_tcp.html">
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_io_net/http_tcp.html">
             
                 <a href="../java_io_net/http_tcp.html">
             
@@ -1430,7 +1456,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/nginx.html">
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/nginx.html">
             
                 <a href="../distributed_design/nginx.html">
             
@@ -1443,7 +1469,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/tomcat.html">
+        <li class="chapter " data-level="1.10.6" data-path="../distributed_design/tomcat.html">
             
                 <a href="../distributed_design/tomcat.html">
             
@@ -1546,12 +1572,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/soa.html">
             
-                <a href="../distributed_design/design.html">
+                <a href="../distributed_design/soa.html">
             
                     
-                    网络设计模式
+                    微服务
             
                 </a>
             
@@ -1569,7 +1595,7 @@
                 <span>
             
                     
-                    [11 剑指offer]
+                    [11 剑指Offer]
             
                 </span>
             
@@ -1661,6 +1687,10 @@
 <li><div><a href="#merge-join">merge join</a><i></i></div></li>
 </ul></li>
 </ul></li>
+<li><div><a href="#innodb">InnoDb</a><i></i></div></li>
+<li><div><a href="#&#x7D22;&#x5F15;&#xFF1F;">&#x7D22;&#x5F15;&#xFF1F;</a><i></i></div></li>
+<li><div><a href="#mysql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;">MySql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;</a><i></i></div></li>
+<li><div><a href="#&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;</a><i></i></div></li>
 </ul></li>
 </ul>
 </div>
@@ -1677,10 +1707,10 @@
 <li>Myisam</li>
 <li><p>Memory</p>
 </li>
-<li><p>InnoDB,Myisam&#x7684;&#x9ED8;&#x8BA4;&#x7D22;&#x5F15;&#x662F;B+tree&#xFF0C;Memory&#x7684;&#x9ED8;&#x8BA4;&#x7D22;&#x5F15;&#x662F;hash</p>
+<li><p>InnoDB,Myisam&#x7684;&#x9ED8;&#x8BA4;&#x7D22;&#x5F15;&#x662F;<code>B+Tree</code>&#xFF0C;Memory&#x7684;&#x9ED8;&#x8BA4;&#x7D22;&#x5F15;&#x662F;<code>hash</code></p>
 </li>
 <li>InnoDB&#x652F;&#x6301;<strong>&#x4E8B;&#x52A1;</strong>&#xFF0C;&#x652F;&#x6301;<strong>&#x5916;&#x952E;</strong>&#xFF0C;&#x652F;&#x6301;<strong>&#x884C;&#x9501;</strong>&#xFF0C;&#x5199;&#x5165;&#x6570;&#x636E;&#x65F6;&#x64CD;&#x4F5C;&#x5FEB;&#xFF0C;MySQL5.6&#x7248;&#x672C;&#x4EE5;&#x4E0A;&#x624D;&#x652F;&#x6301;<strong>&#x5168;&#x6587;&#x7D22;&#x5F15;</strong></li>
-<li>*Myisam&#x4E0D;&#x652F;&#x6301;&#x4E8B;&#x52A1;&#x3002;&#x4E0D;&#x652F;&#x6301;&#x5916;&#x952E;&#xFF0C;&#x652F;&#x6301;&#x8868;&#x9501;&#xFF0C;&#x652F;&#x6301;&#x5168;&#x6587;&#x7D22;&#x5F15;&#xFF0C;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#x5FEB;</li>
+<li>Myisam&#x4E0D;&#x652F;&#x6301;&#x4E8B;&#x52A1;&#x3002;&#x4E0D;&#x652F;&#x6301;&#x5916;&#x952E;&#xFF0C;&#x652F;&#x6301;&#x8868;&#x9501;&#xFF0C;&#x652F;&#x6301;&#x5168;&#x6587;&#x7D22;&#x5F15;&#xFF0C;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#x5FEB;</li>
 <li>Memory&#x6240;&#x6709;&#x7684;&#x6570;&#x636E;&#x90FD;&#x4FDD;&#x7559;&#x5728;&#x5185;&#x5B58;&#x4E2D;,&#x4E0D;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x78C1;&#x76D8;&#x7684;IO&#x6240;&#x4EE5;&#x8BFB;&#x53D6;&#x7684;&#x901F;&#x5EA6;&#x5F88;&#x5FEB;, &#x4F46;&#x662F;&#x4E00;&#x65E6;&#x5173;&#x673A;,&#x8868;&#x7684;&#x7ED3;&#x6784;&#x4F1A;&#x4FDD;&#x7559;&#x4F46;&#x662F;&#x6570;&#x636E;&#x5C31;&#x4F1A;&#x4E22;&#x5931;,&#x8868;&#x652F;&#x6301;Hash&#x7D22;&#x5F15;&#xFF0C;&#x56E0;&#x6B64;&#x67E5;&#x627E;&#x901F;&#x5EA6;&#x5F88;&#x5FEB;</li>
 </ol>
 <h2 id="&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;">&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;</h2>
@@ -1810,8 +1840,13 @@
 <p>&#x5B83;&#x9996;&#x5148;&#x6839;&#x636E;R&#x548C;S&#x7684;join key&#x5206;&#x522B;&#x5BF9;&#x4E24;&#x5F20;&#x8868;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#xFF0C;&#x7136;&#x540E;&#x540C;&#x65F6;&#x904D;&#x5386;&#x6392;&#x5E8F;&#x540E;&#x7684;R&#x548C;S</p>
 <p>&#x5176;I/O&#x590D;&#x6742;&#x5EA6;&#x53EF;&#x4EE5;&#x8868;&#x793A;&#x4E3A;O[p(R) + p(S) + p(R) &#xB7; logp(R) + p(S) &#xB7; logp(S)]</p>
 <p>&#x9644;&#xFF1A;&#x5F52;&#x5E76;&#x6392;&#x5E8F;&#x662F;&#x7A33;&#x5B9A;&#x6392;&#x5E8F;&#xFF0C;&#x6700;&#x597D;&#xFF0C;&#x6700;&#x574F;&#xFF0C;&#x5E73;&#x5747;&#x65F6;&#x95F4;&#x590D;&#x6742;&#x5EA6;&#x5747;&#x4E3A;O(nlogn)&#x3002;</p>
+<h2 id="innodb">InnoDb</h2>
+<p><a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-storage-engine.html" target="_blank">Mysql innodb refman</a></p>
+<h2 id="&#x7D22;&#x5F15;&#xFF1F;">&#x7D22;&#x5F15;&#xFF1F;</h2>
+<h2 id="mysql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;">MySql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;</h2>
+<h2 id="&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;</h2>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-26 21:01:09
+2020-07-30 13:26:41
 </span></footer>
                                 
                                 </section>
@@ -1847,7 +1882,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"数据库/表/查询","layout":"page","date":"2020-03-08 18:00","level":"1.9.1","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"nio","level":"1.10.2.1","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从io到epoll","level":"1.10.2.2","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"http & tcp","level":"1.10.3","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.4","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"tomcat","level":"1.10.5","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]}]},"previous":{"title":"[8 数据库]","level":"1.9","depth":1,"ref":"","articles":[{"title":"数据库/表/查询","level":"1.9.1","depth":2,"path":"content/db_cache/mysql.md","ref":"./content/db_cache/mysql.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-07-26T13:01:09.751Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"数据库/表/查询","layout":"page","date":"2020-03-08 18:00","level":"1.9.1","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"ServerSocketChannel","level":"1.10.2.1","depth":3,"path":"content/java_io_net/server_socket_channel.md","ref":"./content/java_io_net/server_socket_channel.md","articles":[]},{"title":"NIO & BIO问题","level":"1.10.2.2","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从BIO到epoll","level":"1.10.2.3","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"网络设计模式","level":"1.10.3","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"http & tcp","level":"1.10.4","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.5","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"tomcat","level":"1.10.6","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]}]},"previous":{"title":"[8 数据库]","level":"1.9","depth":1,"ref":"","articles":[{"title":"数据库/表/查询","level":"1.9.1","depth":2,"path":"content/db_cache/mysql.md","ref":"./content/db_cache/mysql.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-07-30T05:26:41.594Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-01T07:47:02.574Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

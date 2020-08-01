@@ -1388,12 +1388,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/nio_basic.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
             
-                <a href="../java_io_net/nio_basic.html">
+                <a href="../java_io_net/server_socket_channel.html">
             
                     
-                    nio
+                    ServerSocketChannel
             
                 </a>
             
@@ -1401,12 +1401,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/from_io_to_epoll.html">
+        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    NIO & BIO问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../java_io_net/from_io_to_epoll.html">
             
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从io到epoll
+                    从BIO到epoll
             
                 </a>
             
@@ -1419,7 +1432,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_io_net/http_tcp.html">
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_io_net/http_tcp.html">
             
                 <a href="../java_io_net/http_tcp.html">
             
@@ -1432,7 +1458,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/nginx.html">
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/nginx.html">
             
                 <a href="../distributed_design/nginx.html">
             
@@ -1445,7 +1471,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/tomcat.html">
+        <li class="chapter " data-level="1.10.6" data-path="../distributed_design/tomcat.html">
             
                 <a href="../distributed_design/tomcat.html">
             
@@ -1548,12 +1574,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/soa.html">
             
-                <a href="../distributed_design/design.html">
+                <a href="../distributed_design/soa.html">
             
                     
-                    网络设计模式
+                    微服务
             
                 </a>
             
@@ -1571,7 +1597,7 @@
                 <span>
             
                     
-                    [11 剑指offer]
+                    [11 剑指Offer]
             
                 </span>
             
@@ -1651,11 +1677,11 @@
 <li><div><a href="#b-tree">B+ Tree</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x5BF9;&#x6BD4;b&#x6811;">&#x5BF9;&#x6BD4;B&#x6811;</a><i></i></div></li>
+</ul></li>
 <li><div><a href="#&#x7EA2;&#x9ED1;&#x6811;">&#x7EA2;&#x9ED1;&#x6811;</a><i></i></div></li>
 <li><div><a href="#hash">Hash</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#hash&#x7D22;&#x5F15;">hash&#x7D22;&#x5F15;</a><i></i></div></li>
-</ul></li>
 </ul></li>
 </ul>
 </div>
@@ -1663,7 +1689,7 @@
 
 <p>[TOC]</p>
 <h1 id="b-tree&#x591A;&#x8DEF;&#x641C;&#x7D22;&#x6811;">B Tree(&#x591A;&#x8DEF;&#x641C;&#x7D22;&#x6811;)</h1>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/b_tree.png" alt=""></p>
+<p><img src="imgs/b_tree.png" alt=""></p>
 <ol>
 <li><p>&#x5173;&#x952E;&#x5B57;&#x96C6;&#x5408;&#x5206;&#x5E03;&#x5728;&#x6574;&#x9897;&#x6811;&#x4E2D;</p>
 </li>
@@ -1679,9 +1705,10 @@
 <p>&#x9884;&#x8BFB;: &#x6BCF;&#x4E00;&#x6B21;IO&#x65F6;&#xFF0C;&#x4E0D;&#x4EC5;&#x4EC5;&#x628A;&#x5F53;&#x524D;&#x78C1;&#x76D8;&#x5730;&#x5740;&#x7684;&#x6570;&#x636E;&#x52A0;&#x8F7D;&#x5230;&#x5185;&#x5B58;&#xFF0C;&#x540C;&#x65F6;&#x4E5F;&#x628A;&#x76F8;&#x90BB;&#x6570;&#x636E;&#x4E5F;&#x52A0;&#x8F7D;&#x5230;&#x5185;&#x5B58;&#x7F13;&#x51B2;&#x533A;&#x4E2D;(&#x7A0B;&#x5E8F;&#x5C40;&#x90E8;&#x6027;&#x539F;&#x7406;)</p>
 <p>&#x6BCF;&#x6B21;&#x78C1;&#x76D8;IO&#x8BFB;&#x53D6;&#x7684;&#x6570;&#x636E;&#x6211;&#x4EEC;&#x79F0;&#x4E4B;&#x4E3A;&#x4E00;&#x9875;&#xFF08;page&#xFF09;&#x3002;&#x4E00;&#x9875;&#x7684;&#x5927;&#x5C0F;&#x4E0E;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x6709;&#x5173;&#xFF0C;&#x4E00;&#x822C;&#x4E3A;4k&#x6216;&#x8005;8k&#x3002;&#x8FD9;&#x4E5F;&#x5C31;&#x610F;&#x5473;&#x7740;&#x8BFB;&#x53D6;&#x4E00;&#x9875;&#x5185;&#x6570;&#x636E;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5B9E;&#x9645;&#x4E0A;&#x53D1;&#x751F;&#x4E86;&#x4E00;&#x6B21;&#x78C1;&#x76D8;IO</p>
 <p>&#x6570;&#x636E;&#x5E93;<code>&#x7D22;&#x5F15;</code>&#x662F;&#x5B58;&#x50A8;&#x5728;&#x78C1;&#x76D8;&#x4E0A;&#xFF0C;&#x5F53;&#x8868;&#x4E2D;&#x7684;&#x6570;&#x636E;&#x91CF;&#x6BD4;&#x8F83;&#x5927;&#x65F6;&#xFF0C;&#x7D22;&#x5F15;&#x7684;&#x5927;&#x5C0F;&#x4E5F;&#x8DDF;&#x7740;&#x589E;&#x957F;&#xFF0C;&#x8FBE;&#x5230;&#x51E0;&#x4E2A;G&#x751A;&#x81F3;&#x66F4;&#x591A;&#x3002;&#x5F53;&#x6211;&#x4EEC;&#x5229;&#x7528;&#x7D22;&#x5F15;&#x8FDB;&#x884C;&#x67E5;&#x8BE2;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4E0D;&#x53EF;&#x80FD;&#x628A;&#x7D22;&#x5F15;&#x5168;&#x90E8;&#x52A0;&#x8F7D;&#x5230;&#x5185;&#x5B58;&#x4E2D;&#xFF0C;&#x53EA;&#x80FD;&#x9010;&#x4E00;&#x52A0;&#x8F7D;&#x6BCF;&#x4E2A;&#x78C1;&#x76D8;&#x9875;&#xFF0C;&#x8FD9;&#x91CC;&#x7684;&#x78C1;&#x76D8;&#x9875;&#x5C31;&#x5BF9;&#x5E94;&#x7D22;&#x5F15;&#x6811;&#x7684;&#x8282;&#x70B9;</p>
-<p><strong>&#x51CF;&#x5C11;&#x78C1;&#x76D8;IO</strong>&#x7684;&#x6B21;&#x6570;&#x5C31;&#x5FC5;&#x987B;&#x8981;<strong>&#x538B;&#x7F29;&#x6811;&#x7684;&#x9AD8;&#x5EA6;</strong></p>
+<font color="red">**&#x51CF;&#x5C11;&#x78C1;&#x76D8;IO**&#x7684;&#x6B21;&#x6570;&#x5C31;&#x5FC5;&#x987B;&#x8981;**&#x538B;&#x7F29;&#x6811;&#x7684;&#x9AD8;&#x5EA6;**</font>
+
 <h1 id="b-tree">B+ Tree</h1>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/BAddTree.png" alt=""></p>
+<p><img src="imgs/BAddTree.png" alt=""></p>
 <ol>
 <li><p>&#x7EA2;&#x70B9;&#x8868;&#x793A;&#x662F;&#x6307;&#x5411;&#x536B;&#x661F;&#x6570;&#x636E;&#x7684;&#x6307;&#x9488;&#xFF0C;&#x6307;&#x9488;&#x6307;&#x5411;&#x7684;&#x662F;&#x5B58;&#x653E;&#x5B9E;&#x9645;&#x6570;&#x636E;&#x7684;&#x78C1;&#x76D8;&#x9875;&#xFF0C;&#x536B;&#x661F;&#x6570;&#x636E;&#x5C31;&#x662F;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x4E00;&#x6761;&#x6570;&#x636E;&#x8BB0;&#x5F55;</p>
 </li>
@@ -1689,14 +1716,19 @@
 </li>
 </ol>
 <h2 id="&#x5BF9;&#x6BD4;b&#x6811;">&#x5BF9;&#x6BD4;B&#x6811;</h2>
-<p>a. &#x6240;&#x6709;&#x6570;&#x636E;&#x5B58;&#x5728;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x5176;&#x5B83;&#x8282;&#x70B9;&#x4E0D;&#x5B58;&#x50A8;&#x6570;&#x636E;&#xFF0C;&#x53EA;&#x5B58;&#x50A8;&#x7D22;&#x5F15;&#x3002;&#x90A3;&#x4E48;&#x540C;&#x6837;&#x5927;&#x5C0F;&#x7684;&#x78C1;&#x76D8;&#x9875;&#x53EF;&#x4EE5;&#x5BB9;&#x7EB3;&#x66F4;&#x591A;&#x7684;&#x8282;&#x70B9;&#x5143;&#x7D20;&#xFF0C;&#x5982;&#x6B64;&#x4E00;&#x6765;&#xFF0C;&#x76F8;&#x540C;&#x6570;&#x91CF;&#x7684;&#x6570;&#x636E;&#x4E0B;&#xFF0C;B+&#x6811;&#x5C31;&#x76F8;&#x5BF9;&#x6765;&#x8BF4;&#x8981;&#x66F4;&#x52A0;&#x77EE;&#x80D6;&#x4E9B;&#xFF0C;&#x78C1;&#x76D8;IO&#x7684;&#x6B21;&#x6570;&#x66F4;&#x5C11;&#x3002;</p>
-<p>b. &#x7531;&#x4E8E;&#x53EA;&#x6709;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x624D;&#x4FDD;&#x5B58;&#x536B;&#x661F;&#x6570;&#x636E;&#xFF0C;B+&#x6811;&#x6BCF;&#x6B21;&#x67E5;&#x8BE2;&#x90FD;&#x8981;&#x5230;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF1B;&#x800C;B&#x6811;&#x6BCF;&#x6B21;&#x67E5;&#x8BE2;&#x5219;&#x4E0D;&#x4E00;&#x6837;&#xFF0C;&#x6700;&#x597D;&#x7684;&#x60C5;&#x51B5;&#x662F;&#x6839;&#x8282;&#x70B9;&#xFF0C;&#x6700;&#x574F;&#x7684;&#x60C5;&#x51B5;&#x662F;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x6CA1;&#x6709;B+&#x6811;&#x7A33;&#x5B9A;</p>
-<p>c. &#x53F6;&#x5B50;&#x8282;&#x70B9;&#x5F62;&#x6210;&#x6709;&#x987A;&#x94FE;&#x8868;&#xFF0C;&#x8303;&#x56F4;&#x67E5;&#x627E;&#x6027;&#x80FD;&#x66F4;&#x4F18;</p>
-<h2 id="&#x7EA2;&#x9ED1;&#x6811;">&#x7EA2;&#x9ED1;&#x6811;</h2>
-<p><code>O(logn)</code>&#x65F6;&#x95F4;&#x5185;&#x505A;<strong>&#x67E5;&#x627E;</strong>&#xFF0C;<strong>&#x63D2;&#x5165;</strong>&#x548C;<strong>&#x5220;&#x9664;</strong>&#x64CD;&#x4F5C;</p>
+<ol>
+<li><p>&#x6240;&#x6709;&#x6570;&#x636E;&#x5B58;&#x5728;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x5176;&#x5B83;&#x8282;&#x70B9;&#x4E0D;&#x5B58;&#x50A8;&#x6570;&#x636E;&#xFF0C;&#x53EA;&#x5B58;&#x50A8;&#x7D22;&#x5F15;&#x3002;&#x90A3;&#x4E48;&#x540C;&#x6837;&#x5927;&#x5C0F;&#x7684;&#x78C1;&#x76D8;&#x9875;&#x53EF;&#x4EE5;&#x5BB9;&#x7EB3;&#x66F4;&#x591A;&#x7684;&#x8282;&#x70B9;&#x5143;&#x7D20;&#xFF0C;&#x5982;&#x6B64;&#x4E00;&#x6765;&#xFF0C;&#x76F8;&#x540C;&#x6570;&#x91CF;&#x7684;&#x6570;&#x636E;&#x4E0B;&#xFF0C;B+&#x6811;&#x5C31;&#x76F8;&#x5BF9;&#x6765;&#x8BF4;&#x8981;&#x66F4;&#x52A0;<strong>&#x77EE;&#x80D6;</strong>&#x4E9B;&#xFF0C;&#x78C1;&#x76D8;IO&#x7684;&#x6B21;&#x6570;&#x66F4;&#x5C11;&#x3002;</p>
+</li>
+<li><p>&#x7531;&#x4E8E;&#x53EA;&#x6709;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x624D;&#x4FDD;&#x5B58;&#x536B;&#x661F;&#x6570;&#x636E;&#xFF0C;B+&#x6811;&#x6BCF;&#x6B21;&#x67E5;&#x8BE2;&#x90FD;&#x8981;&#x5230;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF1B;&#x800C;B&#x6811;&#x6BCF;&#x6B21;&#x67E5;&#x8BE2;&#x5219;&#x4E0D;&#x4E00;&#x6837;&#xFF0C;&#x6700;&#x597D;&#x7684;&#x60C5;&#x51B5;&#x662F;&#x6839;&#x8282;&#x70B9;&#xFF0C;&#x6700;&#x574F;&#x7684;&#x60C5;&#x51B5;&#x662F;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x6CA1;&#x6709;B+&#x6811;&#x7A33;&#x5B9A;</p>
+</li>
+<li><p>&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x5F62;&#x6210;&#x6709;&#x987A;&#x94FE;&#x8868;&#xFF0C;<strong>&#x8303;&#x56F4;&#x67E5;&#x627E;</strong>&#x6027;&#x80FD;&#x66F4;&#x4F18;</p>
+</li>
+</ol>
+<h1 id="&#x7EA2;&#x9ED1;&#x6811;">&#x7EA2;&#x9ED1;&#x6811;</h1>
+<p><strong>&#x67E5;&#x627E;</strong>&#xFF0C;<strong>&#x63D2;&#x5165;</strong>&#x548C;<strong>&#x5220;&#x9664;</strong>&#x7B49;&#x64CD;&#x4F5C;&#x90FD;&#x662F;&#x5E73;&#x5747;<code>O(logn)</code>&#x65F6;&#x95F4;&#x5185;</p>
 <p>&#x4ECE;&#x6839;&#x5230;&#x53F6;&#x5B50;&#x7684;&#x6700;&#x957F;&#x7684;&#x53EF;&#x80FD;&#x8DEF;&#x5F84;&#x4E0D;&#x591A;&#x4E8E;&#x6700;&#x77ED;&#x7684;&#x53EF;&#x80FD;&#x8DEF;&#x5F84;&#x7684;&#x4E24;&#x500D;&#x957F;&#x3002;&#x7ED3;&#x679C;&#x662F;&#x8FD9;&#x4E2A;&#x6811;&#x5927;&#x81F4;&#x4E0A;&#x662F;&#x5E73;&#x8861;&#x7684;&#x3002;&#x56E0;&#x4E3A;&#x64CD;&#x4F5C;&#x6BD4;&#x5982;&#x63D2;&#x5165;&#x3001;&#x5220;&#x9664;&#x548C;&#x67E5;&#x627E;&#x67D0;&#x4E2A;&#x503C;&#x7684;&#x6700;&#x574F;&#x60C5;&#x51B5;&#x65F6;&#x95F4;&#x90FD;&#x8981;&#x6C42;&#x4E0E;&#x6811;&#x7684;&#x9AD8;&#x5EA6;&#x6210;&#x6BD4;&#x4F8B;&#xFF0C;&#x8FD9;&#x4E2A;&#x5728;&#x9AD8;&#x5EA6;&#x4E0A;&#x7684;&#x7406;&#x8BBA;&#x4E0A;&#x9650;&#x5141;&#x8BB8;&#x7EA2;&#x9ED1;&#x6811;<strong>&#x5728;&#x6700;&#x574F;&#x60C5;&#x51B5;&#x4E0B;</strong>&#x90FD;&#x662F;&#x9AD8;&#x6548;&#x7684;&#xFF0C;&#x800C;&#x4E0D;&#x540C;&#x4E8E;&#x666E;&#x901A;&#x7684;&#x4E8C;&#x53C9;&#x67E5;&#x627E;&#x6811;&#x3002;</p>
-<h2 id="hash">Hash</h2>
-<h3 id="hash&#x7D22;&#x5F15;">hash&#x7D22;&#x5F15;</h3>
+<h1 id="hash">Hash</h1>
+<h2 id="hash&#x7D22;&#x5F15;">hash&#x7D22;&#x5F15;</h2>
 <p>&#x54C8;&#x5E0C;&#x7D22;&#x5F15;&#x5C31;&#x662F;&#x91C7;&#x7528;&#x4E00;&#x5B9A;&#x7684;&#x54C8;&#x5E0C;&#x7B97;&#x6CD5;&#xFF0C;&#x628A;&#x952E;&#x503C;&#x6362;&#x7B97;&#x6210;&#x65B0;&#x7684;&#x54C8;&#x5E0C;&#x503C;&#xFF0C;&#x68C0;&#x7D22;&#x65F6;&#x4E0D;&#x9700;&#x8981;&#x7C7B;&#x4F3C;B+&#x6811;&#x90A3;&#x6837;&#x4ECE;&#x6839;&#x8282;&#x70B9;&#x5230;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x9010;&#x7EA7;&#x67E5;&#x627E;&#xFF0C;&#x53EA;&#x9700;&#x4E00;&#x6B21;&#x54C8;&#x5E0C;&#x7B97;&#x6CD5;&#x5373;&#x53EF;&#x7ACB;&#x523B;&#x5B9A;&#x4F4D;&#x5230;&#x76F8;&#x5E94;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x901F;&#x5EA6;&#x975E;&#x5E38;&#x5FEB;</p>
 <p>&#x5BF9;&#x6BD4;<code>B+&#x6811;</code></p>
 <ul>
@@ -1712,7 +1744,7 @@
 </li>
 </ul>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-06-16 21:40:07
+2020-07-30 13:13:48
 </span></footer>
                                 
                                 </section>
@@ -1752,7 +1784,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"B/B+ Tree","layout":"page","date":"2020-03-10 10:00","level":"1.3.3.1","depth":3,"next":{"title":"[3 Java基础问题]","level":"1.4","depth":1,"ref":"","articles":[{"title":"System.arraycopy, Array.copyOf","level":"1.4.1","depth":2,"path":"content/java_data_structure/System_arraycopy.md","ref":"./content/java_data_structure/System_arraycopy.md","articles":[]},{"title":"== & equals方法 & hashcode方法","level":"1.4.2","depth":2,"path":"content/java_utils/equals_hashcode.md","ref":"./content/java_utils/equals_hashcode.md","articles":[]},{"title":"Calendar & Date","level":"1.4.3","depth":2,"path":"content/java_utils/Calendar.md","ref":"./content/java_utils/Calendar.md","articles":[]},{"title":"Comparison method violates its general contract","level":"1.4.4","depth":2,"path":"content/java_utils/Compare.md","ref":"./content/java_utils/Compare.md","articles":[]},{"title":"int(基本类型) & Integer(包装类类型)","level":"1.4.5","depth":2,"path":"content/java_utils/int_Integer.md","ref":"./content/java_utils/int_Integer.md","articles":[]},{"title":"Java异常&错误","level":"1.4.6","depth":2,"path":"content/java_utils/exception.md","ref":"./content/java_utils/exception.md","articles":[]},{"title":"String,StringBuffer,StringBuilder","level":"1.4.7","depth":2,"path":"content/java_utils/String.md","ref":"./content/java_utils/String.md","articles":[]},{"title":"反射机制","level":"1.4.8","depth":2,"path":"content/java_utils/reflect.md","ref":"./content/java_utils/reflect.md","articles":[]},{"title":"回调 & 事件机制","level":"1.4.9","depth":2,"path":"content/java_utils/call_back.md","ref":"./content/java_utils/call_back.md","articles":[]},{"title":"数组，集合转换等问题","level":"1.4.10","depth":2,"path":"content/java_utils/array_collection.md","ref":"./content/java_utils/array_collection.md","articles":[]},{"title":"注解 Annotation","level":"1.4.11","depth":2,"path":"content/java_utils/annotation.md","ref":"./content/java_utils/annotation.md","articles":[]},{"title":"Runtime类","level":"1.4.12","depth":2,"path":"content/java_jvm/jvm_runtime.md","ref":"./content/java_jvm/jvm_runtime.md","articles":[]},{"title":"unsafe","level":"1.4.13","depth":2,"path":"content/java_data_structure/unsafe.md","ref":"./content/java_data_structure/unsafe.md","articles":[]},{"title":"《Java编程思想》第3章：操作符，第4章：控制执行流程","level":"1.4.14","depth":2,"path":"content/java_thinking_in_Java/basic.md","ref":"./content/java_thinking_in_Java/basic.md","articles":[]},{"title":"《Java编程思想》第5章：初始化和清理(重点)","level":"1.4.15","depth":2,"path":"content/java_thinking_in_Java/constructor.md","ref":"./content/java_thinking_in_Java/constructor.md","articles":[]},{"title":"《Java编程思想》第6章：访问权限控制(重要)","level":"1.4.16","depth":2,"path":"content/java_thinking_in_Java/public_private_protect.md","ref":"./content/java_thinking_in_Java/public_private_protect.md","articles":[]},{"title":"《Java编程思想》第7章：复用类","level":"1.4.17","depth":2,"path":"content/java_thinking_in_Java/class_final.md","ref":"./content/java_thinking_in_Java/class_final.md","articles":[]},{"title":"《Java编程思想》第8章：多态","level":"1.4.18","depth":2,"path":"content/java_thinking_in_Java/polymorphism.md","ref":"./content/java_thinking_in_Java/polymorphism.md","articles":[]},{"title":"《Java编程思想》第9章：接口 补充：抽象类","level":"1.4.19","depth":2,"path":"content/java_thinking_in_Java/class_final.md","ref":"./content/java_thinking_in_Java/class_final.md","articles":[]},{"title":"《Java编程思想》第10章：内部类","level":"1.4.20","depth":2,"path":"content/java_thinking_in_Java/innner_class.md","ref":"./content/java_thinking_in_Java/innner_class.md","articles":[]}]},"previous":{"title":"高级数据结构","level":"1.3.3","depth":2,"path":"content/java_data_structure/advanced_structure.md","ref":"./content/java_data_structure/advanced_structure.md","articles":[{"title":"B/B+ Tree","level":"1.3.3.1","depth":3,"path":"content/java_data_structure/b_tree.md","ref":"./content/java_data_structure/b_tree.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_data_structure/b_tree.md","mtime":"2020-06-16T13:40:07.171Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"B/B+ Tree","layout":"page","date":"2020-03-10 10:00","level":"1.3.3.1","depth":3,"next":{"title":"[3 Java基础问题]","level":"1.4","depth":1,"ref":"","articles":[{"title":"System.arraycopy, Array.copyOf","level":"1.4.1","depth":2,"path":"content/java_data_structure/System_arraycopy.md","ref":"./content/java_data_structure/System_arraycopy.md","articles":[]},{"title":"== & equals方法 & hashcode方法","level":"1.4.2","depth":2,"path":"content/java_utils/equals_hashcode.md","ref":"./content/java_utils/equals_hashcode.md","articles":[]},{"title":"Calendar & Date","level":"1.4.3","depth":2,"path":"content/java_utils/Calendar.md","ref":"./content/java_utils/Calendar.md","articles":[]},{"title":"Comparison method violates its general contract","level":"1.4.4","depth":2,"path":"content/java_utils/Compare.md","ref":"./content/java_utils/Compare.md","articles":[]},{"title":"int(基本类型) & Integer(包装类类型)","level":"1.4.5","depth":2,"path":"content/java_utils/int_Integer.md","ref":"./content/java_utils/int_Integer.md","articles":[]},{"title":"Java异常&错误","level":"1.4.6","depth":2,"path":"content/java_utils/exception.md","ref":"./content/java_utils/exception.md","articles":[]},{"title":"String,StringBuffer,StringBuilder","level":"1.4.7","depth":2,"path":"content/java_utils/String.md","ref":"./content/java_utils/String.md","articles":[]},{"title":"反射机制","level":"1.4.8","depth":2,"path":"content/java_utils/reflect.md","ref":"./content/java_utils/reflect.md","articles":[]},{"title":"回调 & 事件机制","level":"1.4.9","depth":2,"path":"content/java_utils/call_back.md","ref":"./content/java_utils/call_back.md","articles":[]},{"title":"数组，集合转换等问题","level":"1.4.10","depth":2,"path":"content/java_utils/array_collection.md","ref":"./content/java_utils/array_collection.md","articles":[]},{"title":"注解 Annotation","level":"1.4.11","depth":2,"path":"content/java_utils/annotation.md","ref":"./content/java_utils/annotation.md","articles":[]},{"title":"Runtime类","level":"1.4.12","depth":2,"path":"content/java_jvm/jvm_runtime.md","ref":"./content/java_jvm/jvm_runtime.md","articles":[]},{"title":"unsafe","level":"1.4.13","depth":2,"path":"content/java_data_structure/unsafe.md","ref":"./content/java_data_structure/unsafe.md","articles":[]},{"title":"《Java编程思想》第3章：操作符，第4章：控制执行流程","level":"1.4.14","depth":2,"path":"content/java_thinking_in_Java/basic.md","ref":"./content/java_thinking_in_Java/basic.md","articles":[]},{"title":"《Java编程思想》第5章：初始化和清理(重点)","level":"1.4.15","depth":2,"path":"content/java_thinking_in_Java/constructor.md","ref":"./content/java_thinking_in_Java/constructor.md","articles":[]},{"title":"《Java编程思想》第6章：访问权限控制(重要)","level":"1.4.16","depth":2,"path":"content/java_thinking_in_Java/public_private_protect.md","ref":"./content/java_thinking_in_Java/public_private_protect.md","articles":[]},{"title":"《Java编程思想》第7章：复用类","level":"1.4.17","depth":2,"path":"content/java_thinking_in_Java/class_final.md","ref":"./content/java_thinking_in_Java/class_final.md","articles":[]},{"title":"《Java编程思想》第8章：多态","level":"1.4.18","depth":2,"path":"content/java_thinking_in_Java/polymorphism.md","ref":"./content/java_thinking_in_Java/polymorphism.md","articles":[]},{"title":"《Java编程思想》第9章：接口 补充：抽象类","level":"1.4.19","depth":2,"path":"content/java_thinking_in_Java/class_final.md","ref":"./content/java_thinking_in_Java/class_final.md","articles":[]},{"title":"《Java编程思想》第10章：内部类","level":"1.4.20","depth":2,"path":"content/java_thinking_in_Java/innner_class.md","ref":"./content/java_thinking_in_Java/innner_class.md","articles":[]}]},"previous":{"title":"高级数据结构","level":"1.3.3","depth":2,"path":"content/java_data_structure/advanced_structure.md","ref":"./content/java_data_structure/advanced_structure.md","articles":[{"title":"B/B+ Tree","level":"1.3.3.1","depth":3,"path":"content/java_data_structure/b_tree.md","ref":"./content/java_data_structure/b_tree.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_data_structure/b_tree.md","mtime":"2020-07-30T05:13:48.882Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-01T07:47:02.574Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

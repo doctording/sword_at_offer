@@ -1390,12 +1390,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/nio_basic.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
             
-                <a href="../java_io_net/nio_basic.html">
+                <a href="../java_io_net/server_socket_channel.html">
             
                     
-                    nio
+                    ServerSocketChannel
             
                 </a>
             
@@ -1403,12 +1403,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/from_io_to_epoll.html">
+        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    NIO & BIO问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../java_io_net/from_io_to_epoll.html">
             
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从io到epoll
+                    从BIO到epoll
             
                 </a>
             
@@ -1421,7 +1434,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_io_net/http_tcp.html">
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_io_net/http_tcp.html">
             
                 <a href="../java_io_net/http_tcp.html">
             
@@ -1434,7 +1460,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/nginx.html">
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/nginx.html">
             
                 <a href="../distributed_design/nginx.html">
             
@@ -1447,7 +1473,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/tomcat.html">
+        <li class="chapter " data-level="1.10.6" data-path="../distributed_design/tomcat.html">
             
                 <a href="../distributed_design/tomcat.html">
             
@@ -1550,12 +1576,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/soa.html">
             
-                <a href="../distributed_design/design.html">
+                <a href="../distributed_design/soa.html">
             
                     
-                    网络设计模式
+                    微服务
             
                 </a>
             
@@ -1573,7 +1599,7 @@
                 <span>
             
                     
-                    [11 剑指offer]
+                    [11 剑指Offer]
             
                 </span>
             
@@ -1673,7 +1699,7 @@
 </ul></li>
 <li><div><a href="#&#x9501;&#x7533;&#x8BF7;&#x7B49;&#x5F85;&#x9650;&#x65F6;&#x5B9E;&#x9645;&#x4F8B;&#x5B50;">&#x9501;&#x7533;&#x8BF7;&#x7B49;&#x5F85;&#x9650;&#x65F6;&#x5B9E;&#x9645;&#x4F8B;&#x5B50;</a><i></i></div></li>
 </ul></li>
-<li><div><a href="#&#x8BFB;&#x5199;&#x9501;">&#x8BFB;&#x5199;&#x9501;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<li><div><a href="#&#x8BFB;&#x5199;&#x9501;&#x4F8B;reentrantreadwritelock">&#x8BFB;&#x5199;&#x9501;(&#x4F8B;:ReentrantReadWriteLock)</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x4F2A;&#x4EE3;&#x7801;">&#x4F2A;&#x4EE3;&#x7801;</a><i></i></div></li>
 <li><div><a href="#&#x5B9E;&#x9645;&#x4F8B;&#x5B50;">&#x5B9E;&#x9645;&#x4F8B;&#x5B50;</a><i></i></div></li>
@@ -1714,9 +1740,9 @@
 </ul>
 <h2 id="&#x4E50;&#x89C2;&#x9501;&#x60B2;&#x89C2;&#x9501;">&#x4E50;&#x89C2;&#x9501;&amp;&#x60B2;&#x89C2;&#x9501;</h2>
 <h3 id="&#x4E50;&#x89C2;&#x9501;">&#x4E50;&#x89C2;&#x9501;</h3>
-<p>&#x4E50;&#x89C2;&#x9501;&#x662F;&#x4E00;&#x79CD;&#x4E50;&#x89C2;&#x601D;&#x60F3;&#xFF0C;&#x5373;&#x8BA4;&#x4E3A;&#x8BFB;&#x591A;&#x5199;&#x5C11;&#xFF0C;&#x9047;&#x5230;&#x5E76;&#x53D1;&#x5199;&#x7684;&#x53EF;&#x80FD;&#x6027;&#x4F4E;&#xFF0C;&#x6BCF;&#x6B21;&#x53BB;&#x8BFB;&#x6570;&#x636E;&#x7684;&#x65F6;&#x5019;&#x90FD;&#x8BA4;&#x4E3A;&#x522B;&#x4EBA;&#x4E0D;&#x4F1A;&#x4FEE;&#x6539;&#xFF0C;&#x6240;&#x4EE5;<strong>&#x4E0D;&#x4F1A;&#x4E0A;&#x9501;</strong>&#xFF0C;&#x4F46;&#x662F;&#x5728;&#x66F4;&#x65B0;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x5224;&#x65AD;&#x4E00;&#x4E0B;&#x5728;&#x6B64;&#x671F;&#x95F4;&#x522B;&#x4EBA;&#x6709;&#x6CA1;&#x6709;&#x53BB;&#x66F4;&#x65B0;&#x8FD9;&#x4E2A;&#x6570;&#x636E;&#xFF0C;&#x91C7;&#x53D6;&#x5728;&#x5199;&#x65F6;&#x5148;&#x8BFB;&#x51FA;&#x5F53;&#x524D;&#x7248;&#x672C;&#x53F7;&#xFF0C;&#x7136;&#x540E;&#x52A0;&#x9501;&#x64CD;&#x4F5C;&#xFF08;&#x6BD4;&#x8F83;&#x8DDF;&#x4E0A;&#x4E00;&#x6B21;&#x7684;&#x7248;&#x672C;&#x53F7;&#xFF0C;&#x5982;&#x679C;&#x4E00;&#x6837;&#x5219;&#x66F4;&#x65B0;&#xFF09;&#xFF0C;&#x5982;&#x679C;&#x5931;&#x8D25;&#x5219;&#x8981;&#x91CD;&#x590D;&#xFF1A;&#x8BFB;-&#x6BD4;&#x8F83;-&#x5199;&#x7684;&#x64CD;&#x4F5C;&#x3002;eg: CAS</p>
+<p>&#x4E50;&#x89C2;&#x9501;&#x662F;&#x4E00;&#x79CD;&#x4E50;&#x89C2;&#x601D;&#x60F3;&#xFF0C;&#x5373;&#x8BA4;&#x4E3A;&#x8BFB;&#x591A;&#x5199;&#x5C11;&#xFF0C;&#x9047;&#x5230;&#x5E76;&#x53D1;&#x7ADE;&#x4E89;&#x5199;&#x7684;&#x53EF;&#x80FD;&#x6027;&#x5F88;&#x4F4E;&#xFF0C;&#x6BCF;&#x6B21;&#x53BB;&#x8BFB;&#x6570;&#x636E;&#x7684;&#x65F6;&#x5019;&#x90FD;&#x8BA4;&#x4E3A;&#x522B;&#x4EBA;&#x4E0D;&#x4F1A;&#x4FEE;&#x6539;&#xFF0C;&#x6240;&#x4EE5;<strong>&#x4E0D;&#x4F1A;&#x4E0A;&#x9501;</strong>&#xFF0C;&#x4F46;&#x662F;&#x5728;&#x5199;&#x64CD;&#x4F5C;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x5224;&#x65AD;&#x4E00;&#x4E0B;&#x5728;&#x6B64;&#x671F;&#x95F4;&#x522B;&#x4EBA;&#x6709;&#x6CA1;&#x6709;&#x53BB;&#x66F4;&#x65B0;(&#x5199;&#x64CD;&#x4F5C;)&#x8FD9;&#x4E2A;&#x6570;&#x636E;&#xFF1A;&#x91C7;&#x53D6;&#x5728;&#x5199;&#x65F6;&#x5148;&#x8BFB;&#x51FA;&#x5F53;&#x524D;&#x7248;&#x672C;&#x53F7;&#xFF0C;&#x7136;&#x540E;&#x52A0;&#x9501;&#x64CD;&#x4F5C;&#xFF08;&#x6BD4;&#x8F83;&#x8DDF;&#x4E0A;&#x4E00;&#x6B21;&#x7684;&#x7248;&#x672C;&#x53F7;&#xFF0C;&#x5982;&#x679C;&#x4E00;&#x6837;&#x5219;&#x66F4;&#x65B0;&#xFF09;&#xFF0C;&#x5982;&#x679C;&#x5931;&#x8D25;&#x5219;&#x8981;&#x91CD;&#x590D;<code>&#x8BFB;-&#x6BD4;&#x8F83;-&#x5199;</code>&#x7684;&#x64CD;&#x4F5C;(&#x4E0D;&#x65AD;CAS&#x64CD;&#x4F5C;&#xFF0C;CAS&#x5C31;&#x662F;&#x5178;&#x578B;&#x7684;&#x4E50;&#x89C2;&#x9501;)&#x3002;</p>
 <h3 id="&#x60B2;&#x89C2;&#x9501;">&#x60B2;&#x89C2;&#x9501;</h3>
-<p>&#x60B2;&#x89C2;&#x9501;&#x662F;&#x5C31;&#x662F;&#x60B2;&#x89C2;&#x601D;&#x60F3;&#xFF0C;&#x5373;&#x8BA4;&#x4E3A;&#x5199;&#x591A;&#xFF0C;&#x9047;&#x5230;&#x5E76;&#x53D1;&#x5199;&#x7684;&#x53EF;&#x80FD;&#x6027;&#x9AD8;&#xFF0C;&#x6BCF;&#x6B21;&#x53BB;&#x62FF;&#x6570;&#x636E;&#x7684;&#x65F6;&#x5019;&#x90FD;&#x8BA4;&#x4E3A;&#x522B;&#x4EBA;&#x4F1A;&#x4FEE;&#x6539;&#xFF0C;&#x6240;&#x4EE5;&#x6BCF;&#x6B21;&#x5728;&#x8BFB;&#x5199;&#x6570;&#x636E;&#x7684;&#x65F6;&#x5019;<strong>&#x90FD;&#x4F1A;&#x4E0A;&#x9501;</strong>&#xFF0C;&#x8FD9;&#x6837;&#x522B;&#x4EBA;&#x60F3;&#x8BFB;&#x5199;&#x8FD9;&#x4E2A;&#x6570;&#x636E;&#x5C31;&#x4F1A;Block&#x76F4;&#x5230;&#x62FF;&#x5230;&#x9501;&#x3002;Java&#x4E2D;&#x7684;&#x60B2;&#x89C2;&#x9501;&#x5C31;&#x662F;Synchronized,AQS&#x6846;&#x67B6;&#x4E0B;&#x7684;&#x9501;&#x5219;&#x662F;&#x5148;&#x5C1D;&#x8BD5;CAS&#x4E50;&#x89C2;&#x9501;&#x53BB;&#x83B7;&#x53D6;&#x9501;&#xFF0C;&#x83B7;&#x53D6;&#x4E0D;&#x5230;&#xFF0C;&#x624D;&#x4F1A;&#x8F6C;&#x6362;&#x4E3A;&#x60B2;&#x89C2;&#x9501;&#xFF0C;&#x5982;&#x504F;&#x5411;&#x9501;(RetreenLock)&#x3002;</p>
+<p>&#x60B2;&#x89C2;&#x9501;&#x662F;&#x5C31;&#x662F;&#x60B2;&#x89C2;&#x601D;&#x60F3;&#xFF0C;&#x5373;&#x8BA4;&#x4E3A;&#x5199;&#x591A;&#xFF0C;&#x9047;&#x5230;&#x5E76;&#x53D1;&#x5199;&#x7684;&#x53EF;&#x80FD;&#x6027;&#x9AD8;&#xFF0C;&#x6BCF;&#x6B21;&#x53BB;&#x62FF;&#x6570;&#x636E;&#x7684;&#x65F6;&#x5019;&#x90FD;&#x8BA4;&#x4E3A;&#x522B;&#x4EBA;&#x4F1A;&#x4FEE;&#x6539;&#xFF0C;&#x6240;&#x4EE5;&#x6BCF;&#x6B21;&#x5728;<code>&#x8BFB;/&#x5199;</code>&#x6570;&#x636E;&#x7684;&#x65F6;&#x5019;<strong>&#x90FD;&#x4F1A;&#x4E0A;&#x9501;</strong>&#xFF0C;&#x8FD9;&#x6837;&#x522B;&#x4EBA;&#x60F3;&#x8BFB;/&#x5199;&#x8FD9;&#x4E2A;&#x6570;&#x636E;&#x5C31;&#x4F1A;&#x88AB;<code>Block</code>&#x4F4F;&#xFF0C;&#x76F4;&#x5230;&#x9501;&#x91CA;&#x653E;&#x4E14;&#x81EA;&#x5DF1;&#x62A2;&#x5230;&#x9501;&#x3002;Java&#x4E2D;&#x7684;&#x60B2;&#x89C2;&#x9501;&#x5C31;&#x662F;Synchronized,AQS&#x6846;&#x67B6;&#x4E0B;&#x7684;&#x9501;&#x5219;&#x662F;&#x5148;&#x5C1D;&#x8BD5;CAS&#x4E50;&#x89C2;&#x9501;&#x53BB;&#x83B7;&#x53D6;&#x9501;&#xFF0C;&#x83B7;&#x53D6;&#x4E0D;&#x5230;&#xFF0C;&#x624D;&#x4F1A;&#x8F6C;&#x6362;&#x4E3A;&#x60B2;&#x89C2;&#x9501;&#xFF0C;&#x5982;&#x504F;&#x5411;&#x9501;(RetreenLock)&#x3002;</p>
 <h2 id="&#x81EA;&#x65CB;&#x9501;">&#x81EA;&#x65CB;&#x9501;</h2>
 <p><a href="https://en.wikipedia.org/wiki/Spinlock" target="_blank">Spinlock WikiPedia</a></p>
 <p>&#x81EA;&#x65CB;&#x9501;&#x662F;&#x91C7;&#x7528;&#x8BA9;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x4E0D;&#x505C;&#x5730;&#x7684;&#x5728;&#x5FAA;&#x73AF;&#x4F53;&#x5185;&#x6267;&#x884C;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;&#x53EA;&#x6709;&#x5F53;&#x5FAA;&#x73AF;&#x7684;&#x6761;&#x4EF6;&#x88AB;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x6539;&#x53D8;&#x65F6;&#xFF0C;&#x624D;&#x80FD;&#x8FDB;&#x5165;&#x4E34;&#x754C;&#x533A;&#xFF1B;&#x5426;&#x5219;&#x4E00;&#x76F4;&#x81EA;&#x65CB;&#xFF0C;&#x6D88;&#x8017;CPU</p>
@@ -2144,7 +2170,7 @@ Thread-1 tryLock error
 main end
 */</span>
 </code></pre>
-<h2 id="&#x8BFB;&#x5199;&#x9501;">&#x8BFB;&#x5199;&#x9501;</h2>
+<h2 id="&#x8BFB;&#x5199;&#x9501;&#x4F8B;reentrantreadwritelock">&#x8BFB;&#x5199;&#x9501;(&#x4F8B;:<code>ReentrantReadWriteLock</code>)</h2>
 <p>&#x8BFB;&#x5199;&#x9501;&#x5B9E;&#x9645;&#x662F;&#x4E00;&#x79CD;&#x7279;&#x6B8A;&#x7684;&#x81EA;&#x65CB;&#x9501;&#xFF0C;&#x5B83;&#x628A;&#x5BF9;&#x5171;&#x4EAB;&#x8D44;&#x6E90;&#x7684;&#x8BBF;&#x95EE;&#x8005;&#x5212;&#x5206;&#x6210;&#x8BFB;&#x8005;&#x548C;&#x5199;&#x8005;&#xFF0C;&#x8BFB;&#x8005;&#x53EA;&#x5BF9;&#x5171;&#x4EAB;&#x8D44;&#x6E90;&#x8FDB;&#x884C;&#x8BFB;&#x8BBF;&#x95EE;&#xFF0C;&#x5199;&#x8005;&#x5219;&#x9700;&#x8981;&#x5BF9;&#x5171;&#x4EAB;&#x8D44;&#x6E90;&#x8FDB;&#x884C;&#x5199;&#x64CD;&#x4F5C;&#x3002;</p>
 <p>&#x4E00;&#x6B21;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x53EF;&#x4EE5;&#x5360;&#x6709;<code>&#x5199;&#x6A21;&#x5F0F;</code>&#x7684;&#x8BFB;&#x5199;&#x9501;, &#x4F46;&#x662F;&#x53EF;&#x4EE5;&#x6709;&#x591A;&#x4E2A;&#x7EBF;&#x7A0B;&#x540C;&#x65F6;&#x5360;&#x6709;<code>&#x8BFB;&#x6A21;&#x5F0F;</code>&#x7684;&#x8BFB;&#x5199;&#x9501;.</p>
 <h3 id="&#x4F2A;&#x4EE3;&#x7801;">&#x4F2A;&#x4EE3;&#x7801;</h3>
@@ -2248,7 +2274,7 @@ read_count <span class="token operator">=</span> <span class="token number">0</s
 <ul>
 <li>output</li>
 </ul>
-<p><strong>&#x67D0;&#x4E2A;&#x65F6;&#x523B;&#x53EF;&#x4EE5;&#x6709;&#x591A;&#x4E2A;&#x8BFB;&#xFF0C;&#x4F46;&#x53EA;&#x80FD;&#x6709;&#x4E00;&#x4E2A;&#x5199;&#xFF0C;&#x5199;&#x7684;&#x65F6;&#x5019;&#x4E0D;&#x80FD;&#x8BFB;&#xFF0C;&#x8BFB;&#x7684;&#x65F6;&#x5019;&#x4E0D;&#x80FD;&#x5199;</strong></p>
+<p><strong>&#x67D0;&#x4E2A;&#x65F6;&#x523B;&#x53EF;&#x4EE5;&#x6709;&#x591A;&#x4E2A;&#x8BFB;&#xFF0C;&#x4F46;&#x67D0;&#x4E2A;&#x65F6;&#x5019;&#x53EA;&#x80FD;&#x6709;&#x4E00;&#x4E2A;&#x5199;&#xFF0C;&#x4E14;&#x5199;&#x7684;&#x65F6;&#x5019;&#x4E0D;&#x80FD;&#x8BFB;&#xFF0C;&#x8BFB;&#x7684;&#x65F6;&#x5019;&#x4E0D;&#x80FD;&#x5199;</strong></p>
 <pre class="language-"><code class="lang-java">pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">1</span>&#x8BFB;&#x6570;&#x636E;&#xFF1A;<span class="token number">0.0</span> <span class="token number">2019</span><span class="token operator">-</span><span class="token number">03</span><span class="token operator">-</span><span class="token number">17</span> <span class="token number">19</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">43</span>
 pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">3</span>&#x8BFB;&#x6570;&#x636E;&#xFF1A;<span class="token number">0.0</span> <span class="token number">2019</span><span class="token operator">-</span><span class="token number">03</span><span class="token operator">-</span><span class="token number">17</span> <span class="token number">19</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">43</span>
 pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>&#x5199;&#x5165;&#x6570;&#x636E;<span class="token operator">:</span> <span class="token number">0.14383955312719565</span> <span class="token number">2019</span><span class="token operator">-</span><span class="token number">03</span><span class="token operator">-</span><span class="token number">17</span> <span class="token number">19</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">48</span>
@@ -2330,75 +2356,39 @@ pool<span class="token operator">-</span><span class="token number">1</span><spa
 <h3 id="&#x4E3A;&#x4EC0;&#x4E48;&#x8BF4;&#x91CD;&#x91CF;&#x7EA7;&#x9501;&#x5F00;&#x9500;&#x5927;&#x5462;&#xFF1F;">&#x4E3A;&#x4EC0;&#x4E48;&#x8BF4;&#x91CD;&#x91CF;&#x7EA7;&#x9501;&#x5F00;&#x9500;&#x5927;&#x5462;&#xFF1F;</h3>
 <p>&#x4E3B;&#x8981;&#x662F;&#xFF1A;&#x5F53;&#x7CFB;&#x7EDF;&#x68C0;&#x67E5;&#x5230;&#x9501;&#x662F;&#x91CD;&#x91CF;&#x7EA7;&#x9501;&#x4E4B;&#x540E;&#xFF0C;&#x4F1A;&#x628A;&#x7B49;&#x5F85;&#x60F3;&#x8981;&#x83B7;&#x5F97;&#x9501;&#x7684;&#x7EBF;&#x7A0B;&#x8FDB;&#x884C;&#x963B;&#x585E;&#xFF0C;&#x88AB;<strong>&#x963B;&#x585E;&#x7684;&#x7EBF;&#x7A0B;&#x4E0D;&#x4F1A;&#x6D88;&#x8017;cpu</strong>&#x3002;&#x4F46;&#x662F;&#x963B;&#x585E;&#x6216;&#x8005;&#x5524;&#x9192;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x65F6;&#xFF0C;&#x90FD;&#x9700;&#x8981;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x6765;&#x5E2E;&#x5FD9;&#xFF0C;&#x8FD9;&#x9700;&#x8981;&#x628A;&#x7EBF;&#x7A0B;&#x4ECE;<strong>&#x7528;&#x6237;&#x6001;</strong>&#x8F6C;&#x6362;&#x5230;<strong>&#x5185;&#x6838;&#x6001;</strong>&#xFF0C;&#x800C;&#x8F6C;&#x6362;&#x72B6;&#x6001;&#x662F;&#x9700;&#x8981;&#x6D88;&#x8017;&#x5F88;&#x591A;&#x65F6;&#x95F4;&#x7684;&#xFF0C;&#x6709;&#x53EF;&#x80FD;&#x6BD4;&#x7528;&#x6237;&#x6267;&#x884C;&#x4EE3;&#x7801;&#x7684;&#x65F6;&#x95F4;&#x8FD8;&#x8981;&#x957F;&#x3002;&#x8FD9;&#x5C31;&#x662F;&#x8BF4;&#x4E3A;&#x4EC0;&#x4E48;&#x91CD;&#x91CF;&#x7EA7;&#x7EBF;&#x7A0B;&#x5F00;&#x9500;&#x5F88;&#x5927;&#x7684;&#x3002;</p>
 <h2 id="aqs">AQS</h2>
-<p><code>AbstractQuenedSynchronizer</code>&#x62BD;&#x8C61;&#x7684;&#x961F;&#x5217;&#x5F0F;&#x540C;&#x6B65;&#x5668;,&#x662F;&#x9664;&#x4E86;java&#x81EA;&#x5E26;&#x7684;<code>synchronized</code>&#x5173;&#x952E;&#x5B57;&#x4E4B;&#x5916;&#x7684;&#x9501;&#x673A;&#x5236;</p>
-<pre class="language-"><code class="lang-java"><span class="token comment">/**
- * Provides a framework for implementing blocking locks and related
- * synchronizers (semaphores, events, etc) that rely on
- * first-in-first-out (FIFO) wait queues.  This class is designed to
- * be a useful basis for most kinds of synchronizers that rely on a
- * single atomic {@code int} value to represent state. Subclasses
- * must define the protected methods that change this state, and which
- * define what that state means in terms of this object being acquired
- * or released.  Given these, the other methods in this class carry
- * out all queuing and blocking mechanics. Subclasses can maintain
- * other state fields, but only the atomically updated {@code int}
- * value manipulated using methods {@link #getState}, {@link
- * #setState} and {@link #compareAndSetState} is tracked with respect
- * to synchronization.
- *
-</span></code></pre>
-<p>&#x5185;&#x90E8;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;int&#x7C7B;&#x578B;&#x7684;&#x6210;&#x5458;&#x53D8;&#x91CF;<code>state</code>&#x6765;&#x63A7;&#x5236;&#x540C;&#x6B65;&#x72B6;&#x6001;(&#x5BF9;&#x540C;&#x6B65;&#x72B6;&#x6001;&#x6267;&#x884C;CAS&#x64CD;&#x4F5C;)</p>
-<p>&#x5F53;state=0&#x65F6;&#xFF0C;&#x5219;&#x8BF4;&#x660E;&#x6CA1;&#x6709;&#x4EFB;&#x4F55;&#x7EBF;&#x7A0B;&#x5360;&#x6709;&#x5171;&#x4EAB;&#x8D44;&#x6E90;&#x7684;&#x9501;&#xFF0C;&#x5F53;<code>state == 1</code>&#x65F6;&#xFF0C;&#x5219;&#x8BF4;&#x660E;&#x6709;&#x7EBF;&#x7A0B;&#x76EE;&#x524D;&#x6B63;&#x5728;&#x4F7F;&#x7528;&#x5171;&#x4EAB;&#x53D8;&#x91CF;&#xFF0C;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x5FC5;&#x987B;&#x52A0;&#x5165;&#x540C;&#x6B65;&#x961F;&#x5217;&#x8FDB;&#x884C;&#x7B49;&#x5F85;</p>
-<p>Node&#x7ED3;&#x70B9;&#x662F;&#x5BF9;&#x6BCF;&#x4E00;&#x4E2A;&#x8BBF;&#x95EE;&#x540C;&#x6B65;&#x4EE3;&#x7801;&#x7684;&#x7EBF;&#x7A0B;&#x7684;&#x5C01;&#x88C5;,&#x5305;&#x542B;&#x4E86;&#x9700;&#x8981;&#x540C;&#x6B65;&#x7684;&#x7EBF;&#x7A0B;&#x672C;&#x8EAB;&#x4EE5;&#x53CA;&#x7EBF;&#x7A0B;&#x7684;&#x72B6;&#x6001;&#xFF0C;&#x5982;&#x662F;&#x5426;&#x88AB;&#x963B;&#x585E;&#xFF0C;&#x662F;&#x5426;&#x7B49;&#x5F85;&#x5524;&#x9192;&#xFF0C;&#x662F;&#x5426;&#x5DF2;&#x7ECF;&#x88AB;&#x53D6;&#x6D88;&#x7B49;</p>
-<pre class="language-"><code class="lang-java"><span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Node</span> <span class="token punctuation">{</span>
-    <span class="token comment">//&#x5171;&#x4EAB;&#x6A21;&#x5F0F;</span>
-    <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Node</span> SHARED <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Node</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//&#x72EC;&#x5360;&#x6A21;&#x5F0F;</span>
-    <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Node</span> EXCLUSIVE <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-
-    <span class="token comment">//&#x6807;&#x8BC6;&#x7EBF;&#x7A0B;&#x5DF2;&#x5904;&#x4E8E;&#x7ED3;&#x675F;&#x72B6;&#x6001;</span>
-    <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> CANCELLED <span class="token operator">=</span>  <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token comment">//&#x7B49;&#x5F85;&#x88AB;&#x5524;&#x9192;&#x72B6;&#x6001;</span>
-    <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> SIGNAL    <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token comment">//&#x6761;&#x4EF6;&#x72B6;&#x6001;&#xFF0C;</span>
-    <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> CONDITION <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">;</span>
-    <span class="token comment">//&#x5728;&#x5171;&#x4EAB;&#x6A21;&#x5F0F;&#x4E2D;&#x4F7F;&#x7528;&#x8868;&#x793A;&#x83B7;&#x5F97;&#x7684;&#x540C;&#x6B65;&#x72B6;&#x6001;&#x4F1A;&#x88AB;&#x4F20;&#x64AD;</span>
-    <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> PROPAGATE <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">3</span><span class="token punctuation">;</span>
-
-    <span class="token comment">//&#x7B49;&#x5F85;&#x72B6;&#x6001;,&#x5B58;&#x5728;CANCELLED&#x3001;SIGNAL&#x3001;CONDITION&#x3001;PROPAGATE 4&#x79CD;</span>
-    <span class="token keyword">volatile</span> <span class="token keyword">int</span> waitStatus<span class="token punctuation">;</span>
-
-    <span class="token comment">//&#x540C;&#x6B65;&#x961F;&#x5217;&#x4E2D;&#x524D;&#x9A71;&#x7ED3;&#x70B9;</span>
-    <span class="token keyword">volatile</span> <span class="token class-name">Node</span> prev<span class="token punctuation">;</span>
-
-    <span class="token comment">//&#x540C;&#x6B65;&#x961F;&#x5217;&#x4E2D;&#x540E;&#x7EE7;&#x7ED3;&#x70B9;</span>
-    <span class="token keyword">volatile</span> <span class="token class-name">Node</span> next<span class="token punctuation">;</span>
-
-    <span class="token comment">//&#x8BF7;&#x6C42;&#x9501;&#x7684;&#x7EBF;&#x7A0B;</span>
-    <span class="token keyword">volatile</span> <span class="token class-name">Thread</span> thread<span class="token punctuation">;</span>
-
-    <span class="token comment">//&#x7B49;&#x5F85;&#x961F;&#x5217;&#x4E2D;&#x7684;&#x540E;&#x7EE7;&#x7ED3;&#x70B9;&#xFF0C;&#x8FD9;&#x4E2A;&#x4E0E;Condition&#x6709;&#x5173;&#xFF0C;&#x7A0D;&#x540E;&#x4F1A;&#x5206;&#x6790;</span>
-    <span class="token class-name">Node</span> nextWaiter<span class="token punctuation">;</span>
-
-    <span class="token comment">//&#x5224;&#x65AD;&#x662F;&#x5426;&#x4E3A;&#x5171;&#x4EAB;&#x6A21;&#x5F0F;</span>
-    <span class="token keyword">final</span> <span class="token keyword">boolean</span> <span class="token function">isShared</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> nextWaiter <span class="token operator">==</span> SHARED<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">//&#x83B7;&#x53D6;&#x524D;&#x9A71;&#x7ED3;&#x70B9;</span>
-    <span class="token keyword">final</span> <span class="token class-name">Node</span> <span class="token function">predecessor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">NullPointerException</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Node</span> p <span class="token operator">=</span> prev<span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>p <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">else</span>
-            <span class="token keyword">return</span> p<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">//.....</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<p><code>AbstractQuenedSynchronizer</code>&#x62BD;&#x8C61;&#x7684;&#x961F;&#x5217;&#x5F0F;&#x540C;&#x6B65;&#x5668;,&#x662F;&#x9664;&#x4E86;Java&#x81EA;&#x5E26;&#x7684;<code>synchronized</code>&#x5173;&#x952E;&#x5B57;&#x4E4B;&#x5916;&#x7684;&#x9501;&#x673A;&#x5236;</p>
+<table>
+<thead>
+<tr>
+<th>&#x540C;&#x6B65;&#x5DE5;&#x5177;</th>
+<th>&#x540C;&#x6B65;&#x5DE5;&#x5177;&#x4E0E;AQS&#x7684;&#x5173;&#x8054;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ReentrantLock</td>
+<td>&#x4F7F;&#x7528;AQS&#x4FDD;&#x5B58;&#x9501;&#x91CD;&#x590D;&#x6301;&#x6709;&#x7684;&#x6B21;&#x6570;&#x3002;&#x5F53;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x83B7;&#x53D6;&#x9501;&#x65F6;&#xFF0C;ReentrantLock&#x8BB0;&#x5F55;&#x5F53;&#x524D;&#x83B7;&#x5F97;&#x9501;&#x7684;&#x7EBF;&#x7A0B;&#x6807;&#x8BC6;&#xFF0C;&#x7528;&#x4E8E;&#x68C0;&#x6D4B;&#x662F;&#x5426;&#x91CD;&#x590D;&#x83B7;&#x53D6;&#xFF0C;&#x4EE5;&#x53CA;&#x9519;&#x8BEF;&#x7EBF;&#x7A0B;&#x8BD5;&#x56FE;&#x89E3;&#x9501;&#x64CD;&#x4F5C;&#x65F6;&#x5F02;&#x5E38;&#x60C5;&#x51B5;&#x7684;&#x5904;&#x7406;&#x3002;</td>
+</tr>
+<tr>
+<td>Semaphore</td>
+<td>&#x4F7F;&#x7528;AQS&#x540C;&#x6B65;&#x72B6;&#x6001;&#x6765;&#x4FDD;&#x5B58;&#x4FE1;&#x53F7;&#x91CF;&#x7684;&#x5F53;&#x524D;&#x8BA1;&#x6570;&#x3002;tryRelease&#x4F1A;&#x589E;&#x52A0;&#x8BA1;&#x6570;&#xFF0C;acquireShared&#x4F1A;&#x51CF;&#x5C11;&#x8BA1;&#x6570;&#x3002;</td>
+</tr>
+<tr>
+<td>CountDownLatch</td>
+<td>&#x4F7F;&#x7528;AQS&#x540C;&#x6B65;&#x72B6;&#x6001;&#x6765;&#x8868;&#x793A;&#x8BA1;&#x6570;&#x3002;&#x8BA1;&#x6570;&#x4E3A;0&#x65F6;&#xFF0C;&#x6240;&#x6709;&#x7684;Acquire&#x64CD;&#x4F5C;&#xFF08;CountDownLatch&#x7684;await&#x65B9;&#x6CD5;&#xFF09;&#x624D;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x3002;</td>
+</tr>
+<tr>
+<td>ReentrantReadWriteLock</td>
+<td>&#x4F7F;&#x7528;AQS&#x540C;&#x6B65;&#x72B6;&#x6001;&#x4E2D;&#x7684;16&#x4F4D;&#x4FDD;&#x5B58;&#x5199;&#x9501;&#x6301;&#x6709;&#x7684;&#x6B21;&#x6570;&#xFF0C;&#x5269;&#x4E0B;&#x7684;16&#x4F4D;&#x7528;&#x4E8E;&#x4FDD;&#x5B58;&#x8BFB;&#x9501;&#x7684;&#x6301;&#x6709;&#x6B21;&#x6570;&#x3002;</td>
+</tr>
+<tr>
+<td>ThreadPoolExecutor</td>
+<td>Worker&#x5229;&#x7528;AQS&#x540C;&#x6B65;&#x72B6;&#x6001;&#x5B9E;&#x73B0;&#x5BF9;&#x72EC;&#x5360;&#x7EBF;&#x7A0B;&#x53D8;&#x91CF;&#x7684;&#x8BBE;&#x7F6E;&#xFF08;tryAcquire&#x548C;tryRelease&#xFF09;&#x3002;</td>
+</tr>
+</tbody>
+</table>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-28 09:46:34
+2020-07-30 12:55:23
 </span></footer>
                                 
                                 </section>
@@ -2442,7 +2432,7 @@ pool<span class="token operator">-</span><span class="token number">1</span><spa
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Java Lock 分类","layout":"page","date":"2019-03-15 00:00","level":"1.5.6.1","depth":3,"next":{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]},"previous":{"title":"Java Lock","level":"1.5.6","depth":2,"path":"content/java_thread_concurrent/thread_lock.md","ref":"./content/java_thread_concurrent/thread_lock.md","articles":[{"title":"Java Lock 分类","level":"1.5.6.1","depth":3,"path":"content/java_thread_concurrent/thread_lock_type.md","ref":"./content/java_thread_concurrent/thread_lock_type.md","articles":[]},{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/thread_lock_type.md","mtime":"2020-07-28T01:46:34.426Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Java Lock 分类","layout":"page","date":"2019-03-15 00:00","level":"1.5.6.1","depth":3,"next":{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]},"previous":{"title":"Java Lock","level":"1.5.6","depth":2,"path":"content/java_thread_concurrent/thread_lock.md","ref":"./content/java_thread_concurrent/thread_lock.md","articles":[{"title":"Java Lock 分类","level":"1.5.6.1","depth":3,"path":"content/java_thread_concurrent/thread_lock_type.md","ref":"./content/java_thread_concurrent/thread_lock_type.md","articles":[]},{"title":"Thread 死锁问题","level":"1.5.6.2","depth":3,"path":"content/java_thread_concurrent/thread_deadlock.md","ref":"./content/java_thread_concurrent/thread_deadlock.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/thread_lock_type.md","mtime":"2020-07-30T04:55:23.638Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-01T07:47:02.574Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

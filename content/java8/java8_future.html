@@ -1390,12 +1390,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/nio_basic.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
             
-                <a href="../java_io_net/nio_basic.html">
+                <a href="../java_io_net/server_socket_channel.html">
             
                     
-                    nio
+                    ServerSocketChannel
             
                 </a>
             
@@ -1403,12 +1403,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/from_io_to_epoll.html">
+        <li class="chapter " data-level="1.10.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    NIO & BIO问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../java_io_net/from_io_to_epoll.html">
             
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从io到epoll
+                    从BIO到epoll
             
                 </a>
             
@@ -1421,7 +1434,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_io_net/http_tcp.html">
+        <li class="chapter " data-level="1.10.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_io_net/http_tcp.html">
             
                 <a href="../java_io_net/http_tcp.html">
             
@@ -1434,7 +1460,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../distributed_design/nginx.html">
+        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/nginx.html">
             
                 <a href="../distributed_design/nginx.html">
             
@@ -1447,7 +1473,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../distributed_design/tomcat.html">
+        <li class="chapter " data-level="1.10.6" data-path="../distributed_design/tomcat.html">
             
                 <a href="../distributed_design/tomcat.html">
             
@@ -1550,12 +1576,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/design.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/soa.html">
             
-                <a href="../distributed_design/design.html">
+                <a href="../distributed_design/soa.html">
             
                     
-                    网络设计模式
+                    微服务
             
                 </a>
             
@@ -1573,7 +1599,7 @@
                 <span>
             
                     
-                    [11 剑指offer]
+                    [11 剑指Offer]
             
                 </span>
             
@@ -1650,7 +1676,7 @@
 <ul>
 <li><div><a href="#&#x8D85;&#x65F6;&#x83B7;&#x53D6;&#x8F93;&#x51FA;">&#x8D85;&#x65F6;&#x83B7;&#x53D6;&#x8F93;&#x51FA;</a><i></i></div></li>
 <li><div><a href="#future&#x89C4;&#x5B9A;&#x65F6;&#x95F4;&#x672A;&#x83B7;&#x53D6;&#x5230;&#x4E2D;&#x65AD;&#x5904;&#x7406;">Future&#x89C4;&#x5B9A;&#x65F6;&#x95F4;&#x672A;&#x83B7;&#x53D6;&#x5230;,&#x4E2D;&#x65AD;&#x5904;&#x7406;</a><i></i></div></li>
-<li><div><a href="#futuretask&#x7C7B;">FutureTask&#x7C7B;</a><i></i></div></li>
+<li><div><a href="#callable&#x3001;future&#x3001;futuretask">Callable&#x3001;Future&#x3001;FutureTask</a><i></i></div></li>
 </ul></li>
 </ul>
 </div>
@@ -1799,10 +1825,189 @@ cannot get within <span class="token number">1</span> sec
 
 <span class="token punctuation">}</span>
 </code></pre>
-<h2 id="futuretask&#x7C7B;"><code>FutureTask</code>&#x7C7B;</h2>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/FutureTaskUML.png" alt=""></p>
+<h2 id="callable&#x3001;future&#x3001;futuretask">Callable&#x3001;Future&#x3001;FutureTask</h2>
+<ul>
+<li>Runnable</li>
+</ul>
+<pre class="language-"><code class="lang-java"><span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+    <span class="token comment">/**
+     * When an object implementing interface &lt;code&gt;Runnable&lt;/code&gt; is used
+     * to create a thread, starting the thread causes the object&apos;s
+     * &lt;code&gt;run&lt;/code&gt; method to be called in that separately executing
+     * thread.
+     * &lt;p&gt;
+     * The general contract of the method &lt;code&gt;run&lt;/code&gt; is that it may
+     * take any action whatsoever.
+     *
+     * @see     java.lang.Thread#run()
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>Callable</li>
+</ul>
+<pre class="language-"><code class="lang-java"><span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+    <span class="token comment">/**
+     * Computes a result, or throws an exception if unable to do so.
+     *
+     * @return computed result
+     * @throws Exception if unable to compute a result
+     */</span>
+    <span class="token class-name">V</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>Future</li>
+</ul>
+<pre class="language-"><code class="lang-java"><span class="token comment">/**
+ * A {@code Future} represents the result of an asynchronous
+ * computation.  Methods are provided to check if the computation is
+ * complete, to wait for its completion, and to retrieve the result of
+ * the computation.  The result can only be retrieved using method
+ * {@code get} when the computation has completed, blocking if
+ * necessary until it is ready.  Cancellation is performed by the
+ * {@code cancel} method.  Additional methods are provided to
+ * determine if the task completed normally or was cancelled. Once a
+ * computation has completed, the computation cannot be cancelled.
+ * If you would like to use a {@code Future} for the sake
+ * of cancellability but not provide a usable result, you can
+ * declare types of the form {@code Future&lt;?&gt;} and
+ * return {@code null} as a result of the underlying task.
+ *
+ * &lt;p&gt;
+ * &lt;b&gt;Sample Usage&lt;/b&gt; (Note that the following classes are all
+ * made-up.)
+ * &lt;pre&gt; {@code
+ * interface ArchiveSearcher { String search(String target); }
+ * class App {
+ *   ExecutorService executor = ...
+ *   ArchiveSearcher searcher = ...
+ *   void showSearch(final String target)
+ *       throws InterruptedException {
+ *     Future&lt;String&gt; future
+ *       = executor.submit(new Callable&lt;String&gt;() {
+ *         public String call() {
+ *             return searcher.search(target);
+ *         }});
+ *     displayOtherThings(); // do other things while searching
+ *     try {
+ *       displayText(future.get()); // use future
+ *     } catch (ExecutionException ex) { cleanup(); return; }
+ *   }
+ * }}&lt;/pre&gt;
+ *
+ * The {@link FutureTask} class is an implementation of {@code Future} that
+ * implements {@code Runnable}, and so may be executed by an {@code Executor}.
+ * For example, the above construction with {@code submit} could be replaced by:
+ *  &lt;pre&gt; {@code
+ * FutureTask&lt;String&gt; future =
+ *   new FutureTask&lt;String&gt;(new Callable&lt;String&gt;() {
+ *     public String call() {
+ *       return searcher.search(target);
+ *   }});
+ * executor.execute(future);}&lt;/pre&gt;
+ *
+ * &lt;p&gt;Memory consistency effects: Actions taken by the asynchronous computation
+ * &lt;a href=&quot;package-summary.html#MemoryVisibility&quot;&gt; &lt;i&gt;happen-before&lt;/i&gt;&lt;/a&gt;
+ * actions following the corresponding {@code Future.get()} in another thread.
+ *
+ * @see FutureTask
+ * @see Executor
+ * @since 1.5
+ * @author Doug Lea
+ * @param &lt;V&gt; The result type returned by this Future&apos;s {@code get} method
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+
+    <span class="token comment">/**
+     * Attempts to cancel execution of this task.  This attempt will
+     * fail if the task has already completed, has already been cancelled,
+     * or could not be cancelled for some other reason. If successful,
+     * and this task has not started when {@code cancel} is called,
+     * this task should never run.  If the task has already started,
+     * then the {@code mayInterruptIfRunning} parameter determines
+     * whether the thread executing this task should be interrupted in
+     * an attempt to stop the task.
+     *
+     * &lt;p&gt;After this method returns, subsequent calls to {@link #isDone} will
+     * always return {@code true}.  Subsequent calls to {@link #isCancelled}
+     * will always return {@code true} if this method returned {@code true}.
+     *
+     * @param mayInterruptIfRunning {@code true} if the thread executing this
+     * task should be interrupted; otherwise, in-progress tasks are allowed
+     * to complete
+     * @return {@code false} if the task could not be cancelled,
+     * typically because it has already completed normally;
+     * {@code true} otherwise
+     */</span>
+    <span class="token keyword">boolean</span> <span class="token function">cancel</span><span class="token punctuation">(</span><span class="token keyword">boolean</span> mayInterruptIfRunning<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Returns {@code true} if this task was cancelled before it completed
+     * normally.
+     *
+     * @return {@code true} if this task was cancelled before it completed
+     */</span>
+    <span class="token keyword">boolean</span> <span class="token function">isCancelled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Returns {@code true} if this task completed.
+     *
+     * Completion may be due to normal termination, an exception, or
+     * cancellation -- in all of these cases, this method will return
+     * {@code true}.
+     *
+     * @return {@code true} if this task completed
+     */</span>
+    <span class="token keyword">boolean</span> <span class="token function">isDone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Waits if necessary for the computation to complete, and then
+     * retrieves its result.
+     *
+     * @return the computed result
+     * @throws CancellationException if the computation was cancelled
+     * @throws ExecutionException if the computation threw an
+     * exception
+     * @throws InterruptedException if the current thread was interrupted
+     * while waiting
+     */</span>
+    <span class="token class-name">V</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">,</span> <span class="token class-name">ExecutionException</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Waits if necessary for at most the given time for the computation
+     * to complete, and then retrieves its result, if available.
+     *
+     * @param timeout the maximum time to wait
+     * @param unit the time unit of the timeout argument
+     * @return the computed result
+     * @throws CancellationException if the computation was cancelled
+     * @throws ExecutionException if the computation threw an
+     * exception
+     * @throws InterruptedException if the current thread was interrupted
+     * while waiting
+     * @throws TimeoutException if the wait timed out
+     */</span>
+    <span class="token class-name">V</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">,</span> <span class="token class-name">TimeUnit</span> unit<span class="token punctuation">)</span>
+        <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">,</span> <span class="token class-name">ExecutionException</span><span class="token punctuation">,</span> <span class="token class-name">TimeoutException</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>cancel&#x65B9;&#x6CD5;: &#x7528;&#x6765;&#x53D6;&#x6D88;&#x4EFB;&#x52A1;&#xFF0C;&#x5982;&#x679C;&#x53D6;&#x6D88;&#x4EFB;&#x52A1;&#x6210;&#x529F;&#x5219;&#x8FD4;&#x56DE;true&#xFF0C;&#x5982;&#x679C;&#x53D6;&#x6D88;&#x4EFB;&#x52A1;&#x5931;&#x8D25;&#x5219;&#x8FD4;&#x56DE;false&#x3002;&#x53C2;&#x6570;mayInterruptIfRunning&#x8868;&#x793A;&#x662F;&#x5426;&#x5141;&#x8BB8;&#x53D6;&#x6D88;&#x6B63;&#x5728;&#x6267;&#x884C;&#x5374;&#x6CA1;&#x6709;&#x6267;&#x884C;&#x5B8C;&#x6BD5;&#x7684;&#x4EFB;&#x52A1;&#xFF0C;&#x5982;&#x679C;&#x8BBE;&#x7F6E;true&#xFF0C;&#x5219;&#x8868;&#x793A;&#x53EF;&#x4EE5;&#x53D6;&#x6D88;&#x6B63;&#x5728;&#x6267;&#x884C;&#x8FC7;&#x7A0B;&#x4E2D;&#x7684;&#x4EFB;&#x52A1;&#x3002;&#x5982;&#x679C;&#x4EFB;&#x52A1;&#x5DF2;&#x7ECF;&#x5B8C;&#x6210;&#xFF0C;&#x5219;&#x65E0;&#x8BBA;mayInterruptIfRunning&#x4E3A;true&#x8FD8;&#x662F;false&#xFF0C;&#x6B64;&#x65B9;&#x6CD5;&#x80AF;&#x5B9A;&#x8FD4;&#x56DE;false&#xFF0C;&#x5373;&#x5982;&#x679C;&#x53D6;&#x6D88;&#x5DF2;&#x7ECF;&#x5B8C;&#x6210;&#x7684;&#x4EFB;&#x52A1;&#x4F1A;&#x8FD4;&#x56DE;false&#xFF1B;&#x5982;&#x679C;&#x4EFB;&#x52A1;&#x6B63;&#x5728;&#x6267;&#x884C;&#xFF0C;&#x82E5;mayInterruptIfRunning&#x8BBE;&#x7F6E;&#x4E3A;true&#xFF0C;&#x5219;&#x8FD4;&#x56DE;true&#xFF0C;&#x82E5;mayInterruptIfRunning&#x8BBE;&#x7F6E;&#x4E3A;false&#xFF0C;&#x5219;&#x8FD4;&#x56DE;false&#xFF1B;&#x5982;&#x679C;&#x4EFB;&#x52A1;&#x8FD8;&#x6CA1;&#x6709;&#x6267;&#x884C;&#xFF0C;&#x5219;&#x65E0;&#x8BBA;mayInterruptIfRunning&#x4E3A;true&#x8FD8;&#x662F;false&#xFF0C;&#x80AF;&#x5B9A;&#x8FD4;&#x56DE;true&#x3002;</li>
+<li>isCancelled&#x65B9;&#x6CD5;: &#x8868;&#x793A;&#x4EFB;&#x52A1;&#x662F;&#x5426;&#x88AB;&#x53D6;&#x6D88;&#x6210;&#x529F;&#xFF0C;&#x5982;&#x679C;&#x5728;&#x4EFB;&#x52A1;&#x6B63;&#x5E38;&#x5B8C;&#x6210;&#x524D;&#x88AB;&#x53D6;&#x6D88;&#x6210;&#x529F;&#xFF0C;&#x5219;&#x8FD4;&#x56DE;true&#x3002;</li>
+<li>isDone&#x65B9;&#x6CD5;:&#x8868;&#x793A;&#x4EFB;&#x52A1;&#x662F;&#x5426;&#x5DF2;&#x7ECF;&#x5B8C;&#x6210;&#xFF0C;&#x82E5;&#x4EFB;&#x52A1;&#x5B8C;&#x6210;&#xFF0C;&#x5219;&#x8FD4;&#x56DE;true&#xFF1B;</li>
+<li>get()&#x65B9;&#x6CD5;: &#x7528;&#x6765;&#x83B7;&#x53D6;&#x6267;&#x884C;&#x7ED3;&#x679C;&#xFF0C;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x4F1A;&#x4EA7;&#x751F;&#x963B;&#x585E;&#xFF0C;&#x4F1A;&#x4E00;&#x76F4;&#x7B49;&#x5230;&#x4EFB;&#x52A1;&#x6267;&#x884C;&#x5B8C;&#x6BD5;&#x624D;&#x8FD4;&#x56DE;&#xFF1B;</li>
+<li><p>get(long timeout, TimeUnit unit):&#x7528;&#x6765;&#x83B7;&#x53D6;&#x6267;&#x884C;&#x7ED3;&#x679C;&#xFF0C;&#x5982;&#x679C;&#x5728;&#x6307;&#x5B9A;&#x65F6;&#x95F4;&#x5185;&#xFF0C;&#x8FD8;&#x6CA1;&#x83B7;&#x53D6;&#x5230;&#x7ED3;&#x679C;&#xFF0C;&#x5C31;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;null&#x3002;</p>
+</li>
+<li><p>FutureTask</p>
+</li>
+</ul>
+<p><img src="imgs/FutureTaskUML.png" alt=""></p>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-06-16 08:38:42
+2020-07-31 10:37:20
 </span></footer>
                                 
                                 </section>
@@ -1846,7 +2051,7 @@ cannot get within <span class="token number">1</span> sec
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Future","layout":"page","date":"2019-11-02 13:00","level":"1.6.2","depth":2,"next":{"title":"interface defalt static","level":"1.6.3","depth":2,"path":"content/java8/interface_default.md","ref":"./content/java8/interface_default.md","articles":[]},"previous":{"title":"CompletableFuture","level":"1.6.1","depth":2,"path":"content/java8/java8_completableFuture.md","ref":"./content/java8/java8_completableFuture.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java8/java8_future.md","mtime":"2020-06-16T00:38:42.560Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-07-28T09:45:11.250Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Future","layout":"page","date":"2019-11-02 13:00","level":"1.6.2","depth":2,"next":{"title":"interface defalt static","level":"1.6.3","depth":2,"path":"content/java8/interface_default.md","ref":"./content/java8/interface_default.md","articles":[]},"previous":{"title":"CompletableFuture","level":"1.6.1","depth":2,"path":"content/java8/java8_completableFuture.md","ref":"./content/java8/java8_completableFuture.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java8/java8_future.md","mtime":"2020-07-31T02:37:20.703Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-01T07:47:02.574Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
