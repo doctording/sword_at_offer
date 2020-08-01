@@ -20,9 +20,9 @@ date: 2020-03-08 18:00
 2. Myisam
 3. Memory
 
-* InnoDB,Myisam的默认索引是B+tree，Memory的默认索引是hash
+* InnoDB,Myisam的默认索引是`B+Tree`，Memory的默认索引是`hash`
 * InnoDB支持**事务**，支持**外键**，支持**行锁**，写入数据时操作快，MySQL5.6版本以上才支持**全文索引**
-* *Myisam不支持事务。不支持外键，支持表锁，支持全文索引，读取数据快
+* Myisam不支持事务。不支持外键，支持表锁，支持全文索引，读取数据快
 * Memory所有的数据都保留在内存中,不需要进行磁盘的IO所以读取的速度很快, 但是一旦关机,表的结构会保留但是数据就会丢失,表支持Hash索引，因此查找速度很快
 
 ## 数据库范式
@@ -102,7 +102,6 @@ date: 2020-03-08 18:00
 
 在 join 的过程中，其实就是从驱动表里面依次(注意理解这里面的依次)取出每一个值，然后去非驱动表里面进行匹配，那具体是怎么匹配的呢？这就是我们接下来讲的这三种连接方式：
 
-
 1. (Simple Nested-Loop Join )暴力匹配的方式；如果 table A 有10行，table B 有10行，总共需要执行10 x 10 = 100次查询
 
 2. (Index Nested-Loop Join)这个 Index 是要求非驱动表上要有索引，有了索引以后可以减少匹配次数，匹配次数减少了就可以提高查询的效率了,eg:左边就是普通列的存储方式，右边是树结构索引, 能减少查询次数
@@ -175,3 +174,13 @@ merge join操作本身是非常快的，但是merge join前进行的排序可能
 其I/O复杂度可以表示为O[p(R) + p(S) + p(R) · logp(R) + p(S) · logp(S)]
 
 附：归并排序是稳定排序，最好，最坏，平均时间复杂度均为O(nlogn)。
+
+## InnoDb
+
+<a href='https://dev.mysql.com/doc/refman/5.6/en/innodb-storage-engine.html' target="_blank">Mysql innodb refman</a>
+
+## 索引？
+
+## MySql有哪些锁？
+
+## 慢查询优化

@@ -23,7 +23,7 @@ List<Dish> menu = Arrays.asList(
                 new Dish("salmon", false, 450, Dish.Type.FISH));
 ```
 
-* java7 写法
+* Java7 写法
 
 ```java
 List<Dish> lowCaloricDishes = new ArrayList<>();
@@ -95,7 +95,7 @@ List<String> lowCaloricDishesName =
 
 2. 可以支持顺序和并行的对原Stream进行汇聚的操作
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/streams.png)
+![](../../content/java8/imgs/streams.png)
 
 ### 流与集合
 
@@ -120,7 +120,7 @@ List<String> lowCaloricDishesName =
 2. 一个中间操作链，形成一条流的流水线
 3. 一个终端操作，执行流水线，并能生成结果
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_operate.png)
+![](../../content/java8/imgs/stream_operate.png)
 
 #### 规约(reduce)
 
@@ -174,6 +174,6 @@ System.out.println("max2:"+ numberMax2);
 
 诸如`sort`或`distince`等操作，开始与`map`,`filter`相同，但是需要有个缓冲区存放所有元素，这个存储要求是`无界`的
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_operate2.png)
+![](../../content/java8/imgs/stream_operate2.png)
 
 注：如果能避开 有状态，选用无状态操作，就能获得更好的`并行`性能。

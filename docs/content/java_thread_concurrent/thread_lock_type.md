@@ -27,11 +27,11 @@ date: 2019-03-15 00:00
 
 ### 乐观锁
 
-乐观锁是一种乐观思想，即认为读多写少，遇到并发写的可能性低，每次去读数据的时候都认为别人不会修改，所以**不会上锁**，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复：读-比较-写的操作。eg: CAS
+乐观锁是一种乐观思想，即认为读多写少，遇到并发竞争写的可能性很低，每次去读数据的时候都认为别人不会修改，所以**不会上锁**，但是在写操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据：采取在写时先读出当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复`读-比较-写`的操作(不断CAS操作，CAS就是典型的乐观锁)。
 
 ### 悲观锁
 
-悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性高，每次去拿数据的时候都认为别人会修改，所以每次在读写数据的时候**都会上锁**，这样别人想读写这个数据就会Block直到拿到锁。Java中的悲观锁就是Synchronized,AQS框架下的锁则是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁，如偏向锁(RetreenLock)。
+悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性高，每次去拿数据的时候都认为别人会修改，所以每次在`读/写`数据的时候**都会上锁**，这样别人想读/写这个数据就会被`Block`住，直到锁释放且自己抢到锁。Java中的悲观锁就是Synchronized,AQS框架下的锁则是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁，如偏向锁(RetreenLock)。
 
 ## 自旋锁
 
@@ -494,7 +494,7 @@ main end
 */
 ```
 
-## 读写锁
+## 读写锁(例:`ReentrantReadWriteLock`)
 
 读写锁实际是一种特殊的自旋锁，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。
 
@@ -607,7 +607,7 @@ public class Main {
 
 * output
 
-**某个时刻可以有多个读，但只能有一个写，写的时候不能读，读的时候不能写**
+**某个时刻可以有多个读，但某个时候只能有一个写，且写的时候不能读，读的时候不能写**
 
 ```java
 pool-1-thread-1读数据：0.0 2019-03-17 19:53:43
@@ -714,77 +714,12 @@ A shared lock on a resource can be owned by several tasks at the same time. Howe
 
 ## AQS
 
-`AbstractQuenedSynchronizer`抽象的队列式同步器,是除了java自带的`synchronized`关键字之外的锁机制
+`AbstractQuenedSynchronizer`抽象的队列式同步器,是除了Java自带的`synchronized`关键字之外的锁机制
 
-```java
-/**
- * Provides a framework for implementing blocking locks and related
- * synchronizers (semaphores, events, etc) that rely on
- * first-in-first-out (FIFO) wait queues.  This class is designed to
- * be a useful basis for most kinds of synchronizers that rely on a
- * single atomic {@code int} value to represent state. Subclasses
- * must define the protected methods that change this state, and which
- * define what that state means in terms of this object being acquired
- * or released.  Given these, the other methods in this class carry
- * out all queuing and blocking mechanics. Subclasses can maintain
- * other state fields, but only the atomically updated {@code int}
- * value manipulated using methods {@link #getState}, {@link
- * #setState} and {@link #compareAndSetState} is tracked with respect
- * to synchronization.
- *
-```
-
-内部通过一个int类型的成员变量`state`来控制同步状态(对同步状态执行CAS操作)
-
-当state=0时，则说明没有任何线程占有共享资源的锁，当`state == 1`时，则说明有线程目前正在使用共享变量，其它线程必须加入同步队列进行等待
-
-Node结点是对每一个访问同步代码的线程的封装,包含了需要同步的线程本身以及线程的状态，如是否被阻塞，是否等待唤醒，是否已经被取消等
-
-```java
-static final class Node {
-    //共享模式
-    static final Node SHARED = new Node();
-    //独占模式
-    static final Node EXCLUSIVE = null;
-
-    //标识线程已处于结束状态
-    static final int CANCELLED =  1;
-    //等待被唤醒状态
-    static final int SIGNAL    = -1;
-    //条件状态，
-    static final int CONDITION = -2;
-    //在共享模式中使用表示获得的同步状态会被传播
-    static final int PROPAGATE = -3;
-
-    //等待状态,存在CANCELLED、SIGNAL、CONDITION、PROPAGATE 4种
-    volatile int waitStatus;
-
-    //同步队列中前驱结点
-    volatile Node prev;
-
-    //同步队列中后继结点
-    volatile Node next;
-
-    //请求锁的线程
-    volatile Thread thread;
-
-    //等待队列中的后继结点，这个与Condition有关，稍后会分析
-    Node nextWaiter;
-
-    //判断是否为共享模式
-    final boolean isShared() {
-        return nextWaiter == SHARED;
-    }
-
-    //获取前驱结点
-    final Node predecessor() throws NullPointerException {
-        Node p = prev;
-        if (p == null)
-            throw new NullPointerException();
-        else
-            return p;
-    }
-
-    //.....
-}
-```
+同步工具|同步工具与AQS的关联
+-|-
+ReentrantLock | 使用AQS保存锁重复持有的次数。当一个线程获取锁时，ReentrantLock记录当前获得锁的线程标识，用于检测是否重复获取，以及错误线程试图解锁操作时异常情况的处理。
+Semaphore | 使用AQS同步状态来保存信号量的当前计数。tryRelease会增加计数，acquireShared会减少计数。
+CountDownLatch | 使用AQS同步状态来表示计数。计数为0时，所有的Acquire操作（CountDownLatch的await方法）才可以通过。
+ReentrantReadWriteLock | 使用AQS同步状态中的16位保存写锁持有的次数，剩下的16位用于保存读锁的持有次数。
+ThreadPoolExecutor | Worker利用AQS同步状态实现对独占线程变量的设置（tryAcquire和tryRelease）。

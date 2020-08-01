@@ -6,7 +6,9 @@ date: 2019-03-21 13:00
 
 [TOC]
 
-# Java8 interface default static
+# Java8 interface default & static
+
+Java8中为接口新增了一项功能：定义一个或者更多个静态方法。用法和普通的static方法一样。
 
 ## 实例1
 

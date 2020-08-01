@@ -38,7 +38,7 @@ public static long parallelSum(long n) {
 }
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/parallel.png)
+![](../../content/java8/imgs/parallel.png)
 
 * 并行流用的线程是从哪来的?有多少个?怎么自定义这个过程呢?
 

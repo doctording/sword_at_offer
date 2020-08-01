@@ -10,7 +10,9 @@ date: 2020-20-15 00:00
 
 * 锁的实现框架
 
-参考：<a href="https://www.cnblogs.com/dennyzhangdd/p/7218510.html">《The java.util.concurrent Synchronizer Framework》 JUC同步器框架（AQS框架）原文翻译</a>
+参考：<a href="https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html" target="_blank">美团技术文章：从ReentrantLock的实现看AQS的原理及应用</a>
+
+参考：<a href="https://www.cnblogs.com/dennyzhangdd/p/7218510.html" target="_blank">《The java.util.concurrent Synchronizer Framework》 JUC同步器框架（AQS框架）原文翻译</a>
 
 <a href="http://gee.cs.oswego.edu/dl/papers/aqs.pdf">论文地址</a>
 
@@ -22,8 +24,8 @@ Provides a framework for implementing blocking locks and related synchronizers (
 
 两个操作
 
-1. `acquire`操作阻塞调用的线程，直到或除非同步状态允许其继续执行。
-2. `release`操作则是通过某种方式改变同步状态，使得一或多个被acquire阻塞的线程继续执行。
+1. `acquire`操作：阻塞调用的线程，直到或除非同步状态允许其继续执行。
+2. `release`操作：则是通过某种方式改变同步状态，使得一或多个被acquire阻塞的线程继续执行。
 
 同步器需要支持如下：
 
@@ -31,32 +33,9 @@ Provides a framework for implementing blocking locks and related synchronizers (
 * 可选的超时设置，让调用者可以放弃等待
 * 通过中断实现的任务取消，通常是分为两个版本，一个acquire可取消，而另一个不可以
 
-同步器的实现根据其状态是否**独占**而有所不同。独占状态的同步器，在同一时间只有一个线程可以通过阻塞点，而共享状态的同步器可以同时有多个线程在执行。一般锁的实现类往往只维护独占状态，但是，例如计数信号量在数量许可的情况下，允许多个线程同时执行。为了使框架能得到广泛应用，这两种模式都要支持。
+同步器的实现根据其状态是否**独占**而有所不同。独占状态的同步器，在同一时间只有一个线程可以通过阻塞点，而**共享**状态的同步器可以同时有多个线程在执行。一般锁的实现类往往只维护独占状态，但是，例如计数信号量在数量许可的情况下，允许多个线程同时执行。为了使框架能得到广泛应用，这两种模式都要支持。
 
 j.u.c包里还定义了Condition接口，用于支持监控形式的await/signal操作，这些操作与独占模式的Lock类有关，且Condition的实现天生就和与其关联的Lock类紧密相关
-
-* AbstractQueuedSynchronizer 的变量： 有CLH队列的头部，尾部，以及同步器状态的int变量
-
-```java
- /**
-     * Head of the wait queue, lazily initialized.  Except for
-     * initialization, it is modified only via method setHead.  Note:
-     * If head exists, its waitStatus is guaranteed not to be
-     * CANCELLED.
-     */
-    private transient volatile Node head;
-
-    /**
-     * Tail of the wait queue, lazily initialized.  Modified only via
-     * method enq to add new wait node.
-     */
-    private transient volatile Node tail;
-
-    /**
-     * The synchronization state.
-     */
-    private volatile int state;
-```
 
 ## AbstractQueuedSynchronizer 相关概念
 
@@ -73,11 +52,96 @@ j.u.c包有一个LockSuport类，这个类中包含了解决这个问题的方�
 
 **park**: n. 公园; 专用区; 园区; (英国) 庄园，庭院; v. 停(车); 泊(车); 坐下(或站着); 把…搁置，推迟(在以后的会议上讨论或处理);
 
+### 同步操作
+
+![](../../content/java_thread_concurrent/imgs/aqs.png)
+
+* AbstractQueuedSynchronizer 的变量： 有CLH队列的头部，尾部，以及同步器状态的int变量
+
+```java
+//用于标识共享锁
+static final Node SHARED = new Node();
+
+//用于标识独占锁
+static final Node EXCLUSIVE = null;
+
+/**
+* 因为超时或者中断，节点会被设置为取消状态，被取消的节点时不会参与到竞争中的，他会一直保持取消状态不会转变为其他状态；
+*/
+static final int CANCELLED =  1;
+
+/**
+* 当前节点释放锁的时候，需要唤醒下一个节点
+*/
+static final int SIGNAL    = -1;
+
+/**
+* 节点在等待队列中，节点线程等待Condition唤醒
+*/
+static final int CONDITION = -2;
+
+/**
+* 表示下一次共享式同步状态获取将会无条件地传播下去
+*/
+static final int PROPAGATE = -3;
+
+/** 等待状态 */
+volatile int waitStatus;
+
+/** 前驱节点 */
+volatile Node prev;
+
+/** 后继节点 */
+volatile Node next;
+
+/** 节点线程 */
+volatile Thread thread;
+
+//
+Node nextWaiter;
+```
+
 ### FIFO队列(CLH 队列，双向链表)
 
 整个框架的关键就是如何管理被阻塞的线程的队列，该队列是严格的FIFO队列，因此，框架不支持基于优先级的同步。
 
 自旋判断前驱节点是否释放了锁：如果前驱没有释放锁，那么就一直自旋；否则就能获取到锁，结束自旋
+
+#### `acquireQueued`方法中会使线程自旋阻塞，直到获取到锁
+
+```java
+/**
+    * Acquires in exclusive uninterruptible mode for thread already in
+    * queue. Used by condition wait methods as well as acquire.
+    *
+    * @param node the nodxe
+    * @param arg the acquire argument
+    * @return {@code true} if interrupted while waiting
+    */
+final boolean acquireQueued(final Node node, int arg) {
+    boolean failed = true;
+    try {
+        boolean interrupted = false;
+        for (;;) {
+            final Node p = node.predecessor();
+            if (p == head && tryAcquire(arg)) {
+                setHead(node);
+                p.next = null; // help GC
+                failed = false;
+                return interrupted;
+            }
+            if (shouldParkAfterFailedAcquire(p, node) &&
+                parkAndCheckInterrupt())
+                interrupted = true;
+        }
+    } finally {
+        if (failed)
+            cancelAcquire(node);
+    }
+}
+```
+
+#### `addWaiter`方法会将当前线程封装成Node节点，CAS操作追加在队尾，并返回该节点
 
 ```java
 /**
@@ -101,6 +165,10 @@ private Node addWaiter(Node mode) {
     enq(node);
     return node;
 }
+
+在`addWaiter`方法处理失败的时候进一步会调用`enq`方法
+
+#### `enq`方法会将将node加入队尾，不断的进行CAS操作
 
 /**
     * Inserts node into queue, initializing if necessary. See picture above.

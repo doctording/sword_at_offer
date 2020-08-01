@@ -118,7 +118,6 @@ private volatile static Singleton instance = null;
 
 ```java
 final class Singleton{
-    private byte[] data = new byte[1024];
 
     private Singleton(){
     }

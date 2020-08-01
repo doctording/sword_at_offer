@@ -90,8 +90,10 @@
 * [9 I/O & 网络]
     * [IO和中断](./content/java_io_net/io_interrupte.md)
     * [IO基础](./content/java_io_net/io_basic.md)
-        * [nio](./content/java_io_net/nio_basic.md)
-        * [从io到epoll](./content/java_io_net/from_io_to_epoll.md)
+        * [ServerSocketChannel](./content/java_io_net/server_socket_channel.md)
+        * [NIO & BIO问题](./content/java_io_net/nio_basic.md)
+        * [从BIO到epoll](./content/java_io_net/from_io_to_epoll.md)
+    * [网络设计模式](./content/distributed_design/design.md)
     * [http & tcp](./content/java_io_net/http_tcp.md)
     * [nginx基础](./content/distributed_design/nginx.md)
     * [tomcat](./content/distributed_design/tomcat.md)
@@ -101,6 +103,6 @@
         * [分布式锁](./content/distributed_design/distribute_lock.md)
         * [分布式ID](./content/distributed_design/distribute_id.md)
     * [rpc](./content/distributed_design/rpc.md)
-    * [网络设计模式](./content/distributed_design/design.md)
-* [11 剑指offer]
+    * [微服务](./content/distributed_design/soa.md)
+* [11 剑指Offer]
     * [剑指Offer解题思路(全)](./content/thought_of_solve/thought.md)

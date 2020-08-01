@@ -28,7 +28,7 @@ date: 2019-03-18 00:00
 
 ## 用户空间,内核空间,磁盘
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer.png)
+![](../content/java_io_net/imgs/io_buffer.png)
 
 在磁盘空间和用户空间中加一个内核空间的缓存区的原因有两个：
 
@@ -37,7 +37,7 @@ date: 2019-03-18 00:00
 
 目前的操作系统，用户空间和内核空间的区分一般采用虚拟内存来实现，因此用户空间和内存空间都是在虚拟内存中。使用虚拟内存无非是因为其两大优势：一是它可以使多个虚拟内存地址指向同一个物理内存;二是虚拟内存的空间可以大于物理内存的空间。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/io_buffer_virtual.png)
+![](../../content/java_io_net/imgs/io_buffer_virtual.png)
 
 * 当用户空间所需要的数据在内核空间中已经存在，那么内核无需再次向磁盘控制硬件发起`系统调用`，直接**对内核缓冲区进行复制**，这些数据成为高速缓存，当然内核也可以预读取用户空间需要的数据。
 
@@ -63,7 +63,7 @@ date: 2019-03-18 00:00
     用户态IO缓冲区   <-  内核缓冲区域
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/fill_call.png)
+![](../../content/java_io_net/imgs/fill_call.png)
 
 ### 用户I/O缓冲区的类型
 
@@ -96,7 +96,7 @@ date: 2019-03-18 00:00
 
 虚拟文件系统(VFS)是由Sun microsystems公司在定义网络文件系统(NFS)时创造的。它是一种用于网络环境的分布式文件系统，是允许和操作系统使用不同的文件系统实现的接口。虚拟文件系统（VFS）是物理文件系统与服务之间的一个接口层，它对Linux的每个文件系统的所有细节进行抽象，使得不同的文件系统在Linux核心以及系统中运行的其他进程看来，都是相同的。严格说来，VFS并不是一种实际的文件系统。它只存在于内存中，不存在于任何外存空间。VFS在系统启动时建立，在系统关闭时消亡。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_io_net/imgs/vfs.png)
+![](../../content/java_io_net/imgs/vfs.png)
 
 # I/O模型：同步/阻塞概念
 
@@ -109,8 +109,8 @@ date: 2019-03-18 00:00
 
 ## 同步与异步（用户线程与内核的消息交互方式）
 
-* 同步指用户线程发起I/O请求后需要等待或者**轮询内核I/O操作**完成后才能继续执行；同步有阻塞，非阻塞之分
-* 异步是指用户线程发起I/O请求后仍然继续执行，当**内核I/O操作完成后会通知用户线程**，或者调用用户线程注册的回调函数。异步一定是非阻塞的（内核会通过函数回调或者信号机制通知用户进程；类似观察者模式）
+* 同步指用户线程发起I/O请求后需要**等待**或者**轮询内核I/O操作**完成后才能继续执行；同步有阻塞，非阻塞之分
+* 异步是指用户线程发起I/O请求后仍然可以继续执行，当**内核I/O操作完成后会通知用户线程**，或者调用用户线程注册的回调函数。异步一定是非阻塞的（内核会通过函数回调或者信号机制通知用户进程；类似观察者模式）
 
 ## 用水壶烧水的例子说明[同步/阻塞]
 
