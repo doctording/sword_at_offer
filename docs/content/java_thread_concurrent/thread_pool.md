@@ -9,15 +9,12 @@ date: 2019-02-15 00:00
 # 线程池
 
 * 为什么需要线程池 ？ 线程池的应用范围 ？
-
-1. 线程的创建销毁是个消耗系统的操作
-2. 线程资源的复用
+    1. 线程的创建销毁是个消耗系统的操作
+    2. 线程资源的复用
 
 * 线程池应该具备哪些功能 ？
 
 * 线程池的实现需要注意哪些细节 ？
-
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/thread_pool_flow.png)
 
 ## 常见类
 
@@ -149,9 +146,9 @@ public ThreadPoolExecutor(int corePoolSize,
 }
 ```
 
-* `corePoolSize`: 指定了线程池中的线程数量，它的数量决定了添加的任务是开辟新的线程去执行，还是放到workQueue任务队列中去；
+* `corePoolSize`: 指定了线程池中的基本线程数量，即在没有任务需要执行的时候线程池的大小，并且只有在工作队列满了的情况下才会创建超出这个数量的线程；在刚刚创建ThreadPoolExecutor的时候，线程并不会立即启动，而是要等到有任务提交时才会启动，除非调用了`prestartCoreThread/prestartAllCoreThreads`事先启动核心线程。再考虑到`keepAliveTime`和`allowCoreThreadTimeOut`超时参数的影响，所以没有任务需要执行的时候，线程池的大小不一定是corePoolSize
 
-* `maximumPoolSize`: 指定了线程池中的最大线程数量，这个参数会根据你使用的workQueue任务队列的类型，决定线程池会开辟的最大线程数量；
+* `maximumPoolSize`: 指定了线程池中的最大线程数量，这个参数会根据你使用的workQueue任务队列的类型，决定线程池会开辟的最大线程数量
 
 * `keepAliveTime`: 当线程池中空闲线程数量超过corePoolSize时，多余的线程会在多长时间内被销毁；
 
@@ -165,16 +162,36 @@ public ThreadPoolExecutor(int corePoolSize,
 
 * `workerCount`: 当前活跃的线程数(也即线程池中的线程数量)
 
+### 线程池的处理流程图
+
+![](../../content/java8/imgs/thread_pool_flow.png)
+
+```java
+1、如果当前线程池的线程数还没有达到基本大小(poolSize < corePoolSize)，无论是否有空闲的线程新增一个线程处理新提交的任务；
+
+2、如果当前线程池的线程数大于或等于基本大小(poolSize >= corePoolSize) 且任务队列未满时，就将新提交的任务提交到阻塞队列排队，等候处理workQueue.offer(command)；
+
+3、如果当前线程池的线程数大于或等于基本大小(poolSize >= corePoolSize) 且任务队列满时；
+
+    3.1、当前poolSize<maximumPoolSize，那么就新增线程来处理任务；
+
+    3.2、当前poolSize=maximumPoolSize，那么意味着线程池的处理能力已经达到了极限，此时需要拒绝新增加的任务。至于如何拒绝处理新增的任务，取决于线程池的饱和策略RejectedExecutionHandler。
+```
+
 ## 拒绝策略
 
-线程池的拒绝策略，是指当任务添加到线程池中被拒绝，而采取的处理措施。
+线程池的拒绝策略:是指<font color='red'>当任务添加到线程池中被拒绝而采取的处理措施</font>
 
-当任务添加到线程池中之所以被拒绝，可能是由于：第一，线程池异常关闭。第二，任务数量超过线程池的最大限制,并设置有界的`workeQueue`
+### 线程添加到线程池中被拒绝的原因
+
+当任务添加到线程池中之所以被拒绝，可能是由于：第一线程池异常关闭。第二，任务数量超过线程池的最大限制,并设置有界的`workeQueue`
+
+### 常见的几种拒绝策略
 
 1. `ThreadPoolExecutor.AbortPolicy`:丢弃任务并抛出RejectedExecutionException异常。（**默认**）
 2. `ThreadPoolExecutor.DiscardPolicy`：丢弃任务，但是不抛出异常。
 3. `ThreadPoolExecutor.DiscardOldestPolicy`：丢弃队列最前面的任务，然后重新提交被拒绝的任务
-4. `ThreadPoolExecutor.CallerRunsPolicy`：由调用线程（提交任务的线程）处理该任务
+4. `ThreadPoolExecutor.CallerRunsPolicy`：由调用线程（提交任务的线程）自己处理该任务
 
 ## ThreadPoolExecutor 的使用
 
@@ -182,8 +199,8 @@ public ThreadPoolExecutor(int corePoolSize,
 2. 当线程池**达到corePoolSize**时，新提交任务将被放入workQueue中，等待线程池中任务调度执行
 3. 当**workQueue已满**，如果workerCount >= corePoolSize && workerCount < maximumPoolSize，则创建并启动一个线程来执行新提交的任务；
 4. 当**workQueue已满**，且workerCount**超过maximumPoolSize**时，新提交任务由RejectedExecutionHandler处理
-5. 当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，关闭空闲线程
-6. 当设置allowCoreThreadTimeOut(true)时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+5. 当线程池中有**超过corePoolSize**线程，当空闲时间**达到keepAliveTime**时，会关闭空闲线程
+6. 当设置**allowCoreThreadTimeOut(true)**时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
 
 ### ThreadPoolExecutor 实例1
 
@@ -269,10 +286,6 @@ A pool that is no longer referenced in a program and has no remaining threads wi
 如果程序中不再持有线程池的引用，并且线程池中没有线程时，线程池将会自动关闭。
 
 注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡。然而我们常用的`FixedThreadPool`的核心线程没有超时策略，所以并不会自动关闭。</small>
-
----
-
-https://www.jianshu.com/p/bdf06e2c1541
 
 #### 固定线程池
 

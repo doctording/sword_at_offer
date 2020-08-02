@@ -69,6 +69,8 @@ Warning: Unresolved Symbol: sun.gc.generation.2.space.0.capacity substituted NaN
 
 ## Java8 内存区域
 
+![](../java_jvm/imgs/java8.jpeg)
+
 ```java
 // java7
 mubi@mubideMacBook-Pro Home $ pwd
@@ -142,7 +144,7 @@ Class metadata, interned Strings and class static variables will be moved from t
 * 方法区中中的类静态属性引用的对象
 * load的Clazz
 
-which instances are roots?(JVM规范中)
+<font color='red'>which instances are roots?</font>(JVM规范中)
 
 JVM stack, native method stack, run-time constant pool, static references in method area, Clazz
 
@@ -202,6 +204,7 @@ In Soft reference, even if the object is free for garbage collection then also i
 ```java
 //Code to illustrate Soft reference
 import java.lang.ref.SoftReference;
+
 class Gfg
 {
     //code..
@@ -375,14 +378,14 @@ public static void main(String[] args) throws Exception{
 
 **第一次**：通过GC roots遍历，找到不在引用链内的对象。并检查是否需要执行finalize()方法。（如果没重写finalize()则只需要标记一次，然后就可以进行gc掉）
 
-在第一次标记中有`finalize()`需要被执行的对象，会被丢到一个优先级较低的队列(`F-Queue`:`java.lang.ref.Finalizer.ReferenceQueue`)中执行，但不保证能被执行(因为是由低优先级的**`Finalizer线程`去处理的，试想低优先级线程不被执行到，那么重写了`finalize()`的对象就永久在堆中不能被gc掉，即`java.lang.ref.Finalizer`对象会占用很大的堆空间，甚至溢出)
+在第一次标记中有`finalize()`需要被执行的对象，会被丢到一个优先级较低的队列(`F-Queue`:`java.lang.ref.Finalizer.ReferenceQueue`)中执行，但不保证能被执行(因为是由**低优先级**的`Finalizer线程`去处理的，试想低优先级线程不被执行到，那么重写了`finalize()`的对象就永久在堆中不能被gc掉，即`java.lang.ref.Finalizer`对象会占用很大的堆空间，甚至溢出)
 
 **第二次**：对队列(`F-Queue`)中的对象再遍历一次，看是否有自救，没有则进行GC
 
 1. 对象没有覆盖`finalize()`方法，或者`finalize()`方法已经被虚拟机调用过,虚拟机将这两种情况都视为"没有必要执行"
-2. 如果这个对象被判定为有必要执行`finalize()`方法,则这个对象会放置在一个叫做`F-Queue`的队列之中，并在稍后由一个虚拟机自动建立的，**低优先级的**`Finalizer线程`去执行它。
+2. 如果这个对象被判定为有必要执行`finalize()`方法,则这个对象会放置在一个叫做`F-Queue`的队列之中，并在稍后由一个虚拟机自动建立的，**低优先级**的`Finalizer线程`去执行它。
 
-如果对象要在`finalize()`中成功拯救自己--只需要重新与引用链上的任何一个对象建立关联即可，GC对`F-Queue`中对对象进行第二次标记时，会将它移出"即将回收"的集合，否则会被回收
+如果对象要在`finalize()`中成功拯救自己，则只需要重新与引用链上的任何一个对象建立关联即可，GC对`F-Queue`中对对象进行第二次标记时，会将它移出"即将回收"的集合；否则就会被回收
 
 ### `finalize()`自救代码演示
 
@@ -614,7 +617,7 @@ mubi@mubideMacBook-Pro ~ $
 
 ![](../../content/java_jvm/imgs/gc_fen_dai.png)
 
--|新生代(别名)|老年代|JVM 参数
+-|年轻代(别名)|老年代|JVM 参数
 :---:|:---:|:---:|:---:
 组合一|Serial (DefNew) | Serial Old(PSOldGen) | -XX:+UseSerialGC
 组合二|Parallel Scavenge | (PSYoungGen) | Serial Old(PSOldGen) | -XX:+UseParallelGC
@@ -623,9 +626,11 @@ mubi@mubideMacBook-Pro ~ $
 组合五(*)|ParNew (ParNew) | CMS+Serial Old(PSOldGen) | -XX:+UseConcMarkSweepGC
 组合六(*)|G1 | G1 | -XX:+UseG1GC
 
-* `new object`的gc生命周期
+### `new object`的gc生命周期
 
 ![](../../content/java_jvm/imgs/gc_fen_dai_2.png)
+
+线程TLAB局部缓存区域（Thread Local Allocation Buffer）：Sun Hotspot JVM为了提升对象内存分配的效率，对于所创建的线程都会分配一块独立的空间TLAB（Thread Local Allocation Buffer），其大小由JVM根据运行的情况计算而得，在TLAB上分配对象时不需要加锁，因此JVM在给线程的对象分配内存时会尽量的在TLAB上分配，在这种情况下JVM中分配对象内存的性能和C基本是一样高效的，但如果对象过大的话则仍然是直接使用堆空间分配（堆是JVM中所有线程共享的，因此在其上进行对象内存的分配均需要进行加锁，这也导致了new对象的开销是比较大的）
 
 ## CMS(Concurrent Mark Sweep)垃圾回收器
 
@@ -659,9 +664,9 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 ### 缺点
 
-1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做对事情就是在并发标记和并发清除的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
+1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做的事情就是在`并发标记`和`并发清除`的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
 
-2. CMS处理器无法处理浮动垃圾（`Floating Garbage`）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"，因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
+2. CMS处理器无法处理浮动垃圾（`Floating Garbage`）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"；因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
 
 3. CMS是基于(`mark-sweep`)"标记-清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发`full gc`。
 
@@ -914,11 +919,11 @@ G1 snapshot at the begining,关注引用的删除：当B->D消失时，要把这
 Empty regions are removed and reclaimed. Region liveness is now calculated for all regions.
 （空区域会被删除可以让重新分配，所有区域的liveness会计算）
 
-##### Copying/Cleanup Phase（`筛选`部分region回收，而非全部回收；STW，根据用户期望的GC停顿时间回收）
+##### Copying/Cleanup Phase（`筛选`部分region回收，而非全部回收；STW：根据用户期望的GC停顿时间回收）
 
 G1 selects the regions with the lowest "liveness", those regions which can be collected the fastest. Then those regions are collected at the same time as a young GC. This is denoted in the logs as [GC pause (mixed)]. So both young and old generations are collected at the same time.
 
-（the lowest "liveness"的region会被清理调）
+（the lowest "liveness"的region会被清理掉）
 
 （`yong gc`和`mixed gc`会同时进行）
 
@@ -951,7 +956,7 @@ G1的另一个显著特点他能够让用户设置应用的暂停时间，为什
 
 由于内存被分成了很多小块，又带来了另外好处，由于内存块比较小，进行内存压缩整理的代价都比较小，相比其它GC算法，可以有效的规避内存碎片的问题。
 
-G1的思想，感觉有点像Java`CocurrentHashMap`，将一个大的分成若干个Region，然后再处理；即【分而治之】的思想
+G1的思想：将一个大的分成若干个Region，然后再处理；即【分而治之】的思想
 
 ## G1 和 CMS
 
@@ -959,7 +964,7 @@ G1的思想，感觉有点像Java`CocurrentHashMap`，将一个大的分成若�
 
 * `CMS`将堆逻辑上分成`Eden`,`Survivor(S0,S1)`,`Old`；并且他们是固定大小JVM启动的时候就已经设定不能改变,并且是连续的内存块
 
-* `G1`将堆分成多个大小相同的`Region(区域)`,默认2048个,在1Mb到32Mb之间大小,逻辑上分成`Eden`,`Survivor`,`Old`,`Humongous`(巨型),`空闲`；他们不是固定大小,会根据每次GC的信息做出调整
+* `G1`将堆分成多个大小相同的`Region(区域)`,默认2048个：在1Mb到32Mb之间大小,逻辑上分成`Eden`,`Survivor`,`Old`,`Humongous`(巨型),`空闲`；他们不是固定大小,会根据每次GC的信息做出调整
 
 ### G1 和 CMS GC的区别
 
@@ -975,11 +980,11 @@ G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc�
 
 * mixed gc
 
-当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是一部分老年代，而不是全部老年代，可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制
+当越来越多的对象晋升到老年代old region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即mixed gc，该算法并不是一个old gc，除了回收整个young region，还会回收一部分的old region，这里需要注意：是<font color='red'>一部分老年代，而不是全部老年代</font>，G1可以选择哪些old region进行收集，从而可以对垃圾回收的耗时时间进行控制
 
 * full gc
 
-如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的`serial old gc`，会导致异常长时间的暂停时间；这需要进行不断的调优，尽可能的避免full gc的产生
+如果对象内存分配速度过快，mixed gc来不及回收，导致老年代被填满，就会触发一次full gc，G1的full gc算法就是单线程执行的`serial old gc`，会导致异常长时间的暂停时间；所以这需要进行不断的调优，尽可能的避免full gc的产生
 
 **g1 yong gc log**
 
@@ -1041,7 +1046,7 @@ G1中提供了三种模式垃圾回收模式，young gc、mixed gc 和 full gc�
 * -XXNewRatio 默认为2
 * -XX:SurvivorRatio 默认为8，表示Suvivor:eden=2:8,即一个Survivor占年轻代的1/10
 
-#### Java GC测试程序 和 初始堆情况(Java7 CMS)
+#### Java 分代GC测试程序 和 初始堆情况(Java7 CMS)
 
 * jdk1.7.0_80
 
@@ -1072,7 +1077,7 @@ eden | from survivor | to survivor | old
 -|-|-|-
 8192K | 1024K | 1024K | 10240K
 
-##### 对应GC日志
+##### 对应的GC日志
 
 ```java
 [GC [PSYoungGen: 7534K->416K(9216K)] 7534K->6560K(19456K), 0.0049590 secs] [Times: user=0.01 sys=0.00, real=0.01 secs]
@@ -1110,11 +1115,11 @@ JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhi
 
 ### 大对象直接进入老年代
 
-这里所谓的大对象是指，需要大量连续内存空间的Java对象，，最典型的大对象就是那种很长的字符串以及数组。大对象对虚拟机的内存分配来说就是一个坏消息。（更坏的：一群"朝生夕灭"的"短命大对象"），经常出现大对象容易导致内存还有不少空间时就提前触发垃圾收集以获取足够的连续空间来"安置"它们
+这里所谓的大对象是指，需要大量连续内存空间的Java对象，最典型的大对象就是那种很长的字符串以及数组。大对象对虚拟机的内存分配来说就是一个坏消息。（更坏的是：一群"朝生夕灭"的"短命大对象"），经常出现大对象容易导致内存还有不少空间时就提前触发垃圾收集以获取足够的连续空间来"安置"它们
 
 `-XX:PretenureSizeThreshold`参数，另大于这个设置值的对象直接在老年代分配。这样做的目的是避免在Eden区以及两个Survivor区之间发生大量的内存复制(复习一下：新生代采用复制算法收集内存)
 
-### 长期存活的对象将进入老年代
+### 长期存活的(`Age>15`)对象将进入老年代
 
 内存回收时，必须识别哪些对象应该在新生代，哪些对象应放到老年代。
 
@@ -1136,7 +1141,7 @@ JVM GC log文件的查看<a target='_blank' href='https://www.cnblogs.com/xuezhi
 
 ### 触发gc的条件
 
-“什么时候”即就是GC触发的条件。GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。
+GC触发的条件有两种。（1）程序调用System.gc时可以触发；（2）系统自身来决定GC触发的时机。
 
 #### Minor GC触发条件
 
@@ -1181,33 +1186,33 @@ full gc | Parallel Old（ParOldGen）
 * Java 程序
 
 ```java
- public static void testAllocation() throws InterruptedException{
-        byte[] a1, a2, a3, a4;
+public static void testAllocation() throws InterruptedException{
+    byte[] a1, a2, a3, a4;
 
-        System.out.println("free:" + Runtime.getRuntime().freeMemory() / 1024 / 1024);
-        System.out.println("total:" + Runtime.getRuntime().totalMemory() / 1024 / 1024);
-        System.out.println("max:" + Runtime.getRuntime().maxMemory() / 1024 / 1024);
-        System.out.println("used:" + ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024);
+    System.out.println("free:" + Runtime.getRuntime().freeMemory() / 1024 / 1024);
+    System.out.println("total:" + Runtime.getRuntime().totalMemory() / 1024 / 1024);
+    System.out.println("max:" + Runtime.getRuntime().maxMemory() / 1024 / 1024);
+    System.out.println("used:" + ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024);
 
-        a1 = new byte[2 * _1MB];
+    a1 = new byte[2 * _1MB];
 
-        a2 = new byte[2 * _1MB];
+    a2 = new byte[2 * _1MB];
 
-        System.out.println("free:" + Runtime.getRuntime().freeMemory() / 1024 / 1024);
-        System.out.println("total:" + Runtime.getRuntime().totalMemory() / 1024 / 1024);
-        System.out.println("max:" + Runtime.getRuntime().maxMemory() / 1024 / 1024);
-        System.out.println("used:" + ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
-                / 1024 / 1024);
+    System.out.println("free:" + Runtime.getRuntime().freeMemory() / 1024 / 1024);
+    System.out.println("total:" + Runtime.getRuntime().totalMemory() / 1024 / 1024);
+    System.out.println("max:" + Runtime.getRuntime().maxMemory() / 1024 / 1024);
+    System.out.println("used:" + ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
+            / 1024 / 1024);
 
-        a3 = new byte[2 * _1MB];
+    a3 = new byte[2 * _1MB];
 
-        a4 = new byte[6 * _1MB];
-    }
+    a4 = new byte[6 * _1MB];
+}
 
-    public static void main(String[] args) throws InterruptedException {
-        testAllocation();
-        TimeUnit.SECONDS.sleep(30);
-    }
+public static void main(String[] args) throws InterruptedException {
+    testAllocation();
+    TimeUnit.SECONDS.sleep(30);
+}
 ```
 
 * gc.log 文件
@@ -1238,7 +1243,7 @@ Heap
 
 ## 问题
 
-`metaspace`没有限制，堆内存使用正常(没有`full gc`)，然后遇到`OOMKilled(程序因为内存使用超过限额被 kill -9 杀掉)`
+`metaspace`没有限制，堆内存使用正常(没有`full gc`)而没有释放，最终会遇到`OOMKilled(程序因为内存使用超过限额被 kill -9 杀掉)`,即机器实例的OOM
 
 ## 概念
 
@@ -1253,9 +1258,10 @@ Heap
 ### 堆外内存溢出
 
 1. 最大的堆外内存设置的太小了
-2. 没有full gc， 堆外内存没有及时被清理掉
+2. 没有full gc，堆外内存没有及时被清理掉
+3. 元空间溢出
 
-### 堆外内存更适合
+### 堆外内存更适合存储的对象
 
 * 存储生命周期长的对象
 * 可以在进程间可以共享，减少 JVM 间的对象复制，使得 JVM 的分割部署更容易实现

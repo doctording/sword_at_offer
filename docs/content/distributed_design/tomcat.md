@@ -102,6 +102,10 @@ Most JAR files are simply containers for data that another program needs to run 
 
 WAR files need to be deployed on web container like Apache Tomcat, Jetty, Wildfly etc or it will also deployed on application server.
 
+## Tomcat源码阅读笔记
+
+<a href="https://github.com/doctording/apache-tomcat-8.5.57-src" target='_blank'>https://github.com/doctording/apache-tomcat-8.5.57-src</a>
+
 ## Tomcat架构
 
 ![](../../content/distributed_design/imgs/tomcat_01.png)
