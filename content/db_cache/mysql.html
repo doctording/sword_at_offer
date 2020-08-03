@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>数据库/表/查询 · spring-note</title>
+        <title>MySQL · spring-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -89,6 +89,8 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
+    
+    <link rel="prev" href="io.html" />
     
 
     </head>
@@ -733,7 +735,59 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.1" data-path="../java_thread_concurrent/thread_basic.html">
+        <li class="chapter " data-level="1.5.1" data-path="../java_thread_concurrent/aqs.html">
+            
+                <a href="../java_thread_concurrent/aqs.html">
+            
+                    
+                    AQS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../java_thread_concurrent/cas.html">
+            
+                <a href="../java_thread_concurrent/cas.html">
+            
+                    
+                    CAS(Conmpare And Swap/Exchange) & unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../java_thread_concurrent/volatile.html">
+            
+                <a href="../java_thread_concurrent/volatile.html">
+            
+                    
+                    volatile 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../java_thread_concurrent/synchronized.html">
+            
+                <a href="../java_thread_concurrent/synchronized.html">
+            
+                    
+                    synchronized 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../java_thread_concurrent/thread_basic.html">
             
                 <a href="../java_thread_concurrent/thread_basic.html">
             
@@ -747,12 +801,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.1.1" data-path="../java_thread_concurrent/thread_design.html">
+        <li class="chapter " data-level="1.5.5.1" data-path="../java_thread_concurrent/thread_condition.html">
             
-                <a href="../java_thread_concurrent/thread_design.html">
+                <a href="../java_thread_concurrent/thread_condition.html">
             
                     
-                    多线程设计模式
+                    Condition
             
                 </a>
             
@@ -760,7 +814,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.1.2" data-path="../java_thread_concurrent/hook_thread.html">
+        <li class="chapter " data-level="1.5.5.2" data-path="../java_thread_concurrent/semaphore.html">
+            
+                <a href="../java_thread_concurrent/semaphore.html">
+            
+                    
+                    Semaphore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.3" data-path="../java_thread_concurrent/hook_thread.html">
             
                 <a href="../java_thread_concurrent/hook_thread.html">
             
@@ -773,12 +840,51 @@
             
         </li>
     
+        <li class="chapter " data-level="1.5.5.4" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.5" data-path="../java_thread_concurrent/longAdder.html">
+            
+                <a href="../java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.6" data-path="../java_thread_concurrent/thread_design.html">
+            
+                <a href="../java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
         </li>
     
-        <li class="chapter " data-level="1.5.2" data-path="../java_thread_concurrent/thread_pool.html">
+        <li class="chapter " data-level="1.5.6" data-path="../java_thread_concurrent/thread_pool.html">
             
                 <a href="../java_thread_concurrent/thread_pool.html">
             
@@ -792,7 +898,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.2.1" data-path="../java_thread_concurrent/concurrency_problems.html">
+        <li class="chapter " data-level="1.5.6.1" data-path="../java_thread_concurrent/concurrency_problems.html">
             
                 <a href="../java_thread_concurrent/concurrency_problems.html">
             
@@ -805,7 +911,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.2.2" data-path="../java_thread_concurrent/thread_pool_self.html">
+        <li class="chapter " data-level="1.5.6.2" data-path="../java_thread_concurrent/thread_pool_self.html">
             
                 <a href="../java_thread_concurrent/thread_pool_self.html">
             
@@ -823,117 +929,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.3" data-path="../java_thread_concurrent/cas.html">
-            
-                <a href="../java_thread_concurrent/cas.html">
-            
-                    
-                    CAS(Conmpare And Swap/Exchange) & unsafe
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.4" data-path="../java_thread_concurrent/aqs.html">
-            
-                <a href="../java_thread_concurrent/aqs.html">
-            
-                    
-                    AQS
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.5" >
-            
-                <span>
-            
-                    
-                    [常见关键字和类]
-            
-                </span>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.5.5.1" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
-            
-                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
-            
-                    
-                    CountDownLatch & CyclicBarrier
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.5.2" data-path="../java_thread_concurrent/longAdder.html">
-            
-                <a href="../java_thread_concurrent/longAdder.html">
-            
-                    
-                    LongAdder
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.5.3" data-path="../java_thread_concurrent/semaphore.html">
-            
-                <a href="../java_thread_concurrent/semaphore.html">
-            
-                    
-                    Semaphore
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.5.4" data-path="../java_thread_concurrent/volatile.html">
-            
-                <a href="../java_thread_concurrent/volatile.html">
-            
-                    
-                    volatile 关键字
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.5.5" data-path="../java_thread_concurrent/synchronized.html">
-            
-                <a href="../java_thread_concurrent/synchronized.html">
-            
-                    
-                    synchronized 关键字
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.6" data-path="../java_thread_concurrent/thread_lock.html">
+        <li class="chapter " data-level="1.5.7" data-path="../java_thread_concurrent/thread_lock.html">
             
                 <a href="../java_thread_concurrent/thread_lock.html">
             
@@ -944,28 +940,14 @@
             
 
             
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.5.6.1" data-path="../java_thread_concurrent/thread_lock_type.html">
-            
-                <a href="../java_thread_concurrent/thread_lock_type.html">
-            
-                    
-                    Java Lock 分类
-            
-                </a>
-            
-
-            
         </li>
     
-        <li class="chapter " data-level="1.5.6.2" data-path="../java_thread_concurrent/thread_deadlock.html">
+        <li class="chapter " data-level="1.5.8" data-path="../java_thread_concurrent/thread_deadlock.html">
             
                 <a href="../java_thread_concurrent/thread_deadlock.html">
             
                     
-                    Thread 死锁问题
+                    死锁问题
             
                 </a>
             
@@ -973,17 +955,12 @@
             
         </li>
     
-
-            </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.7" data-path="../java_thread_concurrent/threadLocal.html">
+        <li class="chapter " data-level="1.5.9" data-path="../java_thread_concurrent/threadLocal.html">
             
                 <a href="../java_thread_concurrent/threadLocal.html">
             
                     
-                    ThreadLocal
+                    ThreadLocal对象
             
                 </a>
             
@@ -1327,12 +1304,25 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.9.1" data-path="mysql.html">
+        <li class="chapter " data-level="1.9.1" data-path="io.html">
+            
+                <a href="io.html">
+            
+                    
+                    局部性原理&磁盘IO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.9.2" data-path="mysql.html">
             
                 <a href="mysql.html">
             
                     
-                    数据库/表/查询
+                    MySQL
             
                 </a>
             
@@ -1652,7 +1642,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >数据库/表/查询</a>
+        <a href="../.." >MySQL</a>
     </h1>
 </div>
 
@@ -1670,7 +1660,7 @@
                                 <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
 <li><div><a href="#mysql">MySQL</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
-<li><div><a href="#mysql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;">mysql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;</a><i></i></div></li>
+<li><div><a href="#mysql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;">MySql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;</a><i></i></div></li>
 <li><div><a href="#&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;">&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x7B2C;&#x4E00;&#x8303;&#x5F0F;">&#x7B2C;&#x4E00;&#x8303;&#x5F0F;</a><i></i></div></li>
@@ -1690,7 +1680,7 @@
 <li><div><a href="#innodb">InnoDb</a><i></i></div></li>
 <li><div><a href="#&#x7D22;&#x5F15;&#xFF1F;">&#x7D22;&#x5F15;&#xFF1F;</a><i></i></div></li>
 <li><div><a href="#mysql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;">MySql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;</a><i></i></div></li>
-<li><div><a href="#&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;</a><i></i></div></li>
+<li><div><a href="#&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;</a><i></i></div></li>
 </ul></li>
 </ul>
 </div>
@@ -1701,7 +1691,7 @@
 <p><a href="https://dev.mysql.com/doc/" target="_blank">&#x5B98;&#x65B9;&#x6587;&#x6863;</a></p>
 <p><a href="https://dev.mysql.com/doc/refman/5.6/en/" target="_blank">mysql 5.6</a></p>
 <p><a href="https://blog.csdn.net/qq_26437925/category_5779305.html" target="_blank">&#x6211;&#x7684;&#x535A;&#x5BA2;&#x4E13;&#x9898;</a></p>
-<h2 id="mysql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;">mysql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;</h2>
+<h2 id="mysql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;">MySql&#x7684;&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;</h2>
 <ol>
 <li>InnoDB</li>
 <li>Myisam</li>
@@ -1844,9 +1834,9 @@
 <p><a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-storage-engine.html" target="_blank">Mysql innodb refman</a></p>
 <h2 id="&#x7D22;&#x5F15;&#xFF1F;">&#x7D22;&#x5F15;&#xFF1F;</h2>
 <h2 id="mysql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;">MySql&#x6709;&#x54EA;&#x4E9B;&#x9501;&#xFF1F;</h2>
-<h2 id="&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;</h2>
+<h2 id="&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;</h2>
 <footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-30 13:26:41
+2020-08-03 21:54:03
 </span></footer>
                                 
                                 </section>
@@ -1874,6 +1864,10 @@
 
             
                 
+                <a href="io.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 局部性原理&磁盘IO">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
                 
             
         
@@ -1882,7 +1876,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"数据库/表/查询","layout":"page","date":"2020-03-08 18:00","level":"1.9.1","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"ServerSocketChannel","level":"1.10.2.1","depth":3,"path":"content/java_io_net/server_socket_channel.md","ref":"./content/java_io_net/server_socket_channel.md","articles":[]},{"title":"NIO & BIO问题","level":"1.10.2.2","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从BIO到epoll","level":"1.10.2.3","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"网络设计模式","level":"1.10.3","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"http & tcp","level":"1.10.4","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.5","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"tomcat","level":"1.10.6","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]}]},"previous":{"title":"[8 数据库]","level":"1.9","depth":1,"ref":"","articles":[{"title":"数据库/表/查询","level":"1.9.1","depth":2,"path":"content/db_cache/mysql.md","ref":"./content/db_cache/mysql.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-07-30T05:26:41.594Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-02T16:01:04.406Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MySQL","layout":"page","date":"2020-03-08 18:00","level":"1.9.2","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"ServerSocketChannel","level":"1.10.2.1","depth":3,"path":"content/java_io_net/server_socket_channel.md","ref":"./content/java_io_net/server_socket_channel.md","articles":[]},{"title":"NIO & BIO问题","level":"1.10.2.2","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从BIO到epoll","level":"1.10.2.3","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"网络设计模式","level":"1.10.3","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"http & tcp","level":"1.10.4","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.5","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"tomcat","level":"1.10.6","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]}]},"previous":{"title":"局部性原理&磁盘IO","level":"1.9.1","depth":2,"path":"content/db_cache/io.md","ref":"./content/db_cache/io.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-08-03T13:54:03.320Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-03T14:30:18.132Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
