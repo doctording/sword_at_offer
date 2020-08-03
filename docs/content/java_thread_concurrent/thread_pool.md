@@ -342,7 +342,7 @@ public static void main(String[] args){
 }
 ```
 
-* CachedThreadPool 的线程 keepAliveTime 默认为 60s ，核心线程数量为 0 ，所以不会有核心线程存活阻止线程池自动关闭。 详见 线程池之ThreadPoolExecutor构造 ，为了更快的模拟，构造后将 keepAliveTime 修改为1纳秒，相当于线程执行完马上会消亡，所以线程池可以被回收。实际开发中，如果CachedThreadPool 确实忘记关闭，在一定时间后是可以被回收的。但仍然建议显示关闭。
+* CachedThreadPool 的线程 keepAliveTime 默认为 60s ，核心线程数量为 0 ，所以不会有核心线程存活阻止线程池自动关闭。 详见 线程池之ThreadPoolExecutor构造 ；为了更快的模拟，构造后将 keepAliveTime 修改为1纳秒，相当于线程执行完马上会消亡，所以线程池可以被回收。实际开发中，如果CachedThreadPool确实忘记关闭，在一定时间后是可以被回收的。但仍然建议显示关闭。
 
 #### 线程池`shutdown`，`shutdownNow`
 

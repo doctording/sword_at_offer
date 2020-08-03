@@ -119,7 +119,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 
 3. 进行事务操作，用于存储线程事务信息
 
-## 自己项目中使用到的?
+### 自己项目中使用到的实际例子?
 
 比如一个查询，要经过一层一层处理，最后还有记录此次的查询记录；
 

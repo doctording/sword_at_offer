@@ -37,7 +37,7 @@ date: 2019-03-09 00:00
 
 系统假死
 
-## 死锁代码例子
+## 死锁代码例子(需要手写)
 
 ```java
 class DeadLock {
@@ -45,7 +45,7 @@ class DeadLock {
     private static Object resourceA = new Object();
     private static Object resourceB = new Object();
 
-    //测试
+    // 测试
     public static void test() {
         //启动线程A,B
         new Thread(new A(), "threadA").start();
@@ -93,10 +93,29 @@ class DeadLock {
             }
         }
     }
+
+    public static void main(String[] args) {
+        test();
+    }
 }
 ```
 
-### 信号量解决死锁
+### 输出和死锁现象
+
+输出如下，然后会一直卡住
+
+```java
+Thread[threadA,5,main] get ResourceA
+Thread[threadB,5,main] get ResourceB
+Thread[threadA,5,main] waiting get ResourceB
+Thread[threadB,5,main] waiting get ResourceA
+```
+
+* jvisualvm 可查看到死锁现象
+
+![](../java_thread_concurrent/imgs/dead-lock.png)
+
+### 信号量解决死锁代码
 
 ```java
 class DeadLock {

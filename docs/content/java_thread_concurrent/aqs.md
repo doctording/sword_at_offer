@@ -20,6 +20,16 @@ date: 2020-20-15 00:00
 
 Provides a framework for implementing blocking locks and related synchronizers (semaphores, events, etc) that rely on first-in-first-out (FIFO) wait queues. This class is designed to be a useful basis for most kinds of synchronizers that rely on a single atomic int value to represent state. Subclasses must define the protected methods that change this state, and which define what that state means in terms of this object being acquired or released. Given these, the other methods in this class carry out all queuing and blocking mechanics. Subclasses can maintain other state fields, but only the atomically updated int value manipulated using methods getState(), setState(int) and compareAndSetState(int, int) is tracked with respect to synchronization.
 
+## Aqs核心思想归纳
+
+AQS核心思想是：<font color='red'>如果被请求的共享资源空闲，那么就将当前请求资源的线程设置为有效的工作线程，将共享资源设置为锁定状态；如果共享资源被占用，就需要一定的阻塞等待唤醒机制来保证锁分配。这个机制主要用的是CLH队列的变体实现的，将暂时获取不到锁的线程加入到队列中</font>
+
+CLH：Craig、Landin and Hagersten队列，链表结构，AQS中的队列是CLH变体的虚拟双向队列（FIFO），AQS是通过将每条请求共享资源的线程封装成一个节点来实现锁的分配。
+
+![](../../content/java_thread_concurrent/imgs/aqs-2.png)
+
+AQS使用一个`volatile`的int类型的成员变量来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作，通过CAS完成对State值的修改。
+
 ## 同步器
 
 两个操作
@@ -54,7 +64,13 @@ j.u.c包有一个LockSuport类，这个类中包含了解决这个问题的方�
 
 ### 同步操作
 
+* 独占模式
+
 ![](../../content/java_thread_concurrent/imgs/aqs.png)
+
+* 共享模式
+
+![](../../content/java_thread_concurrent/imgs/aqs-3.png)
 
 * AbstractQueuedSynchronizer 的变量： 有CLH队列的头部，尾部，以及同步器状态的int变量
 

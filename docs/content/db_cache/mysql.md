@@ -1,5 +1,5 @@
 ---
-title: "数据库/表/查询"
+title: "MySQL"
 layout: page
 date: 2020-03-08 18:00
 ---
@@ -14,7 +14,7 @@ date: 2020-03-08 18:00
 
 <a href='https://blog.csdn.net/qq_26437925/category_5779305.html' target='_blank'>我的博客专题</a>
 
-## mysql的数据库引擎有哪些？
+## MySql的数据库引擎有哪些？
 
 1. InnoDB
 2. Myisam
@@ -183,4 +183,4 @@ merge join操作本身是非常快的，但是merge join前进行的排序可能
 
 ## MySql有哪些锁？
 
-## 慢查询优化
+## 慢查询优化？

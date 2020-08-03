@@ -26,7 +26,56 @@ release(int permits) | 同样，上面获取了多少个信号量，这里就需
 
 ### "公平信号量"和"非公平信号量"
 
+Semaphore类采用AQS的共享模式，里面的两个内部类`FairSync`和`NonfairSync`都继承自`AbstractQueuedSynchronizer`
+
 "公平信号量"和"非公平信号量"的释放信号量的机制是一样的！不同的是它们**获取信号量**的机制：线程在尝试获取信号量许可时，对于公平信号量而言，如果当前线程不在CLH队列(CLH即Craig, Landin, and Hagersten (CLH)。AQS内部维护着一个FIFO的队列，即CLH队列。AQS的同步机制就是依靠CLH队列实现的。CLH队列是FIFO的双端双向队列，实现公平锁。线程通过AQS获取锁失败，就会将线程封装成一个Node节点，插入队列尾。当有线程释放锁时，后尝试把队头的next节点占用锁。)的头部，则排队等候；而对于非公平信号量而言，无论当前线程是不是在CLH队列的头部，它都会直接获取信号量。该差异具体的体现在，它们的`tryAcquireShared()`函数的实现不同。
+
+* 非公平获取的源码
+
+```java
+final int nonfairTryAcquireShared(int acquires) {
+    for (;;) {
+        int available = getState();
+        int remaining = available - acquires;
+        if (remaining < 0 ||
+            compareAndSetState(available, remaining))
+            return remaining;
+    }
+}
+```
+
+<font color='red'>无限循环，获取状态，然后CAS操作保证state确实减少acquires</font>
+
+### 构造函数(默认非公平)
+
+```java
+/**
+    * Creates a {@code Semaphore} with the given number of
+    * permits and nonfair fairness setting.
+    *
+    * @param permits the initial number of permits available.
+    *        This value may be negative, in which case releases
+    *        must occur before any acquires will be granted.
+    */
+public Semaphore(int permits) {
+    sync = new NonfairSync(permits);
+}
+
+/**
+    * Creates a {@code Semaphore} with the given number of
+    * permits and the given fairness setting.
+    *
+    * @param permits the initial number of permits available.
+    *        This value may be negative, in which case releases
+    *        must occur before any acquires will be granted.
+    * @param fair {@code true} if this semaphore will guarantee
+    *        first-in first-out granting of permits under contention,
+    *        else {@code false}
+    */
+public Semaphore(int permits, boolean fair) {
+    sync = fair ? new FairSync(permits) : new NonfairSync(permits);
+}
+```
 
 ### 例子代码
 
