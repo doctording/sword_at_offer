@@ -574,6 +574,14 @@ A non-clustering index is defined in the non-ordering field of the table. This t
 
 #### 联合索引
 
+![](../db_cache/imgs/index_union.png)
+
+仍然是B+Tree, 索引中包含多个字段，按照联合索引的先后顺序
+
+### 联合索引为什么是最左前缀匹配？
+
+数据结构底层决定（严格的按照第一个，第二个，第三个字段一个一个匹配），不符合最左匹配则需要全局扫描了
+
 ## MySql有哪些锁？
 
 ## 慢查询优化？
