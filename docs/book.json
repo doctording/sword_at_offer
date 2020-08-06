@@ -25,7 +25,7 @@
       "gittalk": {
         "clientID": "094729e19245d3fe84aa",
         "clientSecret": "6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb",
-        "repo": "https://github.com/doctording/sword_at_offer",
+        "repo": "sword_at_offer",
         "owner": "doctording",
         "admin": ["doctording"],
         "distractionFreeMode": false
