@@ -18,9 +18,18 @@
       "back-to-top-button",
       "code",
       "uml",
-      "page-treeview"
+      "page-treeview",
+      "gittalk"
     ],
     "pluginsConfig": {
+      "gittalk": {
+        "clientID": "094729e19245d3fe84aa",
+        "clientSecret": "6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb",
+        "repo": "https://github.com/doctording/sword_at_offer",
+        "owner": "doctording",
+        "admin": ["doctording"],
+        "distractionFreeMode": false
+      },
       "tbfed-pagefooter": {
         "copyright": "Copyright @doctording",
         "modify_label": "该文件修改时间：",
