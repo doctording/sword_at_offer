@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>MySQL · spring-note</title>
+        <title>MySQL · java-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -1661,6 +1661,7 @@
 <li><div><a href="#mysql">MySQL</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;">&#x6570;&#x636E;&#x5E93;&#x5F15;&#x64CE;&#x6709;&#x54EA;&#x4E9B;&#xFF1F;</a><i></i></div></li>
+<li><div><a href="#&#x6570;&#x636E;&#x5E93;&#x67B6;&#x6784;&#x56FE;">&#x6570;&#x636E;&#x5E93;&#x67B6;&#x6784;&#x56FE;</a><i></i></div></li>
 <li><div><a href="#&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;">&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x7B2C;&#x4E00;&#x8303;&#x5F0F;">&#x7B2C;&#x4E00;&#x8303;&#x5F0F;</a><i></i></div></li>
@@ -1731,7 +1732,31 @@
 <li><div><a href="#mysql&#x7D22;&#x5F15;&#x6982;&#x8FF0;">MySql&#x7D22;&#x5F15;&#x6982;&#x8FF0;</a><i></i></div></li>
 </ul></li>
 </ul></li>
-<li><div><a href="#innodb&#x9501;">InnoDb&#x9501;</a><i></i></div></li>
+<li><div><a href="#innodb&#x9501;">InnoDb&#x9501;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#shared-locks&#x8BFB;&#x9501;-&#x548C;-exclusive-locks&#x5199;&#x9501;">Shared locks(&#x8BFB;&#x9501;) &#x548C; Exclusive locks(&#x5199;&#x9501;)</a><i></i></div></li>
+<li><div><a href="#exclusive-locks">Exclusive locks</a><i></i></div></li>
+<li><div><a href="#shared-locks">Shared locks</a><i></i></div></li>
+<li><div><a href="#intention-locks&#x610F;&#x5411;&#x9501;">Intention Locks(&#x610F;&#x5411;&#x9501;)</a><i></i></div></li>
+<li><div><a href="#record-locks">Record Locks</a><i></i></div></li>
+<li><div><a href="#gap-locks">Gap Locks</a><i></i></div></li>
+<li><div><a href="#next-key-locks">Next-Key Locks</a><i></i></div></li>
+<li><div><a href="#insert-intention-locks&#x63D2;&#x5165;&#x610F;&#x5411;&#x9501;">Insert Intention Locks(&#x63D2;&#x5165;&#x610F;&#x5411;&#x9501;)</a><i></i></div></li>
+<li><div><a href="#auto-inc-locks">AUTO-INC Locks</a><i></i></div></li>
+<li><div><a href="#predicate-locks-for-spatial-indexes">Predicate Locks for Spatial Indexes</a><i></i></div></li>
+<li><div><a href="#error-1213-40001-deadlock-found-when-trying-to-get-lock-try-restarting-transaction">ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction</a><i></i></div></li>
+<li><div><a href="#error-1062-23000-duplicate-entry-6-for-key-primary">ERROR 1062 (23000): Duplicate entry &apos;6&apos; for key &apos;PRIMARY&apos;</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#innodb&#x4E8B;&#x52A1;">Innodb&#x4E8B;&#x52A1;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x539F;&#x5B50;&#x6027;&#xFF1A;undo-log">&#x539F;&#x5B50;&#x6027;&#xFF1A;undo log</a><i></i></div></li>
+<li><div><a href="#&#x6301;&#x4E45;&#x6027;&#xFF1A;redo-log">&#x6301;&#x4E45;&#x6027;&#xFF1A;redo log</a><i></i></div></li>
+<li><div><a href="#undo--redo-log&#x6587;&#x4EF6;&#x64CD;&#x4F5C;">undo / redo log&#x6587;&#x4EF6;&#x64CD;&#x4F5C;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#redo-log&#x6301;&#x4E45;&#x5316;&#x7B56;&#x7565;">redo log&#x6301;&#x4E45;&#x5316;&#x7B56;&#x7565;</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#&#x9694;&#x79BB;&#x6027;">&#x9694;&#x79BB;&#x6027;</a><i></i></div></li>
+</ul></li>
 <li><div><a href="#&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;</a><i></i></div></li>
 </ul></li>
 </ul>
@@ -1756,6 +1781,8 @@
 <li>Myisam&#x4E0D;&#x652F;&#x6301;&#x4E8B;&#x52A1;&#x3002;&#x4E0D;&#x652F;&#x6301;&#x5916;&#x952E;&#xFF0C;&#x652F;&#x6301;&#x8868;&#x9501;&#xFF0C;&#x652F;&#x6301;&#x5168;&#x6587;&#x7D22;&#x5F15;&#xFF0C;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#x5FEB;</li>
 <li>Memory&#x6240;&#x6709;&#x7684;&#x6570;&#x636E;&#x90FD;&#x4FDD;&#x7559;&#x5728;&#x5185;&#x5B58;&#x4E2D;,&#x4E0D;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x78C1;&#x76D8;&#x7684;IO&#x6240;&#x4EE5;&#x8BFB;&#x53D6;&#x7684;&#x901F;&#x5EA6;&#x5F88;&#x5FEB;, &#x4F46;&#x662F;&#x4E00;&#x65E6;&#x5173;&#x673A;,&#x8868;&#x7684;&#x7ED3;&#x6784;&#x4F1A;&#x4FDD;&#x7559;&#x4F46;&#x662F;&#x6570;&#x636E;&#x5C31;&#x4F1A;&#x4E22;&#x5931;,&#x8868;&#x652F;&#x6301;Hash&#x7D22;&#x5F15;&#xFF0C;&#x56E0;&#x6B64;&#x67E5;&#x627E;&#x901F;&#x5EA6;&#x5F88;&#x5FEB;</li>
 </ul>
+<h2 id="&#x6570;&#x636E;&#x5E93;&#x67B6;&#x6784;&#x56FE;">&#x6570;&#x636E;&#x5E93;&#x67B6;&#x6784;&#x56FE;</h2>
+<p><img src="imgs/db-structure.png" alt=""></p>
 <h2 id="&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;">&#x6570;&#x636E;&#x5E93;&#x8303;&#x5F0F;</h2>
 <h3 id="&#x7B2C;&#x4E00;&#x8303;&#x5F0F;">&#x7B2C;&#x4E00;&#x8303;&#x5F0F;</h3>
 <p>&#x6BCF;&#x4E2A;&#x5C5E;&#x6027;&#x90FD;&#x4E0D;&#x53EF;&#x518D;&#x5206;</p>
@@ -2358,9 +2385,154 @@ mysql<span class="token operator">&gt;</span>
 </ul>
 <p>&#x6700;&#x540E;&#xFF1A;Indexes are less important for queries on small tables, or big tables where report queries process most or all of the rows. When a query needs to access most of the rows, reading sequentially is faster than working through an index. Sequential reads minimize disk seeks, even if not all the rows are needed for the query.</p>
 <h2 id="innodb&#x9501;">InnoDb&#x9501;</h2>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html" target="_blank">innodb lock</a></p>
+<h3 id="shared-locks&#x8BFB;&#x9501;-&#x548C;-exclusive-locks&#x5199;&#x9501;">Shared locks(&#x8BFB;&#x9501;) &#x548C; Exclusive locks(&#x5199;&#x9501;)</h3>
+<p>InnoDB implements standard <code>row-level locking</code> where there are two types of locks, shared (S) locks and exclusive (X) locks.</p>
+<ul>
+<li>A shared (S) lock permits the transaction that holds the lock to read a row.</li>
+<li>An exclusive (X) lock permits the transaction that holds the lock to update or delete a row.</li>
+</ul>
+<h3 id="exclusive-locks">Exclusive locks</h3>
+<p>Exclusive locks protect updates to file resources, both recoverable and non-recoverable. They can be owned by only one transaction at a time. Any transaction that requires an exclusive lock must wait if another task currently owns an exclusive lock or a shared lock against the requested resource.</p>
+<p>&#x72EC;&#x5360;&#x9501;&#x4FDD;&#x62A4;&#x6587;&#x4EF6;&#x8D44;&#x6E90;(&#x5305;&#x62EC;&#x53EF;&#x6062;&#x590D;&#x548C;&#x4E0D;&#x53EF;&#x6062;&#x590D;&#x7684;&#x6587;&#x4EF6;&#x8D44;&#x6E90;)&#x7684;&#x66F4;&#x65B0;&#x3002;&#x5B83;&#x4EEC;&#x4E00;&#x6B21;&#x53EA;&#x80FD;&#x7531;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x62E5;&#x6709;&#x3002;&#x5982;&#x679C;&#x53E6;&#x4E00;&#x4E2A;&#x4EFB;&#x52A1;&#x5F53;&#x524D;&#x62E5;&#x6709;&#x5BF9;&#x6240;&#x8BF7;&#x6C42;&#x8D44;&#x6E90;&#x7684;&#x72EC;&#x5360;&#x9501;&#x6216;&#x5171;&#x4EAB;&#x9501;&#xFF0C;&#x5219;&#x4EFB;&#x4F55;&#x9700;&#x8981;&#x5BF9;&#x8BE5;&#x8D44;&#x6E90;&#x7533;&#x8BF7;&#x72EC;&#x5360;&#x9501;&#x7684;&#x4E8B;&#x52A1;&#x90FD;&#x5FC5;&#x987B;&#x7B49;&#x5F85;&#x3002;</p>
+<h3 id="shared-locks">Shared locks</h3>
+<p>Shared locks support read integrity. They ensure that a record is not in the process of being updated during a read-only request. Shared locks can also be used to prevent updates of a record between the time that a record is read and the next syncpoint.</p>
+<p>&#x5171;&#x4EAB;&#x9501;&#x652F;&#x6301;&#x8BFB;&#x5B8C;&#x6574;&#x6027;&#x3002;&#x5B83;&#x4EEC;&#x786E;&#x4FDD;&#x5728;&#x53EA;&#x8BFB;&#x8BF7;&#x6C42;&#x671F;&#x95F4;&#x4E0D;&#x4F1A;&#x66F4;&#x65B0;&#x8BB0;&#x5F55;&#x3002;&#x5171;&#x4EAB;&#x9501;&#x8FD8;&#x53EF;&#x7528;&#x4E8E;&#x9632;&#x6B62;&#x5728;&#x8BFB;&#x53D6;&#x8BB0;&#x5F55;&#x548C;&#x4E0B;&#x4E00;&#x4E2A;&#x540C;&#x6B65;&#x70B9;&#x4E4B;&#x95F4;&#x8FDB;&#x884C;&#x66F4;&#x65B0;&#x64CD;&#x4F5C;&#x3002;</p>
+<p>A shared lock on a resource can be owned by several tasks at the same time. However, although several tasks can own shared locks, there are some circumstances in which tasks can be forced to wait for a lock:</p>
+<p>&#x8D44;&#x6E90;&#x4E0A;&#x7684;&#x5171;&#x4EAB;&#x9501;&#x53EF;&#x4EE5;&#x540C;&#x65F6;&#x7531;&#x591A;&#x4E2A;&#x4EFB;&#x52A1;&#x62E5;&#x6709;&#x3002; &#x4F46;&#x662F;&#xFF0C;&#x5C3D;&#x7BA1;&#x6709;&#x51E0;&#x4E2A;&#x4EFB;&#x52A1;&#x53EF;&#x4EE5;&#x62E5;&#x6709;&#x5171;&#x4EAB;&#x9501;&#xFF0C;&#x4F46;&#x5728;&#x67D0;&#x4E9B;&#x60C5;&#x51B5;&#x4E0B;&#x53EF;&#x4EE5;&#x5F3A;&#x5236;&#x4EFB;&#x52A1;&#x7B49;&#x5F85;&#x9501;&#xFF1A;</p>
+<ul>
+<li>A request for a shared lock must wait if another task currently owns an exclusive lock on the resource.</li>
+<li>A request for an exclusive lock must wait if other tasks currently own shared locks on this resource.</li>
+<li>A new request for a shared lock must wait if another task is waiting for an exclusive lock on a resource that already has a shared lock.</li>
+</ul>
+<p>&#x5373;&#xFF1A;</p>
+<ul>
+<li>&#x5982;&#x679C;&#x53E6;&#x4E00;&#x4E2A;&#x4EFB;&#x52A1;&#x5F53;&#x524D;&#x62E5;&#x6709;&#x8D44;&#x6E90;&#x4E0A;&#x7684;&#x72EC;&#x5360;&#x9501;&#xFF0C;&#x5219;&#x5BF9;&#x5171;&#x4EAB;&#x9501;&#x7684;&#x8BF7;&#x6C42;&#x5FC5;&#x987B;&#x7B49;&#x5F85;&#x3002;</li>
+<li>&#x5982;&#x679C;&#x5176;&#x4ED6;&#x4EFB;&#x52A1;&#x5F53;&#x524D;&#x62E5;&#x6709;&#x6B64;&#x8D44;&#x6E90;&#x4E0A;&#x7684;&#x5171;&#x4EAB;&#x9501;&#xFF0C;&#x5219;&#x5FC5;&#x987B;&#x7B49;&#x5F85;&#x5BF9;&#x72EC;&#x5360;&#x9501;&#x7684;&#x8BF7;&#x6C42;&#x3002;</li>
+<li>&#x5982;&#x679C;&#x53E6;&#x4E00;&#x4E2A;&#x4EFB;&#x52A1;&#x6B63;&#x5728;&#x7B49;&#x5F85;&#x5DF2;&#x7ECF;&#x5177;&#x6709;&#x5171;&#x4EAB;&#x9501;&#x7684;&#x8D44;&#x6E90;&#x7684;&#x72EC;&#x5360;&#x9501;&#xFF0C;&#x5219;&#x5BF9;&#x5171;&#x4EAB;&#x9501;&#x7684;&#x65B0;&#x8BF7;&#x6C42;&#x5FC5;&#x987B;</li>
+</ul>
+<h3 id="intention-locks&#x610F;&#x5411;&#x9501;">Intention Locks(&#x610F;&#x5411;&#x9501;)</h3>
+<p>InnoDB supports multiple granularity locking(&#x591A;&#x7C92;&#x5EA6;&#x9501;) which permits coexistence of row locks and table locks.</p>
+<p>Intention locks are table-level locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table. There are two types of intention locks:</p>
+<ul>
+<li><p>An intention shared lock (IS) indicates that a transaction intends to set a shared lock on individual rows in a table. &#x4E8B;&#x52A1;T&#x5C1D;&#x8BD5;&#x5728;&#x8868;t&#x7684;&#x67D0;&#x4E9B;&#x884C;&#x8BB0;&#x5F55;&#x4E0A;&#x8BBE;&#x7F6E;S&#x9501;</p>
+</li>
+<li><p>An intention exclusive lock (IX) indicates that a transaction intends to set an exclusive lock on individual rows in a table. &#x4E8B;&#x52A1;T&#x5C1D;&#x8BD5;&#x5728;&#x8868;t&#x7684;&#x67D0;&#x4E9B;&#x884C;&#x8BB0;&#x5F55;&#x4E0A;&#x8BBE;&#x7F6E;X&#x9501;</p>
+</li>
+</ul>
+<p>&#x9501;&#x4F7F;&#x7528;&#x89C4;&#x5219;&#xFF1A;</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">-</th>
+<th style="text-align:center">X</th>
+<th style="text-align:center">IX</th>
+<th style="text-align:center">S</th>
+<th style="text-align:center">IS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">X</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Conflict</td>
+</tr>
+<tr>
+<td style="text-align:center">IX</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Compatible</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Compatible</td>
+</tr>
+<tr>
+<td style="text-align:center">S</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Compatible</td>
+<td style="text-align:center">Compatible</td>
+</tr>
+<tr>
+<td style="text-align:center">IS</td>
+<td style="text-align:center">Conflict</td>
+<td style="text-align:center">Compatible</td>
+<td style="text-align:center">Compatible</td>
+<td style="text-align:center">Compatible</td>
+</tr>
+</tbody>
+</table>
+<h3 id="record-locks">Record Locks</h3>
+<p>A record lock is a lock on an index record. For example, SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE; prevents any other transaction from inserting, updating, or deleting rows where the value of t.c1 is 10.</p>
+<p>Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking.</p>
+<p>&#x5355;&#x4E2A;&#x7D22;&#x5F15;&#x884C;&#x8BB0;&#x5F55;&#x7684;&#x9501;&#x3002;</p>
+<h3 id="gap-locks">Gap Locks</h3>
+<p>A gap lock is a lock on a gap between index records, or a lock on the gap before the first or after the last index record. For example, SELECT c1 FROM t WHERE c1 BETWEEN 10 and 20 FOR UPDATE; prevents other transactions from inserting a value of 15 into column t.c1, whether or not there was already any such value in the column, because the gaps between all existing values in the range are locked.</p>
+<p>A gap might span a single index value, multiple index values, or even be empty.</p>
+<p>Gap locks are part of the tradeoff between performance and concurrency, and are used in some transaction isolation levels and not others.</p>
+<p>&#x95F4;&#x9699;&#x9501;&#xFF0C;&#x9501;&#x5B9A;&#x4E00;&#x4E2A;&#x8303;&#x56F4;&#xFF0C;&#x4F46;&#x4E0D;&#x5305;&#x62EC;&#x8BB0;&#x5F55;&#x672C;&#x8EAB;&#x3002;GAP&#x9501;&#x7684;&#x76EE;&#x7684;&#xFF0C;&#x662F;&#x4E3A;&#x4E86;&#x9632;&#x6B62;&#x540C;&#x4E00;&#x4E8B;&#x52A1;&#x7684;&#x4E24;&#x6B21;&#x5F53;&#x524D;&#x8BFB;&#xFF0C;&#x51FA;&#x73B0;&#x5E7B;&#x8BFB;&#x7684;&#x60C5;&#x51B5;&#x3002;</p>
+<h3 id="next-key-locks">Next-Key Locks</h3>
+<p>A next-key lock is a combination of a record lock on the index record and a gap lock on the gap before the index record.</p>
+<p>InnoDB performs row-level locking in such a way that when it searches or scans a table index, it sets shared or exclusive locks on the index records it encounters. Thus, the row-level locks are actually index-record locks. A next-key lock on an index record also affects the &#x201C;gap&#x201D; before that index record. That is, a next-key lock is an index-record lock plus a gap lock on the gap preceding the index record. If one session has a shared or exclusive lock on record R in an index, another session cannot insert a new index record in the gap immediately before R in the index order.</p>
+<p>&#x9501;&#x5B9A;&#x4E00;&#x4E2A;&#x8303;&#x56F4;&#xFF0C;&#x5E76;&#x4E14;&#x9501;&#x5B9A;&#x8BB0;&#x5F55;&#x672C;&#x8EAB;&#x3002;&#x5BF9;&#x4E8E;&#x884C;&#x7684;&#x67E5;&#x8BE2;&#xFF0C;&#x90FD;&#x662F;&#x91C7;&#x7528;&#x8BE5;&#x65B9;&#x6CD5;&#xFF0C;&#x4E3B;&#x8981;&#x76EE;&#x7684;&#x662F;&#x89E3;&#x51B3;&#x5E7B;&#x8BFB;&#x7684;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x4F8B;&#x5982;&#xFF1A;</p>
+<pre class="language-"><code class="lang-java">root<span class="token annotation punctuation">@localhost</span> <span class="token operator">:</span> test <span class="token number">10</span><span class="token operator">:</span><span class="token number">56</span><span class="token operator">:</span><span class="token number">15</span><span class="token operator">&gt;</span>select <span class="token operator">*</span> from t<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span> a    <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>
+<span class="token operator">|</span>    <span class="token number">3</span> <span class="token operator">|</span>
+<span class="token operator">|</span>    <span class="token number">5</span> <span class="token operator">|</span>
+<span class="token operator">|</span>    <span class="token number">8</span> <span class="token operator">|</span>
+<span class="token operator">|</span>   <span class="token number">11</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token number">5</span> rows in set <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+root<span class="token annotation punctuation">@localhost</span> <span class="token operator">:</span> test <span class="token number">10</span><span class="token operator">:</span><span class="token number">56</span><span class="token operator">:</span><span class="token number">29</span><span class="token operator">&gt;</span>select <span class="token operator">*</span> from t where a <span class="token operator">=</span> <span class="token number">8</span> <span class="token keyword">for</span> update<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span> a    <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>    <span class="token number">8</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token number">1</span> row in set <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+</code></pre>
+<p>&#x8BE5;SQL&#x8BED;&#x53E5;&#x9501;&#x5B9A;&#x7684;&#x8303;&#x56F4;&#x662F;<code>&#xFF08;5,8]</code>&#xFF0C;&#x4E0B;&#x4E2A;&#x4E0B;&#x4E2A;&#x952E;&#x503C;&#x8303;&#x56F4;&#x662F;<code>&#xFF08;8,11]</code>&#xFF0C;&#x6240;&#x4EE5;&#x63D2;&#x5165;<code>5~11</code>&#x4E4B;&#x95F4;&#x7684;&#x503C;&#x7684;&#x65F6;&#x5019;&#x90FD;&#x4F1A;&#x88AB;&#x9501;&#x5B9A;&#xFF0C;&#x8981;&#x6C42;&#x7B49;&#x5F85;&#x3002;&#x5373;&#xFF1A;&#x63D2;&#x5165;<code>5&#xFF0C;6&#xFF0C;7&#xFF0C;8&#xFF0C;9&#xFF0C;10</code>&#x4F1A;&#x88AB;&#x9501;&#x4F4F;&#x3002;&#x63D2;&#x5165;&#x975E;&#x8FD9;&#x4E2A;&#x8303;&#x56F4;&#x5185;&#x7684;&#x503C;&#x90FD;&#x6B63;&#x5E38;&#x3002;</p>
+<h3 id="insert-intention-locks&#x63D2;&#x5165;&#x610F;&#x5411;&#x9501;">Insert Intention Locks(&#x63D2;&#x5165;&#x610F;&#x5411;&#x9501;)</h3>
+<p>An insert intention lock is a type of gap lock set by INSERT operations prior to row insertion. This lock signals the intent to insert in such a way that multiple transactions inserting into the same index gap need not wait for each other if they are not inserting at the same position within the gap. Suppose that there are index records with values of 4 and 7. Separate transactions that attempt to insert values of 5 and 6, respectively, each lock the gap between 4 and 7 with insert intention locks prior to obtaining the exclusive lock on the inserted row, but do not block each other because the rows are nonconflicting.</p>
+<p>Insert Intention Locks&#x610F;&#x4E3A;&#x63D2;&#x5165;&#x610F;&#x5411;&#x9501;&#xFF0C;&#x63D2;&#x5165;&#x610F;&#x5411;&#x9501;&#x662F;Innodb gap&#x9501;&#x7684;&#x4E00;&#x79CD;&#x7C7B;&#x578B;&#xFF0C;&#x8FD9;&#x79CD;&#x9501;&#x8868;&#x793A;&#x8981;&#x4EE5;&#x8FD9;&#x6837;&#x4E00;&#x79CD;&#x65B9;&#x5F0F;&#x63D2;&#x5165;:&#x5982;&#x679C;&#x591A;&#x4E2A;&#x4E8B;&#x52A1;&#x63D2;&#x5165;&#x5230;&#x76F8;&#x540C;&#x7684;&#x7D22;&#x5F15;&#x95F4;&#x9699;&#x4E2D;&#xFF0C;&#x5982;&#x679C;&#x5B83;&#x4EEC;&#x4E0D;&#x5728;&#x95F4;&#x9699;&#x4E2D;&#x7684;&#x76F8;&#x540C;&#x4F4D;&#x7F6E;&#x63D2;&#x5165;&#xFF0C;&#x5219;&#x65E0;&#x9700;&#x7B49;&#x5F85;&#x5176;&#x4ED6;&#x4E8B;&#x52A1;&#x3002;&#x6BD4;&#x5982;&#x8BF4;&#x6709;&#x7D22;&#x5F15;&#x8BB0;&#x5F55;4&#x548C;7&#xFF0C;&#x6709;&#x4E24;&#x4E2A;&#x4E8B;&#x52A1;&#x60F3;&#x8981;&#x5206;&#x522B;&#x63D2;&#x5165;5&#xFF0C;6&#xFF0C;&#x5728;&#x83B7;&#x53D6;&#x63D2;&#x5165;&#x884C;&#x4E0A;&#x7684;&#x72EC;&#x5360;&#x9501;&#x4E4B;&#x524D;&#xFF0C;&#x6BCF;&#x4E2A;&#x9501;&#x90FD;&#x4F7F;&#x7528;&#x63D2;&#x5165;&#x610F;&#x56FE;&#x9501;&#x9501;&#x5B9A;4&#x548C;7&#x4E4B;&#x95F4;&#x7684;&#x95F4;&#x9699;&#xFF0C;&#x4F46;&#x662F;&#x4E0D;&#x8981;&#x4E92;&#x76F8;&#x963B;&#x585E;&#xFF0C;&#x56E0;&#x4E3A;&#x884C;&#x662F;&#x4E0D;&#x51B2;&#x7A81;&#x7684;&#xFF0C;&#x610F;&#x5411;&#x9501;&#x7684;&#x6D89;&#x53CA;&#x662F;&#x4E3A;&#x4E86;&#x63D2;&#x5165;&#x7684;&#x6B63;&#x786E;&#x548C;&#x9AD8;&#x6548;&#x3002;</p>
+<h3 id="auto-inc-locks">AUTO-INC Locks</h3>
+<h3 id="predicate-locks-for-spatial-indexes">Predicate Locks for Spatial Indexes</h3>
+<h3 id="error-1213-40001-deadlock-found-when-trying-to-get-lock-try-restarting-transaction">ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction</h3>
+<p>&#x4E09;&#x4E2A;&#x4E8B;&#x52A1;&#x90FD;&#x63D2;&#x5165;&#x76F8;&#x540C;&#x6570;&#x636E;&#xFF0C;&#x5176;&#x4E2D;&#x7B2C;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x8FDB;&#x884C;&#x4E86;&#x56DE;&#x6EDA;&#xFF0C;&#x7B2C;&#x4E09;&#x4E2A;&#x4E8B;&#x52A1;&#x62A5;&#x9519;</p>
+<p><img src="imgs/innodb-deadlock.png" alt=""></p>
+<p>&#x5728;&#x7B2C;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x56DE;&#x6EDA;&#x4E4B;&#x524D;&#xFF0C;&#x67E5;&#x770B;&#x4E8B;&#x52A1;&#x9501;&#x60C5;&#x51B5;</p>
+<p><img src="imgs/innodb-deadlock2.png" alt=""></p>
+<ul>
+<li>&#x4E8B;&#x52A1;1&#x83B7;&#x5F97;&#x884C;&#x8BB0;&#x5F55;&#x4E0A;&#x7684;&#x6392;&#x5B83;&#x9501;&#xFF08;LOCK_X | LOCK_REC_NOT_GAP&#xFF09;</li>
+<li>&#x7D27;&#x63A5;&#x7740;&#x4E8B;&#x52A1;T2&#x3001;T3&#x4E5F;&#x5F00;&#x59CB;&#x63D2;&#x5165;&#x8BB0;&#x5F55;&#xFF0C;&#x8BF7;&#x6C42;&#x6392;&#x5B83;&#x63D2;&#x5165;&#x610F;&#x5411;&#x9501;(LOCK_X | LOCK_GAP | LOCK_INSERT_INTENTION)&#xFF1B;&#x4F46;&#x7531;&#x4E8E;&#x53D1;&#x751F;&#x91CD;&#x590D;&#x552F;&#x4E00;&#x952E;&#x51B2;&#x7A81;&#xFF0C;&#x5404;&#x81EA;&#x8BF7;&#x6C42;&#x7684;&#x6392;&#x5B83;&#x8BB0;&#x5F55;&#x9501;(LOCK_X | LOCK_REC_NOT_GAP)&#x8F6C;&#x6210;&#x5171;&#x4EAB;&#x8BB0;&#x5F55;&#x9501;(LOCK_S | LOCK_REC_NOT_GAP)&#x3002;</li>
+</ul>
+<p>T1&#x56DE;&#x6EDA;&#x4F1A;&#x91CA;&#x653E;&#x5176;&#x83B7;&#x53D6;&#x5230;&#x5230;&#x6392;&#x5B83;&#x9501;&#xFF0C;T2,T3&#x90FD;&#x8981;&#x8BF7;&#x6C42;&#x6392;&#x5B83;&#x9501;&#xFF0C;&#x4F46;&#x662F;&#x7531;&#x4E8E;X&#x9501;&#x4E0E;S&#x9501;&#x4E92;&#x65A5;&#xFF0C;T2&#x4E0E;T3&#x90FD;&#x7B49;&#x5F85;&#x5BF9;&#x65B9;&#x91CA;&#x653E;S&#x9501;&#xFF0C;&#x4E8E;&#x662F;&#x4FBF;&#x4EA7;&#x751F;&#x4E86;&#x6B7B;&#x9501;</p>
+<h3 id="error-1062-23000-duplicate-entry-6-for-key-primary">ERROR 1062 (23000): Duplicate entry &apos;6&apos; for key &apos;PRIMARY&apos;</h3>
+<p><img src="imgs/innodb-duplicate.png" alt=""></p>
+<p><img src="imgs/innodb-duplicate2.png" alt=""></p>
+<h2 id="innodb&#x4E8B;&#x52A1;">Innodb&#x4E8B;&#x52A1;</h2>
+<p><a href="https://blog.csdn.net/qq_26437925/article/details/50739813" target="_blank">&#x6570;&#x636E;&#x5E93;&#x4E8B;&#x52A1;&#x7684;4&#x4E2A;&#x7279;&#x6027;&#x7406;&#x89E3;</a></p>
+<h3 id="&#x539F;&#x5B50;&#x6027;&#xFF1A;undo-log">&#x539F;&#x5B50;&#x6027;&#xFF1A;undo log</h3>
+<p>undo log&#x662F;&#x4E3A;&#x4E86;&#x5B9E;&#x73B0;&#x4E8B;&#x52A1;&#x7684;&#x539F;&#x5B50;&#x6027;&#xFF0C;&#x5728;Mysql&#x6570;&#x636E;&#x5E93;Innodb&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x4E2D;&#xFF0C;&#x8FD8;&#x7528;undo log&#x6765;&#x5B9E;&#x73B0;&#x591A;&#x7248;&#x672C;&#x5E76;&#x53D1;&#x63A7;&#x5236;(MVCC)</p>
+<p>&#x5728;&#x64CD;&#x4F5C;&#x4EFB;&#x4F55;&#x6570;&#x636E;&#x4E4B;&#x524D;&#xFF0C;&#x9996;&#x5148;&#x5C06;&#x6570;&#x636E;&#x5907;&#x4EFD;&#x5230;&#x4E00;&#x4E2A;&#x5730;&#x65B9;&#xFF08;&#x8FD9;&#x4E2A;&#x5B58;&#x50A8;&#x6570;&#x636E;&#x5907;&#x4EFD;&#x7684;&#x5730;&#x65B9;&#x79F0;&#x4E3A;undo log&#xFF09;&#xFF1B;&#x7136;&#x540E;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x7684;&#x4FEE;&#x6539;&#x3002;&#x5982;&#x679C;&#x51FA;&#x73B0;&#x4E86;&#x9519;&#x8BEF;&#x6216;&#x8005;&#x7528;&#x6237;&#x6267;&#x884C;&#x4E86;<code>rollback</code>,&#x7CFB;&#x7EDF;&#x5229;&#x7528;undo log&#x7684;&#x5907;&#x4EFD;&#x6570;&#x636E;&#x5C06;&#x6570;&#x636E;&#x6062;&#x590D;&#x5230;&#x4E8B;&#x52A1;&#x5F00;&#x59CB;&#x4E4B;&#x524D;&#x7684;&#x72B6;&#x6001;</p>
+<p>undo log&#x662F;&#x903B;&#x8F91;&#x65E5;&#x5FD7;&#xFF0C;&#x53EF;&#x4EE5;&#x7406;&#x89E3;&#x4E3A;&#xFF1A;&#x53EA;&#x8981;&#x6709;insert&#x64CD;&#x4F5C;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x8BB0;&#x5F55;&#x4E00;&#x6761;&#x5220;&#x9664;&#x8BB0;&#x5F55;&#xFF1B;&#x6709;delete&#x64CD;&#x4F5C;&#xFF0C;&#x5C31;&#x8BB0;&#x5F55;&#x4E00;&#x6761;&#x65B0;&#x589E;&#x8BB0;&#x5F55;&#xFF0C;&#x6709;update&#x64CD;&#x4F5C;&#xFF0C;&#x8BB0;&#x5F55;update&#x524D;&#x7684;&#x6570;&#x636E;update&#x64CD;&#x4F5C;;&#x8FD9;&#x6837;&#x6062;&#x590D;&#x64CD;&#x4F5C;&#x53BB;&#x6267;&#x884C;&#xFF0C;&#x5C31;&#x80FD;&#x56DE;&#x5230;&#x4E8B;&#x52A1;&#x4E4B;&#x524D;&#x7684;&#x72B6;&#x6001;</p>
+<h3 id="&#x6301;&#x4E45;&#x6027;&#xFF1A;redo-log">&#x6301;&#x4E45;&#x6027;&#xFF1A;redo log</h3>
+<p>&#x548C;undo log&#x76F8;&#x53CD;&#xFF0C;redo log&#x8BB0;&#x5F55;&#x7684;&#x662F;&#x65B0;&#x6570;&#x636E;&#x7684;&#x5907;&#x4EFD;&#xFF0C;<font color="red">&#x5F53;&#x4E8B;&#x52A1;&#x63D0;&#x4EA4;&#x524D;&#xFF0C;&#x53EA;&#x8981;&#x5C06;redo log&#x6301;&#x4E45;&#x5316;&#x5373;&#x53EF;&#xFF0C;&#x4E0D;&#x9700;&#x8981;&#x5C06;&#x6570;&#x636E;&#x6301;&#x4E45;&#x5316;</font>&#xFF0C;&#x5F53;&#x7CFB;&#x7EDF;&#x5D29;&#x6E83;&#x65F6;&#xFF0C;&#x867D;&#x7136;&#x6570;&#x636E;&#x6CA1;&#x6709;&#x6301;&#x4E45;&#x5316;&#xFF0C;&#x4F46;&#x662F;redo log&#x5DF2;&#x7ECF;&#x6301;&#x4E45;&#x5316;&#xFF0C;&#x7CFB;&#x7EDF;&#x53EF;&#x4EE5;&#x6839;&#x636E;redo log&#x7684;&#x5185;&#x5BB9;&#xFF0C;&#x5C06;&#x6240;&#x6709;&#x6570;&#x636E;&#x6062;&#x590D;&#x5230;&#x6700;&#x65B0;&#x7684;&#x72B6;&#x6001;</p>
+<h3 id="undo--redo-log&#x6587;&#x4EF6;&#x64CD;&#x4F5C;">undo / redo log&#x6587;&#x4EF6;&#x64CD;&#x4F5C;</h3>
+<p><img src="imgs/innodb-log.png" alt=""></p>
+<h4 id="redo-log&#x6301;&#x4E45;&#x5316;&#x7B56;&#x7565;">redo log&#x6301;&#x4E45;&#x5316;&#x7B56;&#x7565;</h4>
+<p><img src="imgs/innodb-log.png" alt=""></p>
+<p>mysql&#x8FDB;&#x7A0B;&#x6302;&#xFF1F;&#x673A;&#x5668;&#x6302;&#xFF1F;&#x6027;&#x80FD;&#x95EE;&#x9898;&#x8003;&#x8651;&#xFF1F;</p>
+<h3 id="&#x9694;&#x79BB;&#x6027;">&#x9694;&#x79BB;&#x6027;</h3>
+<p><a href="https://blog.csdn.net/qq_26437925/article/details/80270741" target="_blank">&#x6211;&#x7684;&#x535A;&#x6587;&#x5B9E;&#x8DF5;</a></p>
 <h2 id="&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;">&#x6162;&#x67E5;&#x8BE2;&#x4F18;&#x5316;&#xFF1F;</h2>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-08-06 22:00:39
+2020-08-08 11:00:14
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2401,7 +2573,7 @@ mysql<span class="token operator">&gt;</span>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"MySQL","layout":"page","date":"2020-03-08 18:00","level":"1.9.2","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"ServerSocketChannel","level":"1.10.2.1","depth":3,"path":"content/java_io_net/server_socket_channel.md","ref":"./content/java_io_net/server_socket_channel.md","articles":[]},{"title":"NIO & BIO问题","level":"1.10.2.2","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从BIO到epoll","level":"1.10.2.3","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"网络设计模式","level":"1.10.3","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"http & tcp","level":"1.10.4","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.5","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"tomcat","level":"1.10.6","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]}]},"previous":{"title":"局部性原理&磁盘IO","level":"1.9.1","depth":2,"path":"content/db_cache/io.md","ref":"./content/db_cache/io.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"spring-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-08-06T14:00:39.854Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-06T15:01:07.465Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MySQL","layout":"page","date":"2020-03-08 18:00","level":"1.9.2","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"ServerSocketChannel","level":"1.10.2.1","depth":3,"path":"content/java_io_net/server_socket_channel.md","ref":"./content/java_io_net/server_socket_channel.md","articles":[]},{"title":"NIO & BIO问题","level":"1.10.2.2","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从BIO到epoll","level":"1.10.2.3","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"网络设计模式","level":"1.10.3","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"http & tcp","level":"1.10.4","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.5","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"tomcat","level":"1.10.6","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]}]},"previous":{"title":"局部性原理&磁盘IO","level":"1.9.1","depth":2,"path":"content/db_cache/io.md","ref":"./content/db_cache/io.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-08-08T03:00:14.894Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-08T03:00:35.582Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
