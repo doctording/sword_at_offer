@@ -27,6 +27,10 @@ date: 2020-03-08 18:00
 * Myisam不支持事务。不支持外键，支持表锁，支持全文索引，读取数据快
 * Memory所有的数据都保留在内存中,不需要进行磁盘的IO所以读取的速度很快, 但是一旦关机,表的结构会保留但是数据就会丢失,表支持Hash索引，因此查找速度很快
 
+## 数据库架构图
+
+![](../../content/db_cache/imgs/db-structure.png)
+
 ## 数据库范式
 
 ### 第一范式
@@ -610,5 +614,171 @@ MySQL uses indexes for these operations:
 
 ## InnoDb锁
 
+<a href='https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html' target='_blank'>innodb lock</a>
+
+### Shared locks(读锁) 和 Exclusive locks(写锁)
+
+InnoDB implements standard `row-level locking` where there are two types of locks, shared (S) locks and exclusive (X) locks.
+
+* A shared (S) lock permits the transaction that holds the lock to read a row.
+* An exclusive (X) lock permits the transaction that holds the lock to update or delete a row.
+
+### Exclusive locks
+
+Exclusive locks protect updates to file resources, both recoverable and non-recoverable. They can be owned by only one transaction at a time. Any transaction that requires an exclusive lock must wait if another task currently owns an exclusive lock or a shared lock against the requested resource.
+
+独占锁保护文件资源(包括可恢复和不可恢复的文件资源)的更新。它们一次只能由一个事务拥有。如果另一个任务当前拥有对所请求资源的独占锁或共享锁，则任何需要对该资源申请独占锁的事务都必须等待。
+
+### Shared locks
+
+Shared locks support read integrity. They ensure that a record is not in the process of being updated during a read-only request. Shared locks can also be used to prevent updates of a record between the time that a record is read and the next syncpoint.
+
+共享锁支持读完整性。它们确保在只读请求期间不会更新记录。共享锁还可用于防止在读取记录和下一个同步点之间进行更新操作。
+
+A shared lock on a resource can be owned by several tasks at the same time. However, although several tasks can own shared locks, there are some circumstances in which tasks can be forced to wait for a lock:
+
+资源上的共享锁可以同时由多个任务拥有。 但是，尽管有几个任务可以拥有共享锁，但在某些情况下可以强制任务等待锁：
+
+* A request for a shared lock must wait if another task currently owns an exclusive lock on the resource.
+* A request for an exclusive lock must wait if other tasks currently own shared locks on this resource.
+* A new request for a shared lock must wait if another task is waiting for an exclusive lock on a resource that already has a shared lock.
+
+即：
+
+* 如果另一个任务当前拥有资源上的独占锁，则对共享锁的请求必须等待。
+* 如果其他任务当前拥有此资源上的共享锁，则必须等待对独占锁的请求。
+* 如果另一个任务正在等待已经具有共享锁的资源的独占锁，则对共享锁的新请求必须
+
+### Intention Locks(意向锁)
+
+InnoDB supports multiple granularity locking(多粒度锁) which permits coexistence of row locks and table locks.
+
+Intention locks are table-level locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table. There are two types of intention locks:
+
+* An intention shared lock (IS) indicates that a transaction intends to set a shared lock on individual rows in a table. 事务T尝试在表t的某些行记录上设置S锁
+
+* An intention exclusive lock (IX) indicates that a transaction intends to set an exclusive lock on individual rows in a table. 事务T尝试在表t的某些行记录上设置X锁
+
+锁使用规则：
+
+- |X |IX| S| IS
+:---:| :---:|:---:|:---:|:---:
+X|Conflict |Conflict |Conflict |Conflict
+IX |Conflict |Compatible |Conflict |Compatible
+S |Conflict |Conflict |Compatible |Compatible
+IS |Conflict |Compatible |Compatible |Compatible
+
+### Record Locks
+
+A record lock is a lock on an index record. For example, SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE; prevents any other transaction from inserting, updating, or deleting rows where the value of t.c1 is 10.
+
+Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking.
+
+单个索引行记录的锁。
+
+### Gap Locks
+
+A gap lock is a lock on a gap between index records, or a lock on the gap before the first or after the last index record. For example, SELECT c1 FROM t WHERE c1 BETWEEN 10 and 20 FOR UPDATE; prevents other transactions from inserting a value of 15 into column t.c1, whether or not there was already any such value in the column, because the gaps between all existing values in the range are locked.
+
+A gap might span a single index value, multiple index values, or even be empty.
+
+Gap locks are part of the tradeoff between performance and concurrency, and are used in some transaction isolation levels and not others.
+
+间隙锁，锁定一个范围，但不包括记录本身。GAP锁的目的，是为了防止同一事务的两次当前读，出现幻读的情况。
+
+### Next-Key Locks
+
+A next-key lock is a combination of a record lock on the index record and a gap lock on the gap before the index record.
+
+InnoDB performs row-level locking in such a way that when it searches or scans a table index, it sets shared or exclusive locks on the index records it encounters. Thus, the row-level locks are actually index-record locks. A next-key lock on an index record also affects the “gap” before that index record. That is, a next-key lock is an index-record lock plus a gap lock on the gap preceding the index record. If one session has a shared or exclusive lock on record R in an index, another session cannot insert a new index record in the gap immediately before R in the index order.
+
+锁定一个范围，并且锁定记录本身。对于行的查询，都是采用该方法，主要目的是解决幻读的问题。
+
+例如：
+
+```java
+root@localhost : test 10:56:15>select * from t;
++------+
+| a    |
++------+
+|    1 |
+|    3 |
+|    5 |
+|    8 |
+|   11 |
++------+
+5 rows in set (0.00 sec)
+
+root@localhost : test 10:56:29>select * from t where a = 8 for update;
++------+
+| a    |
++------+
+|    8 |
++------+
+1 row in set (0.00 sec)
+```
+
+该SQL语句锁定的范围是`（5,8]`，下个下个键值范围是`（8,11]`，所以插入`5~11`之间的值的时候都会被锁定，要求等待。即：插入`5，6，7，8，9，10`会被锁住。插入非这个范围内的值都正常。
+
+### Insert Intention Locks(插入意向锁)
+
+An insert intention lock is a type of gap lock set by INSERT operations prior to row insertion. This lock signals the intent to insert in such a way that multiple transactions inserting into the same index gap need not wait for each other if they are not inserting at the same position within the gap. Suppose that there are index records with values of 4 and 7. Separate transactions that attempt to insert values of 5 and 6, respectively, each lock the gap between 4 and 7 with insert intention locks prior to obtaining the exclusive lock on the inserted row, but do not block each other because the rows are nonconflicting.
+
+Insert Intention Locks意为插入意向锁，插入意向锁是Innodb gap锁的一种类型，这种锁表示要以这样一种方式插入:如果多个事务插入到相同的索引间隙中，如果它们不在间隙中的相同位置插入，则无需等待其他事务。比如说有索引记录4和7，有两个事务想要分别插入5，6，在获取插入行上的独占锁之前，每个锁都使用插入意图锁锁定4和7之间的间隙，但是不要互相阻塞，因为行是不冲突的，意向锁的涉及是为了插入的正确和高效。
+
+### AUTO-INC Locks
+
+### Predicate Locks for Spatial Indexes
+
+### ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction
+
+三个事务都插入相同数据，其中第一个事务进行了回滚，第三个事务报错
+
+![](../db_cache/imgs/innodb-deadlock.png)
+
+在第一个事务回滚之前，查看事务锁情况
+
+![](../db_cache/imgs/innodb-deadlock2.png)
+
+* 事务1获得行记录上的排它锁（LOCK_X | LOCK_REC_NOT_GAP）
+* 紧接着事务T2、T3也开始插入记录，请求排它插入意向锁(LOCK_X | LOCK_GAP | LOCK_INSERT_INTENTION)；但由于发生重复唯一键冲突，各自请求的排它记录锁(LOCK_X | LOCK_REC_NOT_GAP)转成共享记录锁(LOCK_S | LOCK_REC_NOT_GAP)。
+
+T1回滚会释放其获取到到排它锁，T2,T3都要请求排它锁，但是由于X锁与S锁互斥，T2与T3都等待对方释放S锁，于是便产生了死锁
+
+### ERROR 1062 (23000): Duplicate entry '6' for key 'PRIMARY'
+
+![](../db_cache/imgs/innodb-duplicate.png)
+
+![](../db_cache/imgs/innodb-duplicate2.png)
+
+## Innodb事务
+
+<a href="https://blog.csdn.net/qq_26437925/article/details/50739813" target="_blank">数据库事务的4个特性理解</a>
+
+### 原子性：undo log
+
+undo log是为了实现事务的原子性，在Mysql数据库Innodb存储引擎中，还用undo log来实现多版本并发控制(MVCC)
+
+在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为undo log）；然后进行数据的修改。如果出现了错误或者用户执行了`rollback`,系统利用undo log的备份数据将数据恢复到事务开始之前的状态
+
+undo log是逻辑日志，可以理解为：只要有insert操作，就可以记录一条删除记录；有delete操作，就记录一条新增记录，有update操作，记录update前的数据update操作;这样恢复操作去执行，就能回到事务之前的状态
+
+### 持久性：redo log
+
+和undo log相反，redo log记录的是新数据的备份，<font color='red'>当事务提交前，只要将redo log持久化即可，不需要将数据持久化</font>，当系统崩溃时，虽然数据没有持久化，但是redo log已经持久化，系统可以根据redo log的内容，将所有数据恢复到最新的状态
+
+### undo / redo log文件操作
+
+![](../db_cache/imgs/innodb-log.png)
+
+#### redo log持久化策略
+
+![](../db_cache/imgs/innodb-log.png)
+
+mysql进程挂？机器挂？性能问题考虑？
+
+### 隔离性
+
+<a href="https://blog.csdn.net/qq_26437925/article/details/80270741" target='_blank'>我的博文实践</a>
 
 ## 慢查询优化？
