@@ -1658,6 +1658,7 @@
                                 <section class="normal markdown-section">
                                 
                                 <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#cpu-whiletrue">CPU while(true)</a><i></i></div></li>
 <li><div><a href="#&#x7F13;&#x5B58;&#x4E00;&#x81F4;&#x6027;">&#x7F13;&#x5B58;&#x4E00;&#x81F4;&#x6027;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#cpu&#x63D0;&#x901F;&#x4F18;&#x5316;">CPU&#x63D0;&#x901F;&#x4F18;&#x5316;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
@@ -1681,9 +1682,23 @@
 
 
 <p>[TOC]</p>
+<h1 id="cpu-whiletrue">CPU while(true)</h1>
+<ul>
+<li>while(true){}&#x65E0;&#x4EFB;&#x4F55;&#x64CD;&#x4F5C;&#xFF0C;&#x8FD1;&#x4E4E;&#x5360;&#x6EE1;&#x4E00;&#x4E2A;CPU&#x6838;</li>
+</ul>
+<p><img src="imgs/whiletrue.png" alt=""></p>
+<p><img src="imgs/whiletrue3.png" alt=""></p>
+<ul>
+<li>while(true){sleep},&#x57FA;&#x672C;&#x4E0D;&#x6682;&#x7528;CPU</li>
+</ul>
+<p><img src="imgs/whiletrue2.png" alt=""></p>
+<ul>
+<li>while(true)&#x548C;for(;;)&#x65E0;&#x5DEE;&#x5F02;</li>
+</ul>
+<p><img src="imgs/whiletrue4.png" alt=""></p>
 <h1 id="&#x7F13;&#x5B58;&#x4E00;&#x81F4;&#x6027;">&#x7F13;&#x5B58;&#x4E00;&#x81F4;&#x6027;</h1>
 <p>&#x8BA1;&#x7B97;&#x673A;&#x4F53;&#x7CFB;&#x67B6;&#x6784;</p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/computer.png" alt=""></p>
+<p><img src="imgs/computer.png" alt=""></p>
 <h2 id="cpu&#x63D0;&#x901F;&#x4F18;&#x5316;">CPU&#x63D0;&#x901F;&#x4F18;&#x5316;</h2>
 <p>CPU&#x4F18;&#x5316;&#x7684;&#x4E24;&#x70B9;</p>
 <ol>
@@ -1744,7 +1759,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="&#x4E09;&#x7EA7;&#x7F13;&#x5B58;">&#x4E09;&#x7EA7;&#x7F13;&#x5B58;</h2>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/cpu.png" alt=""></p>
+<p><img src="imgs/cpu.png" alt=""></p>
 <ul>
 <li>L1&#x9AD8;&#x901F;&#x7F13;&#x5B58;&#xFF1A;&#x4E5F;&#x53EB;&#x4E00;&#x7EA7;&#x7F13;&#x5B58;&#x3002;&#x4E00;&#x822C;&#x5185;&#x7F6E;&#x5728;&#x5185;&#x6838;&#x65C1;&#x8FB9;&#xFF0C;&#x662F;&#x4E0E;CPU&#x7ED3;&#x5408;&#x6700;&#x4E3A;&#x7D27;&#x5BC6;&#x7684;CPU&#x7F13;&#x5B58;&#x3002;&#x4E00;&#x6B21;&#x8BBF;&#x95EE;&#x53EA;&#x9700;&#x8981;2~4&#x4E2A;&#x65F6;&#x949F;&#x5468;&#x671F;</li>
 <li>L2&#x9AD8;&#x901F;&#x7F13;&#x5B58;&#xFF1A;&#x4E5F;&#x53EB;&#x4E8C;&#x7EA7;&#x7F13;&#x5B58;&#x3002;&#x7A7A;&#x95F4;&#x6BD4;L1&#x7F13;&#x5B58;&#x5927;&#xFF0C;&#x901F;&#x5EA6;&#x6BD4;L1&#x7F13;&#x5B58;&#x7565;&#x6162;&#x3002;&#x4E00;&#x6B21;&#x8BBF;&#x95EE;&#x7EA6;&#x9700;&#x8981;10&#x591A;&#x4E2A;&#x65F6;&#x949F;&#x5468;&#x671F;</li>
@@ -1752,7 +1767,7 @@
 </ul>
 <p>&#x5F53;CPU&#x8981;&#x8BFB;&#x53D6;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x65F6;&#xFF0C;&#x9996;&#x5148;&#x4ECE;L1&#x7F13;&#x5B58;&#x67E5;&#x627E;&#xFF0C;&#x547D;&#x4E2D;&#x5219;&#x8FD4;&#x56DE;&#xFF1B;&#x82E5;&#x672A;&#x547D;&#x4E2D;&#xFF0C;&#x518D;&#x4ECE;L2&#x7F13;&#x5B58;&#x4E2D;&#x67E5;&#x627E;&#xFF0C;&#x5982;&#x679C;&#x8FD8;&#x6CA1;&#x6709;&#x5219;&#x4ECE;L3&#x7F13;&#x5B58;&#x67E5;&#x627E;&#xFF08;&#x5982;&#x679C;&#x6709;L3&#x7F13;&#x5B58;&#x7684;&#x8BDD;&#xFF09;&#x3002;&#x5982;&#x679C;&#x8FD8;&#x662F;&#x6CA1;&#x6709;&#xFF0C;&#x5219;&#x4ECE;&#x5185;&#x5B58;&#x4E2D;&#x67E5;&#x627E;&#xFF0C;&#x5E76;&#x5C06;&#x8BFB;&#x53D6;&#x5230;&#x7684;&#x6570;&#x636E;&#x9010;&#x7EA7;&#x653E;&#x5165;&#x7F13;&#x5B58;&#x3002;</p>
 <p>eg:</p>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/cache_3.png" alt=""></p>
+<p><img src="imgs/cache_3.png" alt=""></p>
 <h2 id="mesi&#x534F;&#x8BAE;">MESI&#x534F;&#x8BAE;</h2>
 <p>&#x591A;&#x4E2A;&#x5904;&#x7406;&#x5668;&#x90FD;&#x6D89;&#x53CA;&#x540C;&#x4E00;&#x5757;&#x4E3B;&#x5185;&#x5B58;&#x533A;&#x57DF;&#x7684;&#x66F4;&#x6539;&#x65F6;&#xFF0C;&#x5C06;&#x5BFC;&#x81F4;&#x5404;&#x81EA;&#x7684;&#x7F13;&#x5B58;&#x6570;&#x636E;&#x4E0D;&#x4E00;&#x81F4;&#xFF1F;&#x5982;&#x4F55;&#x89E3;&#x51B3;&#xFF1F;</p>
 <p>&#x5F53;&#x67D0;&#x4E2A;cpu&#x4FEE;&#x6539;&#x7F13;&#x5B58;&#x884C;&#x6570;&#x636E;&#x65F6;&#xFF0C;&#x5176;&#x5B83;&#x7684;cpu&#x901A;&#x8FC7;&#x76D1;&#x542C;&#x673A;&#x5236;&#x83B7;&#x6089;&#x5171;&#x4EAB;&#x7F13;&#x5B58;&#x884C;&#x7684;&#x6570;&#x636E;&#x88AB;&#x4FEE;&#x6539;&#xFF0C;&#x4F1A;&#x4F7F;&#x5176;&#x5171;&#x4EAB;&#x7F13;&#x5B58;&#x884C;&#x5931;&#x6548;&#x3002;&#x672C;cpu&#x4F1A;&#x5C06;&#x4FEE;&#x6539;&#x540E;&#x7684;&#x7F13;&#x5B58;&#x884C;&#x5199;&#x56DE;&#x5230;&#x4E3B;&#x5185;&#x5B58;&#x4E2D;&#x3002;&#x6B64;&#x65F6;&#x5176;&#x5B83;&#x7684;cpu&#x5982;&#x679C;&#x9700;&#x8981;&#x6B64;&#x7F13;&#x5B58;&#x884C;&#x5171;&#x4EAB;&#x6570;&#x636E;&#xFF0C;&#x5219;&#x4ECE;&#x4E3B;&#x5185;&#x5B58;&#x4E2D;&#x91CD;&#x65B0;&#x52A0;&#x8F7D;&#xFF0C;&#x5E76;&#x653E;&#x5165;&#x7F13;&#x5B58;&#xFF0C;&#x4EE5;&#x6B64;&#x5B8C;&#x6210;&#x4E86;&#x7F13;&#x5B58;&#x4E00;&#x81F4;&#x6027;&#x3002;</p>
@@ -1882,7 +1897,7 @@
 </code></pre>
 <p>&#x914D;&#x5408;<code>import sun.misc.Contended;</code>&#x7684;<code>@Contended</code>&#x6CE8;&#x89E3;(&#x6CE8;&#x610F;&#x52A0;&#x4E0A;<code>-XX:-RestrictContended</code>&#x53C2;&#x6570;)</p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-06-17 20:00:03
+2020-08-09 22:39:55
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -1923,7 +1938,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"CPU,缓存","layout":"page","date":"2019-03-09 00:00","level":"1.8.7","depth":2,"next":{"title":"[8 数据库]","level":"1.9","depth":1,"ref":"","articles":[{"title":"局部性原理&磁盘IO","level":"1.9.1","depth":2,"path":"content/db_cache/io.md","ref":"./content/db_cache/io.md","articles":[]},{"title":"MySQL","level":"1.9.2","depth":2,"path":"content/db_cache/mysql.md","ref":"./content/db_cache/mysql.md","articles":[]}]},"previous":{"title":"限流","level":"1.8.6","depth":2,"path":"content/distributed_design/flow_limit.md","ref":"./content/distributed_design/flow_limit.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/cpu_cache.md","mtime":"2020-06-17T12:00:03.266Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-08T03:00:35.582Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"CPU,缓存","layout":"page","date":"2019-03-09 00:00","level":"1.8.7","depth":2,"next":{"title":"[8 数据库]","level":"1.9","depth":1,"ref":"","articles":[{"title":"局部性原理&磁盘IO","level":"1.9.1","depth":2,"path":"content/db_cache/io.md","ref":"./content/db_cache/io.md","articles":[]},{"title":"MySQL","level":"1.9.2","depth":2,"path":"content/db_cache/mysql.md","ref":"./content/db_cache/mysql.md","articles":[]}]},"previous":{"title":"限流","level":"1.8.6","depth":2,"path":"content/distributed_design/flow_limit.md","ref":"./content/distributed_design/flow_limit.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/cpu_cache.md","mtime":"2020-08-09T14:39:55.565Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-09T15:35:18.795Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
