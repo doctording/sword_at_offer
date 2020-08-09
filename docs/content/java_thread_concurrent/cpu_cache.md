@@ -6,11 +6,27 @@ date: 2019-03-09 00:00
 
 [TOC]
 
+# CPU while(true)
+
+* while(true){}无任何操作，近乎占满一个CPU核
+
+![](../../content/java_thread_concurrent/imgs/whiletrue.png)
+
+![](../../content/java_thread_concurrent/imgs/whiletrue3.png)
+
+* while(true){sleep},基本不暂用CPU
+
+![](../../content/java_thread_concurrent/imgs/whiletrue2.png)
+
+* while(true)和for(;;)无差异
+
+![](../../content/java_thread_concurrent/imgs/whiletrue4.png)
+
 # 缓存一致性
 
 计算机体系架构
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/computer.png)
+![](../../content/java_thread_concurrent/imgs/computer.png)
 
 ## CPU提速优化
 
@@ -78,7 +94,7 @@ public class Main {
 
 ## 三级缓存
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/cpu.png)
+![](../../content/java_thread_concurrent/imgs/cpu.png)
 
 * L1高速缓存：也叫一级缓存。一般内置在内核旁边，是与CPU结合最为紧密的CPU缓存。一次访问只需要2~4个时钟周期
 * L2高速缓存：也叫二级缓存。空间比L1缓存大，速度比L1缓存略慢。一次访问约需要10多个时钟周期
@@ -88,7 +104,7 @@ public class Main {
 
 eg:
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/cache_3.png)
+![](../../content/java_thread_concurrent/imgs/cache_3.png)
 
 ## MESI协议
 

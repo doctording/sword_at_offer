@@ -472,7 +472,7 @@ t6 status:BLOCKED
 
 * wait: 在其它线程调用此对象的`notify()`方法或`notifyAll()`方法前，导致当前线程等待
 * notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。
-* `sleep`方法没有释放锁，而`wait`方法释放了锁，使得其他线程可以使用同步控制块或方法
+* `sleep`方法没有释放锁，而`wait`方法释放了锁，使得其它线程可以使用同步控制块或方法；sleep是让出CPU给其它线程
 
 ```java
 参考文档： https://www.baeldung.com/java-wait-notify
@@ -537,7 +537,7 @@ main continue
 ## wait方法的底层原理
 
 * Java中每一个对象都可以成为一个监视器（Monitor）, 该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒调度), 一个入口队列(EntryQueue,要去竞争获取锁).
-* `waiting`进入`_waitSet`等待中(底层通过执行`thread_ParkEvent->park`来挂起线程)，等待被唤醒，不会占用CPU
+* `waiting`进入`_waitSet`等待中(底层通过执行`thread_ParkEvent->park`来挂起线程)，等待被唤醒，**不会占用CPU**
 * `waiting`被唤醒后，不是直接执行，而是进入`_EntryList`(没有获取到锁的Blocking状态，要继续竞争锁)，去竞争`monitor`来获得机会去执行
 
 ![](../../content/java_thread_concurrent/imgs/wait_set.png)
