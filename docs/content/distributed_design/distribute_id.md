@@ -196,6 +196,38 @@ ERROR 1062 (23000): Duplicate entry '2147483647' for key 'PRIMARY'
 mysql>
 ```
 
+## 分布式ID解决方案
+
+* 完全依赖数据源方式
+
+ID的生成规则，读取控制完全由数据源控制，常见的如数据库的自增长ID，序列号等，或Redis的INCR/INCRBY原子操作产生顺序号等。
+
+* 半依赖数据源方式
+
+ID的生成规则，有部分生成因子需要由数据源（或配置信息）控制，如**snowflake算法**。
+
+* 不依赖数据源方式
+
+ID的生成规则完全由机器信息独立计算，不依赖任何配置信息和数据记录，如常见的UUID，GUID等
+实
+
+作者：1黄鹰
+链接：https://juejin.im/post/6844903977612476430
+来源：掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+### snowflake算法
+
+snowflake算法的特性是有序、唯一，并且要求高性能，低延迟（每台机器每秒至少生成10k条数据，并且响应时间在2ms以内），要在分布式环境（多集群，跨机房）下使用，因此snowflake算法得到的ID是分段组成的：
+
+* 与指定日期的时间差（毫秒级），41位，够用69年
+* 集群ID + 机器ID， 10位，最多支持1024台机器
+* 序列，12位，每台机器每毫秒内最多产生4096个序列号
+
+![](../../content/distributed_design/imgs/snow.png)
+
+Java简单实现：<a href='https://github.com/beyondfengyu/SnowFlake/blob/master/SnowFlake.java' target='_blank'>snowflake算法</a>
+
 ## Leaf(美团点评分布式ID生成系统)
 
 <a href="https://tech.meituan.com/2017/04/21/mt-leaf.html" target="_blank">美团Leaf</a>

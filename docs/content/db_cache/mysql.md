@@ -27,9 +27,11 @@ date: 2020-03-08 18:00
 * Myisam不支持事务。不支持外键，支持表锁，支持全文索引，读取数据快
 * Memory所有的数据都保留在内存中,不需要进行磁盘的IO所以读取的速度很快, 但是一旦关机,表的结构会保留但是数据就会丢失,表支持Hash索引，因此查找速度很快
 
-## 数据库架构图
+## 数据库架构图(需手写)
 
 ![](../../content/db_cache/imgs/db-structure.png)
+
+![](../../content/db_cache/imgs/db-frame.png)
 
 ## 数据库范式
 
@@ -623,13 +625,13 @@ InnoDB implements standard `row-level locking` where there are two types of lock
 * A shared (S) lock permits the transaction that holds the lock to read a row.
 * An exclusive (X) lock permits the transaction that holds the lock to update or delete a row.
 
-### Exclusive locks
+#### Exclusive locks
 
 Exclusive locks protect updates to file resources, both recoverable and non-recoverable. They can be owned by only one transaction at a time. Any transaction that requires an exclusive lock must wait if another task currently owns an exclusive lock or a shared lock against the requested resource.
 
 独占锁保护文件资源(包括可恢复和不可恢复的文件资源)的更新。它们一次只能由一个事务拥有。如果另一个任务当前拥有对所请求资源的独占锁或共享锁，则任何需要对该资源申请独占锁的事务都必须等待。
 
-### Shared locks
+#### Shared locks
 
 Shared locks support read integrity. They ensure that a record is not in the process of being updated during a read-only request. Shared locks can also be used to prevent updates of a record between the time that a record is read and the next syncpoint.
 
@@ -781,4 +783,131 @@ mysql进程挂？机器挂？性能问题考虑？
 
 <a href="https://blog.csdn.net/qq_26437925/article/details/80270741" target='_blank'>我的博文实践</a>
 
-## 慢查询优化？
+## 主从复制
+
+### 为什么需要主从复制？
+
+* 当主数据库出现问题时，可以用从数据库代替主数据库，可以避免数据的丢失（数据热备）
+* 减轻主数据库的压力，降低单机的磁盘I/O访问率，提高单个机器的I/O性能
+* 在业务复杂的系统中，有这么一个情景，有一句sql语句需要锁表，导致暂时不能使用读的服务，那么就很影响运行中的业务，使用主从复制，让主库负责写，从库负责读，这样，即使主库出现了锁表的情景，也能通过读从库也去保证业务的正常运作
+
+### 主从复制的原理？
+
+* 主服务器上面的任何修改都会通过自己的`I/O thread`(I/O 线程)保存在二进制日志`Binary log`里面
+* 主服务器的binlog输出线程：每当有从库连接到主库的时候，主库都会创建一个线程然后发送binlog内容到从库；对于每一个即将发送给从库的sql事件，binlog输出线程会将其锁住。一旦该事件被线程读取完之后，该锁会被释放，即使在该事件完全发送到从库的时候，该锁也会被释放
+* 从服务器上面也启动一个`I/O thread`，通过配置好的用户名和密码, 连接到主服务器上面请求读取二进制日志，然后把读取到的二进制日志写到本地的一个`Realy log`（中继日志）里面
+* 从服务器上面同时开启一个`SQL thread`定时检查`Realy log`(这个文件也是二进制的)，如果发现有更新立即把更新的内容在本机的数据库上面执行一遍
+
+![](../db_cache/imgs/master_slave.png)
+
+基本步骤如下（注意整个mysql主从复制是<font color='red'>异步的</font>）
+    * 步骤一：主库db的更新事件(update、insert、delete)被写到binlog
+    * 步骤二：从库发起连接，连接到主库
+    * 步骤三：此时主库创建一个binlog dump thread，把binlog的内容发送到从库
+    * 步骤四：从库启动之后，创建一个I/O线程，读取主库传过来的binlog内容并写入到relay log
+    * 步骤五：还会创建一个SQL线程，从relay log里面读取内容，从Exec_Master_Log_Pos位置开始执行读取到的更新事件，将更新内容写入到slave的db
+
+### binlog文件
+
+#### binlog文件概述
+
+* 查看是否开启binlog
+
+```sql
+show variables like 'log_bin';
+```
+
+binlog是二进制日志文件，是由mysql server维护的,用于记录mysql的数据更新或者潜在更新(比如DELETE语句执行删除而实际并没有符合条件的数据)，在mysql主从复制中就是依靠的binlog；执行SELECT等不涉及数据更新的语句是不会记binlog的，而涉及到数据更新则会记录。要注意的是，对支持事务的引擎如innodb而言，必须要提交了事务才会记录binlog。
+
+<a href='https://dev.mysql.com/doc/internals/en/binary-log-overview.html' target='_blank'>binary-log</a>
+
+The binary log is a set of log files that contain information about data modifications made to a MySQL server instance. The log is enabled by starting the server with the --log-bin option.
+
+#### binlog文件作用
+
+The binary log has two important purposes:
+
+* For replication, the binary log is used on master replication servers as a record of the statements to be sent to slave servers. Many details of binary log format and handling are specific to this purpose. The master server sends the events contained in its binary log to its slaves, which execute those events to make the same data changes that were made on the master. A slave stores events received from the master in its relay log until they can be executed. The relay log has the same format as the binary log.
+
+* Certain data recovery operations require use of the binary log. After a backup file has been restored, the events in the binary log that were recorded after the backup was made are re-executed. These events bring databases up to date from the point of the backup.
+
+主从复制 & 数据恢复
+
+#### binlog文件记录类型
+
+* Statement-based logging: Events contain SQL statements that produce data changes (inserts, updates, deletes)
+
+* Row-based logging: Events describe changes to individual rows
+
+* Mixed logging uses statement-based logging by default but switches to row-based logging automatically as necessary.
+
+format | 定义 | 优点 | 缺点
+-|-|-|-
+statement | 记录修改的sql语句 | 日志文件小，节约IO，提高性能 | 准确性差，对一些系统函数不能准确复制或不能复制，如now()、uuid()、limit(由于mysql是自选索引，有可能master同salve选择的索引不同，导致更新的内容也不同)等;在某些情况下会导致master-slave中的数据不一致(如sleep()函数， last_insert_id()，以及user-defined functions(udf)等会出现问题)
+row|记录的是每行实际数据的变更|准确性强，能准确复制数据的变更|日志文件大，较大的网络IO和磁盘IO
+mixed|statement和row模式的混合|准确性强，文件大小适中|当binlog format 设置为mixed时，普通复制不会有问题，但是级联复制在特殊情况下会binlog丢失
+
+* 查看 binlog 格式
+
+![](../db_cache/imgs/binlog.png)
+
+业内目前推荐使用的是`row`模式，**准确性高**，虽然文件大，但是现在有SSD和万兆光纤网络，这些磁盘IO和网络IO都是可以接受的。
+
+## 分库/分表
+
+### 为什么会分表分库？
+
+支撑高并发、大数据量
+
+经验值：单表到`几百万`记录，存储`几百G`的时候，性能就会相对差一些了
+
+### 分表 & 分库概念
+
+分库分表就是为了解决由于数据量过大而导致数据库性能降低的问题，将原来独立的数据库拆分成若干数据库组成 ，将数据大表拆分成若干数据表组成，使得单一数据库、单一数据表的数据量变小，从而达到提升数据库性能的目的。
+
+分库分表包括分库和分表两个部分，在生产中通常包括：垂直分库、水平分库、垂直分表、水平分表四种方式。
+
+#### 垂直分表
+
+用户在浏览商品列表时，只有对某商品感兴趣时才会查看该商品的详细描述。因此，商品信息中商品`描述字段`访问频次较低，且该字段存储占用空间较大，访问单个数据IO时间较长；商品信息中`商品名称`、`商品图片`、`商品价格`等其它字段数据访问频次较高。由于这两种数据的特性不一样，因此考虑将商品信息表拆分成：将访问频次低的商品描述信息单独存放在一张表中，访问频次较高的商品基本信息单独放在一张表中；即 商品表 可拆分成 商品信息表 和 商品描述表。
+
+**垂直分表定义**：将一个表按照字段分成多表，每个表存储其中一部分字段。
+
+* 为什么大字段IO效率低
+    1. 第一是由于数据量本身大，需要更长的读取时间；
+    2. 第二是跨页，页是数据库存储单位，很多查找及定位操作都是以页为单位，单页内的数据行越多数据库整体性能越好，而大字段占用空间大，单页内存储行数少，因此IO效率较低。
+    3. 第三，数据库以行为单位将数据加载到内存中，这样表中字段长度较短且访问频率较高，内存能加载更多的数据，命中率更高，减少了磁盘IO，从而提升了数据库性能。
+
+#### 垂直分库
+
+通过垂直分表性能得到了一定程度的提升，但是还没有达到要求，并且磁盘空间也快不够了，因为数据还是始终限制在一台服务器，库内垂直分表只解决了单一表数据量过大的问题，但没有将表分布到不同的服务器上，因此每个表还是竞争同一个物理机的CPU、内存、网络IO、磁盘。可以业务划分：将商品业务，卖家业务，用户信息，存储到不同到数据服务器上
+
+**垂直分库**：是指按照业务将表进行分类，分布到不同的数据库上面，每个库可以放在不同的服务器上，它的核心理念是专库专用。
+
+* 解决业务层面的耦合，业务清晰
+* 能对不同业务的数据进行分级管理、维护、监控、扩展等
+* 高并发场景下，垂直分库一定程度的提升IO、数据库连接数、降低单机硬件资源的瓶颈
+* 垂直分库通过将表按业务分类，然后分布在不同数据库，并且可以将这些数据库部署在不同服务器上，从而达到多个服务器共同分摊压力的效果，但是依然没有解决单表数据量过大的问题。
+
+#### 水平分库
+
+经过垂直分库后，数据库性能问题得到一定程度的解决，但是随着业务量的增长，PRODUCT_DB(商品库)单库存储数据已经超出预估。可以将商品的所属店铺ID为单数的和店铺ID为双数的商品信息分别放在两个数据库中
+
+**水平分库**:是把同一个表的数据按一定规则拆到不同的数据库中，每个库可以放在不同的服务器上。
+
+它带来的提升是：
+
+* 解决了单库大数据，高并发的性能瓶颈
+* 提高了系统的稳定性及可用性
+
+例如：要操作某条商品数据，先分析这条数据所属的店铺ID。如果店铺ID为双数，将此操作映射至RRODUCT_DB1(商品库1)；如果店铺ID为单数，将操作映射至RRODUCT_DB2(商品库2)。此操作要访问数据库名称的表达式为RRODUCT_DB[店铺ID%2 + 1] 。
+
+#### 水平分表
+
+按照水平分库的思路把PRODUCT_DB_X(商品库)内的表也可以进行水平拆分，其目的也是为解决单表数据量大的问题，与水平分库的思路类似，不过这次操作的目标是表
+
+**水平分表**：是在同一个数据库内，把同一个表的数据按一定规则拆到多个表中
+
+### 分库分表实践
+
+<a href="https://tech.meituan.com/2016/11/18/dianping-order-db-sharding.html" target="_blank">大众点评订单系统分库分表实践</a>
