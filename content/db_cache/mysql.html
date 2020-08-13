@@ -1459,19 +1459,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.6" data-path="../distributed_design/tomcat.html">
-            
-                <a href="../distributed_design/tomcat.html">
-            
-                    
-                    tomcat
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -1562,7 +1549,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/soa.html">
+        <li class="chapter " data-level="1.11.3" data-path="../distributed_design/zk.html">
+            
+                <a href="../distributed_design/zk.html">
+            
+                    
+                    zookeeper
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.4" data-path="../distributed_design/soa.html">
             
                 <a href="../distributed_design/soa.html">
             
@@ -1780,6 +1780,7 @@
 <li><div><a href="#&#x6C34;&#x5E73;&#x5206;&#x5E93;">&#x6C34;&#x5E73;&#x5206;&#x5E93;</a><i></i></div></li>
 <li><div><a href="#&#x6C34;&#x5E73;&#x5206;&#x8868;">&#x6C34;&#x5E73;&#x5206;&#x8868;</a><i></i></div></li>
 </ul></li>
+<li><div><a href="#&#x5206;&#x5E93;&#x5206;&#x8868;&#x5E26;&#x6765;&#x7684;&#x95EE;&#x9898;">&#x5206;&#x5E93;&#x5206;&#x8868;&#x5E26;&#x6765;&#x7684;&#x95EE;&#x9898;</a><i></i></div></li>
 <li><div><a href="#&#x5206;&#x5E93;&#x5206;&#x8868;&#x5B9E;&#x8DF5;">&#x5206;&#x5E93;&#x5206;&#x8868;&#x5B9E;&#x8DF5;</a><i></i></div></li>
 </ul></li>
 </ul></li>
@@ -2678,10 +2679,19 @@ root<span class="token annotation punctuation">@localhost</span> <span class="to
 <h4 id="&#x6C34;&#x5E73;&#x5206;&#x8868;">&#x6C34;&#x5E73;&#x5206;&#x8868;</h4>
 <p>&#x6309;&#x7167;&#x6C34;&#x5E73;&#x5206;&#x5E93;&#x7684;&#x601D;&#x8DEF;&#x628A;PRODUCT_DB_X(&#x5546;&#x54C1;&#x5E93;)&#x5185;&#x7684;&#x8868;&#x4E5F;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x6C34;&#x5E73;&#x62C6;&#x5206;&#xFF0C;&#x5176;&#x76EE;&#x7684;&#x4E5F;&#x662F;&#x4E3A;&#x89E3;&#x51B3;&#x5355;&#x8868;&#x6570;&#x636E;&#x91CF;&#x5927;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x4E0E;&#x6C34;&#x5E73;&#x5206;&#x5E93;&#x7684;&#x601D;&#x8DEF;&#x7C7B;&#x4F3C;&#xFF0C;&#x4E0D;&#x8FC7;&#x8FD9;&#x6B21;&#x64CD;&#x4F5C;&#x7684;&#x76EE;&#x6807;&#x662F;&#x8868;</p>
 <p><strong>&#x6C34;&#x5E73;&#x5206;&#x8868;</strong>&#xFF1A;&#x662F;&#x5728;&#x540C;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5E93;&#x5185;&#xFF0C;&#x628A;&#x540C;&#x4E00;&#x4E2A;&#x8868;&#x7684;&#x6570;&#x636E;&#x6309;&#x4E00;&#x5B9A;&#x89C4;&#x5219;&#x62C6;&#x5230;&#x591A;&#x4E2A;&#x8868;&#x4E2D;</p>
+<h3 id="&#x5206;&#x5E93;&#x5206;&#x8868;&#x5E26;&#x6765;&#x7684;&#x95EE;&#x9898;">&#x5206;&#x5E93;&#x5206;&#x8868;&#x5E26;&#x6765;&#x7684;&#x95EE;&#x9898;</h3>
+<ol>
+<li>&#x4E8B;&#x52A1;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x95EE;&#x9898;&#xFF1A;&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;</li>
+<li>&#x8DE8;&#x8282;&#x70B9;&#x5173;&#x8054;&#x67E5;&#x8BE2;&#x95EE;&#x9898;</li>
+<li>&#x8DE8;&#x8282;&#x70B9;&#x5206;&#x9875;&#xFF0C;&#x6392;&#x5E8F;&#x95EE;&#x9898;</li>
+<li>&#x4E3B;&#x952E;&#x91CD;&#x590D;&#x95EE;&#x9898;&#xFF1A;&#x5168;&#x5C40;ID</li>
+<li>&#x516C;&#x5171;&#x8868;&#xFF0C;&#x9AD8;&#x9891;&#x516C;&#x5171;&#x64CD;&#x4F5C;&#x8868;</li>
+</ol>
 <h3 id="&#x5206;&#x5E93;&#x5206;&#x8868;&#x5B9E;&#x8DF5;">&#x5206;&#x5E93;&#x5206;&#x8868;&#x5B9E;&#x8DF5;</h3>
 <p><a href="https://tech.meituan.com/2016/11/18/dianping-order-db-sharding.html" target="_blank">&#x5927;&#x4F17;&#x70B9;&#x8BC4;&#x8BA2;&#x5355;&#x7CFB;&#x7EDF;&#x5206;&#x5E93;&#x5206;&#x8868;&#x5B9E;&#x8DF5;</a></p>
+<p><a href="https://github.com/doctording/sharding-sql" target="_blank">shardingsphere &#x7B80;&#x5355;&#x5B9E;&#x8DF5;</a></p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-08-11 22:49:41
+2020-08-12 10:58:33
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2722,7 +2732,7 @@ root<span class="token annotation punctuation">@localhost</span> <span class="to
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"MySQL","layout":"page","date":"2020-03-08 18:00","level":"1.9.2","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"ServerSocketChannel","level":"1.10.2.1","depth":3,"path":"content/java_io_net/server_socket_channel.md","ref":"./content/java_io_net/server_socket_channel.md","articles":[]},{"title":"NIO & BIO问题","level":"1.10.2.2","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从BIO到epoll","level":"1.10.2.3","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"网络设计模式","level":"1.10.3","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"http & tcp","level":"1.10.4","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.5","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]},{"title":"tomcat","level":"1.10.6","depth":2,"path":"content/distributed_design/tomcat.md","ref":"./content/distributed_design/tomcat.md","articles":[]}]},"previous":{"title":"局部性原理&磁盘IO","level":"1.9.1","depth":2,"path":"content/db_cache/io.md","ref":"./content/db_cache/io.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-08-11T14:49:41.982Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-11T14:57:28.582Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MySQL","layout":"page","date":"2020-03-08 18:00","level":"1.9.2","depth":2,"next":{"title":"[9 I/O & 网络]","level":"1.10","depth":1,"ref":"","articles":[{"title":"IO和中断","level":"1.10.1","depth":2,"path":"content/java_io_net/io_interrupte.md","ref":"./content/java_io_net/io_interrupte.md","articles":[]},{"title":"IO基础","level":"1.10.2","depth":2,"path":"content/java_io_net/io_basic.md","ref":"./content/java_io_net/io_basic.md","articles":[{"title":"ServerSocketChannel","level":"1.10.2.1","depth":3,"path":"content/java_io_net/server_socket_channel.md","ref":"./content/java_io_net/server_socket_channel.md","articles":[]},{"title":"NIO & BIO问题","level":"1.10.2.2","depth":3,"path":"content/java_io_net/nio_basic.md","ref":"./content/java_io_net/nio_basic.md","articles":[]},{"title":"从BIO到epoll","level":"1.10.2.3","depth":3,"path":"content/java_io_net/from_io_to_epoll.md","ref":"./content/java_io_net/from_io_to_epoll.md","articles":[]}]},{"title":"网络设计模式","level":"1.10.3","depth":2,"path":"content/distributed_design/design.md","ref":"./content/distributed_design/design.md","articles":[]},{"title":"http & tcp","level":"1.10.4","depth":2,"path":"content/java_io_net/http_tcp.md","ref":"./content/java_io_net/http_tcp.md","articles":[]},{"title":"nginx基础","level":"1.10.5","depth":2,"path":"content/distributed_design/nginx.md","ref":"./content/distributed_design/nginx.md","articles":[]}]},"previous":{"title":"局部性原理&磁盘IO","level":"1.9.1","depth":2,"path":"content/db_cache/io.md","ref":"./content/db_cache/io.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql.md","mtime":"2020-08-12T02:58:33.049Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-13T13:51:22.860Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
