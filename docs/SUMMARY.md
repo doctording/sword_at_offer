@@ -96,13 +96,13 @@
     * [网络设计模式](./content/distributed_design/design.md)
     * [http & tcp](./content/java_io_net/http_tcp.md)
     * [nginx基础](./content/distributed_design/nginx.md)
-    * [tomcat](./content/distributed_design/tomcat.md)
 * [10 分布式]
     * [分布式基础](./content/distributed_design/distribute.md)
         * [分布式事务](./content/distributed_design/distribute_tx.md)
         * [分布式锁](./content/distributed_design/distribute_lock.md)
         * [分布式ID](./content/distributed_design/distribute_id.md)
     * [rpc](./content/distributed_design/rpc.md)
+    * [zookeeper](./content/distributed_design/zk.md)
     * [微服务](./content/distributed_design/soa.md)
 * [11 剑指Offer]
     * [剑指Offer解题思路(全)](./content/thought_of_solve/thought.md)

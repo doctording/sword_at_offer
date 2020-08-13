@@ -908,6 +908,16 @@ mixed|statement和row模式的混合|准确性强，文件大小适中|当binlog
 
 **水平分表**：是在同一个数据库内，把同一个表的数据按一定规则拆到多个表中
 
+### 分库分表带来的问题
+
+1. 事务的一致性问题：分布式事务
+2. 跨节点关联查询问题
+3. 跨节点分页，排序问题
+4. 主键重复问题：全局ID
+5. 公共表，高频公共操作表
+
 ### 分库分表实践
 
 <a href="https://tech.meituan.com/2016/11/18/dianping-order-db-sharding.html" target="_blank">大众点评订单系统分库分表实践</a>
+
+<a href="https://github.com/doctording/sharding-sql" target='_blank'>shardingsphere 简单实践</a>

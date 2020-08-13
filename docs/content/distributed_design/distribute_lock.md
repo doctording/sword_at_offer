@@ -196,7 +196,6 @@ redis get结果会是最终的`70`
 1. 超时时间是个问题：业务时常不确定
 2. 其它线程可能删除别的线程的锁
 
-
 * 改进1
 
 ```java
@@ -271,7 +270,7 @@ public String deductStockRedisson() throws Exception {
 ![](../../content/distributed_design/imgs/redisson_frame.png)
 
 * setnx的设置key与过期时间用脚本实现原子操作
-* key设置成功默认30s，则有后台线程每10秒(1/3的原始过期时间定时检查)检查判断，延长过期时间
+* key设置成功默认30s，则有后台线程每10秒(1/3的原始过期时间定时检查)检查判断，延长过期时间()
 * 未获取到锁的线程会自旋，知道获取到锁的其它线程的释放
 
 ###### redis主从架构问题？
