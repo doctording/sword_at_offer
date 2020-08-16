@@ -198,4 +198,4 @@ class B extends A{
 }
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thinking_in_Java/imgs/abstract_class.png)
+![](../../content/java_thinking_in_Java/imgs/abstract_class.png)
