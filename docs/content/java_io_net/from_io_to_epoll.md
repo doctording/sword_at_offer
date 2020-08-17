@@ -73,7 +73,7 @@ strace -ff -o ./stracefile java TestSocket
 
 ![](../../content/java_io_net/imgs/linux_io_2.png)
 
-* <font color='red'>小知识</font>：通过进程ID号能知道有多少个线程(`/proc/<pid>/task`)
+* <font color='red'>小知识</font>：通过进程ID号能知道有多少个线程(linux的`/proc/<pid>/task`目录下)
 
 ![](../../content/java_io_net/imgs/proc_task_threads.png)
 
@@ -168,9 +168,9 @@ BIO的问题解决,可以把所有fd放到一个集合(select)中，一次性的
 
 ### epoll
 
-* select的问题解决，在内核区域开辟一块共享区域，有一个fd就加入进去，不用拷贝了；随着fd的增多，这个集合也增多了；不像select那样，每次传递重复的fd集合
+* 在内核区域开辟一块共享区域，有一个`fd`就加入进去，不用拷贝了；随着`fd`的增多，这个集合也增多了；不像select那样，每次传递重复的fd集合
 
-* 不需要遍历所有fd，基于事件驱动（中断），哪个df准备好了，就发出通知事件，这些事件放到一个事件区域中，用户态自己去等待其中的事件
+* 不需要遍历所有`fd`，基于事件驱动（中断），哪个`fd`准备好了，就发出通知事件，这些事件放到一个事件区域中，用户态自己去等待其中的事件
 
 1. 无需fd拷贝到内核
 2. 内核检查fd是否准备好,采用事件通知方式
@@ -191,25 +191,29 @@ BIO的问题解决,可以把所有fd放到一个集合(select)中，一次性的
 
 函数功能：用于控制某个文件描述符上的事件，可以注册事件，修改事件，删除事件。
 
+```java
 参数epfd为epoll的句柄，即 epoll_create 函数返回值
 参数op表示动作，用3个宏来表示：  
-    EPOLL_CTL_ADD(注册新的fd到epfd)， 
+    EPOLL_CTL_ADD(注册新的fd到epfd)，
     EPOLL_CTL_MOD(修改已经注册的fd的监听事件)，
     EPOLL_CTL_DEL(从epfd删除一个fd)；
-其中参数fd为需要监听的标示符；
+参数fd为需要监听的标示符；
 参数event告诉内核需要监听的事件
+```
 
 ##### epoll_wait
 
 `int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout)`
 该函数用于轮询I/O事件的发生；
 
-epfd:由epoll_create 生成的epoll专用的文件描述符；
-epoll_event:用于回传代处理事件的数组；
-maxevents:每次能处理的事件数；
-timeout:等待I/O事件发生的超时值（ms）；-1永不超时，直到有事件产生才触发，0立即返回。
+```java
+epfd: 由epoll_create 生成的epoll专用的文件描述符；
+epoll_event: 用于回传代处理事件的数组；
+maxevents: 每次能处理的事件数；
+timeout: 等待I/O事件发生的超时值（ms）；-1永不超时，直到有事件产生才触发，0立即返回。
 
 该函数返回发生事件数。-1有错误。
+```
 
 ## I/O存储金字塔
 

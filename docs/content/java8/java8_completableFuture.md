@@ -764,11 +764,11 @@ public static void main(String[] args) {
 
 * 执行流程图
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/stream_future.png)
+![](../../content/java8/imgs/stream_future.png)
 
 #### 合并两个独立的CompletableFuture对象
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/combine_future.png)
+![](../../content/java8/imgs/combine_future.png)
 
 #### 响应CompletableFuture的completion事件
 

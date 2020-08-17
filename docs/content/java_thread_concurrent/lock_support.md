@@ -83,7 +83,7 @@ static void testLockSupport(){
 
 线程执行park后，属于wait状态
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/park_unpark.png)
+![](../../content/java_thread_concurrent/imgs/park_unpark.png)
 
 * unpark 在 park 之前
 
@@ -175,7 +175,7 @@ static void testLockSupport(){
 	- None
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_thread_concurrent/imgs/thread_park.png)
+![](../../content/java_thread_concurrent/imgs/thread_park.png)
 
 ## 进一步原理
 

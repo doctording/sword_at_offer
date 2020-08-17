@@ -942,7 +942,7 @@ RPC多用于服务器集群间的通信
 
 ## 回顾RPC
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/rpc.png)
+![](../../content/distributed_design/imgs/rpc.png)
 
 ## 为什么需要服务注册与发现
 
@@ -951,7 +951,7 @@ RPC多用于服务器集群间的通信
 * 客户端与服务端自己维护：有多少个服务，客户端就要维护多少个(服务增减，负载均衡，心跳)
 * 找个代理，客户端有需求找代理，代理维持这些服务，也能给客户通知；（可以看成`代理模式`）
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/rpc_reg.png)
+![](../../content/distributed_design/imgs/rpc_reg.png)
 
 **服务注册**就是维护一个登记簿，它管理系统内所有的服务地址。当新的服务启动后，它会向登记簿交待自己的地址信息。服务的依赖方直接向登记簿要Service Provider地址就行了
 
@@ -972,7 +972,7 @@ One significant drawback of this pattern is that it couples the client with the 
 
 #### 服务端实现
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/server-discovery.png)
+![](../../content/distributed_design/imgs/server-discovery.png)
 
 The client makes a request to a service via a load balancer. The load balancer queries the service registry and routes each request to an available service instance. As with client‑side discovery, service instances are registered and deregistered with the service registry.
 

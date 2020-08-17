@@ -308,7 +308,7 @@ Node<E> node(int index) {
 
 * 需要遍历链表
 
-## Vector
+# Vector
 
 * Vector使用同步方法实现(synchronized)
 

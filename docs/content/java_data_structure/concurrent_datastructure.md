@@ -186,7 +186,7 @@ public long mappingCount() {
 
 ### Java7分段锁的实现
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/concurrent_segment.png)
+![](../../content/java_data_structure/imgs/concurrent_segment.png)
 
 eg, `new ConcurrentHashMap()`:
 
@@ -201,7 +201,7 @@ eg, `new ConcurrentHashMap()`:
 
 #### 扩容不足与改进
 
-* 在于并发扩容的时候，由于操作的table都是同一个，不像JDK7中分段控制，所以这里需要等扩容完之后，所有的读写操作才能进行，所以扩容的效率就成为了整个并发的一个瓶颈点
+* 在并发扩容的时候，由于操作的table都是同一个，不像JDK7中分段控制，所以这里需要等扩容完之后，所有的读写操作才能进行，所以扩容的效率就成为了整个并发的一个瓶颈点
 
 * 引入了一个ForwardingNode类，在一个线程发起扩容的时候，就会改变`sizeCtl`这个值
 

@@ -117,8 +117,8 @@ Class metadata, interned Strings and class static variables will be moved from t
 
 **Metaspace**由两大部分组成：Klass Metaspace和NoKlass Metaspace。
 
-1. klass Metaspace就是用来存klass的，就是class文件在jvm里的运行时数据结构，是一块连续的内存区域，紧接着Heap
-2. NoKlass Metaspace专门来存klass相关的其他的内容，比如method，ConstantPool等，可以由多块不连续的内存组成
+1. klass Metaspace就是用来存klass的，即class文件在jvm里的运行时数据结构，是一块连续的内存区域，紧接着Heap
+2. NoKlass Metaspace专门来存klass相关的其它的内容，比如method，ConstantPool等，可以由多块不连续的内存组成
 
 # 垃圾收集器
 

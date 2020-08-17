@@ -16,12 +16,15 @@ socket编程：一个socket连接来了， 就创建一个新的线程或者从�
 
 <a href="https://tech.meituan.com/2016/11/04/nio.html" target="_blank">美团《Java NIO浅析》</a>
 
-* 使用多线程的本质：1.利用多核；2.当I/O阻塞系统，但CPU空闲的时候，可以利用多线程使用CPU资源。(现在的多线程一般都使用线程池,这可以让线程的创建和回收成本相对较低。在活动连接数不是特别高（小于单机`1000`）的情况下，这种模型是比较不错的)
+* 使用多线程的本质
+  1. 充分利用多核（线程是CPU调度的基本单位；进程是系统进行资源分配和调度的一个独立单位）
+  2. 当I/O阻塞系统，但CPU空闲的时候，可以利用多线程使用CPU资源。(现在的多线程一般都使用线程池,这可以让线程的创建和回收成本相对较低。在活动连接数不是特别高（小于单机`1000`）的情况下，这种模型是比较不错的，每一个连接线程可以专注于自己的I/O并且编程模型简单，也不用过多考虑系统的过载、限流等问题)
 
-1. 线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数
-2. 线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半
-3. 线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统`load偏高`、`CPU使用率特别高`（超过20%以上)，导致系统几乎陷入不可用的状态
-4. 容易造成`锯齿状的系统负载`。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大
+* 多线程的一些缺点
+  1. 线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程，创建和销毁都是重量级的系统函数调用
+  2. 线程本身占用较大内存，比如Java的线程栈一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半
+  3. 线程的切换成本是很高的，操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统`load偏高`、`CPU使用率特别高`（超过20%以上)，导致系统几乎陷入不可用的状态
+  4. 容易造成`锯齿状的系统负载`。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高且外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，并激活大量阻塞线程从而使系统负载压力突然过大
 
 结论：当面对十万甚至百万级连接的时候，传统的BIO模型是无能为力的。
 
@@ -34,6 +37,106 @@ However, it really depends on what your threads are doing. If each thread is ite
 In the end, a blanket statement covering all threads in general without regard for what they are doing is pretty worthless.
 
 I highly recommend the book Java Concurrency in Practice for a high-quality treatment of the topic of concurrent Java programming.
+
+## NIO设计思路
+
+### BIO 服务端代码（阻塞，要开多线程）
+
+```java
+public class BIOServer {
+    public static void main(String[] args) throws IOException {
+        ServerSocket ss = new ServerSocket();
+        ss.bind(new InetSocketAddress("127.0.0.1", 8888));
+        while(true) {
+            Socket s = ss.accept(); //阻塞方法
+            // 每个客户端socket都开一个线程处理
+            new Thread(() -> {
+                handle(s);
+            }).start();
+        }
+    }
+
+    static void handle(Socket s) {
+        try {
+            byte[] bytes = new byte[1024];
+            int len = s.getInputStream().read(bytes); // 阻塞方法
+            System.out.println("read data:" + new String(bytes, 0, len));
+
+            s.getOutputStream().write(bytes, 0, len);
+            s.getOutputStream().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### NIO（用`ServerSocketChannel`实现非阻塞）
+
+<font color='red'>用单线程去解决两个阻塞(accept阻塞，read阻塞)问题</font>
+
+```java
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @Author mubi
+ * @Date 2020/7/20 22:41
+ */
+public class NioServer {
+
+    public static void main(String[] args) throws IOException {
+        ServerSocketChannel ssc = ServerSocketChannel.open();
+        ssc.socket().bind(new InetSocketAddress("127.0.0.1", 8889));
+        // 设置 accept 非阻塞
+        ssc.configureBlocking(false);
+
+        System.out.println("nio server listen on:" + ssc.getLocalAddress());
+
+        // 所有的客户端加入到集合，每次while循环都遍历去读取
+        List<SocketChannel> socketChannelList = new ArrayList<>();
+
+        while (true) {
+
+            List<SocketChannel> rmList = new ArrayList<>();
+            // 遍历 socketChannelList, 一个一个处理
+            for (SocketChannel scTmp : socketChannelList) {
+                ByteBuffer buffer = ByteBuffer.allocate(1024);
+                buffer.clear();
+                try {
+                    int len = scTmp.read(buffer);
+                    if (len > 0) {
+                        System.out.println("read data from:" + scTmp.getRemoteAddress() + ":"
+                                + new String(buffer.array(), 0, len));
+                        scTmp.write(buffer);
+                    }
+                } catch (Exception e) {
+                    // 加入遇到异常代表客户端终止连接，再从列表中删除即可
+                    rmList.add(scTmp);
+                }
+            }
+            socketChannelList.removeAll(rmList);
+
+            SocketChannel sc = ssc.accept();
+            if (sc != null) {
+                // 设置 read 非阻塞，并加入到客户端list中
+                sc.configureBlocking(false);
+                socketChannelList.add(sc);
+
+                System.out.println("accept a client:" + sc.getRemoteAddress() + " current size:" +
+                        socketChannelList.size());
+            }
+        }
+    }
+}
+```
+
+![](../../content/java_io_net/imgs/nio.png)
 
 ## NIO与IO的区别
 

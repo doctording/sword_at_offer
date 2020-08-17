@@ -230,7 +230,7 @@ TreeSet | 好
 
 分支/合并框架的目的是以递归方式将可以并行的任务拆分成更小的任务，然后将每个子任务的结果合并起来生成整体结果。它是`ExecutorService`接口的一个实现，它把子任务分配给线程池(称为`ForkJoinPool`)中的工作线程。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/fork_join.png)
+![](../../content/java8/imgs/fork_join.png)
 
 伪代码如下
 
@@ -319,13 +319,13 @@ System.out.println("Sequential sum done in:" +
 
 这个性能看起来比用并行流的版本要差，但这只是因为必须先要把整个数字流都放进一个`long[]`，之后才能在`ForkJoinSumRecursiveTask`任务中使用它
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/fork_join_2.png)
+![](../../content/java8/imgs/fork_join_2.png)
 
 #### 工作窃取算法（work stealing）
 
 工作窃取算法（work stealing）用于在池中的工作线程之间重新分配和平衡任务. 在实际应用中，这意味着这些任务差不多被平均分配到ForkJoinPool中的所有线程上。
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java8/imgs/fork_join_3.png)
+![](../../content/java8/imgs/fork_join_3.png)
 
 #### Spliterator
 

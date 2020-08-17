@@ -379,7 +379,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 
 ## 被 transient 所修饰 table 变量
 
-HashMap 的桶数组 table 被申明为`transient`。`transient`表示易变的意思，在 Java 中，被该关键字修饰的变量不会被默认的序列化机制序列化，而是通过实现`readObject/writeObject`两个方法自定义了序列化的内容
+HashMap 的桶数组 table 被申明为`transient`。`transient`表示易变的意思，在 Java 中，被该关键字修饰的变量<font color='red'>不会被默认的序列化机制序列化</font>，而是通过实现`readObject/writeObject`两个方法自定义了序列化的内容
 
 ## 为什么Java中的HashMap默认加载因子是0.75？
 
