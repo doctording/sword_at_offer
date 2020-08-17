@@ -350,9 +350,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.1.4" data-path="../java_utils/Map.html">
+        <li class="chapter " data-level="1.3.1.4" data-path="Map.html">
             
-                <a href="../java_utils/Map.html">
+                <a href="Map.html">
             
                     
                     HashMap,HashTable,ConcurrentHashMap 对比
@@ -363,7 +363,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.1.5" data-path="fail_fast.html">
+        <li class="chapter " data-level="1.3.1.5" data-path="linked_hash_map.html">
+            
+                <a href="linked_hash_map.html">
+            
+                    
+                    LinkedHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.6" data-path="fail_fast.html">
             
                 <a href="fail_fast.html">
             
@@ -376,7 +389,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.1.6" data-path="../java_utils/quick_sort.html">
+        <li class="chapter " data-level="1.3.1.7" data-path="../java_utils/quick_sort.html">
             
                 <a href="../java_utils/quick_sort.html">
             
@@ -1364,26 +1377,26 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2" data-path="../java_io_net/io_basic.html">
+        <li class="chapter " data-level="1.10.2" >
             
-                <a href="../java_io_net/io_basic.html">
+                <span>
             
                     
-                    IO基础
+                    [Java IO]
             
-                </a>
+                </span>
             
 
             
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/io_basic.html">
             
-                <a href="../java_io_net/server_socket_channel.html">
+                <a href="../java_io_net/io_basic.html">
             
                     
-                    ServerSocketChannel
+                    IO必备基础
             
                 </a>
             
@@ -1396,7 +1409,7 @@
                 <a href="../java_io_net/nio_basic.html">
             
                     
-                    NIO & BIO问题
+                    BIO到NIO
             
                 </a>
             
@@ -1409,7 +1422,20 @@
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从BIO到epoll
+                    再谈select & epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.4" data-path="../java_io_net/server_socket_channel.html">
+            
+                <a href="../java_io_net/server_socket_channel.html">
+            
+                    
+                    ServerSocketChannel
             
                 </a>
             
@@ -1861,7 +1887,7 @@
 <p>&#x4E00;&#x4E2A;&#x5927;&#x6982;&#x7684;&#x6570;&#x503C;&#xFF0C;&#x56E0;&#x4E3A;&#x53EF;&#x80FD;&#x5728;&#x7EDF;&#x8BA1;&#x7684;&#x65F6;&#x5019;&#x6709;&#x5176;&#x4ED6;&#x7EBF;&#x7A0B;&#x6B63;&#x5728;&#x6267;&#x884C;&#x63D2;&#x5165;&#x6216;&#x5220;&#x9664;&#x64CD;&#x4F5C;</p>
 <h3 id="&#x5BF9;&#x6BD4;java7&#x5206;&#x6BB5;&#x9501;&#x4F18;&#x52A3;">&#x5BF9;&#x6BD4;Java7&#x5206;&#x6BB5;&#x9501;&#x4F18;&#x52A3;</h3>
 <h3 id="java7&#x5206;&#x6BB5;&#x9501;&#x7684;&#x5B9E;&#x73B0;">Java7&#x5206;&#x6BB5;&#x9501;&#x7684;&#x5B9E;&#x73B0;</h3>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/concurrent_segment.png" alt=""></p>
+<p><img src="imgs/concurrent_segment.png" alt=""></p>
 <p>eg, <code>new ConcurrentHashMap()</code>:</p>
 <ul>
 <li>Segment &#x6570;&#x7EC4;&#x957F;&#x5EA6;&#x4E3A; 16&#xFF0C;&#x4E0D;&#x53EF;&#x4EE5;&#x6269;&#x5BB9;</li>
@@ -1873,7 +1899,7 @@
 <p>&#x53EA;&#x9700;&#x8981;&#x9501;&#x4F4F;&#x8FD9;&#x4E2A;&#x94FE;&#x8868;/&#x7EA2;&#x9ED1;&#x6811;&#x7684;head&#x8282;&#x70B9;&#xFF0C;&#x5E76;&#x4E0D;&#x4F1A;&#x5F71;&#x54CD;&#x5176;&#x4ED6;&#x7684;table&#x5143;&#x7D20;&#x7684;&#x8BFB;&#x5199;&#xFF0C;&#x5F71;&#x54CD;&#x66F4;&#x5C0F;</p>
 <h4 id="&#x6269;&#x5BB9;&#x4E0D;&#x8DB3;&#x4E0E;&#x6539;&#x8FDB;">&#x6269;&#x5BB9;&#x4E0D;&#x8DB3;&#x4E0E;&#x6539;&#x8FDB;</h4>
 <ul>
-<li><p>&#x5728;&#x4E8E;&#x5E76;&#x53D1;&#x6269;&#x5BB9;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x7531;&#x4E8E;&#x64CD;&#x4F5C;&#x7684;table&#x90FD;&#x662F;&#x540C;&#x4E00;&#x4E2A;&#xFF0C;&#x4E0D;&#x50CF;JDK7&#x4E2D;&#x5206;&#x6BB5;&#x63A7;&#x5236;&#xFF0C;&#x6240;&#x4EE5;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x7B49;&#x6269;&#x5BB9;&#x5B8C;&#x4E4B;&#x540E;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;&#x624D;&#x80FD;&#x8FDB;&#x884C;&#xFF0C;&#x6240;&#x4EE5;&#x6269;&#x5BB9;&#x7684;&#x6548;&#x7387;&#x5C31;&#x6210;&#x4E3A;&#x4E86;&#x6574;&#x4E2A;&#x5E76;&#x53D1;&#x7684;&#x4E00;&#x4E2A;&#x74F6;&#x9888;&#x70B9;</p>
+<li><p>&#x5728;&#x5E76;&#x53D1;&#x6269;&#x5BB9;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x7531;&#x4E8E;&#x64CD;&#x4F5C;&#x7684;table&#x90FD;&#x662F;&#x540C;&#x4E00;&#x4E2A;&#xFF0C;&#x4E0D;&#x50CF;JDK7&#x4E2D;&#x5206;&#x6BB5;&#x63A7;&#x5236;&#xFF0C;&#x6240;&#x4EE5;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x7B49;&#x6269;&#x5BB9;&#x5B8C;&#x4E4B;&#x540E;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;&#x624D;&#x80FD;&#x8FDB;&#x884C;&#xFF0C;&#x6240;&#x4EE5;&#x6269;&#x5BB9;&#x7684;&#x6548;&#x7387;&#x5C31;&#x6210;&#x4E3A;&#x4E86;&#x6574;&#x4E2A;&#x5E76;&#x53D1;&#x7684;&#x4E00;&#x4E2A;&#x74F6;&#x9888;&#x70B9;</p>
 </li>
 <li><p>&#x5F15;&#x5165;&#x4E86;&#x4E00;&#x4E2A;ForwardingNode&#x7C7B;&#xFF0C;&#x5728;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x53D1;&#x8D77;&#x6269;&#x5BB9;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5C31;&#x4F1A;&#x6539;&#x53D8;<code>sizeCtl</code>&#x8FD9;&#x4E2A;&#x503C;</p>
 </li>
@@ -2208,7 +2234,7 @@
 </code></pre>
 <h2 id="todo">TODO</h2>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-24 11:35:45
+2020-08-17 19:12:42
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2253,7 +2279,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"concurrent数据结构","layout":"page","date":"2019-05-25 00:00","level":"1.3.2","depth":2,"next":{"title":"高级数据结构","level":"1.3.3","depth":2,"path":"content/java_data_structure/advanced_structure.md","ref":"./content/java_data_structure/advanced_structure.md","articles":[{"title":"B/B+ Tree","level":"1.3.3.1","depth":3,"path":"content/java_data_structure/b_tree.md","ref":"./content/java_data_structure/b_tree.md","articles":[]}]},"previous":{"title":"快排(没事手写写)","level":"1.3.1.6","depth":3,"path":"content/java_utils/quick_sort.md","ref":"./content/java_utils/quick_sort.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_data_structure/concurrent_datastructure.md","mtime":"2020-07-24T03:35:45.738Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-16T14:37:08.315Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"concurrent数据结构","layout":"page","date":"2019-05-25 00:00","level":"1.3.2","depth":2,"next":{"title":"高级数据结构","level":"1.3.3","depth":2,"path":"content/java_data_structure/advanced_structure.md","ref":"./content/java_data_structure/advanced_structure.md","articles":[{"title":"B/B+ Tree","level":"1.3.3.1","depth":3,"path":"content/java_data_structure/b_tree.md","ref":"./content/java_data_structure/b_tree.md","articles":[]}]},"previous":{"title":"快排(没事手写写)","level":"1.3.1.7","depth":3,"path":"content/java_utils/quick_sort.md","ref":"./content/java_utils/quick_sort.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_data_structure/concurrent_datastructure.md","mtime":"2020-08-17T11:12:42.064Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-17T14:31:54.136Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

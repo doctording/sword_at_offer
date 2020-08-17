@@ -350,9 +350,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.1.4" data-path="../java_utils/Map.html">
+        <li class="chapter " data-level="1.3.1.4" data-path="../java_data_structure/Map.html">
             
-                <a href="../java_utils/Map.html">
+                <a href="../java_data_structure/Map.html">
             
                     
                     HashMap,HashTable,ConcurrentHashMap 对比
@@ -363,7 +363,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.1.5" data-path="../java_data_structure/fail_fast.html">
+        <li class="chapter " data-level="1.3.1.5" data-path="../java_data_structure/linked_hash_map.html">
+            
+                <a href="../java_data_structure/linked_hash_map.html">
+            
+                    
+                    LinkedHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.6" data-path="../java_data_structure/fail_fast.html">
             
                 <a href="../java_data_structure/fail_fast.html">
             
@@ -376,7 +389,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.1.6" data-path="../java_utils/quick_sort.html">
+        <li class="chapter " data-level="1.3.1.7" data-path="../java_utils/quick_sort.html">
             
                 <a href="../java_utils/quick_sort.html">
             
@@ -1364,26 +1377,26 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2" data-path="../java_io_net/io_basic.html">
+        <li class="chapter " data-level="1.10.2" >
             
-                <a href="../java_io_net/io_basic.html">
+                <span>
             
                     
-                    IO基础
+                    [Java IO]
             
-                </a>
+                </span>
             
 
             
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/server_socket_channel.html">
+        <li class="chapter " data-level="1.10.2.1" data-path="../java_io_net/io_basic.html">
             
-                <a href="../java_io_net/server_socket_channel.html">
+                <a href="../java_io_net/io_basic.html">
             
                     
-                    ServerSocketChannel
+                    IO必备基础
             
                 </a>
             
@@ -1396,7 +1409,7 @@
                 <a href="../java_io_net/nio_basic.html">
             
                     
-                    NIO & BIO问题
+                    BIO到NIO
             
                 </a>
             
@@ -1409,7 +1422,20 @@
                 <a href="../java_io_net/from_io_to_epoll.html">
             
                     
-                    从BIO到epoll
+                    再谈select & epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.4" data-path="../java_io_net/server_socket_channel.html">
+            
+                <a href="../java_io_net/server_socket_channel.html">
+            
+                    
+                    ServerSocketChannel
             
                 </a>
             
@@ -2587,14 +2613,14 @@
 <p>RPC&#x672C;&#x8EAB;&#x91CD;&#x70B9;&#x5728;&#x4E8E;&#x65B9;&#x6CD5;&#x8C03;&#x7528;&#xFF0C;&#x53EF;&#x4EE5;&#x7528;&#x5404;&#x79CD;&#x7F51;&#x7EDC;&#x534F;&#x8BAE;&#x662F;&#x5B9E;&#x73B0;&#xFF0C;&#x6BD4;&#x5982;RMI,restful&#x7B49;&#xFF0C;&#x5176;&#x4E2D;(RMI&#x4E0D;&#x80FD;&#x8DE8;&#x8BED;&#x8A00;&#xFF0C;Resful&#x57FA;&#x4E8E;http&#xFF1A;&#x5E26;&#x5BBD;&#x5360;&#x7528;&#x9AD8;&#xFF0C;&#x6548;&#x7387;&#x4F4E;)</p>
 <p>RPC&#x591A;&#x7528;&#x4E8E;&#x670D;&#x52A1;&#x5668;&#x96C6;&#x7FA4;&#x95F4;&#x7684;&#x901A;&#x4FE1;</p>
 <h2 id="&#x56DE;&#x987E;rpc">&#x56DE;&#x987E;RPC</h2>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/rpc.png" alt=""></p>
+<p><img src="imgs/rpc.png" alt=""></p>
 <h2 id="&#x4E3A;&#x4EC0;&#x4E48;&#x9700;&#x8981;&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x4E0E;&#x53D1;&#x73B0;">&#x4E3A;&#x4EC0;&#x4E48;&#x9700;&#x8981;&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x4E0E;&#x53D1;&#x73B0;</h2>
 <p>&#x968F;&#x7740;&#x670D;&#x52A1;&#x6570;&#x91CF;&#x7684;&#x589E;&#x591A;&#xFF0C;&#x5404;&#x4E2A;&#x670D;&#x52A1;&#x4E4B;&#x95F4;&#x7684;&#x8C03;&#x7528;&#x53D8;&#x5F97;&#x9519;&#x7EFC;&#x590D;&#x6742;&#xFF0C;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x53EF;&#x80FD;&#x4F9D;&#x8D56;&#x5916;&#x90E8;&#x591A;&#x4E2A;&#x670D;&#x52A1;&#xFF0C;&#x5F53;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x7684;&#x57DF;&#x540D;&#x6216;IP&#x5730;&#x5740;&#x6539;&#x53D8;&#x4E86;&#x4E4B;&#x540E;&#x5982;&#x4F55;&#x901A;&#x77E5;&#x4F9D;&#x8D56;&#x65B9;&#xFF0C;&#x6216;&#x8005;&#x4F9D;&#x8D56;&#x65B9;&#x5982;&#x4F55;&#x5FEB;&#x901F;&#x7684;&#x53D1;&#x73B0;&#x670D;&#x52A1;&#x63D0;&#x4F9B;&#x65B9;&#x7684;&#x5730;&#x5740;&#x53D8;&#x5316;&#x3002;</p>
 <ul>
 <li>&#x5BA2;&#x6237;&#x7AEF;&#x4E0E;&#x670D;&#x52A1;&#x7AEF;&#x81EA;&#x5DF1;&#x7EF4;&#x62A4;&#xFF1A;&#x6709;&#x591A;&#x5C11;&#x4E2A;&#x670D;&#x52A1;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x5C31;&#x8981;&#x7EF4;&#x62A4;&#x591A;&#x5C11;&#x4E2A;(&#x670D;&#x52A1;&#x589E;&#x51CF;&#xFF0C;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF0C;&#x5FC3;&#x8DF3;)</li>
 <li>&#x627E;&#x4E2A;&#x4EE3;&#x7406;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x6709;&#x9700;&#x6C42;&#x627E;&#x4EE3;&#x7406;&#xFF0C;&#x4EE3;&#x7406;&#x7EF4;&#x6301;&#x8FD9;&#x4E9B;&#x670D;&#x52A1;&#xFF0C;&#x4E5F;&#x80FD;&#x7ED9;&#x5BA2;&#x6237;&#x901A;&#x77E5;&#xFF1B;&#xFF08;&#x53EF;&#x4EE5;&#x770B;&#x6210;<code>&#x4EE3;&#x7406;&#x6A21;&#x5F0F;</code>&#xFF09;</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/rpc_reg.png" alt=""></p>
+<p><img src="imgs/rpc_reg.png" alt=""></p>
 <p><strong>&#x670D;&#x52A1;&#x6CE8;&#x518C;</strong>&#x5C31;&#x662F;&#x7EF4;&#x62A4;&#x4E00;&#x4E2A;&#x767B;&#x8BB0;&#x7C3F;&#xFF0C;&#x5B83;&#x7BA1;&#x7406;&#x7CFB;&#x7EDF;&#x5185;&#x6240;&#x6709;&#x7684;&#x670D;&#x52A1;&#x5730;&#x5740;&#x3002;&#x5F53;&#x65B0;&#x7684;&#x670D;&#x52A1;&#x542F;&#x52A8;&#x540E;&#xFF0C;&#x5B83;&#x4F1A;&#x5411;&#x767B;&#x8BB0;&#x7C3F;&#x4EA4;&#x5F85;&#x81EA;&#x5DF1;&#x7684;&#x5730;&#x5740;&#x4FE1;&#x606F;&#x3002;&#x670D;&#x52A1;&#x7684;&#x4F9D;&#x8D56;&#x65B9;&#x76F4;&#x63A5;&#x5411;&#x767B;&#x8BB0;&#x7C3F;&#x8981;Service Provider&#x5730;&#x5740;&#x5C31;&#x884C;&#x4E86;</p>
 <h3 id="&#x670D;&#x52A1;&#x53D1;&#x73B0;">&#x670D;&#x52A1;&#x53D1;&#x73B0;</h3>
 <p><a href="https://www.nginx.com/blog/service-discovery-in-a-microservices-architecture/" target="_blank">Nginx Service Discovery blog</a></p>
@@ -2605,14 +2631,14 @@
 <p>&#x7F3A;&#x70B9;&#xFF1A;</p>
 <p>One significant drawback of this pattern is that it couples the client with the service registry. You must implement client&#x2011;side service discovery logic for each programming language and framework used by your service clients.&#xFF08;&#x8FD9;&#x79CD;&#x6A21;&#x5F0F;&#x7684;&#x4E00;&#x4E2A;&#x91CD;&#x8981;&#x7F3A;&#x70B9;&#x662F;&#x5B83;&#x5C06;&#x5BA2;&#x6237;&#x7AEF;&#x4E0E;&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x4E2D;&#x5FC3;&#x8026;&#x5408;&#x8D77;&#x6765;&#x3002;&#x5BA2;&#x6237;&#x7AEF;&#x5FC5;&#x987B;&#x4E3A;&#x670D;&#x52A1;&#x7AEF;&#x4F7F;&#x7528;&#x7684;&#x6BCF;&#x79CD;&#x7F16;&#x7A0B;&#x8BED;&#x8A00;&#x548C;&#x6846;&#x67B6;&#x5B9E;&#x73B0;&#x4E00;&#x5957;&#x670D;&#x52A1;&#x53D1;&#x73B0;&#x903B;&#x8F91;&#x3002;&#xFF09;</p>
 <h4 id="&#x670D;&#x52A1;&#x7AEF;&#x5B9E;&#x73B0;">&#x670D;&#x52A1;&#x7AEF;&#x5B9E;&#x73B0;</h4>
-<p><img src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/distributed_design/imgs/server-discovery.png" alt=""></p>
+<p><img src="imgs/server-discovery.png" alt=""></p>
 <p>The client makes a request to a service via a load balancer. The load balancer queries the service registry and routes each request to an available service instance. As with client&#x2011;side discovery, service instances are registered and deregistered with the service registry.</p>
 <p>&#x4F18;&#x7F3A;&#x70B9;&#xFF1A;</p>
 <p>The server&#x2011;side discovery pattern has several benefits and drawbacks. One great benefit of this pattern is that details of discovery are abstracted away from the client. Clients simply make requests to the load balancer. This eliminates the need to implement discovery logic for each programming language and framework used by your service clients. Also, as mentioned above, some deployment environments provide this functionality for free. This pattern also has some drawbacks, however. Unless the load balancer is provided by the deployment environment, it is yet another highly available system component that you need to set up and manage.</p>
 <h4 id="&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x4E2D;&#x5FC3;&#xFF08;service-registry&#xFF09;">&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x4E2D;&#x5FC3;&#xFF08;Service Registry&#xFF09;</h4>
 <p>It is a database containing the network locations of service instances. A service registry needs to be highly available and up to date. Clients can cache network locations obtained from the service registry. However, that information eventually becomes out of date and clients become unable to discover service instances. Consequently, a service registry consists of a cluster of servers that use a replication protocol to maintain consistency.</p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-07-26 20:21:39
+2020-08-17 19:12:44
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2657,7 +2683,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"rpc","layout":"page","date":"2020-05-18 00:00","level":"1.11.2","depth":2,"next":{"title":"zookeeper","level":"1.11.3","depth":2,"path":"content/distributed_design/zk.md","ref":"./content/distributed_design/zk.md","articles":[]},"previous":{"title":"分布式ID","level":"1.11.1.3","depth":3,"path":"content/distributed_design/distribute_id.md","ref":"./content/distributed_design/distribute_id.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/distributed_design/rpc.md","mtime":"2020-07-26T12:21:39.036Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-16T14:37:08.315Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"rpc","layout":"page","date":"2020-05-18 00:00","level":"1.11.2","depth":2,"next":{"title":"zookeeper","level":"1.11.3","depth":2,"path":"content/distributed_design/zk.md","ref":"./content/distributed_design/zk.md","articles":[]},"previous":{"title":"分布式ID","level":"1.11.1.3","depth":3,"path":"content/distributed_design/distribute_id.md","ref":"./content/distributed_design/distribute_id.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/distributed_design/rpc.md","mtime":"2020-08-17T11:12:44.919Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-17T14:31:54.136Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

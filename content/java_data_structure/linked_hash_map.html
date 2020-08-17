@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>fail-fast,ConcurrentModificationException · java-note</title>
+        <title>LinkedHashMap · java-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -89,10 +89,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../java_utils/quick_sort.html" />
+    <link rel="next" href="fail_fast.html" />
     
     
-    <link rel="prev" href="linked_hash_map.html" />
+    <link rel="prev" href="Map.html" />
     
 
     </head>
@@ -363,7 +363,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.1.5" data-path="linked_hash_map.html">
+        <li class="chapter active" data-level="1.3.1.5" data-path="linked_hash_map.html">
             
                 <a href="linked_hash_map.html">
             
@@ -376,7 +376,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3.1.6" data-path="fail_fast.html">
+        <li class="chapter " data-level="1.3.1.6" data-path="fail_fast.html">
             
                 <a href="fail_fast.html">
             
@@ -1670,7 +1670,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >fail-fast,ConcurrentModificationException</a>
+        <a href="../.." >LinkedHashMap</a>
     </h1>
 </div>
 
@@ -1686,197 +1686,82 @@
                                 <section class="normal markdown-section">
                                 
                                 <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
-<li><div><a href="#fail-fast&#xFF08;&#x5FEB;&#x901F;&#x5931;&#x8D25;&#xFF09;">fail-fast&#xFF08;&#x5FEB;&#x901F;&#x5931;&#x8D25;&#xFF09;</a><i></i></div></li>
-<li><div><a href="#fail-safe&#xFF08;&#x5B89;&#x5168;&#x5931;&#x8D25;&#xFF09;">fail-safe&#xFF08;&#x5B89;&#x5168;&#x5931;&#x8D25;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#linkedhashmap">LinkedHashMap</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x53CC;&#x5411;&#x94FE;&#x8868;&#x7684;&#x5B9A;&#x4E49;">&#x53CC;&#x5411;&#x94FE;&#x8868;&#x7684;&#x5B9A;&#x4E49;</a><i></i></div></li>
+<li><div><a href="#&#x4F7F;&#x7528;&#x548C;&#x8BF4;&#x660E;">&#x4F7F;&#x7528;&#x548C;&#x8BF4;&#x660E;</a><i></i></div></li>
+<li><div><a href="#get&#x65B9;&#x6CD5;&#x7C7B;&#x4F3C;lru">get&#x65B9;&#x6CD5;(&#x7C7B;&#x4F3C;LRU)</a><i></i></div></li>
+</ul></li>
 </ul>
 </div>
 
 
 <p>[TOC]</p>
-<h1 id="fail-fast&#xFF08;&#x5FEB;&#x901F;&#x5931;&#x8D25;&#xFF09;">fail-fast&#xFF08;&#x5FEB;&#x901F;&#x5931;&#x8D25;&#xFF09;</h1>
-<p>fail-fast,&#x5373;&#x5FEB;&#x901F;&#x5931;&#x8D25;&#x673A;&#x5236;&#xFF0C;&#x5B83;&#x662F;Java&#x96C6;&#x5408;&#x4E2D;&#x7684;&#x4E00;&#x79CD;&#x9519;&#x8BEF;&#x68C0;&#x6D4B;&#x673A;&#x5236;&#xFF0C;&#x5B83;&#x53EA;&#x80FD;<strong>&#x88AB;&#x7528;&#x6765;&#x68C0;&#x6D4B;&#x9519;&#x8BEF;</strong>&#xFF0C;&#x56E0;&#x4E3A;JDK&#x5E76;&#x4E0D;&#x4FDD;&#x8BC1;fail-fast&#x673A;&#x5236;&#x4E00;&#x5B9A;&#x4F1A;&#x53D1;&#x751F;</p>
-<p>&#x5F53;&#x591A;&#x4E2A;&#x7EBF;&#x7A0B;&#x5728;&#x7ED3;&#x6784;&#x4E0A;&#x5BF9;&#x96C6;&#x5408;&#x8FDB;&#x884C;&#x6539;&#x53D8;&#x65F6;&#xFF0C;&#x5C31;&#x6709;&#x53EF;&#x80FD;&#x4F1A;&#x4EA7;&#x751F;fail-fast&#x673A;&#x5236;&#x3002;</p>
-<p>&#x5982;&#xFF1A;&#x5728;&#x4F7F;&#x7528;&#x8FED;&#x4EE3;&#x5668;&#x5BF9;&#x96C6;&#x5408;&#x5BF9;&#x8C61;&#x8FDB;&#x884C;&#x904D;&#x5386;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5982;&#x679C; A &#x7EBF;&#x7A0B;&#x6B63;&#x5728;&#x5BF9;&#x96C6;&#x5408;&#x8FDB;&#x884C;&#x904D;&#x5386;&#xFF0C;&#x6B64;&#x65F6; B &#x7EBF;&#x7A0B;&#x5BF9;&#x96C6;&#x5408;&#x8FDB;&#x884C;&#x4FEE;&#x6539;&#xFF08;&#x589E;&#x52A0;&#x3001;&#x5220;&#x9664;&#x3001;&#x4FEE;&#x6539;&#xFF09;&#xFF0C;&#x6216;&#x8005; A &#x7EBF;&#x7A0B;&#x5728;&#x904D;&#x5386;&#x8FC7;&#x7A0B;&#x4E2D;&#x5BF9;&#x96C6;&#x5408;&#x8FDB;&#x884C;&#x4FEE;&#x6539;&#xFF0C;&#x90FD;&#x4F1A;&#x5BFC;&#x81F4; A &#x7EBF;&#x7A0B;&#x629B;&#x51FA; <code>ConcurrentModificationException</code> &#x5F02;&#x5E38;&#x3002;</p>
-<ul>
-<li>eg&#xFF1A;</li>
-</ul>
-<pre class="language-"><code class="lang-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util</span><span class="token punctuation">.</span><span class="token class-name">ArrayList</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util</span><span class="token punctuation">.</span><span class="token class-name">Iterator</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util</span><span class="token punctuation">.</span><span class="token class-name">List</span><span class="token punctuation">;</span>
-
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// &#x6DFB;&#x52A0;</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">ThreadA</span> <span class="token keyword">extends</span> <span class="token class-name">Thread</span><span class="token punctuation">{</span>
-
-        <span class="token class-name">ThreadA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">&quot;A&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token annotation punctuation">@Override</span>
-        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">Iterator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> iterator <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">while</span><span class="token punctuation">(</span>iterator<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token keyword">int</span> i <span class="token operator">=</span> iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;ThreadOne &#x904D;&#x5386;:&quot;</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">// &#x4FEE;&#x6539;</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">ThreadB</span> <span class="token keyword">extends</span> <span class="token class-name">Thread</span><span class="token punctuation">{</span>
-
-        <span class="token class-name">ThreadB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">&quot;B&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token annotation punctuation">@Override</span>
-        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span> <span class="token punctuation">;</span>
-            <span class="token keyword">while</span><span class="token punctuation">(</span>i <span class="token operator">&lt;</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;ThreadTwo run&#xFF1A;&quot;</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                    list<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-                i<span class="token operator">++</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span> <span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">new</span> <span class="token class-name">ThreadA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">new</span> <span class="token class-name">ThreadB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-<span class="token punctuation">}</span>
-</code></pre>
-<ul>
-<li>output</li>
-</ul>
-<pre class="language-"><code class="lang-java"><span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">0</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">0</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">1</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">2</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">3</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">4</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">5</span>
-<span class="token class-name">Exception</span> in thread <span class="token string">&quot;A&quot;</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span><span class="token class-name">ConcurrentModificationException</span>
-    at java<span class="token punctuation">.</span>util<span class="token punctuation">.</span><span class="token class-name">ArrayList</span>$<span class="token class-name">Itr</span><span class="token punctuation">.</span><span class="token function">checkForComodification</span><span class="token punctuation">(</span><span class="token class-name">ArrayList</span><span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">909</span><span class="token punctuation">)</span>
-    at java<span class="token punctuation">.</span>util<span class="token punctuation">.</span><span class="token class-name">ArrayList</span>$<span class="token class-name">Itr</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token class-name">ArrayList</span><span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">859</span><span class="token punctuation">)</span>
-    at <span class="token class-name">Main</span>$<span class="token class-name">ThreadA</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">24</span><span class="token punctuation">)</span>
-</code></pre>
-<h1 id="fail-safe&#xFF08;&#x5B89;&#x5168;&#x5931;&#x8D25;&#xFF09;">fail-safe&#xFF08;&#x5B89;&#x5168;&#x5931;&#x8D25;&#xFF09;</h1>
-<p>&#x91C7;&#x7528;&#x5B89;&#x5168;&#x5931;&#x8D25;&#x673A;&#x5236;&#x7684;&#x96C6;&#x5408;&#x5BB9;&#x5668;&#xFF0C;&#x5728;&#x904D;&#x5386;&#x65F6;&#x4E0D;&#x662F;&#x76F4;&#x63A5;&#x5728;&#x96C6;&#x5408;&#x5185;&#x5BB9;&#x4E0A;&#x8BBF;&#x95EE;&#x7684;&#xFF0C;&#x800C;&#x662F;&#x5148;&#x590D;&#x5236;&#x539F;&#x6709;&#x96C6;&#x5408;&#x5185;&#x5BB9;&#xFF0C;&#x5728;&#x62F7;&#x8D1D;&#x7684;&#x96C6;&#x5408;&#x4E0A;&#x8FDB;&#x884C;&#x904D;&#x5386;&#x3002;</p>
-<p>&#x7531;&#x4E8E;&#x8FED;&#x4EE3;&#x65F6;&#x662F;&#x5BF9;&#x539F;&#x96C6;&#x5408;&#x7684;&#x62F7;&#x8D1D;&#x8FDB;&#x884C;&#x904D;&#x5386;&#xFF0C;&#x6240;&#x4EE5;&#x5728;&#x904D;&#x5386;&#x8FC7;&#x7A0B;&#x4E2D;&#x5BF9;&#x539F;&#x96C6;&#x5408;&#x6240;&#x4F5C;&#x7684;&#x4FEE;&#x6539;&#x5E76;&#x4E0D;&#x80FD;&#x88AB;&#x8FED;&#x4EE3;&#x5668;&#x68C0;&#x6D4B;&#x5230;&#xFF0C;&#x6545;&#x4E0D;&#x4F1A;&#x629B; ConcurrentModificationException &#x5F02;&#x5E38;</p>
-<pre class="language-"><code class="lang-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util</span><span class="token punctuation">.</span><span class="token class-name">Iterator</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util</span><span class="token punctuation">.</span><span class="token class-name">List</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent</span><span class="token punctuation">.</span><span class="token class-name">CopyOnWriteArrayList</span><span class="token punctuation">;</span>
-
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CopyOnWriteArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// &#x6DFB;&#x52A0;</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">ThreadA</span> <span class="token keyword">extends</span> <span class="token class-name">Thread</span><span class="token punctuation">{</span>
-
-        <span class="token class-name">ThreadA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">&quot;A&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token annotation punctuation">@Override</span>
-        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">Iterator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> iterator <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">while</span><span class="token punctuation">(</span>iterator<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token keyword">int</span> i <span class="token operator">=</span> iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;ThreadOne &#x904D;&#x5386;:&quot;</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">// &#x4FEE;&#x6539;</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">ThreadB</span> <span class="token keyword">extends</span> <span class="token class-name">Thread</span><span class="token punctuation">{</span>
-
-        <span class="token class-name">ThreadB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">&quot;B&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token annotation punctuation">@Override</span>
-        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span> <span class="token punctuation">;</span>
-            <span class="token keyword">while</span><span class="token punctuation">(</span>i <span class="token operator">&lt;</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;ThreadTwo run&#xFF1A;&quot;</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                    list<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-                i<span class="token operator">++</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span> <span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            <span class="token class-name">ThreadA</span> threadA <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadA</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">ThreadB</span> threadB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadB</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            threadA<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            threadB<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-            threadA<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            threadB<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-        <span class="token punctuation">}</span>
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> val<span class="token operator">:</span> list<span class="token punctuation">)</span><span class="token punctuation">{</span>
-           <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">&quot; &quot;</span> <span class="token operator">+</span> val<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<h1 id="linkedhashmap">LinkedHashMap</h1>
+<p>HashMap + &#x53CC;&#x5411;&#x94FE;&#x8868;</p>
+<h2 id="&#x53CC;&#x5411;&#x94FE;&#x8868;&#x7684;&#x5B9A;&#x4E49;">&#x53CC;&#x5411;&#x94FE;&#x8868;&#x7684;&#x5B9A;&#x4E49;</h2>
+<p>&#x8282;&#x70B9;&#x7EE7;&#x627F;&#x4E86;<code>HashMap.Node<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>K,V</span><span class="token punctuation">&gt;</span></span></code>,&#x518D;&#x52A0;&#x4E0A;&#x53CC;&#x5411;&#x94FE;&#x8868;&#x7684;<code>before</code>&#x8282;&#x70B9;&#x548C;<code>after</code>&#x8282;&#x70B9;</p>
+<pre class="language-"><code class="lang-java"><span class="token comment">//&#x6269;&#x5C55;&#x4E00;&#x4E2A;&#x53CC;&#x5411;&#x94FE;&#x8868;&#x7684;entry</span>
+<span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token keyword">extends</span> <span class="token class-name">HashMap</span><span class="token punctuation">.</span><span class="token class-name">Node</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+    <span class="token class-name">Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> before<span class="token punctuation">,</span> after<span class="token punctuation">;</span>
+    <span class="token class-name">Entry</span><span class="token punctuation">(</span><span class="token keyword">int</span> hash<span class="token punctuation">,</span> <span class="token class-name">K</span> key<span class="token punctuation">,</span> <span class="token class-name">V</span> value<span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>hash<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> next<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
+
+<span class="token comment">//&#x94FE;&#x8868;&#x5934;</span>
+<span class="token keyword">transient</span> <span class="token class-name">LinkedHashMap</span><span class="token punctuation">.</span><span class="token class-name">Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> head<span class="token punctuation">;</span>
+
+<span class="token comment">//&#x94FE;&#x8868;&#x5C3E;</span>
+<span class="token keyword">transient</span> <span class="token class-name">LinkedHashMap</span><span class="token punctuation">.</span><span class="token class-name">Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> tail<span class="token punctuation">;</span>
 </code></pre>
-<ul>
-<li>output</li>
-</ul>
-<pre class="language-"><code class="lang-java"><span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">0</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">0</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">1</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">2</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">3</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">4</span>
-<span class="token class-name">ThreadTwo</span> run&#xFF1A;<span class="token number">5</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">1</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">2</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">3</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">4</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">5</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">6</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">7</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">8</span>
-<span class="token class-name">ThreadOne</span> &#x904D;&#x5386;<span class="token operator">:</span><span class="token number">9</span>
- <span class="token number">0</span> <span class="token number">1</span> <span class="token number">2</span> <span class="token number">4</span> <span class="token number">5</span> <span class="token number">6</span> <span class="token number">7</span> <span class="token number">8</span> <span class="token number">9</span>
+<h2 id="&#x4F7F;&#x7528;&#x548C;&#x8BF4;&#x660E;">&#x4F7F;&#x7528;&#x548C;&#x8BF4;&#x660E;</h2>
+<p>LinkedHashMap &#x7684;&#x7279;&#x6027;&#xFF0C; &#x6BCF;&#x4E2A;&#x8282;&#x70B9;&#x95F4;&#x7531;&#x4E00;&#x4E2A;before&#x5F15;&#x7528; &#x548C; after &#x5F15;&#x7528;&#x4E32;&#x8054;&#x8D77;&#x6765;&#x6210;&#x4E3A;&#x4E00;&#x4E2A;&#x53CC;&#x5411;&#x94FE;&#x8868;&#x3002;&#x94FE;&#x8868;&#x8282;&#x70B9;&#x6309;&#x7167;&#x8BBF;&#x95EE;&#x65F6;&#x95F4;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#xFF0C;&#x6700;&#x8FD1;&#x8BBF;&#x95EE;&#x8FC7;&#x7684;&#x94FE;&#x8868;&#x653E;&#x5728;&#x94FE;&#x8868;&#x5C3E;&#x3002;</p>
+<pre class="language-"><code class="lang-java"><span class="token comment">// 10 &#x662F;&#x521D;&#x59CB;&#x5927;&#x5C0F;&#xFF0C;0.75 &#x662F;&#x88C5;&#x8F7D;&#x56E0;&#x5B50;&#xFF0C;true &#x662F;&#x8868;&#x793A;&#x6309;&#x7167;&#x8BBF;&#x95EE;&#x65F6;&#x95F4;&#x6392;&#x5E8F;</span>
+<span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> m <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedHashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">0.75f</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+m<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+m<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+m<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">23</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+m<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">22</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+m<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">26</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+m<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token class-name">Entry</span> e <span class="token operator">:</span> m<span class="token punctuation">.</span><span class="token function">entrySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+&#x8F93;&#x51FA;&#x7684;&#x7ED3;&#x679C;&#x5C31;&#x662F; 1&#xFF0C;2&#xFF0C;3&#xFF0C;5
+*/</span>
+</code></pre>
+<h2 id="get&#x65B9;&#x6CD5;&#x7C7B;&#x4F3C;lru">get&#x65B9;&#x6CD5;(&#x7C7B;&#x4F3C;LRU)</h2>
+<p>&#x4F1A;&#x5C06;&#x5F53;&#x524D;&#x88AB;&#x8BBF;&#x95EE;&#x5230;&#x7684;&#x8282;&#x70B9;e&#xFF0C;&#x79FB;&#x52A8;&#x81F3;&#x5185;&#x90E8;&#x7684;&#x53CC;&#x5411;&#x94FE;&#x8868;&#x7684;&#x5C3E;&#x90E8;&#x3002;</p>
+<pre class="language-"><code class="lang-java"><span class="token comment">/**
+    * Returns the value to which the specified key is mapped,
+    * or {@code null} if this map contains no mapping for the key.
+    *
+    * &lt;p&gt;More formally, if this map contains a mapping from a key
+    * {@code k} to a value {@code v} such that {@code (key==null ? k==null :
+    * key.equals(k))}, then this method returns {@code v}; otherwise
+    * it returns {@code null}.  (There can be at most one such mapping.)
+    *
+    * &lt;p&gt;A return value of {@code null} does not &lt;i&gt;necessarily&lt;/i&gt;
+    * indicate that the map contains no mapping for the key; it&apos;s also
+    * possible that the map explicitly maps the key to {@code null}.
+    * The {@link #containsKey containsKey} operation may be used to
+    * distinguish these two cases.
+    */</span>
+<span class="token keyword">public</span> <span class="token class-name">V</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">Object</span> key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Node</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> e<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>e <span class="token operator">=</span> <span class="token function">getNode</span><span class="token punctuation">(</span><span class="token function">hash</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>accessOrder<span class="token punctuation">)</span>
+        <span class="token function">afterNodeAccess</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> e<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-06-09 13:00:27
+2020-08-17 19:12:08
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -1905,12 +1790,12 @@
 
             
                 
-                <a href="linked_hash_map.html" class="navigation navigation-prev " aria-label="Previous page: LinkedHashMap">
+                <a href="Map.html" class="navigation navigation-prev " aria-label="Previous page: HashMap,HashTable,ConcurrentHashMap 对比">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../java_utils/quick_sort.html" class="navigation navigation-next " aria-label="Next page: 快排(没事手写写)">
+                <a href="fail_fast.html" class="navigation navigation-next " aria-label="Next page: fail-fast,ConcurrentModificationException">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1921,7 +1806,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"fail-fast,ConcurrentModificationException","layout":"page","date":"2019-05-25 00:00","level":"1.3.1.6","depth":3,"next":{"title":"快排(没事手写写)","level":"1.3.1.7","depth":3,"path":"content/java_utils/quick_sort.md","ref":"./content/java_utils/quick_sort.md","articles":[]},"previous":{"title":"LinkedHashMap","level":"1.3.1.5","depth":3,"path":"content/java_data_structure/linked_hash_map.md","ref":"./content/java_data_structure/linked_hash_map.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_data_structure/fail_fast.md","mtime":"2020-06-09T05:00:27.789Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-17T14:31:54.136Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"LinkedHashMap","layout":"page","date":"2020-08-08 11:00","level":"1.3.1.5","depth":3,"next":{"title":"fail-fast,ConcurrentModificationException","level":"1.3.1.6","depth":3,"path":"content/java_data_structure/fail_fast.md","ref":"./content/java_data_structure/fail_fast.md","articles":[]},"previous":{"title":"HashMap,HashTable,ConcurrentHashMap 对比","level":"1.3.1.4","depth":3,"path":"content/java_data_structure/Map.md","ref":"./content/java_data_structure/Map.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_data_structure/linked_hash_map.md","mtime":"2020-08-17T11:12:08.924Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-17T14:31:54.136Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
