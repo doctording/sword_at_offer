@@ -18,3 +18,4 @@
 
 * Spring: <a href='https://github.com/doctording/spring-framework-5.1.3.RELEASE'>doctording/spring-framework-5.1.3.RELEASE</a>
 * Tomcat: <a href='https://github.com/doctording/apache-tomcat-8.5.57-src'>doctording/apache-tomcat-8.5.57-src</a>
+* Kafka: <a href="https://github.com/doctording/kafka-1.1.0-src">doctording/kafka-1.1.0-src</a>
