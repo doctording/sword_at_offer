@@ -92,6 +92,10 @@ public class Main {
 }
 ```
 
+指令有序的话，理论上不会出现x,y都等于0的情况；如果出现可以说明指令乱序
+
+![](../../content/java_thread_concurrent/imgs/cpu_2.png)
+
 ## 三级缓存
 
 ![](../../content/java_thread_concurrent/imgs/cpu.png)

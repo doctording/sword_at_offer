@@ -130,13 +130,15 @@ Class metadata, interned Strings and class static variables will be moved from t
 
 3. 如何回收
 
-## 通过`可达性分析`来判定对象是否存活(什么是垃圾?)
+## 通过可达性分析来判定对象是否存活(什么是垃圾?)
 
 算法的基本思路就是通过一系列的称为`GC Roots`的对象作为起始点，从这些节点向下搜索，搜索所走过的路径称为`引用链(Reference Chain)`,当一个对象到`GC Roots`没有任何引用链相连(用图论的话来说，就是`GC Roots`到这个对象不可达)时，则证明此对象是不可用的。
 
 ![](../../content/java_jvm/imgs/gc_roots.png)
 
-### Java中可作为`GC Roots`的对象包括
+### Java中可作为(GC Roots)的对象包括
+
+JVM stack, native method stack, run-time constant pool, static references in method area, Clazz
 
 * 虚拟机栈（栈帧中的本地变量表）中引用的对象
 * 本地方法栈中JNI(即一般说的Native方法)引用的对象
@@ -144,15 +146,11 @@ Class metadata, interned Strings and class static variables will be moved from t
 * 方法区中中的类静态属性引用的对象
 * load的Clazz
 
-<font color='red'>which instances are roots?</font>(JVM规范中)
+<a href='https://www.dynatrace.com/resources/ebooks/javabook/how-garbage-collection-works/' target='_blank'>参考学习文章链接</a>
 
-JVM stack, native method stack, run-time constant pool, static references in method area, Clazz
+## 4种引用(Reference)
 
-<a href="https://www.dynatrace.com/resources/ebooks/javabook/how-garbage-collection-works/" target="_blank">参考学习文章链接</a>
-
-## 4种引用`Reference`
-
-参考：<a href="https://www.geeksforgeeks.org/types-references-java/">https://www.geeksforgeeks.org/types-references-java/</a>
+参考：<a href='https://www.geeksforgeeks.org/types-references-java/'>types-references-java</a>
 
 ![](../../content/java_jvm/imgs/reference.png)
 
@@ -195,7 +193,7 @@ static void testM(){
 }
 ```
 
-### 软引用(`SoftReference`)
+### 软引用(SoftReference)
 
 In Soft reference, even if the object is free for garbage collection then also its not garbage collected, until JVM is in need of memory badly.The objects gets cleared from the memory when JVM runs out of memory.To create such references java.lang.ref.SoftReference class is used.(<font color='red'>JVM 内存紧张的时候会回收软引用对象</font>)
 
@@ -269,7 +267,7 @@ static void testSoftReference() throws Exception{
 }
 ```
 
-### 弱引用(`WeakReference`)
+### 弱引用(WeakReference)
 
 ```java
 // Strong Reference
@@ -316,7 +314,7 @@ static void testWeakReference(){
 }
 ```
 
-### 虚引用(`PhantomReference`)
+### 虚引用(PhantomReference)
 
 The objects which are being referenced by phantom references are eligible for garbage collection. But, before removing them from the memory, JVM puts them in a queue called ‘reference queue’ . They are put in a reference queue after calling finalize() method on them.To create such references java.lang.ref.PhantomReference class is used.
 
@@ -370,10 +368,10 @@ public static void main(String[] args) throws Exception{
 
 ## 对象是生存还是死亡的？
 
-### `两次标记`&`F-Queue`&`Finalizer线程`
+### 两次标记 & F-Queue & Finalizer线程
 
 ```java
-=》没有GC Roots的引用链 =》 判断对象是否有必要执行`finalize()`方法
+=》没有GC Roots的引用链 =》 判断对象是否有必要执行 finalize() 方法
 ```
 
 **第一次**：通过GC roots遍历，找到不在引用链内的对象。并检查是否需要执行finalize()方法。（如果没重写finalize()则只需要标记一次，然后就可以进行gc掉）
@@ -900,9 +898,9 @@ If empty regions are found (as denoted by the "X"), they are removed immediately
 
 困难点：在标记对象的过程中，引用关系也正发生着变化
 
-1. <font color='white'>白色</font>： 没有被标记的对象
-2. <font color='gray'>灰色</font>： 自身被标记，成员未被标记
-3. <font color='black'>黑色</font>： 自身被和成员都被标记完成了
+1. 白色： 没有被标记的对象
+2. 灰色： 自身被标记，成员未被标记
+3. 黑色： 自身被和成员都被标记完成了
 
 ![](../../content/java_jvm/imgs/three_color.png)
 

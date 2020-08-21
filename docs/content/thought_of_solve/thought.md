@@ -176,10 +176,9 @@ next 和 random
 
 # 31 整数中1出现的次数（从1到n整数中1出现的次数）
 
-* 遍历1到n,对每个数采用mod 10 取得1的个数，时间复杂度达到O(nlogn)
+* 遍历1到n,对每个数采用`mod 10`取得1的个数，时间复杂度达到O(nlogn)
 
-* 找规律的方法，时间复杂度达到O(logn), 参考如下的讲解
-http://blog.csdn.net/yi_afly/article/details/52012593
+* 找规律的方法，时间复杂度达到O(logn), 参考：<a href='http://blog.csdn.net/yi_afly/article/details/52012593' target='_blank'>讲解博文</a>
 
 # 32 把数组排成最小的数
 

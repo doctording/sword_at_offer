@@ -542,9 +542,9 @@ A non-clustering index is defined in the non-ordering field of the table. This t
 * 如果没有主键被定义，那么该表的第一个唯一非空索引会被作为聚集索引
 * 如果没有主键也没有合适的唯一索引，那么innodb内部会生成一个隐藏的主键作为聚集索引，这个隐藏的主键是一个6个字节的列，该列的值会随着数据的插入进行自增
 
-* 聚集索引的特点
+聚集索引的特点
 
-1. 聚集索引表记录的排列顺序和索引的排列顺序保持一致，所以查询效率相当快。只要找到第一个索引记录的值，其余的连续性的记录也一定是连续存放的。
+1. 聚集索引表记录的排列顺序和索引的排列顺序保持一致，所以查询效率相当快。只要找到第一个索引记录的值，其余的连续性的记录也一定是连续存放的
 2. 聚集索引的缺点就是修改起来比较慢，因为它需要保持表中记录和索引的顺序一致，在插入新记录的时候就会对数据也重新做一次排序。
 3. InnoDB表数据本身就是一个按B+Tree组织的一个索引结构文件，叶节点包含了完整的数据记录（.ibd文件）;MyIsam数据和索引文件是分开的（.MYD文件，.MYI文件）
 
@@ -590,7 +590,7 @@ A non-clustering index is defined in the non-ordering field of the table. This t
 
 #### MySql索引概述
 
-<a href>='https://dev.mysql.com/doc/refman/5.7/en/mysql-indexes.html' target='_blank'>https://dev.mysql.com/doc/refman/5.7/en/mysql-indexes.html</a>
+<a href='https://dev.mysql.com/doc/refman/5.7/en/mysql-indexes.html' target='_blank'>https://dev.mysql.com/doc/refman/5.7/en/mysql-indexes.html</a>
 
 Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data file without having to look at all the data. This is much faster than reading every row sequentially.
 
@@ -771,13 +771,15 @@ undo log是逻辑日志，可以理解为：只要有insert操作，就可以记
 
 ### undo / redo log文件操作
 
-![](../db_cache/imgs/innodb-log.png)
-
 #### redo log持久化策略
 
 ![](../db_cache/imgs/innodb-log.png)
 
-mysql进程挂？机器挂？性能问题考虑？
+mysql进程挂？机器挂？性能问题考虑？数据一致性考虑？
+
+0. 只写redo log，每秒落地一次，性能最高，数据一致性最差，如果mysql奔溃可能丢失一秒的数据
+1. 写redo log，buffer同时落地，性能最差，一致性最高
+2. 写redo log，buffer同时写入到os buffer，性能好，安全性也高，只要os不宕机就能保证数据一致性
 
 ### 隔离性
 
