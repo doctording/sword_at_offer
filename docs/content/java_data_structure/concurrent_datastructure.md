@@ -6,7 +6,7 @@ date: 2019-05-25 00:00
 
 [TOC]
 
-# `concurrent`数据结构
+# concurrent数据结构
 
 ## ConcurrentMap(interface)
 
@@ -21,7 +21,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     implements ConcurrentMap<K,V>, Serializable {
 ```
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/java_data_structure/imgs/concurrent_hashmap.png)
+![](../../content/java_data_structure/imgs/concurrent_hashmap.png)
 
 每个桶可能是`链表`结构或者`红黑树`结构，锁针对桶的头节点加，`锁粒度小`
 
@@ -195,11 +195,11 @@ eg, `new ConcurrentHashMap()`:
 * 这里初始化了 segment[0]，其他位置还是 null
 * put操作是，先根据 hash 值很快就能找到相应的 Segment，之后就是 Segment 内部的 put 操作了
 
-#### 锁粒度小
+#### Java8的锁粒度小
 
 只需要锁住这个链表/红黑树的head节点，并不会影响其他的table元素的读写，影响更小
 
-#### 扩容不足与改进
+#### Java8的扩容
 
 * 在并发扩容的时候，由于操作的table都是同一个，不像JDK7中分段控制，所以这里需要等扩容完之后，所有的读写操作才能进行，所以扩容的效率就成为了整个并发的一个瓶颈点
 
@@ -240,12 +240,12 @@ public class CopyOnWriteArrayList<E>
     implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
 ```
 
-* CopyOnWriteArrayList是线程安全的`ArrayList`, 读方法不加锁，写方法加锁
-* 读写分离，写时复制出一个新的数组，完成插入、修改或者移除操作后将新数组赋值给array
-* 如果读的时候有多个线程正在向CopyOnWriteArrayList添加数据，读还是会读到旧的数据，因为写的时候不会锁住旧的
-* volatile 修饰的成员变量在每次被线程访问时，都强迫从共享内存中重读该成员变量的值。而且，当成员变量发生变 化时，强迫线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。
+* `CopyOnWriteArrayList`是线程安全的`ArrayList`, 读方法不加锁;写方法加锁
+* 读写分离：写时复制出一个新的数组，完成插入、修改或者移除操作后将新数组赋值给array
+* 如果读的时候有多个线程正在向CopyOnWriteArrayList添加数据；能读到旧的数据，因为写的时候不会锁住旧的数组
+* volatile 修饰的成员变量在每次被线程访问时，都强迫从共享内存中重读该成员变量的值。而且，当成员变量发生变化时，强迫线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。
 
-### add方法使用`ReentrantLock`
+### add方法使用`ReentrantLock`，`new`新数组
 
 ```java
 public boolean add(E e) {
@@ -266,15 +266,15 @@ public boolean add(E e) {
 
 ### 缺点
 
-* 内存占用问题
+#### 内存占用问题
 
-因为CopyOnWrite的写时复制机制，所以在进行写操作的时候，内存里会同时驻扎两个对象的内存，旧的对象和新写入的对象（注意:在复制的时候只是复制容器里的引用，只是在写的时候会创建新对象添加到新容器里，而旧容器的对象还在使用，所以有两份对象内存）。如果这些对象占用的内存比较大，比如说200M左右，那么再写入100M数据进去，内存就会占用300M，那么这个时候很有可能造成频繁的Yong GC和Full GC。之前我们系统中使用了一个服务由于每晚使用CopyOnWrite机制更新大对象，造成了每晚15秒的Full GC，应用响应时间也随之变长。针对内存占用问题，可以通过压缩容器中的元素的方法来减少大对象的内存消耗，比如，如果元素全是10进制的数字，可以考虑把它压缩成36进制或64进制。或者不使用CopyOnWrite容器，而使用其他的并发容器，如ConcurrentHashMap。
+因为`CopyOnWrite`的写时复制机制，所以在进行写操作的时候，内存里会同时驻扎两个对象的内存，旧的对象和新写入的对象（注意:在复制的时候只是复制容器里的引用，只是在写的时候会创建新对象添加到新容器里，而旧容器的对象还在使用，所以有两份对象内存）。如果这些对象占用的内存比较大，比如说200M左右，那么再写入100M数据进去，内存就会占用300M，那么这个时候很有可能造成频繁的Yong GC和Full GC。之前我们系统中使用了一个服务由于每晚使用CopyOnWrite机制更新大对象，造成了每晚15秒的Full GC，应用响应时间也随之变长。针对内存占用问题，可以通过压缩容器中的元素的方法来减少大对象的内存消耗，比如，如果元素全是10进制的数字，可以考虑把它压缩成36进制或64进制。或者不使用CopyOnWrite容器，而使用其他的并发容器，如ConcurrentHashMap。
 
-* 数据一致性问题(只保证`最终一致性`)
+#### 数据一致性问题(只保证`最终一致性`)
 
 CopyOnWrite容器只能保证数据的`最终一致性`，不能保证数据的实时一致性。所以如果你希望写入的的数据，马上能读到，请不要使用CopyOnWrite容器。
 
-## CopyOnWriteArraySet(class 基于 CopyOnWriteArrayList)
+## CopyOnWriteArraySet(class 线程安全的无序的集合)
 
 ```java
 public class CopyOnWriteArraySet<E> extends AbstractSet<E>
@@ -312,6 +312,12 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
 
 add操作采用`CopyOnWriteArrayList`的`addIfAbsent`方法，加了锁保护，并创建一个新的Object数组；每次add都要进行数组的遍历，性能低
 
+1. 它最适合于具有以下特征的应用程序：Set 大小通常保持很小，只读操作远多于可变操作，需要在遍历期间防止线程间的冲突。
+2. 它是线程安全的。
+3. 因为通常需要复制整个基础数组，所以可变操作（add()、set() 和 remove() 等等）的开销很大。
+4. 迭代器支持hasNext(), next()等不可变操作，但不支持可变 remove()等 操作。
+5. 使用迭代器进行遍历的速度很快，并且不会与其他线程发生冲突。在构造迭代器时，迭代器依赖于不变的数组快照。
+
 ## ArrayBlockingQueue(class) 基于数组的阻塞队列
 
 ```java
@@ -329,7 +335,7 @@ public class LinkedBlockingDeque<E>
     implements BlockingDeque<E>, java.io.Serializable {
 ```
 
-### 链表
+### 链表Node结构
 
 ```java
 /**
@@ -362,10 +368,25 @@ private final AtomicInteger count = new AtomicInteger();
 transient Node<E> head;
 
 /**
-    * Tail of linked list.
-    * Invariant: last.next == null
-    */
+* Tail of linked list.
+* Invariant: last.next == null
+*/
 private transient Node<E> last;
+
+/** Number of items in the deque */
+private transient int count;
+
+/** Maximum number of items in the deque */
+private final int capacity;
+
+/** Main lock guarding all access */
+final ReentrantLock lock = new ReentrantLock();
+
+/** Condition for waiting takes */
+private final Condition notEmpty = lock.newCondition();
+
+/** Condition for waiting puts */
+private final Condition notFull = lock.newCondition();
 ```
 
 ### put方法，添加元素
@@ -417,31 +438,31 @@ public void put(E e) throws InterruptedException {
 
 ```java
 public boolean offer(E e, long timeout, TimeUnit unit)
-        throws InterruptedException {
+    throws InterruptedException {
 
-        if (e == null) throw new NullPointerException();
-        long nanos = unit.toNanos(timeout);
-        int c = -1;
-        final ReentrantLock putLock = this.putLock;
-        final AtomicInteger count = this.count;
-        putLock.lockInterruptibly();
-        try {
-            while (count.get() == capacity) {
-                if (nanos <= 0)
-                    return false;
-                nanos = notFull.awaitNanos(nanos);
-            }
-            enqueue(new Node<E>(e));
-            c = count.getAndIncrement();
-            if (c + 1 < capacity)
-                notFull.signal();
-        } finally {
-            putLock.unlock();
+    if (e == null) throw new NullPointerException();
+    long nanos = unit.toNanos(timeout);
+    int c = -1;
+    final ReentrantLock putLock = this.putLock;
+    final AtomicInteger count = this.count;
+    putLock.lockInterruptibly();
+    try {
+        while (count.get() == capacity) {
+            if (nanos <= 0)
+                return false;
+            nanos = notFull.awaitNanos(nanos);
         }
-        if (c == 0)
-            signalNotEmpty();
-        return true;
+        enqueue(new Node<E>(e));
+        c = count.getAndIncrement();
+        if (c + 1 < capacity)
+            notFull.signal();
+    } finally {
+        putLock.unlock();
     }
+    if (c == 0)
+        signalNotEmpty();
+    return true;
+}
 ```
 
 如果发现队列已满无法添加的话，等待指定时间后会直接返回false

@@ -43,8 +43,6 @@ null:c
 
 `数组`是HashMap的主体，`链表`则是主要为了解决哈希冲突而存在的(**拉链法**解决冲突)
 
-![](../../content/java_utils/imgs/hashmap.png)
-
 ## 拉链法解决冲突
 
 ```java
@@ -407,7 +405,7 @@ public int size() {
 
 当`链表`的节点数大于8时会转换成`红黑树`的结构
 
-## put
+### put
 
 ```java
 public V put(K key, V value) {
@@ -488,7 +486,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 }
 ```
 
-## 对比 Jdk1.7
+### 对比 Jdk1.7
 
 * JDK1.8的实现降低锁的粒度，JDK1.7版本锁的粒度是基于Segment的，包含多个HashEntry，而JDK1.8锁的粒度就是HashEntry（首节点）
 

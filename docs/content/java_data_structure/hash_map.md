@@ -6,11 +6,13 @@ date: 2020-03-08 11:00
 
 [TOC]
 
-# HashMap
+# Java8 HashMap
 
 * hash表 + 链表(拉链法) + 红黑树
 
 * hash冲突，拉链；链表过长，则转化为红黑树
+
+![](../java_data_structure/imgs/hashmap1-8.png)
 
 ## 链表结构和红黑树结构
 

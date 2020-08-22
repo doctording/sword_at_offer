@@ -1,5 +1,5 @@
 ---
-title: "Java8 ArrayList & LinkedList"
+title: "Java8 ArrayList & LinkedList & Vector"
 layout: page
 date: 2020-03-08 13:00
 ---
@@ -308,10 +308,10 @@ Node<E> node(int index) {
 
 * 需要遍历链表
 
-# Vector
+# Vector（线程安全）
 
-* Vector使用同步方法实现(synchronized)
+* Vector使用同步方法实现(synchronized),线程安全
 
-* ArrayList不可以设置扩展的容量, 默认1.5倍; Vector可以设置, 默认2倍
+* Vector和ArrayList底层是数组，ArrayList不可以设置扩展的容量, 默认1.5倍; Vector可以设置, 默认2倍
 
 * ArrayList无参构造函数中初始量为0; Vector的无参构造函数初始容量为10

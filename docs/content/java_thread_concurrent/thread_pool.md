@@ -167,11 +167,11 @@ public ThreadPoolExecutor(int corePoolSize,
 ![](../../content/java8/imgs/thread_pool_flow.png)
 
 ```java
-1、如果当前线程池的线程数还没有达到基本大小(poolSize < corePoolSize)，无论是否有空闲的线程新增一个线程处理新提交的任务；
+1、如果当前线程池的线程数还没有达到核心大小(poolSize < corePoolSize)，无论是否有空闲的线程新增一个线程处理新提交的任务；
 
-2、如果当前线程池的线程数大于或等于基本大小(poolSize >= corePoolSize) 且任务队列未满时，就将新提交的任务提交到阻塞队列排队，等候处理workQueue.offer(command)；
+2、如果当前线程池的线程数大于或等于核心大小(poolSize >= corePoolSize) 且任务队列未满时，就将新提交的任务提交到阻塞队列排队，等候处理workQueue.offer(command)；
 
-3、如果当前线程池的线程数大于或等于基本大小(poolSize >= corePoolSize) 且任务队列满时；
+3、如果当前线程池的线程数大于或等于核心大小(poolSize >= corePoolSize) 且任务队列满时；
 
     3.1、当前poolSize<maximumPoolSize，那么就新增线程来处理任务；
 
@@ -193,14 +193,7 @@ public ThreadPoolExecutor(int corePoolSize,
 3. `ThreadPoolExecutor.DiscardOldestPolicy`：丢弃队列最前面的任务，然后重新提交被拒绝的任务
 4. `ThreadPoolExecutor.CallerRunsPolicy`：由调用线程（提交任务的线程）自己处理该任务
 
-## ThreadPoolExecutor 的使用
-
-1. 当线程池**小于corePoolSize**时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程
-2. 当线程池**达到corePoolSize**时，新提交任务将被放入workQueue中，等待线程池中任务调度执行
-3. 当**workQueue已满**，如果workerCount >= corePoolSize && workerCount < maximumPoolSize，则创建并启动一个线程来执行新提交的任务；
-4. 当**workQueue已满**，且workerCount**超过maximumPoolSize**时，新提交任务由RejectedExecutionHandler处理
-5. 当线程池中有**超过corePoolSize**线程，当空闲时间**达到keepAliveTime**时，会关闭空闲线程
-6. 当设置**allowCoreThreadTimeOut(true)**时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+## ThreadPoolExecutor 的使用例子
 
 ### ThreadPoolExecutor 实例1
 
