@@ -270,7 +270,7 @@ main end
 
 ### 乐观锁
 
-乐观锁是一种乐观思想，即认为读多写少，遇到并发竞争写的可能性很低，每次去读数据的时候都认为别人不会修改，所以**不会上锁**，但是在写操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据：采取在写时先读出当前版本号，然后加锁比较（即比较跟上一次的版本号，如果一样则进行写操作），如果失败则要重复`读-比较-写`的操作(不断CAS操作，CAS就是典型的乐观锁)。
+乐观锁是一种乐观思想，即认为读多写少，遇到并发竞争写的可能性很低，每次去`读`数据的时候都认为别人不会修改，所以**不会上锁**，但是在`写`操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据：采取在写时先读出当前版本号，然后加锁比较（即比较跟上一次的版本号，如果一样则进行写操作），如果失败则要重复`读-比较-写`的操作(不断CAS操作，CAS就是典型的乐观锁)。
 
 ### 悲观锁
 
@@ -289,7 +289,6 @@ main end
 ### AtomicReference实现一个公平的自旋锁
 
 ```java
-
 /**
  * 使用了CAS原子操作，lock函数将owner设置为当前线程，并且预测原来的值为空。unlock函数将owner设置为null，并且预测值为当前线程
  *
@@ -352,7 +351,7 @@ public class Solution {
 }
 ```
 
-由于自旋锁只是将当前线程不停地执行循环体，**不进行线程状态的改变**，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行类似一个空for循环，**占用CPU时间**。如果线程竞争不激烈，并且保持锁的时间短，则适合使用自旋锁。
+由于自旋锁**不进行线程状态的改变**，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行类似一个空for循环，**占用CPU时间**。如果线程竞争不激烈，并且保持锁的时间短，则适合使用自旋锁。
 
 In software engineering, a spinlock is a lock which causes a thread trying to acquire it to simply wait in a loop ("spin") while repeatedly checking if the lock is available. Since the thread remains active but is not performing a useful task, the use of such a lock is a kind of busy waiting. Once acquired, spinlocks will usually be held until they are explicitly released, although in some implementations they may be automatically released if the thread being waited on (the one which holds the lock) blocks, or "goes to sleep".
 

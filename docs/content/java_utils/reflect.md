@@ -8,9 +8,16 @@ date: 2020-06-14 00:00
 
 # 反射
 
-Java的反射（`reflection`）机制是指在程序的运行状态中，可以构造任意一个类的对象，可以了解任意一个对象所属的类，可以了解任意一个类的成员变量和方法，可以调用任意一个对象的属性和方法。这种动态获取程序信息以及动态调用对象的功能称为Java语言的反射机制。
+Java的反射（`reflection`）机制是指在程序的运行状态中，可以构造任意一个类的对象(可以实例化该对象出来)，可以了解任意一个对象所属的类，可以了解任意一个类的成员变量和方法，可以调用任意一个对象的属性和方法。这种动态获取程序信息以及动态调用对象的功能称为Java语言的反射机制。
 
 对于一个字节码文件`.class`，虽然表面上我们对该字节码文件一无所知，但该文件本身却记录了许多信息。Java在将`.class`字节码文件载入时，JVM将产生一个`java.lang.Class`对象代表该`.class`字节码文件，从该Class对象中可以获得类的许多基本信息，这就是反射机制。
+
+## 反射机制的功能
+
+* 在运行时判断任意一个对象所属的类。
+* 在运行时构造任意一个类的对象。
+* 在运行时判断任意一个类所具有的成员变量和方法。
+* 在运行时调用任意一个对象的方法。
 
 ## 获得`Class对象`的方式
 
@@ -274,7 +281,7 @@ public static Class<?> forName(String className)
 }
 ```
 
-将类的`.class`文件加载到jvm中之外，还会对类进行解释，执行类中的`static`块(静态成员初始化，静态代码块)
+将类的`.class`文件加载到jvm中之外，还会对类进行解释，即会执行类中的`static`块(静态成员初始化，静态代码块)
 
 ### ClassLoader.loadClass
 
@@ -301,3 +308,62 @@ public Class<?> loadClass(String name) throws ClassNotFoundException {
 ```
 
 第2个boolean参数，表示目标对象是否进行链接，false表示<font color='red'>不进行链接</font>，不进行链接意味着就不会进行包括初始化等的一系列步骤，那么静态块和静态成员就不会得到执行
+
+## 反射机制会不会有性能问题？
+
+<a href='https://docs.oracle.com/javase/tutorial/reflect/index.html'>Drawbacks of Reflection
+</a>
+
+Reflection is powerful, but should not be used indiscriminately. If it is possible to perform an operation without using reflection, then it is preferable to avoid using it. The following concerns should be kept in mind when accessing code via reflection.
+
+* Performance Overhead（性能开销）
+
+Because reflection involves types that are dynamically resolved, certain Java virtual machine optimizations can not be performed. Consequently, reflective operations have slower performance than their non-reflective counterparts, and should be avoided in sections of code which are called frequently in performance-sensitive applications.
+
+* Security Restrictions（安全限制）
+
+Reflection requires a runtime permission which may not be present when running under a security manager. This is in an important consideration for code which has to run in a restricted security context, such as in an Applet.
+
+* Exposure of Internals（内部暴露）
+
+Since reflection allows code to perform operations that would be illegal in non-reflective code, such as accessing private fields and methods, the use of reflection can result in unexpected side-effects, which may render code dysfunctional and may destroy portability. Reflective code breaks abstractions and therefore may change behavior with upgrades of the platform.
+
+### 反射实例化和普通new的效率对比
+
+```java
+
+class A{
+    public void doSomeThing(){
+
+    }
+}
+
+public class Main {
+
+    static int N = 1_000_000;
+
+    public static void main(String[] args) throws Exception {
+        doRegular(); // 8,6 几毫秒
+        doReflection(); // 421,391，几百毫秒
+    }
+
+    public static void doRegular() {
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < N; i++) {
+            A a = new A();
+            a.doSomeThing();
+        }
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    public static void doReflection() throws Exception {
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < N; i++) {
+            A a = (A) Class.forName("A").newInstance();
+            a.doSomeThing();
+        }
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+}
+```
