@@ -293,7 +293,7 @@ eg: 实现`MethodInterceptor`的**intercept**方法，可以任意修改目标�
 
 ### Java动态代理和cglib动态代理的区别？
 
-* JDK动态代理只能对实现了接口的类生成代理，而不能针对类
+* JDK动态代理只能对**实现了接口的类**生成代理，而不能针对类
 * CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法
 
 1. JDK动态代理类实现了InvocationHandler接口，重写的invoke方法。

@@ -277,7 +277,16 @@ Total: reserved=6033952KB, committed=2097428KB
 
 -                     Class (reserved=1125078KB, committed=85206KB)
                             (classes #14483)
-mubi@mubideMacBook-Pro Downloads $
+                            (malloc=6870KB #17632)
+                            (mmap: reserved=1118208KB, committed=78336KB)
+
+-                    Thread (reserved=130665KB, committed=130665KB)
+                            (thread #128)
+                            (stack: reserved=130048KB, committed=130048KB)
+                            (malloc=404KB #641)
+                            (arena=214KB #255)
+
+
 ```
 
 ### Native Memory Tracking(简称:NMT) 分析
@@ -291,48 +300,48 @@ Native Memory Tracking:
 
 Total: reserved=6033952KB, committed=2097428KB
 -                 Java Heap (reserved=4194304KB, committed=1537024KB)
-                            (mmap: reserved=4194304KB, committed=1537024KB) 
- 
+                            (mmap: reserved=4194304KB, committed=1537024KB)
+
 -                     Class (reserved=1125078KB, committed=85206KB)
                             (classes #14483)
-                            (malloc=6870KB #17632) 
-                            (mmap: reserved=1118208KB, committed=78336KB) 
- 
+                            (malloc=6870KB #17632)
+                            (mmap: reserved=1118208KB, committed=78336KB)
+
 -                    Thread (reserved=130665KB, committed=130665KB)
                             (thread #128)
                             (stack: reserved=130048KB, committed=130048KB)
-                            (malloc=404KB #641) 
+                            (malloc=404KB #641)
                             (arena=214KB #255)
- 
+
 -                      Code (reserved=254310KB, committed=25318KB)
-                            (malloc=4710KB #11332) 
-                            (mmap: reserved=249600KB, committed=20608KB) 
- 
+                            (malloc=4710KB #11332)
+                            (mmap: reserved=249600KB, committed=20608KB)
+
 -                        GC (reserved=159021KB, committed=148641KB)
-                            (malloc=5777KB #297) 
-                            (mmap: reserved=153244KB, committed=142864KB) 
- 
+                            (malloc=5777KB #297)
+                            (mmap: reserved=153244KB, committed=142864KB)
+
 -                  Compiler (reserved=177KB, committed=177KB)
-                            (malloc=46KB #844) 
+                            (malloc=46KB #844)
                             (arena=131KB #3)
- 
+
 -                  Internal (reserved=143983KB, committed=143983KB)
-                            (malloc=143951KB #18708) 
-                            (mmap: reserved=32KB, committed=32KB) 
- 
+                            (malloc=143951KB #18708)
+                            (mmap: reserved=32KB, committed=32KB)
+
 -                    Symbol (reserved=21199KB, committed=21199KB)
-                            (malloc=17164KB #176970) 
+                            (malloc=17164KB #176970)
                             (arena=4036KB #1)
- 
+
 -    Native Memory Tracking (reserved=3693KB, committed=3693KB)
-                            (malloc=120KB #1832) 
+                            (malloc=120KB #1832)
                             (tracking overhead=3573KB)
- 
+
 -               Arena Chunk (reserved=1521KB, committed=1521KB)
-                            (malloc=1521KB) 
- 
+                            (malloc=1521KB)
+
 Virtual memory map:
- 
+
 [0x00000001025e7000 - 0x00000001025ef000] reserved and committed 32KB for Internal from
     [0x00000001032b4ae8] PerfMemory::create_memory_region(unsigned long)+0x728
     [0x00000001032b41ef] PerfMemory::initialize()+0x39

@@ -32,6 +32,15 @@ date: 2019-06-07 00:00
 
 javac在编译时，不会提示和发现这样的异常，不要求在程序处理这些异常。所以如果愿意，我们可以编写代码处理（使用try…catch…finally）这样的异常，也可以不处理。对于这些异常，我们应该修正代码，而不是去通过异常处理器处理 。这样的异常发生的原因多半是代码写的有问题。如除0错误ArithmeticException，错误的强制类型转换错误ClassCastException，数组索引越界ArrayIndexOutOfBoundsException，使用了空对象NullPointerException等等。
 
+常见的RuntimeException
+
+1. java.lang.NullPointerException;
+2. java.lang.ArithmaticException;
+3. java.lang.ArrayIndexoutofBoundsException
+4. StringIndexOutOfBoundsException
+5. ClassCastException
+6. IllegalArgumentException
+
 ## finally块和return
 
 ### finally 一定会执行, try中也return了

@@ -55,7 +55,17 @@ System.out.println(s3.equals(s4));
 
 # `equals`方法
 
-## `equals`方法是基类`Object`中的方法，因此对于所有的继承于`Object`的类都会有该方法。
+equals() 的作用是 用来判断两个对象是否相等。
+
+equals() 定义在JDK的Object.java中。通过判断两个对象的地址是否相等(即，是否是同一个对象)来区分它们是否相等。源码如下：
+
+```java
+public boolean equals(Object obj) {
+    return (this == obj);
+}
+```
+
+## `equals`方法是基类`Object`中的方法，因此对于所有的继承于`Object`的类都会有该方法
 
 * equals方法不能作用于基本数据类型的变量
 
@@ -63,9 +73,11 @@ System.out.println(s3.equals(s4));
 
 * 诸如`String`、`Date`等类对`equals`方法进行了`override`的话，比较的是所指向的对象的内容
 
-* equals默认实现是`==`, 不过大部分是要重写的
+* equals默认实现是`==`, 不过大部分是要重写的类的equals方法的
 
 ## 对象的hashcode方法
+
+`hashCode()`在散列表中才有用，在其它情况下没用。在散列表中`hashCode()`的作用是获取对象的散列码，进而确定该对象在散列表中的位置(散列表存储的是键值对(key-value)，它的特点是：能根据“键”快速的检索出对应的“值”。这其中就利用到了散列码！)
 
 ```java
  /**

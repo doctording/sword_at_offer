@@ -303,13 +303,13 @@ public static void testStringBuffer () {
 }
 ```
 
-## StringBuilder > StringBuffer > String
+## StringBuilder
 
 ### 非线程安全
 
 适用于单线程下在字符缓冲区进行大量操作的情况
 
-### append字符串 对比 String +
+### append字符串 对比 String 快
 
 ```java
 // 对于String，会不断的创建、回收对象，速度会很慢。

@@ -1,6 +1,40 @@
 # Summary
 
-* [1 常见设计模式]
+* [计算机组成]
+    * [CPU,缓存](./content/computer/cpu_cache.md)
+    * [进程和线程](./content/computer/process_thread.md)
+    * [内存管理](./content/computer/mem_management.md)
+* [I/O & 网络]
+    * [IO和中断](./content/java_io_net/io_interrupte.md)
+    * [IO基础]
+        * [Java IO基础](./content/java_io_net/io_basic.md)
+            * [Java IO面试题](./content/java_io_net/io_basic_pro.md)
+        * [BIO到NIO](./content/java_io_net/nio_basic.md)
+        * [再谈select & epoll](./content/java_io_net/from_io_to_epoll.md)
+        * [ServerSocketChannel](./content/java_io_net/server_socket_channel.md)
+    * [网络设计模式](./content/distributed_design/design.md)
+    * [http & tcp](./content/java_io_net/http_tcp.md)
+        * [http & tcp面试题](./content/java_io_net/http_tcp_pro.md)
+    * [nginx基础](./content/distributed_design/nginx.md)
+* [数据库]
+    * [局部性原理&磁盘IO](./content/db_cache/io.md)
+    * [MySQL](./content/db_cache/mysql.md)
+* [分布式]
+    * [分布式基础](./content/distributed_design/distribute.md)
+        * [分布式事务](./content/distributed_design/distribute_tx.md)
+        * [分布式锁](./content/distributed_design/distribute_lock.md)
+        * [分布式ID](./content/distributed_design/distribute_id.md)
+    * [rpc](./content/distributed_design/rpc.md)
+    * [zookeeper](./content/distributed_design/zk.md)
+    * [微服务](./content/distributed_design/soa.md)
+* [缓存 & 限流]
+    * [LFU](./content/db_cache/LFU.md)
+    * [LRU](./content/db_cache/LRU.md)
+    * [一致性Hash](./content/db_cache/consistent_hash.md)
+    * [布隆过滤器](./content/db_cache/bloom.md)
+    * [缓存](./content/db_cache/cache.md)
+    * [限流](./content/distributed_design/flow_limit.md)
+* [常见设计模式]
     * [代理模式](./content/design_pattern/proxy.md)
     * [单例模式](./content/design_pattern/singleton.md)
     * [工厂模式](./content/design_pattern/factory.md)
@@ -11,7 +45,7 @@
     * [访问者模式](./content/design_pattern/visitor.md)
     * [迭代器模式](./content/design_pattern/iterator.md)
     * [门面模式](./content/design_pattern/facade.md)
-* [2 数据结构和算法基础]
+* [数据结构和算法基础]
     * [常见基础数据结构](./content/java_data_structure/java_basic_datastructure.md)
         * [ArrayList & LinkedList & Vector](./content/java_data_structure/array_list.md)
         * [HashMap](./content/java_data_structure/hash_map.md)
@@ -24,7 +58,7 @@
         * [HashMap,HashTable,ConcurrentHashMap 对比](./content/java_data_structure/Map.md)
     * [高级数据结构](./content/java_data_structure/advanced_structure.md)
         * [B/B+ Tree](./content/java_data_structure/b_tree.md)
-* [3 Java基础问题]
+* [Java基础问题]
     * [System.arraycopy, Array.copyOf](./content/java_data_structure/System_arraycopy.md)
     * [== & equals方法 & hashcode方法](./content/java_utils/equals_hashcode.md)
     * [Calendar & Date](./content/java_utils/Calendar.md)
@@ -45,7 +79,7 @@
     * [《Java编程思想》第8章：多态](./content/java_thinking_in_Java/polymorphism.md)
     * [《Java编程思想》第9章：接口 补充：抽象类](./content/java_thinking_in_Java/class_final.md)
     * [《Java编程思想》第10章：内部类](./content/java_thinking_in_Java/innner_class.md)
-* [4 Java多线程 & 并发基础]
+* [Java多线程 & 并发基础]
     * [AQS](./content/java_thread_concurrent/aqs.md)
     * [CAS(Conmpare And Swap/Exchange) & unsafe](./content/java_thread_concurrent/cas.md)
     * [volatile 关键字](./content/java_thread_concurrent/volatile.md)
@@ -64,7 +98,7 @@
     * [Java Lock](./content/java_thread_concurrent/thread_lock.md)
     * [死锁问题](./content/java_thread_concurrent/thread_deadlock.md)
     * [ThreadLocal对象](./content/java_thread_concurrent/threadLocal.md)
-* [5 Java8]
+* [Java8]
     * [Future](./content/java8/java8_future.md)
     * [CompletableFuture](./content/java8/java8_completableFuture.md)
     * [interface defalt static](./content/java8/interface_default.md)
@@ -73,42 +107,13 @@
     * [Java8 Optional](./content/java8/java8_optional.md)
     * [Java8 Streams](./content/java8/streams.md)
     * [Java8 并行数据处理与性能](./content/java8/streams_parallel.md)
-* [6 JVM]
+* [JVM]
     * [内存模型与线程](./content/java_jvm/jvm_mem_model.md)
     * [类加载机制,类加载器,内存布局](./content/java_jvm/jvm_class_load.md)
     * [堆栈 & 各种GC](./content/java_jvm/jvm_mem_gc.md)
     * [JVM参数](./content/java_jvm/jvm_params.md)
     * [JVM命令工具(jstack,jmap,jcmd...)](./content/java_jvm/jvm_tools.md)
-* [7 缓存 & 限流]
-    * [LFU](./content/db_cache/LFU.md)
-    * [LRU](./content/db_cache/LRU.md)
-    * [一致性Hash](./content/db_cache/consistent_hash.md)
-    * [布隆过滤器](./content/db_cache/bloom.md)
-    * [缓存](./content/db_cache/cache.md)
-    * [限流](./content/distributed_design/flow_limit.md)
-    * [CPU,缓存](./content/java_thread_concurrent/cpu_cache.md)
-* [8 数据库]
-    * [局部性原理&磁盘IO](./content/db_cache/io.md)
-    * [MySQL](./content/db_cache/mysql.md)
-* [9 I/O & 网络]
-    * [IO和中断](./content/java_io_net/io_interrupte.md)
-    * [Java IO]
-        * [IO必备基础](./content/java_io_net/io_basic.md)
-        * [BIO到NIO](./content/java_io_net/nio_basic.md)
-        * [再谈select & epoll](./content/java_io_net/from_io_to_epoll.md)
-        * [ServerSocketChannel](./content/java_io_net/server_socket_channel.md)
-    * [网络设计模式](./content/distributed_design/design.md)
-    * [http & tcp](./content/java_io_net/http_tcp.md)
-    * [nginx基础](./content/distributed_design/nginx.md)
-* [10 分布式]
-    * [分布式基础](./content/distributed_design/distribute.md)
-        * [分布式事务](./content/distributed_design/distribute_tx.md)
-        * [分布式锁](./content/distributed_design/distribute_lock.md)
-        * [分布式ID](./content/distributed_design/distribute_id.md)
-    * [rpc](./content/distributed_design/rpc.md)
-    * [zookeeper](./content/distributed_design/zk.md)
-    * [微服务](./content/distributed_design/soa.md)
-* [11 系统设计]
+* [系统设计]
     * [秒杀系统](./content/system_design/seckill.md)
-* [12 剑指Offer]
+* [剑指Offer]
     * [剑指Offer解题思路(全)](./content/thought_of_solve/thought.md)

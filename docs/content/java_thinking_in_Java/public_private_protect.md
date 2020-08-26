@@ -10,7 +10,7 @@ date: 2018-12-12 00:00
 
 ## 访问权限修饰词
 
-Java访问控制符的含义和使用情况(不注明权限，默认是default)
+Java访问控制符的含义和使用情况(不注明权限，默认是`default`)
 
 - | 类内部 | 本包 | 子类 | 外部包
 - | -| - | - | -
@@ -141,3 +141,41 @@ public class Main2 {
 ```
 
 * 不同包，子类方法能访问`protected`的成员，子类方法不能访问`default`的成员
+
+## default 关键字
+
+`default`是在java8中引入的关键字，也可称为Virtual
+
+### 为什么有default
+
+首先，之前的接口是个双刃剑，好处是面向抽象而不是面向具体编程，缺陷是，当需要修改接口时候，需要修改全部实现该接口的类，目前的java8之前的集合框架没有foreach方法，通常能想到的解决办法是在JDK里给相关的接口添加新的方法及实现。然而，对于已经发布的版本，是没法在给接口添加新方法的同时不影响已有的实现。所以引进的默认方法。他们的目的是为了解决接口的修改与现有的实现不兼容的问题。
+
+* 接口例子
+
+```java
+package com.example.service;
+
+/**
+ * 定义一个接口
+ * @author lxp
+ * @date 2019 -11-07 11:09:02
+ */
+public interface Formula {
+
+    /**
+     * 计算的方法
+     * @param a
+     * @return
+     */
+    double calculate(int a);
+
+    /**
+     * default，默认求平方根的方法
+     * @param a
+     * @return
+     */
+    default double sqrt(int a) {
+        return Math.sqrt(a);
+    }
+}
+```

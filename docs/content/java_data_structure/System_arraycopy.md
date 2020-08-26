@@ -30,7 +30,7 @@ public static native void arraycopy(Object src,  int  srcPos,
                                 int length);
 ```
 
-## 浅拷贝
+## 浅拷贝：复制引用
 
 ```java
 public static void testArraycopy(){
@@ -59,10 +59,31 @@ public static void testArraycopy(){
     System.out.println("两个数组地址是否相同：" + (st == dt));
     for(int i=0;i<N;i++){
         // true
-        System.out.println("两个数组内容"+i+"是否相同：" + (st[0] == dt[0]));
+        System.out.println("两个数组内容"+i+"是否相同：" + (st[i] == dt[i]));
     }
+
+    st[0].a = 2;
+    System.out.println("st[0].a = " + st[0].a);
+    System.out.println("dt[0].a = " + dt[0].a);
 }
+/* 输出
+两个数组地址是否相同：false
+两个数组内容0是否相同：true
+两个数组内容1是否相同：true
+两个数组内容2是否相同：true
+st[0].a = 2
+dt[0].a = 2
+*/
 ```
+
+如下图：拷贝是复制一堆的引用变量到另一个数组，修改副本会影响原来到数组
+
+![](../../content/java_data_structure/imgs/array_copy.png)
+
+### 附：深拷贝 & 浅拷贝
+
+* 浅拷贝只是对指针的拷贝，拷贝后两个指针指向同一个内存空间；
+* 深拷贝不但对指针进行拷贝，而且对指针指向的内容进行拷贝，经深拷贝后的指针是指向两个不同地址的指针。
 
 ## 对比for效率高
 
@@ -91,6 +112,8 @@ public static void testArrayCopyOfEfficient(){
     System.out.println("System.arraycopy复制数组："  + (arrayCopyEndTime - arrayCopyStartTime) + "纳秒");
 }
 ```
+
+System.arraycopy是直接对内存进行复制，而for循环需要寻址
 
 ## 非线程安全
 
@@ -183,7 +206,7 @@ public class ArrayCopyThreadSafe {
 
 # Array.copyOf
 
-* new 新的长度，调用了`System.arraycopy`
+* 直接 new 新的长度，然后调用了`System.arraycopy`
 
 ```java
  /**

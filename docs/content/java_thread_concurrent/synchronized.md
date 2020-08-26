@@ -39,8 +39,6 @@ date: 2019-03-09 00:00
 
 `volatile`、`syncronized`、`Lock`都可保证有序性。
 
-参考：https://blog.csdn.net/qq_30948019/article/details/80193392
-
 ## synchronized的几个性质
 
 * `synchronized` 提供了一种锁对机制，能确保共享变量的互斥访问，从而防止数据不一致问题的出现

@@ -8,6 +8,8 @@ date: 2019-03-18 00:00
 
 # Java IO 基础
 
+![](../../content/java_io_net/imgs/java_io_frame.jpg)
+
 流是一组有顺序的，有起点和终点的字节集合，是对数据传输的总称或抽象。即数据在两设备间的传输称为流，**流的本质是数据传输**，根据数据传输特性将流抽象为各种类，方便更直观的进行数据操作。
 
 * 字节流 InputStream/OutStream
@@ -15,6 +17,8 @@ date: 2019-03-18 00:00
 字节流能处理所有类型的数据（如图片、avi等），而字符流只能处理字符类型的数据。
 
 * 字符流 Reader/Writer
+
+![](../../content/java_io_net/imgs/java_io_2.png)
 
 # How Java I/O Works Internally at Lower Level?
 
