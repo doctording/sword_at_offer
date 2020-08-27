@@ -478,6 +478,8 @@ t6 status:BLOCKED
 
 # 对象的`wait`,`notify`方法
 
+## wait, notify的简单使用
+
 * wait: 在其它线程调用此对象的`notify()`方法或`notifyAll()`方法前，导致当前线程等待
 * notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。
 * `sleep`方法没有释放锁，而`wait`方法释放了锁，使得其它线程可以使用同步控制块或方法；sleep是让出CPU给其它线程
@@ -503,10 +505,14 @@ class ThreadA extends Thread{
     public ThreadA(String name) {
         super(name);
     }
+
+    @Override
     public void run() {
         synchronized (this) {
             try {
+                System.out.println("run start");
                 Thread.sleep(1000); //  使当前线阻塞 1 s，确保主程序的 t1.wait(); 执行之后再执行 notify()
+                System.out.println("run end");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -517,32 +523,124 @@ class ThreadA extends Thread{
     }
 }
 
-// main 线程
-public static void main(String[] args) {
-    ThreadA t1 = new ThreadA("t1");
-    synchronized(t1) {
-        try {
-            // 启动“线程t1”
-            System.out.println(Thread.currentThread().getName()+" start t1");
-            t1.start();
-            // 主线程等待t1通过notify()唤醒。
-            System.out.println(Thread.currentThread().getName()+" wait()");
-            t1.wait();  //  不是使t1线程等待，而是当前执行wait的线程等待
-            System.out.println(Thread.currentThread().getName()+" continue");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+public class Main {
+
+    // main 线程
+    public static void main(String[] args) {
+        ThreadA t1 = new ThreadA("t1");
+        synchronized(t1) {
+            try {
+                // 启动“线程t1”
+                System.out.println(Thread.currentThread().getName()+" start");
+                t1.start();
+                // 主线程等待t1通过notify()唤醒。
+                System.out.println(Thread.currentThread().getName()+" wait()");
+                t1.wait();  //  不是使t1线程等待，而是当前执行wait的线程等待
+                System.out.println(Thread.currentThread().getName()+" continue");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 }
-/* 执行结果
+/*
 main start t1
 main wait()
+run start
+run end
 t1 call notify()
 main continue
 */
 ```
 
-## wait方法的底层原理
+## wait底层原理
+
+### wait java源码
+
+```java
+/**
+* Causes the current thread to wait until another thread invokes the
+* {@link java.lang.Object#notify()} method or the
+* {@link java.lang.Object#notifyAll()} method for this object.
+* In other words, this method behaves exactly as if it simply
+* performs the call {@code wait(0)}.
+* <p>
+* The current thread must own this object's monitor. The thread
+* releases ownership of this monitor and waits until another thread
+* notifies threads waiting on this object's monitor to wake up
+* either through a call to the {@code notify} method or the
+* {@code notifyAll} method. The thread then waits until it can
+* re-obtain ownership of the monitor and resumes execution.
+* <p>
+* As in the one argument version, interrupts and spurious wakeups are
+* possible, and this method should always be used in a loop:
+* <pre>
+*     synchronized (obj) {
+*         while (&lt;condition does not hold&gt;)
+*             obj.wait();
+*         ... // Perform action appropriate to condition
+*     }
+* </pre>
+* This method should only be called by a thread that is the owner
+* of this object's monitor. See the {@code notify} method for a
+* description of the ways in which a thread can become the owner of
+* a monitor.
+*
+* @throws  IllegalMonitorStateException  if the current thread is not
+*               the owner of the object's monitor.
+* @throws  InterruptedException if any thread interrupted the
+*             current thread before or while the current thread
+*             was waiting for a notification.  The <i>interrupted
+*             status</i> of the current thread is cleared when
+*             this exception is thrown.
+* @see        java.lang.Object#notify()
+* @see        java.lang.Object#notifyAll()
+*/
+public final void wait() throws InterruptedException {
+    wait(0);
+}
+
+public final native void wait(long timeout) throws InterruptedException;
+```
+
+### notify java源码
+
+```java
+/**
+* Wakes up a single thread that is waiting on this object's
+* monitor. If any threads are waiting on this object, one of them
+* is chosen to be awakened. The choice is arbitrary and occurs at
+* the discretion of the implementation. A thread waits on an object's
+* monitor by calling one of the {@code wait} methods.
+* <p>
+* The awakened thread will not be able to proceed until the current
+* thread relinquishes the lock on this object. The awakened thread will
+* compete in the usual manner with any other threads that might be
+* actively competing to synchronize on this object; for example, the
+* awakened thread enjoys no reliable privilege or disadvantage in being
+* the next thread to lock this object.
+* <p>
+* This method should only be called by a thread that is the owner
+* of this object's monitor. A thread becomes the owner of the
+* object's monitor in one of three ways:
+* <ul>
+* <li>By executing a synchronized instance method of that object.
+* <li>By executing the body of a {@code synchronized} statement
+*     that synchronizes on the object.
+* <li>For objects of type {@code Class,} by executing a
+*     synchronized static method of that class.
+* </ul>
+* <p>
+* Only one thread at a time can own an object's monitor.
+*
+* @throws  IllegalMonitorStateException  if the current thread is not
+*               the owner of this object's monitor.
+* @see        java.lang.Object#notifyAll()
+* @see        java.lang.Object#wait()
+*/
+public final native void notify();
+```
 
 * Java中每一个对象都可以成为一个监视器（Monitor）, 该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒调度), 一个入口队列(EntryQueue,要去竞争获取锁).
 * `waiting`进入`_waitSet`等待中(底层通过执行`thread_ParkEvent->park`来挂起线程)，等待被唤醒，**不会占用CPU**
