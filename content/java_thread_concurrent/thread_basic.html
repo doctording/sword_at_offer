@@ -1856,7 +1856,12 @@
 <li><div><a href="#monitor">Monitor</a><i></i></div></li>
 <li><div><a href="#&#x5BF9;&#x8C61;&#x7684;waitnotify&#x65B9;&#x6CD5;">&#x5BF9;&#x8C61;&#x7684;wait,notify&#x65B9;&#x6CD5;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
-<li><div><a href="#wait&#x65B9;&#x6CD5;&#x7684;&#x5E95;&#x5C42;&#x539F;&#x7406;">wait&#x65B9;&#x6CD5;&#x7684;&#x5E95;&#x5C42;&#x539F;&#x7406;</a><i></i></div></li>
+<li><div><a href="#wait-notify&#x7684;&#x7B80;&#x5355;&#x4F7F;&#x7528;">wait, notify&#x7684;&#x7B80;&#x5355;&#x4F7F;&#x7528;</a><i></i></div></li>
+<li><div><a href="#wait&#x5E95;&#x5C42;&#x539F;&#x7406;">wait&#x5E95;&#x5C42;&#x539F;&#x7406;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#wait-java&#x6E90;&#x7801;">wait java&#x6E90;&#x7801;</a><i></i></div></li>
+<li><div><a href="#notify-java&#x6E90;&#x7801;">notify java&#x6E90;&#x7801;</a><i></i></div></li>
+</ul></li>
 <li><div><a href="#wait-&#x548C;-sleep-&#x7684;&#x533A;&#x522B;&#xFF1F;">wait &#x548C; sleep &#x7684;&#x533A;&#x522B;&#xFF1F;</a><i></i></div></li>
 </ul></li>
 <li><div><a href="#threadgroup&#x7EBF;&#x7A0B;&#x7EC4;">ThreadGroup&#x7EBF;&#x7A0B;&#x7EC4;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
@@ -2344,6 +2349,7 @@ t6 status<span class="token operator">:</span>BLOCKED
 <h1 id="monitor">Monitor</h1>
 <p><a href="https://www.programcreek.com/2011/12/monitors-java-synchronization-mechanism/" target="_blank">Monitors &#x2013; The Basic Idea of Java Synchronization</a></p>
 <h1 id="&#x5BF9;&#x8C61;&#x7684;waitnotify&#x65B9;&#x6CD5;">&#x5BF9;&#x8C61;&#x7684;<code>wait</code>,<code>notify</code>&#x65B9;&#x6CD5;</h1>
+<h2 id="wait-notify&#x7684;&#x7B80;&#x5355;&#x4F7F;&#x7528;">wait, notify&#x7684;&#x7B80;&#x5355;&#x4F7F;&#x7528;</h2>
 <ul>
 <li>wait: &#x5728;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x8C03;&#x7528;&#x6B64;&#x5BF9;&#x8C61;&#x7684;<code>notify()</code>&#x65B9;&#x6CD5;&#x6216;<code>notifyAll()</code>&#x65B9;&#x6CD5;&#x524D;&#xFF0C;&#x5BFC;&#x81F4;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;</li>
 <li>notify: &#x5524;&#x9192;&#x5728;&#x6B64;&#x5BF9;&#x8C61;&#x76D1;&#x89C6;&#x5668;&#x4E0A;&#x7B49;&#x5F85;&#x7684;&#x5355;&#x4E2A;&#x7EBF;&#x7A0B;,&#x5982;&#x679C;&#x6240;&#x6709;&#x7EBF;&#x7A0B;&#x90FD;&#x5728;&#x6B64;&#x5BF9;&#x8C61;&#x4E0A;&#x7B49;&#x5F85;&#xFF0C;&#x5219;&#x4F1A;&#x9009;&#x62E9;&#x5524;&#x9192;&#x5176;&#x4E2D;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x3002;&#x9009;&#x62E9;&#x662F;&#x4EFB;&#x610F;&#x6027;&#x7684;&#xFF0C;&#x5E76;&#x5728;&#x5BF9;&#x5B9E;&#x73B0;&#x505A;&#x51FA;&#x51B3;&#x5B9A;&#x65F6;&#x53D1;&#x751F;&#x3002;&#x7EBF;&#x7A0B;&#x901A;&#x8FC7;&#x8C03;&#x7528;&#x5176;&#x4E2D;&#x4E00;&#x4E2A; wait &#x65B9;&#x6CD5;&#xFF0C;&#x5728;&#x5BF9;&#x8C61;&#x7684;&#x76D1;&#x89C6;&#x5668;&#x4E0A;&#x7B49;&#x5F85;&#x3002;</li>
@@ -2367,10 +2373,14 @@ by executing <span class="token keyword">synchronized</span> <span class="token 
     <span class="token keyword">public</span> <span class="token class-name">ThreadA</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">super</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
     <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;run start&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
                 <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//  &#x4F7F;&#x5F53;&#x524D;&#x7EBF;&#x963B;&#x585E; 1 s&#xFF0C;&#x786E;&#x4FDD;&#x4E3B;&#x7A0B;&#x5E8F;&#x7684; t1.wait(); &#x6267;&#x884C;&#x4E4B;&#x540E;&#x518D;&#x6267;&#x884C; notify()</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;run end&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
             <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
                 e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
             <span class="token punctuation">}</span>
@@ -2381,31 +2391,117 @@ by executing <span class="token keyword">synchronized</span> <span class="token 
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 
-<span class="token comment">// main &#x7EBF;&#x7A0B;</span>
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">ThreadA</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadA</span><span class="token punctuation">(</span><span class="token string">&quot;t1&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">synchronized</span><span class="token punctuation">(</span>t1<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            <span class="token comment">// &#x542F;&#x52A8;&#x201C;&#x7EBF;&#x7A0B;t1&#x201D;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">&quot; start t1&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment">// &#x4E3B;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;t1&#x901A;&#x8FC7;notify()&#x5524;&#x9192;&#x3002;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">&quot; wait()&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            t1<span class="token punctuation">.</span><span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//  &#x4E0D;&#x662F;&#x4F7F;t1&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;&#xFF0C;&#x800C;&#x662F;&#x5F53;&#x524D;&#x6267;&#x884C;wait&#x7684;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">&quot; continue&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">// main &#x7EBF;&#x7A0B;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">ThreadA</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadA</span><span class="token punctuation">(</span><span class="token string">&quot;t1&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">synchronized</span><span class="token punctuation">(</span>t1<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                <span class="token comment">// &#x542F;&#x52A8;&#x201C;&#x7EBF;&#x7A0B;t1&#x201D;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">&quot; start&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment">// &#x4E3B;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;t1&#x901A;&#x8FC7;notify()&#x5524;&#x9192;&#x3002;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">&quot; wait()&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                t1<span class="token punctuation">.</span><span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//  &#x4E0D;&#x662F;&#x4F7F;t1&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;&#xFF0C;&#x800C;&#x662F;&#x5F53;&#x524D;&#x6267;&#x884C;wait&#x7684;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">&quot; continue&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
+
 <span class="token punctuation">}</span>
-<span class="token comment">/* &#x6267;&#x884C;&#x7ED3;&#x679C;
+<span class="token comment">/*
 main start t1
 main wait()
+run start
+run end
 t1 call notify()
 main continue
 */</span>
 </code></pre>
-<h2 id="wait&#x65B9;&#x6CD5;&#x7684;&#x5E95;&#x5C42;&#x539F;&#x7406;">wait&#x65B9;&#x6CD5;&#x7684;&#x5E95;&#x5C42;&#x539F;&#x7406;</h2>
+<h2 id="wait&#x5E95;&#x5C42;&#x539F;&#x7406;">wait&#x5E95;&#x5C42;&#x539F;&#x7406;</h2>
+<h3 id="wait-java&#x6E90;&#x7801;">wait java&#x6E90;&#x7801;</h3>
+<pre class="language-"><code class="lang-java"><span class="token comment">/**
+* Causes the current thread to wait until another thread invokes the
+* {@link java.lang.Object#notify()} method or the
+* {@link java.lang.Object#notifyAll()} method for this object.
+* In other words, this method behaves exactly as if it simply
+* performs the call {@code wait(0)}.
+* &lt;p&gt;
+* The current thread must own this object&apos;s monitor. The thread
+* releases ownership of this monitor and waits until another thread
+* notifies threads waiting on this object&apos;s monitor to wake up
+* either through a call to the {@code notify} method or the
+* {@code notifyAll} method. The thread then waits until it can
+* re-obtain ownership of the monitor and resumes execution.
+* &lt;p&gt;
+* As in the one argument version, interrupts and spurious wakeups are
+* possible, and this method should always be used in a loop:
+* &lt;pre&gt;
+*     synchronized (obj) {
+*         while (&amp;lt;condition does not hold&amp;gt;)
+*             obj.wait();
+*         ... // Perform action appropriate to condition
+*     }
+* &lt;/pre&gt;
+* This method should only be called by a thread that is the owner
+* of this object&apos;s monitor. See the {@code notify} method for a
+* description of the ways in which a thread can become the owner of
+* a monitor.
+*
+* @throws  IllegalMonitorStateException  if the current thread is not
+*               the owner of the object&apos;s monitor.
+* @throws  InterruptedException if any thread interrupted the
+*             current thread before or while the current thread
+*             was waiting for a notification.  The &lt;i&gt;interrupted
+*             status&lt;/i&gt; of the current thread is cleared when
+*             this exception is thrown.
+* @see        java.lang.Object#notify()
+* @see        java.lang.Object#notifyAll()
+*/</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+    <span class="token function">wait</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="notify-java&#x6E90;&#x7801;">notify java&#x6E90;&#x7801;</h3>
+<pre class="language-"><code class="lang-java"><span class="token comment">/**
+* Wakes up a single thread that is waiting on this object&apos;s
+* monitor. If any threads are waiting on this object, one of them
+* is chosen to be awakened. The choice is arbitrary and occurs at
+* the discretion of the implementation. A thread waits on an object&apos;s
+* monitor by calling one of the {@code wait} methods.
+* &lt;p&gt;
+* The awakened thread will not be able to proceed until the current
+* thread relinquishes the lock on this object. The awakened thread will
+* compete in the usual manner with any other threads that might be
+* actively competing to synchronize on this object; for example, the
+* awakened thread enjoys no reliable privilege or disadvantage in being
+* the next thread to lock this object.
+* &lt;p&gt;
+* This method should only be called by a thread that is the owner
+* of this object&apos;s monitor. A thread becomes the owner of the
+* object&apos;s monitor in one of three ways:
+* &lt;ul&gt;
+* &lt;li&gt;By executing a synchronized instance method of that object.
+* &lt;li&gt;By executing the body of a {@code synchronized} statement
+*     that synchronizes on the object.
+* &lt;li&gt;For objects of type {@code Class,} by executing a
+*     synchronized static method of that class.
+* &lt;/ul&gt;
+* &lt;p&gt;
+* Only one thread at a time can own an object&apos;s monitor.
+*
+* @throws  IllegalMonitorStateException  if the current thread is not
+*               the owner of this object&apos;s monitor.
+* @see        java.lang.Object#notifyAll()
+* @see        java.lang.Object#wait()
+*/</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <ul>
 <li>Java&#x4E2D;&#x6BCF;&#x4E00;&#x4E2A;&#x5BF9;&#x8C61;&#x90FD;&#x53EF;&#x4EE5;&#x6210;&#x4E3A;&#x4E00;&#x4E2A;&#x76D1;&#x89C6;&#x5668;&#xFF08;Monitor&#xFF09;, &#x8BE5;Monitor&#x7531;&#x4E00;&#x4E2A;&#x9501;(lock), &#x4E00;&#x4E2A;&#x7B49;&#x5F85;&#x961F;&#x5217;(WaitingQueue&#xFF0C;&#x963B;&#x585E;&#x72B6;&#x6001;&#xFF0C;&#x7B49;&#x5F85;&#x88AB;&#x5524;&#x9192;&#x8C03;&#x5EA6;), &#x4E00;&#x4E2A;&#x5165;&#x53E3;&#x961F;&#x5217;(EntryQueue,&#x8981;&#x53BB;&#x7ADE;&#x4E89;&#x83B7;&#x53D6;&#x9501;).</li>
 <li><code>waiting</code>&#x8FDB;&#x5165;<code>_waitSet</code>&#x7B49;&#x5F85;&#x4E2D;(&#x5E95;&#x5C42;&#x901A;&#x8FC7;&#x6267;&#x884C;<code>thread_ParkEvent-&gt;park</code>&#x6765;&#x6302;&#x8D77;&#x7EBF;&#x7A0B;)&#xFF0C;&#x7B49;&#x5F85;&#x88AB;&#x5524;&#x9192;&#xFF0C;<strong>&#x4E0D;&#x4F1A;&#x5360;&#x7528;CPU</strong></li>
@@ -2865,7 +2961,7 @@ Interrupted
 <h3 id="&#x5F02;&#x5E38;&#x9000;&#x51FA;">&#x5F02;&#x5E38;&#x9000;&#x51FA;</h3>
 <h3 id="&#x8FDB;&#x7A0B;&#x5047;&#x6B7B;">&#x8FDB;&#x7A0B;&#x5047;&#x6B7B;</h3>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-08-26 09:21:50
+2020-08-27 11:18:23
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2910,7 +3006,7 @@ Interrupted
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"线程基础","layout":"page","date":"2019-02-15 00:00","level":"1.10.5","depth":2,"next":{"title":"Condition","level":"1.10.5.1","depth":3,"path":"content/java_thread_concurrent/thread_condition.md","ref":"./content/java_thread_concurrent/thread_condition.md","articles":[]},"previous":{"title":"synchronized 关键字","level":"1.10.4","depth":2,"path":"content/java_thread_concurrent/synchronized.md","ref":"./content/java_thread_concurrent/synchronized.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/thread_basic.md","mtime":"2020-08-26T01:21:50.020Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-26T15:36:42.245Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"线程基础","layout":"page","date":"2019-02-15 00:00","level":"1.10.5","depth":2,"next":{"title":"Condition","level":"1.10.5.1","depth":3,"path":"content/java_thread_concurrent/thread_condition.md","ref":"./content/java_thread_concurrent/thread_condition.md","articles":[]},"previous":{"title":"synchronized 关键字","level":"1.10.4","depth":2,"path":"content/java_thread_concurrent/synchronized.md","ref":"./content/java_thread_concurrent/synchronized.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/thread_basic.md","mtime":"2020-08-27T03:18:23.753Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-27T15:04:59.989Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
