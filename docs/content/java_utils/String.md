@@ -169,6 +169,59 @@ public String concat(String str) {
 }
 ```
 
+## new String("xx") 和 = "xx"的区别
+
+```java
+public class Main {
+
+    // main 线程
+    public static void main(String[] args) {
+        String s1 = "test";
+        String s2 = "test";
+        System.out.println("s1和s2是同一个字符串" + (s1 == s2));//true
+
+        String s3 = new String("test");
+        System.out.println("s1和s3是同一个字符串" + (s1 == s3));//false
+        String s4 = "tes" + "t";
+        System.out.println("s1和s4是同一个字符串" + (s1 == s4));//true
+        System.out.println("s3和s4是同一个字符串" + (s3 == s4));//false
+
+        String s5 = new String("test");
+        System.out.println("s1和s5是同一个字符串" + (s1 == s5));//false
+        System.out.println("s3和s5是同一个字符串" + (s3 == s5));//false
+
+        String s6 = s3.intern();
+        System.out.println("s1和s6是同一个字符串" + (s1 == s6));//true
+        System.out.println("s3和s6是同一个字符串" + (s3 == s6));//false
+
+        String s7 = "test";
+        System.out.println("s1和s7是同一个字符串" + (s1 == s7));//true
+        System.out.println("s3和s7是同一个字符串" + (s3 == s7));//false
+        System.out.println("s6和s7是同一个字符串" + (s6 == s7));//true
+
+        String s8 = new String("add");
+        String s9 = "add";
+        System.out.println("s8和s9是同一个字符串" + (s8 == s9));//false
+
+        String s10 = new String("delete").intern();
+        String s11 = "delete";
+        System.out.println("s10和s11是同一个字符串" + (s10 == s11));//true
+    }
+
+}
+```
+
+* string = "xx"，如果常量池中存在这个字符串，那么不会产生新的字符串，会引用已经存在的字符串，如果常量池中没有，则会在常量池中生成一个
+* 每次new String("xx")会在堆中创建一个"xx"对象,然后在常量池中也创建一个对象,这俩不是同一个对象；如果常量池中已经有"xx"对象，则不需要在常量池中创建；但是堆中只要new就会产生对象，且不可被引用
+* String.intern()方法会返回常量池中的"xx"对象,如果常量池已有则直接返回;如果没有,就把堆中的对象放入常量池,他俩是同一个对象,然后返回
+
+### new String("xx")创建了几个对象
+
+问：`String s=new String("xyz")`创建了几个对象，分为两种情况：
+
+1. 如果String常量池中，已经创建了"xyz"，则不会继续创建，此时只创建了一个对象new String("xyz")；
+2. 如果String常量池中，没有创建"xyz"，则会创建两个对象：一个对象是常量池中的"xyz"，一个对象是堆中new String("xyz")。
+
 ## StringBuffer
 
 final类，继承了`AbstractStringBuilder`
