@@ -3,7 +3,6 @@
 * [计算机组成]
     * [CPU,缓存](./content/computer/cpu_cache.md)
     * [进程和线程](./content/computer/process_thread.md)
-    * [内存管理](./content/computer/mem_management.md)
 * [I/O & 网络]
     * [IO和中断](./content/java_io_net/io_interrupte.md)
     * [IO基础]
@@ -59,6 +58,7 @@
     * [高级数据结构](./content/java_data_structure/advanced_structure.md)
         * [B/B+ Tree](./content/java_data_structure/b_tree.md)
 * [Java基础问题]
+    * [java.lang.Object](./content/java_utils/object.md)
     * [System.arraycopy, Array.copyOf](./content/java_data_structure/System_arraycopy.md)
     * [== & equals方法 & hashcode方法](./content/java_utils/equals_hashcode.md)
     * [Calendar & Date](./content/java_utils/Calendar.md)
