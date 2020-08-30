@@ -1,0 +1,2653 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>java.lang.Object · java-note</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="doctording">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-page-treeview/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../java_data_structure/System_arraycopy.html" />
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [计算机组成]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../computer/cpu_cache.html">
+            
+                <a href="../computer/cpu_cache.html">
+            
+                    
+                    CPU,缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../computer/process_thread.html">
+            
+                <a href="../computer/process_thread.html">
+            
+                    
+                    进程和线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [I/O & 网络]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../java_io_net/io_interrupte.html">
+            
+                <a href="../java_io_net/io_interrupte.html">
+            
+                    
+                    IO和中断
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" >
+            
+                <span>
+            
+                    
+                    [IO基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1" data-path="../java_io_net/io_basic.html">
+            
+                <a href="../java_io_net/io_basic.html">
+            
+                    
+                    Java IO基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1.1" data-path="../java_io_net/io_basic_pro.html">
+            
+                <a href="../java_io_net/io_basic_pro.html">
+            
+                    
+                    Java IO面试题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    BIO到NIO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.3" data-path="../java_io_net/from_io_to_epoll.html">
+            
+                <a href="../java_io_net/from_io_to_epoll.html">
+            
+                    
+                    再谈select & epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.4" data-path="../java_io_net/server_socket_channel.html">
+            
+                <a href="../java_io_net/server_socket_channel.html">
+            
+                    
+                    ServerSocketChannel
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../java_io_net/http_tcp.html">
+            
+                <a href="../java_io_net/http_tcp.html">
+            
+                    
+                    http & tcp
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.4.1" data-path="../java_io_net/http_tcp_pro.html">
+            
+                <a href="../java_io_net/http_tcp_pro.html">
+            
+                    
+                    http & tcp面试题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../distributed_design/nginx.html">
+            
+                <a href="../distributed_design/nginx.html">
+            
+                    
+                    nginx基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    [数据库]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../db_cache/io.html">
+            
+                <a href="../db_cache/io.html">
+            
+                    
+                    局部性原理&磁盘IO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../db_cache/mysql.html">
+            
+                <a href="../db_cache/mysql.html">
+            
+                    
+                    MySQL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    [分布式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../distributed_design/distribute.html">
+            
+                <a href="../distributed_design/distribute.html">
+            
+                    
+                    分布式基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1.1" data-path="../distributed_design/distribute_tx.html">
+            
+                <a href="../distributed_design/distribute_tx.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.2" data-path="../distributed_design/distribute_lock.html">
+            
+                <a href="../distributed_design/distribute_lock.html">
+            
+                    
+                    分布式锁
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.3" data-path="../distributed_design/distribute_id.html">
+            
+                <a href="../distributed_design/distribute_id.html">
+            
+                    
+                    分布式ID
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../distributed_design/rpc.html">
+            
+                <a href="../distributed_design/rpc.html">
+            
+                    
+                    rpc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../distributed_design/zk.html">
+            
+                <a href="../distributed_design/zk.html">
+            
+                    
+                    zookeeper
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../distributed_design/soa.html">
+            
+                <a href="../distributed_design/soa.html">
+            
+                    
+                    微服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    [缓存 & 限流]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../db_cache/LFU.html">
+            
+                <a href="../db_cache/LFU.html">
+            
+                    
+                    LFU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../db_cache/LRU.html">
+            
+                <a href="../db_cache/LRU.html">
+            
+                    
+                    LRU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../db_cache/consistent_hash.html">
+            
+                <a href="../db_cache/consistent_hash.html">
+            
+                    
+                    一致性Hash
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../db_cache/bloom.html">
+            
+                <a href="../db_cache/bloom.html">
+            
+                    
+                    布隆过滤器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../db_cache/cache.html">
+            
+                <a href="../db_cache/cache.html">
+            
+                    
+                    缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="../distributed_design/flow_limit.html">
+            
+                <a href="../distributed_design/flow_limit.html">
+            
+                    
+                    限流
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    [常见设计模式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../design_pattern/proxy.html">
+            
+                <a href="../design_pattern/proxy.html">
+            
+                    
+                    代理模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../design_pattern/singleton.html">
+            
+                <a href="../design_pattern/singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../design_pattern/factory.html">
+            
+                <a href="../design_pattern/factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../design_pattern/template.html">
+            
+                <a href="../design_pattern/template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../design_pattern/strategy.html">
+            
+                <a href="../design_pattern/strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="../design_pattern/decorator.html">
+            
+                <a href="../design_pattern/decorator.html">
+            
+                    
+                    装饰器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.7" data-path="../design_pattern/observer.html">
+            
+                <a href="../design_pattern/observer.html">
+            
+                    
+                    观察者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.8" data-path="../design_pattern/visitor.html">
+            
+                <a href="../design_pattern/visitor.html">
+            
+                    
+                    访问者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.9" data-path="../design_pattern/iterator.html">
+            
+                <a href="../design_pattern/iterator.html">
+            
+                    
+                    迭代器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.10" data-path="../design_pattern/facade.html">
+            
+                <a href="../design_pattern/facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" >
+            
+                <span>
+            
+                    
+                    [数据结构和算法基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../java_data_structure/java_basic_datastructure.html">
+            
+                <a href="../java_data_structure/java_basic_datastructure.html">
+            
+                    
+                    常见基础数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1.1" data-path="../java_data_structure/array_list.html">
+            
+                <a href="../java_data_structure/array_list.html">
+            
+                    
+                    ArrayList & LinkedList & Vector
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.2" data-path="../java_data_structure/hash_map.html">
+            
+                <a href="../java_data_structure/hash_map.html">
+            
+                    
+                    HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.3" data-path="../java_data_structure/hash_table.html">
+            
+                <a href="../java_data_structure/hash_table.html">
+            
+                    
+                    HashTable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.4" data-path="../java_data_structure/linked_hash_map.html">
+            
+                <a href="../java_data_structure/linked_hash_map.html">
+            
+                    
+                    LinkedHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.5" data-path="../java_data_structure/tree_map.html">
+            
+                <a href="../java_data_structure/tree_map.html">
+            
+                    
+                    TreeMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.6" data-path="../java_data_structure/fail_fast.html">
+            
+                <a href="../java_data_structure/fail_fast.html">
+            
+                    
+                    fail-fast,ConcurrentModificationException
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.7" data-path="quick_sort.html">
+            
+                <a href="quick_sort.html">
+            
+                    
+                    快排(没事手写写)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.8" data-path="../java_data_structure/concurrent_datastructure.html">
+            
+                <a href="../java_data_structure/concurrent_datastructure.html">
+            
+                    
+                    concurrent数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.9" data-path="../java_data_structure/Map.html">
+            
+                <a href="../java_data_structure/Map.html">
+            
+                    
+                    HashMap,HashTable,ConcurrentHashMap 对比
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../java_data_structure/advanced_structure.html">
+            
+                <a href="../java_data_structure/advanced_structure.html">
+            
+                    
+                    高级数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.2.1" data-path="../java_data_structure/b_tree.html">
+            
+                <a href="../java_data_structure/b_tree.html">
+            
+                    
+                    B/B+ Tree
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" >
+            
+                <span>
+            
+                    
+                    [Java基础问题]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.9.1" data-path="object.html">
+            
+                <a href="object.html">
+            
+                    
+                    java.lang.Object
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../java_data_structure/System_arraycopy.html">
+            
+                <a href="../java_data_structure/System_arraycopy.html">
+            
+                    
+                    System.arraycopy, Array.copyOf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="equals_hashcode.html">
+            
+                <a href="equals_hashcode.html">
+            
+                    
+                    == & equals方法 & hashcode方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="Calendar.html">
+            
+                <a href="Calendar.html">
+            
+                    
+                    Calendar & Date
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="Compare.html">
+            
+                <a href="Compare.html">
+            
+                    
+                    Comparison method violates its general contract
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="int_Integer.html">
+            
+                <a href="int_Integer.html">
+            
+                    
+                    int(基本类型) & Integer(包装类类型)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.7" data-path="exception.html">
+            
+                <a href="exception.html">
+            
+                    
+                    Java异常&错误
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.8" data-path="String.html">
+            
+                <a href="String.html">
+            
+                    
+                    String,StringBuffer,StringBuilder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.9" data-path="reflect.html">
+            
+                <a href="reflect.html">
+            
+                    
+                    反射机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.10" data-path="call_back.html">
+            
+                <a href="call_back.html">
+            
+                    
+                    回调 & 事件机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.11" data-path="array_collection.html">
+            
+                <a href="array_collection.html">
+            
+                    
+                    数组，集合转换等问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.12" data-path="annotation.html">
+            
+                <a href="annotation.html">
+            
+                    
+                    注解 Annotation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.13" data-path="../java_jvm/jvm_runtime.html">
+            
+                <a href="../java_jvm/jvm_runtime.html">
+            
+                    
+                    Runtime类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.14" data-path="../java_data_structure/unsafe.html">
+            
+                <a href="../java_data_structure/unsafe.html">
+            
+                    
+                    unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.15" data-path="../java_thinking_in_Java/basic.html">
+            
+                <a href="../java_thinking_in_Java/basic.html">
+            
+                    
+                    《Java编程思想》第3章：操作符，第4章：控制执行流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.16" data-path="../java_thinking_in_Java/constructor.html">
+            
+                <a href="../java_thinking_in_Java/constructor.html">
+            
+                    
+                    《Java编程思想》第5章：初始化和清理(重点)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.17" data-path="../java_thinking_in_Java/public_private_protect.html">
+            
+                <a href="../java_thinking_in_Java/public_private_protect.html">
+            
+                    
+                    《Java编程思想》第6章：访问权限控制(重要)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.18" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第7章：复用类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.19" data-path="../java_thinking_in_Java/polymorphism.html">
+            
+                <a href="../java_thinking_in_Java/polymorphism.html">
+            
+                    
+                    《Java编程思想》第8章：多态
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.20" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第9章：接口 补充：抽象类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.21" data-path="../java_thinking_in_Java/innner_class.html">
+            
+                <a href="../java_thinking_in_Java/innner_class.html">
+            
+                    
+                    《Java编程思想》第10章：内部类
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    [Java多线程 & 并发基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../java_thread_concurrent/aqs.html">
+            
+                <a href="../java_thread_concurrent/aqs.html">
+            
+                    
+                    AQS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="../java_thread_concurrent/cas.html">
+            
+                <a href="../java_thread_concurrent/cas.html">
+            
+                    
+                    CAS(Conmpare And Swap/Exchange) & unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../java_thread_concurrent/volatile.html">
+            
+                <a href="../java_thread_concurrent/volatile.html">
+            
+                    
+                    volatile 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_thread_concurrent/synchronized.html">
+            
+                <a href="../java_thread_concurrent/synchronized.html">
+            
+                    
+                    synchronized 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../java_thread_concurrent/thread_basic.html">
+            
+                <a href="../java_thread_concurrent/thread_basic.html">
+            
+                    
+                    线程基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.5.1" data-path="../java_thread_concurrent/thread_condition.html">
+            
+                <a href="../java_thread_concurrent/thread_condition.html">
+            
+                    
+                    Condition
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5.2" data-path="../java_thread_concurrent/semaphore.html">
+            
+                <a href="../java_thread_concurrent/semaphore.html">
+            
+                    
+                    Semaphore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5.3" data-path="../java_thread_concurrent/hook_thread.html">
+            
+                <a href="../java_thread_concurrent/hook_thread.html">
+            
+                    
+                    Hook线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5.4" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5.5" data-path="../java_thread_concurrent/longAdder.html">
+            
+                <a href="../java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5.6" data-path="../java_thread_concurrent/thread_design.html">
+            
+                <a href="../java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" >
+            
+                <span>
+            
+                    
+                    [线程池]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.6.1" data-path="../java_thread_concurrent/thread_pool.html">
+            
+                <a href="../java_thread_concurrent/thread_pool.html">
+            
+                    
+                    Java线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.2" data-path="../java_thread_concurrent/concurrency_problems.html">
+            
+                <a href="../java_thread_concurrent/concurrency_problems.html">
+            
+                    
+                    常见的多线程题目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6.3" data-path="../java_thread_concurrent/thread_pool_self.html">
+            
+                <a href="../java_thread_concurrent/thread_pool_self.html">
+            
+                    
+                    自定义线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.7" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.8" data-path="../java_thread_concurrent/thread_deadlock.html">
+            
+                <a href="../java_thread_concurrent/thread_deadlock.html">
+            
+                    
+                    死锁问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.9" data-path="../java_thread_concurrent/threadLocal.html">
+            
+                <a href="../java_thread_concurrent/threadLocal.html">
+            
+                    
+                    ThreadLocal对象
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    [Java8]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../java8/java8_future.html">
+            
+                <a href="../java8/java8_future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="../java8/java8_completableFuture.html">
+            
+                <a href="../java8/java8_completableFuture.html">
+            
+                    
+                    CompletableFuture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.3" data-path="../java8/interface_default.html">
+            
+                <a href="../java8/interface_default.html">
+            
+                    
+                    interface defalt static
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.4" data-path="../java8/java8_mem.html">
+            
+                <a href="../java8/java8_mem.html">
+            
+                    
+                    Java8 jvm内存结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5" data-path="../java8/lambda.html">
+            
+                <a href="../java8/lambda.html">
+            
+                    
+                    Java8 lambda表达式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6" data-path="../java8/java8_optional.html">
+            
+                <a href="../java8/java8_optional.html">
+            
+                    
+                    Java8 Optional
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7" data-path="../java8/streams.html">
+            
+                <a href="../java8/streams.html">
+            
+                    
+                    Java8 Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.8" data-path="../java8/streams_parallel.html">
+            
+                <a href="../java8/streams_parallel.html">
+            
+                    
+                    Java8 并行数据处理与性能
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" >
+            
+                <span>
+            
+                    
+                    [JVM]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="../java_jvm/jvm_mem_model.html">
+            
+                <a href="../java_jvm/jvm_mem_model.html">
+            
+                    
+                    内存模型与线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.2" data-path="../java_jvm/jvm_class_load.html">
+            
+                <a href="../java_jvm/jvm_class_load.html">
+            
+                    
+                    类加载机制,类加载器,内存布局
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.3" data-path="../java_jvm/jvm_mem_gc.html">
+            
+                <a href="../java_jvm/jvm_mem_gc.html">
+            
+                    
+                    堆栈 & 各种GC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.4" data-path="../java_jvm/jvm_params.html">
+            
+                <a href="../java_jvm/jvm_params.html">
+            
+                    
+                    JVM参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.5" data-path="../java_jvm/jvm_tools.html">
+            
+                <a href="../java_jvm/jvm_tools.html">
+            
+                    
+                    JVM命令工具(jstack,jmap,jcmd...)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" >
+            
+                <span>
+            
+                    
+                    [系统设计]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.13.1" data-path="../system_design/seckill.html">
+            
+                <a href="../system_design/seckill.html">
+            
+                    
+                    秒杀系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" >
+            
+                <span>
+            
+                    
+                    [剑指Offer]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.14.1" data-path="../thought_of_solve/thought.html">
+            
+                <a href="../thought_of_solve/thought.html">
+            
+                    
+                    剑指Offer解题思路(全)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >java.lang.Object</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#javalangobject">java.lang.Object</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#9&#x7C7B;&#x79CD;&#x65B9;&#x6CD5;&#x975E;9&#x4E2A;">9&#x7C7B;(&#x79CD;)&#x65B9;&#x6CD5;(&#x975E;9&#x4E2A;)</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#registernatives">registerNatives</a><i></i></div></li>
+<li><div><a href="#clone&#x65B9;&#x6CD5;">clone&#x65B9;&#x6CD5;</a><i></i></div></li>
+<li><div><a href="#finalize">finalize()</a><i></i></div></li>
+<li><div><a href="#getclass&#x65B9;&#x6CD5;">getClass&#x65B9;&#x6CD5;</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#&#x9644;&#xFF1A;object&#x7C7B;&#x7684;&#x6E90;&#x7801;">&#x9644;&#xFF1A;Object&#x7C7B;&#x7684;&#x6E90;&#x7801;</a><i></i></div></li>
+</ul></li>
+</ul>
+</div>
+
+
+<p>[TOC]</p>
+<h1 id="javalangobject">java.lang.Object</h1>
+<h2 id="9&#x7C7B;&#x79CD;&#x65B9;&#x6CD5;&#x975E;9&#x4E2A;">9&#x7C7B;(&#x79CD;)&#x65B9;&#x6CD5;(&#x975E;9&#x4E2A;)</h2>
+<pre class="language-"><code class="lang-java"><span class="token comment">// &#x6CE8;&#x518C;&#x672C;&#x5730;&#x65B9;&#x6CD5;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token punctuation">{</span>
+    <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// getClass</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// hashCode</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">int</span> <span class="token function">hashCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// equals</span>
+<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">equals</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token operator">==</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// clone</span>
+<span class="token keyword">protected</span> <span class="token keyword">native</span> <span class="token class-name">Object</span> <span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">CloneNotSupportedException</span><span class="token punctuation">;</span>
+<span class="token comment">// toString</span>
+<span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">&quot;@&quot;</span> <span class="token operator">+</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">toHexString</span><span class="token punctuation">(</span><span class="token function">hashCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// noity</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">notifyAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// wait</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">,</span> <span class="token keyword">int</span> nanos<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>timeout <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalArgumentException</span><span class="token punctuation">(</span><span class="token string">&quot;timeout value is negative&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>nanos <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> nanos <span class="token operator">&gt;</span> <span class="token number">999999</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalArgumentException</span><span class="token punctuation">(</span>
+                            <span class="token string">&quot;nanosecond timeout value out of range&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>nanos <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        timeout<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">wait</span><span class="token punctuation">(</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+    <span class="token function">wait</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// finalize</span>
+<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">finalize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Throwable</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+</code></pre>
+<h3 id="registernatives">registerNatives</h3>
+<p>native&#x65B9;&#x6CD5;&#x662F;&#x8054;&#x7CFB;Java&#x7A0B;&#x5E8F;&#x548C;&#x5E95;&#x5C42;&#x4E3B;&#x673A;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7684;&#x8FDE;&#x63A5;&#x65B9;&#x6CD5;,&#x4E00;&#x4E2A;Java&#x7A0B;&#x5E8F;&#x8981;&#x60F3;&#x8C03;&#x7528;&#x4E00;&#x4E2A;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#xFF0C;&#x9700;&#x8981;&#x6267;&#x884C;&#x4E24;&#x4E2A;&#x6B65;&#x9AA4;&#xFF1A;</p>
+<ol>
+<li>&#x901A;&#x8FC7;System.loadLibrary()&#x5C06;&#x5305;&#x542B;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x5B9E;&#x73B0;&#x7684;&#x52A8;&#x6001;&#x6587;&#x4EF6;&#x52A0;&#x8F7D;&#x8FDB;&#x5185;&#x5B58;&#xFF1B;</li>
+<li>&#x5F53;Java&#x7A0B;&#x5E8F;&#x9700;&#x8981;&#x8C03;&#x7528;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x65F6;&#xFF0C;&#x865A;&#x62DF;&#x673A;&#x5728;&#x52A0;&#x8F7D;&#x7684;&#x52A8;&#x6001;&#x6587;&#x4EF6;&#x4E2D;&#x5B9A;&#x4F4D;&#x5E76;&#x94FE;&#x63A5;&#x8BE5;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#xFF0C;&#x4ECE;&#x800C;&#x5F97;&#x4EE5;&#x6267;&#x884C;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x3002;</li>
+</ol>
+<p>registerNatives()&#x65B9;&#x6CD5;&#x7684;&#x4F5C;&#x7528;&#x5C31;&#x662F;&#x53D6;&#x4EE3;&#x7B2C;2&#x6B65;&#xFF0C;&#x8BA9;&#x7A0B;&#x5E8F;&#x4E3B;&#x52A8;&#x5C06;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x94FE;&#x63A5;&#x5230;&#x8C03;&#x7528;&#x65B9;&#xFF0C;&#x5F53;Java&#x7A0B;&#x5E8F;&#x9700;&#x8981;&#x8C03;&#x7528;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x65F6;&#x5C31;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x8C03;&#x7528;&#xFF0C;&#x800C;&#x4E0D;&#x9700;&#x8981;&#x865A;&#x62DF;&#x673A;&#x518D;&#x53BB;&#x5B9A;&#x4F4D;&#x5E76;&#x94FE;&#x63A5;</p>
+<p>registerNatives&#x672C;&#x8D28;&#x4E0A;&#x5C31;&#x662F;&#x4E00;&#x4E2A;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#xFF0C;&#x4F46;&#x8FD9;&#x53C8;&#x662F;&#x4E00;&#x4E2A;&#x6709;&#x522B;&#x4E8E;&#x4E00;&#x822C;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x7684;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#xFF0C;&#x8BE5;&#x65B9;&#x6CD5;&#x5E94;&#x8BE5;&#x662F;&#x7528;&#x6765;&#x6CE8;&#x518C;&#x672C;&#x5730;&#x65B9;&#x6CD5;&#x7684;:&#x6CE8;&#x518C;&#x7684;&#x65B9;&#x6CD5;&#x5C31;&#x662F;&#x8BE5;&#x7C7B;&#x6240;&#x5305;&#x542B;&#x7684;&#x9664;&#x4E86;registerNatives()&#x65B9;&#x6CD5;&#x4EE5;&#x5916;&#x7684;&#x6240;&#x6709;&#x672C;&#x5730;&#x65B9;&#x6CD5;</p>
+<h3 id="clone&#x65B9;&#x6CD5;">clone&#x65B9;&#x6CD5;</h3>
+<ul>
+<li>clone()&#x65B9;&#x6CD5; &#x4E0E;new constructor()&#x6784;&#x9020;&#x5668;&#x521B;&#x5EFA;&#x5BF9;&#x8C61;&#x4E0D;&#x540C; &#x662F;&#x514B;&#x9686;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x5BF9;&#x8C61;</li>
+<li>clone()&#x65B9;&#x6CD5; &#x5BF9;&#x8C61;&#x91CC;&#x9762;&#x7684;&#x6210;&#x5458;&#x4E00;&#x822C;&#x662F;<code>&#x6D45;&#x62F7;&#x8D1D;</code></li>
+</ul>
+<p>&#x4F7F;&#x7528;clone&#x7684;&#x6B65;&#x9AA4;</p>
+<ol>
+<li>&#x5B9E;&#x73B0;clone&#x7684;&#x7C7B;&#x9996;&#x5148;&#x9700;&#x8981;&#x7EE7;&#x627F;Cloneable&#x63A5;&#x53E3;&#x3002;Cloneable&#x63A5;&#x53E3;&#x5B9E;&#x8D28;&#x4E0A;&#x662F;&#x4E00;&#x4E2A;&#x6807;&#x8BC6;&#x63A5;&#x53E3;&#xFF0C;&#x6CA1;&#x6709;&#x4EFB;&#x4F55;&#x63A5;&#x53E3;&#x65B9;&#x6CD5;&#x3002;</li>
+<li>&#x5728;&#x7C7B;&#x4E2D;&#x91CD;&#x5199;Object&#x7C7B;&#x4E2D;&#x7684;clone()&#x65B9;&#x6CD5;&#x3002;</li>
+<li>&#x5728;clone&#x65B9;&#x6CD5;&#x4E2D;&#x8C03;&#x7528;super.clone()&#x3002;&#x65E0;&#x8BBA;clone&#x7C7B;&#x7684;&#x7EE7;&#x627F;&#x7ED3;&#x6784;&#x662F;&#x4EC0;&#x4E48;&#xFF0C;super.clone()&#x90FD;&#x4F1A;&#x76F4;&#x63A5;&#x6216;&#x95F4;&#x63A5;&#x8C03;&#x7528;java.lang,Object&#x7C7B;&#x7684;clone()&#x65B9;&#x6CD5;&#x3002;</li>
+<li>&#x628A;&#x6D45;&#x590D;&#x5236;&#x7684;&#x5F15;&#x7528;&#x6307;&#x5411;&#x539F;&#x578B;&#x5BF9;&#x8C61;&#x65B0;&#x7684;&#x514B;&#x9686;&#x4F53;&#x3002;</li>
+</ol>
+<pre class="language-"><code class="lang-java"><span class="token keyword">class</span> <span class="token class-name">Car</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">class</span> <span class="token class-name">Man</span> <span class="token keyword">implements</span> <span class="token class-name">Cloneable</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token class-name">Car</span> car<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Man</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Man</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">,</span> <span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> id<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+        <span class="token class-name">Car</span> car <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Car</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        car<span class="token punctuation">.</span>name <span class="token operator">=</span> id<span class="token operator">+</span><span class="token string">&quot;:&quot;</span><span class="token operator">+</span>name<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setName</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Integer</span> <span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> id<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setId</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> id<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> name<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Car</span> <span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> car<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCar</span><span class="token punctuation">(</span><span class="token class-name">Car</span> car<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+<span class="token comment">//    @Override</span>
+<span class="token comment">//    protected Object clone() throws CloneNotSupportedException {</span>
+<span class="token comment">//        return super.clone();</span>
+<span class="token comment">//    }</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">Man</span> m <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Man</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        m<span class="token punctuation">.</span><span class="token function">setId</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        m<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Car</span> car <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            car <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Car</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            car<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>car<span class="token punctuation">.</span>name<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        m<span class="token punctuation">.</span><span class="token function">setCar</span><span class="token punctuation">(</span>car<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> m<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>
+        <span class="token class-name">Man</span> m1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Man</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&quot;A&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Man</span> m2 <span class="token operator">=</span> m1<span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        m2<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">&quot;m2&quot;</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m1<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m2<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">Man</span> m3 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Man</span><span class="token punctuation">)</span> m1<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m1 <span class="token operator">==</span> m3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m1<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m3<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        m3<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">&quot;m3&quot;</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m1<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>m3<span class="token punctuation">.</span><span class="token function">getCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="finalize">finalize()</h3>
+<p>&#x5728;GC&#x51C6;&#x5907;&#x91CA;&#x653E;&#x5BF9;&#x8C61;&#x6240;&#x5360;&#x7528;&#x7684;&#x5185;&#x5B58;&#x7A7A;&#x95F4;&#x4E4B;&#x524D;&#xFF0C;&#x5B83;&#x5C06;&#x9996;&#x5148;&#x8C03;&#x7528;finalize()&#x65B9;&#x6CD5;;</p>
+<p><strong>&#x7B2C;&#x4E00;&#x6B21;GC&#x904D;&#x5386;&#x5904;&#x7406;</strong>&#xFF1A;&#x901A;&#x8FC7;GC roots&#x904D;&#x5386;&#xFF0C;&#x627E;&#x5230;&#x4E0D;&#x5728;&#x5F15;&#x7528;&#x94FE;&#x5185;&#x7684;&#x5BF9;&#x8C61;&#x3002;&#x5E76;&#x68C0;&#x67E5;&#x662F;&#x5426;&#x9700;&#x8981;&#x6267;&#x884C;finalize()&#x65B9;&#x6CD5;&#x3002;&#xFF08;&#x5982;&#x679C;&#x6CA1;&#x91CD;&#x5199;finalize()&#x5219;&#x53EA;&#x9700;&#x8981;&#x6807;&#x8BB0;&#x4E00;&#x6B21;&#xFF0C;&#x7136;&#x540E;&#x5C31;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;gc&#x6389;&#xFF09;</p>
+<p>&#x5728;&#x7B2C;&#x4E00;&#x6B21;&#x6807;&#x8BB0;&#x4E2D;&#x6709;<code>finalize()</code>&#x9700;&#x8981;&#x88AB;&#x6267;&#x884C;&#x7684;&#x5BF9;&#x8C61;&#xFF0C;&#x4F1A;&#x88AB;&#x4E22;&#x5230;&#x4E00;&#x4E2A;&#x4F18;&#x5148;&#x7EA7;&#x8F83;&#x4F4E;&#x7684;&#x961F;&#x5217;(<code>F-Queue</code>:<code>java.lang.ref.Finalizer.ReferenceQueue</code>)&#x4E2D;&#x6267;&#x884C;&#xFF0C;&#x4F46;&#x4E0D;&#x4FDD;&#x8BC1;&#x80FD;&#x88AB;&#x6267;&#x884C;(&#x56E0;&#x4E3A;&#x662F;&#x7531;<strong>&#x4F4E;&#x4F18;&#x5148;&#x7EA7;</strong>&#x7684;<code>Finalizer&#x7EBF;&#x7A0B;</code>&#x53BB;&#x5904;&#x7406;&#x7684;&#xFF0C;&#x8BD5;&#x60F3;&#x4F4E;&#x4F18;&#x5148;&#x7EA7;&#x7EBF;&#x7A0B;&#x4E0D;&#x88AB;&#x6267;&#x884C;&#x5230;&#xFF0C;&#x90A3;&#x4E48;&#x91CD;&#x5199;&#x4E86;<code>finalize()</code>&#x7684;&#x5BF9;&#x8C61;&#x5C31;&#x6C38;&#x4E45;&#x5728;&#x5806;&#x4E2D;&#x4E0D;&#x80FD;&#x88AB;gc&#x6389;&#xFF0C;&#x5373;<code>java.lang.ref.Finalizer</code>&#x5BF9;&#x8C61;&#x4F1A;&#x5360;&#x7528;&#x5F88;&#x5927;&#x7684;&#x5806;&#x7A7A;&#x95F4;&#xFF0C;&#x751A;&#x81F3;&#x6EA2;&#x51FA;)</p>
+<p><strong>&#x7B2C;&#x4E8C;&#x6B21;</strong>&#xFF1A;&#x5BF9;&#x961F;&#x5217;(<code>F-Queue</code>)&#x4E2D;&#x7684;&#x5BF9;&#x8C61;&#x518D;&#x904D;&#x5386;&#x4E00;&#x6B21;&#xFF0C;&#x770B;&#x662F;&#x5426;&#x6709;&#x81EA;&#x6551;&#xFF0C;&#x6CA1;&#x6709;&#x5219;&#x8FDB;&#x884C;GC</p>
+<h3 id="getclass&#x65B9;&#x6CD5;">getClass&#x65B9;&#x6CD5;</h3>
+<p>&#x5728;Java&#x4E2D;&#x4E00;&#x5207;&#x90FD;&#x662F;&#x5BF9;&#x8C61;&#xFF0C;&#x6211;&#x4EEC;&#x4E00;&#x822C;&#x6240;&#x4F7F;&#x7528;&#x7684;&#x5BF9;&#x8C61;&#x90FD;&#x76F4;&#x63A5;&#x6216;&#x95F4;&#x63A5;&#x7EE7;&#x627F;&#x81EA;Object&#x7C7B;&#x3002;Object&#x7C7B;&#x4E2D;&#x5305;&#x542B;&#x4E00;&#x4E2A;&#x65B9;&#x6CD5;&#x540D;&#x53EB;getClass&#xFF0C;&#x5229;&#x7528;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x5C31;&#x53EF;&#x4EE5;&#x83B7;&#x5F97;&#x4E00;&#x4E2A;&#x5B9E;&#x4F8B;&#x7684;class&#x5BF9;&#x8C61;&#x3002;&#x8FD9;&#x4E2A;&#x5BF9;&#x8C61;&#x6307;&#x7684;&#x662F;&#x4EE3;&#x8868;&#x4E00;&#x4E2A;&#x7C7B;&#x578B;&#x7684;&#x5BF9;&#x8C61;&#xFF0C;&#x56E0;&#x4E3A;&#x4E00;&#x5207;&#x7686;&#x662F;&#x5BF9;&#x8C61;&#xFF0C;&#x7C7B;&#x578B;&#x4E5F;&#x4E0D;&#x4F8B;&#x5916;&#xFF0C;&#x5728;Java&#x4F7F;&#x7528;class&#x7C7B;&#x7684;&#x5BF9;&#x8C61;&#x6765;&#x8868;&#x793A;&#x4E00;&#x4E2A;&#x7C7B;&#x578B;&#x3002;&#x6240;&#x6709;&#x7684;&#x7C7B;&#x578B;&#x7C7B;&#x90FD;&#x662F;Class&#x7C7B;&#x7684;&#x5B9E;&#x4F8B;&#x3002;</p>
+<p>&#x9644;&#xFF0C;&#x83B7;&#x53D6;Class&#x5BF9;&#x8C61;&#x7684;&#x51E0;&#x79CD;&#x65B9;&#x6CD5;&#xFF1A;</p>
+<ol>
+<li>Class.forName(&#x201C;&#x7C7B;&#x7684;&#x5168;&#x9650;&#x5B9A;&#x540D;&#x201D;)</li>
+<li>&#x5B9E;&#x4F8B;&#x5BF9;&#x8C61;.getClass()</li>
+<li>&#x7C7B;&#x540D;.class &#xFF08;&#x7C7B;&#x5B57;&#x9762;&#x5E38;&#x91CF;&#xFF09;</li>
+</ol>
+<h2 id="&#x9644;&#xFF1A;object&#x7C7B;&#x7684;&#x6E90;&#x7801;">&#x9644;&#xFF1A;Object&#x7C7B;&#x7684;&#x6E90;&#x7801;</h2>
+<pre class="language-"><code class="lang-java"><span class="token keyword">package</span> <span class="token namespace">java<span class="token punctuation">.</span>lang</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * Class {@code Object} is the root of the class hierarchy.
+ * Every class has {@code Object} as a superclass. All objects,
+ * including arrays, implement the methods of this class.
+ *
+ * @author  unascribed
+ * @see     java.lang.Class
+ * @since   JDK1.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Object</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token punctuation">{</span>
+        <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * Returns the runtime class of this {@code Object}. The returned
+     * {@code Class} object is the object that is locked by {@code
+     * static synchronized} methods of the represented class.
+     *
+     * &lt;p&gt;&lt;b&gt;The actual result type is {@code Class&lt;? extends |X|&gt;}
+     * where {@code |X|} is the erasure of the static type of the
+     * expression on which {@code getClass} is called.&lt;/b&gt; For
+     * example, no cast is required in this code fragment:&lt;/p&gt;
+     *
+     * &lt;p&gt;
+     * {@code Number n = 0;                             }&lt;br&gt;
+     * {@code Class&lt;? extends Number&gt; c = n.getClass(); }
+     * &lt;/p&gt;
+     *
+     * @return The {@code Class} object that represents the runtime
+     *         class of this object.
+     * @jls 15.8.2 Class Literals
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Returns a hash code value for the object. This method is
+     * supported for the benefit of hash tables such as those provided by
+     * {@link java.util.HashMap}.
+     * &lt;p&gt;
+     * The general contract of {@code hashCode} is:
+     * &lt;ul&gt;
+     * &lt;li&gt;Whenever it is invoked on the same object more than once during
+     *     an execution of a Java application, the {@code hashCode} method
+     *     must consistently return the same integer, provided no information
+     *     used in {@code equals} comparisons on the object is modified.
+     *     This integer need not remain consistent from one execution of an
+     *     application to another execution of the same application.
+     * &lt;li&gt;If two objects are equal according to the {@code equals(Object)}
+     *     method, then calling the {@code hashCode} method on each of
+     *     the two objects must produce the same integer result.
+     * &lt;li&gt;It is &lt;em&gt;not&lt;/em&gt; required that if two objects are unequal
+     *     according to the {@link java.lang.Object#equals(java.lang.Object)}
+     *     method, then calling the {@code hashCode} method on each of the
+     *     two objects must produce distinct integer results.  However, the
+     *     programmer should be aware that producing distinct integer results
+     *     for unequal objects may improve the performance of hash tables.
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * As much as is reasonably practical, the hashCode method defined by
+     * class {@code Object} does return distinct integers for distinct
+     * objects. (This is typically implemented by converting the internal
+     * address of the object into an integer, but this implementation
+     * technique is not required by the
+     * Java&amp;trade; programming language.)
+     *
+     * @return  a hash code value for this object.
+     * @see     java.lang.Object#equals(java.lang.Object)
+     * @see     java.lang.System#identityHashCode
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">int</span> <span class="token function">hashCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Indicates whether some other object is &quot;equal to&quot; this one.
+     * &lt;p&gt;
+     * The {@code equals} method implements an equivalence relation
+     * on non-null object references:
+     * &lt;ul&gt;
+     * &lt;li&gt;It is &lt;i&gt;reflexive&lt;/i&gt;: for any non-null reference value
+     *     {@code x}, {@code x.equals(x)} should return
+     *     {@code true}.
+     * &lt;li&gt;It is &lt;i&gt;symmetric&lt;/i&gt;: for any non-null reference values
+     *     {@code x} and {@code y}, {@code x.equals(y)}
+     *     should return {@code true} if and only if
+     *     {@code y.equals(x)} returns {@code true}.
+     * &lt;li&gt;It is &lt;i&gt;transitive&lt;/i&gt;: for any non-null reference values
+     *     {@code x}, {@code y}, and {@code z}, if
+     *     {@code x.equals(y)} returns {@code true} and
+     *     {@code y.equals(z)} returns {@code true}, then
+     *     {@code x.equals(z)} should return {@code true}.
+     * &lt;li&gt;It is &lt;i&gt;consistent&lt;/i&gt;: for any non-null reference values
+     *     {@code x} and {@code y}, multiple invocations of
+     *     {@code x.equals(y)} consistently return {@code true}
+     *     or consistently return {@code false}, provided no
+     *     information used in {@code equals} comparisons on the
+     *     objects is modified.
+     * &lt;li&gt;For any non-null reference value {@code x},
+     *     {@code x.equals(null)} should return {@code false}.
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * The {@code equals} method for class {@code Object} implements
+     * the most discriminating possible equivalence relation on objects;
+     * that is, for any non-null reference values {@code x} and
+     * {@code y}, this method returns {@code true} if and only
+     * if {@code x} and {@code y} refer to the same object
+     * ({@code x == y} has the value {@code true}).
+     * &lt;p&gt;
+     * Note that it is generally necessary to override the {@code hashCode}
+     * method whenever this method is overridden, so as to maintain the
+     * general contract for the {@code hashCode} method, which states
+     * that equal objects must have equal hash codes.
+     *
+     * @param   obj   the reference object with which to compare.
+     * @return  {@code true} if this object is the same as the obj
+     *          argument; {@code false} otherwise.
+     * @see     #hashCode()
+     * @see     java.util.HashMap
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">equals</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token operator">==</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * Creates and returns a copy of this object.  The precise meaning
+     * of &quot;copy&quot; may depend on the class of the object. The general
+     * intent is that, for any object {@code x}, the expression:
+     * &lt;blockquote&gt;
+     * &lt;pre&gt;
+     * x.clone() != x&lt;/pre&gt;&lt;/blockquote&gt;
+     * will be true, and that the expression:
+     * &lt;blockquote&gt;
+     * &lt;pre&gt;
+     * x.clone().getClass() == x.getClass()&lt;/pre&gt;&lt;/blockquote&gt;
+     * will be {@code true}, but these are not absolute requirements.
+     * While it is typically the case that:
+     * &lt;blockquote&gt;
+     * &lt;pre&gt;
+     * x.clone().equals(x)&lt;/pre&gt;&lt;/blockquote&gt;
+     * will be {@code true}, this is not an absolute requirement.
+     * &lt;p&gt;
+     * By convention, the returned object should be obtained by calling
+     * {@code super.clone}.  If a class and all of its superclasses (except
+     * {@code Object}) obey this convention, it will be the case that
+     * {@code x.clone().getClass() == x.getClass()}.
+     * &lt;p&gt;
+     * By convention, the object returned by this method should be independent
+     * of this object (which is being cloned).  To achieve this independence,
+     * it may be necessary to modify one or more fields of the object returned
+     * by {@code super.clone} before returning it.  Typically, this means
+     * copying any mutable objects that comprise the internal &quot;deep structure&quot;
+     * of the object being cloned and replacing the references to these
+     * objects with references to the copies.  If a class contains only
+     * primitive fields or references to immutable objects, then it is usually
+     * the case that no fields in the object returned by {@code super.clone}
+     * need to be modified.
+     * &lt;p&gt;
+     * The method {@code clone} for class {@code Object} performs a
+     * specific cloning operation. First, if the class of this object does
+     * not implement the interface {@code Cloneable}, then a
+     * {@code CloneNotSupportedException} is thrown. Note that all arrays
+     * are considered to implement the interface {@code Cloneable} and that
+     * the return type of the {@code clone} method of an array type {@code T[]}
+     * is {@code T[]} where T is any reference or primitive type.
+     * Otherwise, this method creates a new instance of the class of this
+     * object and initializes all its fields with exactly the contents of
+     * the corresponding fields of this object, as if by assignment; the
+     * contents of the fields are not themselves cloned. Thus, this method
+     * performs a &quot;shallow copy&quot; of this object, not a &quot;deep copy&quot; operation.
+     * &lt;p&gt;
+     * The class {@code Object} does not itself implement the interface
+     * {@code Cloneable}, so calling the {@code clone} method on an object
+     * whose class is {@code Object} will result in throwing an
+     * exception at run time.
+     *
+     * @return     a clone of this instance.
+     * @throws  CloneNotSupportedException  if the object&apos;s class does not
+     *               support the {@code Cloneable} interface. Subclasses
+     *               that override the {@code clone} method can also
+     *               throw this exception to indicate that an instance cannot
+     *               be cloned.
+     * @see java.lang.Cloneable
+     */</span>
+    <span class="token keyword">protected</span> <span class="token keyword">native</span> <span class="token class-name">Object</span> <span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">CloneNotSupportedException</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Returns a string representation of the object. In general, the
+     * {@code toString} method returns a string that
+     * &quot;textually represents&quot; this object. The result should
+     * be a concise but informative representation that is easy for a
+     * person to read.
+     * It is recommended that all subclasses override this method.
+     * &lt;p&gt;
+     * The {@code toString} method for class {@code Object}
+     * returns a string consisting of the name of the class of which the
+     * object is an instance, the at-sign character `{@code @}&apos;, and
+     * the unsigned hexadecimal representation of the hash code of the
+     * object. In other words, this method returns a string equal to the
+     * value of:
+     * &lt;blockquote&gt;
+     * &lt;pre&gt;
+     * getClass().getName() + &apos;@&apos; + Integer.toHexString(hashCode())
+     * &lt;/pre&gt;&lt;/blockquote&gt;
+     *
+     * @return  a string representation of the object.
+     */</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">&quot;@&quot;</span> <span class="token operator">+</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">toHexString</span><span class="token punctuation">(</span><span class="token function">hashCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * Wakes up a single thread that is waiting on this object&apos;s
+     * monitor. If any threads are waiting on this object, one of them
+     * is chosen to be awakened. The choice is arbitrary and occurs at
+     * the discretion of the implementation. A thread waits on an object&apos;s
+     * monitor by calling one of the {@code wait} methods.
+     * &lt;p&gt;
+     * The awakened thread will not be able to proceed until the current
+     * thread relinquishes the lock on this object. The awakened thread will
+     * compete in the usual manner with any other threads that might be
+     * actively competing to synchronize on this object; for example, the
+     * awakened thread enjoys no reliable privilege or disadvantage in being
+     * the next thread to lock this object.
+     * &lt;p&gt;
+     * This method should only be called by a thread that is the owner
+     * of this object&apos;s monitor. A thread becomes the owner of the
+     * object&apos;s monitor in one of three ways:
+     * &lt;ul&gt;
+     * &lt;li&gt;By executing a synchronized instance method of that object.
+     * &lt;li&gt;By executing the body of a {@code synchronized} statement
+     *     that synchronizes on the object.
+     * &lt;li&gt;For objects of type {@code Class,} by executing a
+     *     synchronized static method of that class.
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * Only one thread at a time can own an object&apos;s monitor.
+     *
+     * @throws  IllegalMonitorStateException  if the current thread is not
+     *               the owner of this object&apos;s monitor.
+     * @see        java.lang.Object#notifyAll()
+     * @see        java.lang.Object#wait()
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Wakes up all threads that are waiting on this object&apos;s monitor. A
+     * thread waits on an object&apos;s monitor by calling one of the
+     * {@code wait} methods.
+     * &lt;p&gt;
+     * The awakened threads will not be able to proceed until the current
+     * thread relinquishes the lock on this object. The awakened threads
+     * will compete in the usual manner with any other threads that might
+     * be actively competing to synchronize on this object; for example,
+     * the awakened threads enjoy no reliable privilege or disadvantage in
+     * being the next thread to lock this object.
+     * &lt;p&gt;
+     * This method should only be called by a thread that is the owner
+     * of this object&apos;s monitor. See the {@code notify} method for a
+     * description of the ways in which a thread can become the owner of
+     * a monitor.
+     *
+     * @throws  IllegalMonitorStateException  if the current thread is not
+     *               the owner of this object&apos;s monitor.
+     * @see        java.lang.Object#notify()
+     * @see        java.lang.Object#wait()
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">notifyAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Causes the current thread to wait until either another thread invokes the
+     * {@link java.lang.Object#notify()} method or the
+     * {@link java.lang.Object#notifyAll()} method for this object, or a
+     * specified amount of time has elapsed.
+     * &lt;p&gt;
+     * The current thread must own this object&apos;s monitor.
+     * &lt;p&gt;
+     * This method causes the current thread (call it &lt;var&gt;T&lt;/var&gt;) to
+     * place itself in the wait set for this object and then to relinquish
+     * any and all synchronization claims on this object. Thread &lt;var&gt;T&lt;/var&gt;
+     * becomes disabled for thread scheduling purposes and lies dormant
+     * until one of four things happens:
+     * &lt;ul&gt;
+     * &lt;li&gt;Some other thread invokes the {@code notify} method for this
+     * object and thread &lt;var&gt;T&lt;/var&gt; happens to be arbitrarily chosen as
+     * the thread to be awakened.
+     * &lt;li&gt;Some other thread invokes the {@code notifyAll} method for this
+     * object.
+     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt() interrupts}
+     * thread &lt;var&gt;T&lt;/var&gt;.
+     * &lt;li&gt;The specified amount of real time has elapsed, more or less.  If
+     * {@code timeout} is zero, however, then real time is not taken into
+     * consideration and the thread simply waits until notified.
+     * &lt;/ul&gt;
+     * The thread &lt;var&gt;T&lt;/var&gt; is then removed from the wait set for this
+     * object and re-enabled for thread scheduling. It then competes in the
+     * usual manner with other threads for the right to synchronize on the
+     * object; once it has gained control of the object, all its
+     * synchronization claims on the object are restored to the status quo
+     * ante - that is, to the situation as of the time that the {@code wait}
+     * method was invoked. Thread &lt;var&gt;T&lt;/var&gt; then returns from the
+     * invocation of the {@code wait} method. Thus, on return from the
+     * {@code wait} method, the synchronization state of the object and of
+     * thread {@code T} is exactly as it was when the {@code wait} method
+     * was invoked.
+     * &lt;p&gt;
+     * A thread can also wake up without being notified, interrupted, or
+     * timing out, a so-called &lt;i&gt;spurious wakeup&lt;/i&gt;.  While this will rarely
+     * occur in practice, applications must guard against it by testing for
+     * the condition that should have caused the thread to be awakened, and
+     * continuing to wait if the condition is not satisfied.  In other words,
+     * waits should always occur in loops, like this one:
+     * &lt;pre&gt;
+     *     synchronized (obj) {
+     *         while (&amp;lt;condition does not hold&amp;gt;)
+     *             obj.wait(timeout);
+     *         ... // Perform action appropriate to condition
+     *     }
+     * &lt;/pre&gt;
+     * (For more information on this topic, see Section 3.2.3 in Doug Lea&apos;s
+     * &quot;Concurrent Programming in Java (Second Edition)&quot; (Addison-Wesley,
+     * 2000), or Item 50 in Joshua Bloch&apos;s &quot;Effective Java Programming
+     * Language Guide&quot; (Addison-Wesley, 2001).
+     *
+     * &lt;p&gt;If the current thread is {@linkplain java.lang.Thread#interrupt()
+     * interrupted} by any thread before or while it is waiting, then an
+     * {@code InterruptedException} is thrown.  This exception is not
+     * thrown until the lock status of this object has been restored as
+     * described above.
+     *
+     * &lt;p&gt;
+     * Note that the {@code wait} method, as it places the current thread
+     * into the wait set for this object, unlocks only this object; any
+     * other objects on which the current thread may be synchronized remain
+     * locked while the thread waits.
+     * &lt;p&gt;
+     * This method should only be called by a thread that is the owner
+     * of this object&apos;s monitor. See the {@code notify} method for a
+     * description of the ways in which a thread can become the owner of
+     * a monitor.
+     *
+     * @param      timeout   the maximum time to wait in milliseconds.
+     * @throws  IllegalArgumentException      if the value of timeout is
+     *               negative.
+     * @throws  IllegalMonitorStateException  if the current thread is not
+     *               the owner of the object&apos;s monitor.
+     * @throws  InterruptedException if any thread interrupted the
+     *             current thread before or while the current thread
+     *             was waiting for a notification.  The &lt;i&gt;interrupted
+     *             status&lt;/i&gt; of the current thread is cleared when
+     *             this exception is thrown.
+     * @see        java.lang.Object#notify()
+     * @see        java.lang.Object#notifyAll()
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Causes the current thread to wait until another thread invokes the
+     * {@link java.lang.Object#notify()} method or the
+     * {@link java.lang.Object#notifyAll()} method for this object, or
+     * some other thread interrupts the current thread, or a certain
+     * amount of real time has elapsed.
+     * &lt;p&gt;
+     * This method is similar to the {@code wait} method of one
+     * argument, but it allows finer control over the amount of time to
+     * wait for a notification before giving up. The amount of real time,
+     * measured in nanoseconds, is given by:
+     * &lt;blockquote&gt;
+     * &lt;pre&gt;
+     * 1000000*timeout+nanos&lt;/pre&gt;&lt;/blockquote&gt;
+     * &lt;p&gt;
+     * In all other respects, this method does the same thing as the
+     * method {@link #wait(long)} of one argument. In particular,
+     * {@code wait(0, 0)} means the same thing as {@code wait(0)}.
+     * &lt;p&gt;
+     * The current thread must own this object&apos;s monitor. The thread
+     * releases ownership of this monitor and waits until either of the
+     * following two conditions has occurred:
+     * &lt;ul&gt;
+     * &lt;li&gt;Another thread notifies threads waiting on this object&apos;s monitor
+     *     to wake up either through a call to the {@code notify} method
+     *     or the {@code notifyAll} method.
+     * &lt;li&gt;The timeout period, specified by {@code timeout}
+     *     milliseconds plus {@code nanos} nanoseconds arguments, has
+     *     elapsed.
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * The thread then waits until it can re-obtain ownership of the
+     * monitor and resumes execution.
+     * &lt;p&gt;
+     * As in the one argument version, interrupts and spurious wakeups are
+     * possible, and this method should always be used in a loop:
+     * &lt;pre&gt;
+     *     synchronized (obj) {
+     *         while (&amp;lt;condition does not hold&amp;gt;)
+     *             obj.wait(timeout, nanos);
+     *         ... // Perform action appropriate to condition
+     *     }
+     * &lt;/pre&gt;
+     * This method should only be called by a thread that is the owner
+     * of this object&apos;s monitor. See the {@code notify} method for a
+     * description of the ways in which a thread can become the owner of
+     * a monitor.
+     *
+     * @param      timeout   the maximum time to wait in milliseconds.
+     * @param      nanos      additional time, in nanoseconds range
+     *                       0-999999.
+     * @throws  IllegalArgumentException      if the value of timeout is
+     *                      negative or the value of nanos is
+     *                      not in the range 0-999999.
+     * @throws  IllegalMonitorStateException  if the current thread is not
+     *               the owner of this object&apos;s monitor.
+     * @throws  InterruptedException if any thread interrupted the
+     *             current thread before or while the current thread
+     *             was waiting for a notification.  The &lt;i&gt;interrupted
+     *             status&lt;/i&gt; of the current thread is cleared when
+     *             this exception is thrown.
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">,</span> <span class="token keyword">int</span> nanos<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>timeout <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalArgumentException</span><span class="token punctuation">(</span><span class="token string">&quot;timeout value is negative&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>nanos <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> nanos <span class="token operator">&gt;</span> <span class="token number">999999</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalArgumentException</span><span class="token punctuation">(</span>
+                                <span class="token string">&quot;nanosecond timeout value out of range&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>nanos <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            timeout<span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token function">wait</span><span class="token punctuation">(</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * Causes the current thread to wait until another thread invokes the
+     * {@link java.lang.Object#notify()} method or the
+     * {@link java.lang.Object#notifyAll()} method for this object.
+     * In other words, this method behaves exactly as if it simply
+     * performs the call {@code wait(0)}.
+     * &lt;p&gt;
+     * The current thread must own this object&apos;s monitor. The thread
+     * releases ownership of this monitor and waits until another thread
+     * notifies threads waiting on this object&apos;s monitor to wake up
+     * either through a call to the {@code notify} method or the
+     * {@code notifyAll} method. The thread then waits until it can
+     * re-obtain ownership of the monitor and resumes execution.
+     * &lt;p&gt;
+     * As in the one argument version, interrupts and spurious wakeups are
+     * possible, and this method should always be used in a loop:
+     * &lt;pre&gt;
+     *     synchronized (obj) {
+     *         while (&amp;lt;condition does not hold&amp;gt;)
+     *             obj.wait();
+     *         ... // Perform action appropriate to condition
+     *     }
+     * &lt;/pre&gt;
+     * This method should only be called by a thread that is the owner
+     * of this object&apos;s monitor. See the {@code notify} method for a
+     * description of the ways in which a thread can become the owner of
+     * a monitor.
+     *
+     * @throws  IllegalMonitorStateException  if the current thread is not
+     *               the owner of the object&apos;s monitor.
+     * @throws  InterruptedException if any thread interrupted the
+     *             current thread before or while the current thread
+     *             was waiting for a notification.  The &lt;i&gt;interrupted
+     *             status&lt;/i&gt; of the current thread is cleared when
+     *             this exception is thrown.
+     * @see        java.lang.Object#notify()
+     * @see        java.lang.Object#notifyAll()
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+        <span class="token function">wait</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * Called by the garbage collector on an object when garbage collection
+     * determines that there are no more references to the object.
+     * A subclass overrides the {@code finalize} method to dispose of
+     * system resources or to perform other cleanup.
+     * &lt;p&gt;
+     * The general contract of {@code finalize} is that it is invoked
+     * if and when the Java&amp;trade; virtual
+     * machine has determined that there is no longer any
+     * means by which this object can be accessed by any thread that has
+     * not yet died, except as a result of an action taken by the
+     * finalization of some other object or class which is ready to be
+     * finalized. The {@code finalize} method may take any action, including
+     * making this object available again to other threads; the usual purpose
+     * of {@code finalize}, however, is to perform cleanup actions before
+     * the object is irrevocably discarded. For example, the finalize method
+     * for an object that represents an input/output connection might perform
+     * explicit I/O transactions to break the connection before the object is
+     * permanently discarded.
+     * &lt;p&gt;
+     * The {@code finalize} method of class {@code Object} performs no
+     * special action; it simply returns normally. Subclasses of
+     * {@code Object} may override this definition.
+     * &lt;p&gt;
+     * The Java programming language does not guarantee which thread will
+     * invoke the {@code finalize} method for any given object. It is
+     * guaranteed, however, that the thread that invokes finalize will not
+     * be holding any user-visible synchronization locks when finalize is
+     * invoked. If an uncaught exception is thrown by the finalize method,
+     * the exception is ignored and finalization of that object terminates.
+     * &lt;p&gt;
+     * After the {@code finalize} method has been invoked for an object, no
+     * further action is taken until the Java virtual machine has again
+     * determined that there is no longer any means by which this object can
+     * be accessed by any thread that has not yet died, including possible
+     * actions by other objects or classes which are ready to be finalized,
+     * at which point the object may be discarded.
+     * &lt;p&gt;
+     * The {@code finalize} method is never invoked more than once by a Java
+     * virtual machine for any given object.
+     * &lt;p&gt;
+     * Any exception thrown by the {@code finalize} method causes
+     * the finalization of this object to be halted, but is otherwise
+     * ignored.
+     *
+     * @throws Throwable the {@code Exception} raised by this method
+     * @see java.lang.ref.WeakReference
+     * @see java.lang.ref.PhantomReference
+     * @jls 12.6 Finalization of Class Instances
+     */</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">finalize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Throwable</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
+2020-08-30 16:50:16
+</span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+                <a href="../java_data_structure/System_arraycopy.html" class="navigation navigation-next navigation-unique" aria-label="Next page: System.arraycopy, Array.copyOf">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"java.lang.Object","layout":"page","date":"2020-08-30 00:00","level":"1.9.1","depth":2,"next":{"title":"System.arraycopy, Array.copyOf","level":"1.9.2","depth":2,"path":"content/java_data_structure/System_arraycopy.md","ref":"./content/java_data_structure/System_arraycopy.md","articles":[]},"previous":{"title":"[Java基础问题]","level":"1.9","depth":1,"ref":"","articles":[{"title":"java.lang.Object","level":"1.9.1","depth":2,"path":"content/java_utils/object.md","ref":"./content/java_utils/object.md","articles":[]},{"title":"System.arraycopy, Array.copyOf","level":"1.9.2","depth":2,"path":"content/java_data_structure/System_arraycopy.md","ref":"./content/java_data_structure/System_arraycopy.md","articles":[]},{"title":"== & equals方法 & hashcode方法","level":"1.9.3","depth":2,"path":"content/java_utils/equals_hashcode.md","ref":"./content/java_utils/equals_hashcode.md","articles":[]},{"title":"Calendar & Date","level":"1.9.4","depth":2,"path":"content/java_utils/Calendar.md","ref":"./content/java_utils/Calendar.md","articles":[]},{"title":"Comparison method violates its general contract","level":"1.9.5","depth":2,"path":"content/java_utils/Compare.md","ref":"./content/java_utils/Compare.md","articles":[]},{"title":"int(基本类型) & Integer(包装类类型)","level":"1.9.6","depth":2,"path":"content/java_utils/int_Integer.md","ref":"./content/java_utils/int_Integer.md","articles":[]},{"title":"Java异常&错误","level":"1.9.7","depth":2,"path":"content/java_utils/exception.md","ref":"./content/java_utils/exception.md","articles":[]},{"title":"String,StringBuffer,StringBuilder","level":"1.9.8","depth":2,"path":"content/java_utils/String.md","ref":"./content/java_utils/String.md","articles":[]},{"title":"反射机制","level":"1.9.9","depth":2,"path":"content/java_utils/reflect.md","ref":"./content/java_utils/reflect.md","articles":[]},{"title":"回调 & 事件机制","level":"1.9.10","depth":2,"path":"content/java_utils/call_back.md","ref":"./content/java_utils/call_back.md","articles":[]},{"title":"数组，集合转换等问题","level":"1.9.11","depth":2,"path":"content/java_utils/array_collection.md","ref":"./content/java_utils/array_collection.md","articles":[]},{"title":"注解 Annotation","level":"1.9.12","depth":2,"path":"content/java_utils/annotation.md","ref":"./content/java_utils/annotation.md","articles":[]},{"title":"Runtime类","level":"1.9.13","depth":2,"path":"content/java_jvm/jvm_runtime.md","ref":"./content/java_jvm/jvm_runtime.md","articles":[]},{"title":"unsafe","level":"1.9.14","depth":2,"path":"content/java_data_structure/unsafe.md","ref":"./content/java_data_structure/unsafe.md","articles":[]},{"title":"《Java编程思想》第3章：操作符，第4章：控制执行流程","level":"1.9.15","depth":2,"path":"content/java_thinking_in_Java/basic.md","ref":"./content/java_thinking_in_Java/basic.md","articles":[]},{"title":"《Java编程思想》第5章：初始化和清理(重点)","level":"1.9.16","depth":2,"path":"content/java_thinking_in_Java/constructor.md","ref":"./content/java_thinking_in_Java/constructor.md","articles":[]},{"title":"《Java编程思想》第6章：访问权限控制(重要)","level":"1.9.17","depth":2,"path":"content/java_thinking_in_Java/public_private_protect.md","ref":"./content/java_thinking_in_Java/public_private_protect.md","articles":[]},{"title":"《Java编程思想》第7章：复用类","level":"1.9.18","depth":2,"path":"content/java_thinking_in_Java/class_final.md","ref":"./content/java_thinking_in_Java/class_final.md","articles":[]},{"title":"《Java编程思想》第8章：多态","level":"1.9.19","depth":2,"path":"content/java_thinking_in_Java/polymorphism.md","ref":"./content/java_thinking_in_Java/polymorphism.md","articles":[]},{"title":"《Java编程思想》第9章：接口 补充：抽象类","level":"1.9.20","depth":2,"path":"content/java_thinking_in_Java/class_final.md","ref":"./content/java_thinking_in_Java/class_final.md","articles":[]},{"title":"《Java编程思想》第10章：内部类","level":"1.9.21","depth":2,"path":"content/java_thinking_in_Java/innner_class.md","ref":"./content/java_thinking_in_Java/innner_class.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/object.md","mtime":"2020-08-30T08:50:16.883Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-30T14:43:39.110Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-gittalk/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
