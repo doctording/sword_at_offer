@@ -16,7 +16,13 @@ date: 2019-03-09 00:00
 4. 循环等待：存在一个进程循环链，使得每个进程都占有下一个进程所需的至少一种资源。
 
 附:临界区的概念
-    * 临界区：每个进程中访问临界资源的那段程序叫做临界区。进程对临界区的访问必须互斥，每次只允许一个进程进去临界区，其他进程等待
+    * 临界区：每个进程中访问临界资源的那段程序叫做临界区。进程对临界区的访问必须互斥，每次只允许一个进程进去临界区，其它进程等待
+
+* each concurrent process has a segment of code, called a critical section, in which the  process may be changing common variables,updating atable,writing a file and so on
+
+* the important feature of the system is that when one process is excuting in its critical section, no other process is allowed to execute in its critical section. That is no two process are execting in their critical section at the same time
+
+* the cirtical-section problem is to design a protocal that the processes can use to cooperate
 
 ## 程序死锁的可能原因
 
