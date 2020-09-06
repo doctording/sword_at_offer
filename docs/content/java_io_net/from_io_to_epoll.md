@@ -127,7 +127,7 @@ futex(0x7fd8f000b354, FUTEX_WAKE_OP_PRIVATE, 1, 1, 0x7fd8f000b350, {FUTEX_OP_SET
 futex(0x7fd8f000b328, FUTEX_WAKE_PRIVATE, 1) = 1
 sched_getaffinity(4787, 32, [1, 0, 0, 0, 0, 145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) = 32
 sched_getaffinity(4787, 32, [1, 0, 0, 0, 0, 145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) = 32
-mmap(0x7fd8d8409000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fd8d8409000
+(0x7fd8d8409000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fd8d8409000
 mprotect(0x7fd8d8409000, 12288, PROT_NONE) = 0
 lseek(3, 30054856, SEEK_SET)            = 30054856
 read(3, "PK\3\4\n\0\0\10\0\0006\211|L\24w\0067E\3\0\0E\3\0\0\27\0\0\0", 30) = 30

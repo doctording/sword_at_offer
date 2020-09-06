@@ -19,7 +19,8 @@
       "code",
       "uml",
       "page-treeview",
-      "gittalk"
+      "gittalk",
+      "advanced-emoji"
     ],
     "pluginsConfig": {
       "gittalk": {

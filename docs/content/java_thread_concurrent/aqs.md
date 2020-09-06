@@ -26,9 +26,11 @@ AQS核心思想是：<font color='red'>如果被请求的共享资源空闲，�
 
 CLH：Craig、Landin and Hagersten队列，链表结构，AQS中的队列是CLH变体的虚拟双向队列（FIFO），AQS是通过将每条请求共享资源的线程封装成一个节点来实现锁的分配。
 
+![](../../content/java_thread_concurrent/imgs/aqs-22.png)
+
 ![](../../content/java_thread_concurrent/imgs/aqs-2.png)
 
-AQS使用一个`volatile`的int类型的成员变量来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作，通过CAS完成对State值的修改。
+AQS使用一个`volatile`的int类型的成员变量state来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作，通过CAS完成对state值的修改。
 
 ## 同步器
 
@@ -72,7 +74,7 @@ j.u.c包有一个LockSuport类，这个类中包含了解决这个问题的方�
 
 ![](../../content/java_thread_concurrent/imgs/aqs-3.png)
 
-* AbstractQueuedSynchronizer 的变量： 有CLH队列的头部，尾部，以及同步器状态的int变量
+* AbstractQueuedSynchronizer 的变量：有CLH队列的头部，尾部，以及同步器状态的int变量
 
 ```java
 //用于标识共享锁
@@ -181,11 +183,13 @@ private Node addWaiter(Node mode) {
     enq(node);
     return node;
 }
+```
 
 在`addWaiter`方法处理失败的时候进一步会调用`enq`方法
 
 #### `enq`方法会将将node加入队尾，不断的进行CAS操作
 
+```java
 /**
     * Inserts node into queue, initializing if necessary. See picture above.
     * @param node the node to insert

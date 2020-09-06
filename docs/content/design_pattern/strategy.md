@@ -106,3 +106,11 @@ public class Client {
 
 }
 ```
+
+## 应用
+
+Java spi（Service Provider Interface）机制
+
+![](../../content/design_pattern/imgs/spi.webp)
+
+Java SPI 实际上是<font color='red'>“基于接口的编程＋策略模式＋配置文件”</font>组合实现的动态加载机制。

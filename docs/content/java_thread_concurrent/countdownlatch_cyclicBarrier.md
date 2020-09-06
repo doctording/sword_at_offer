@@ -109,7 +109,96 @@ protected final boolean compareAndSetState(int expect, int update) {
 }
 ```
 
-* await方法
+### countDownLatch.countDown()
+
+```java
+public void countDown() {
+    sync.releaseShared(1);
+}
+```
+
+使用了Aqs的releaseShared方法
+
+```java
+/**
+    * Releases in shared mode.  Implemented by unblocking one or more
+    * threads if {@link #tryReleaseShared} returns true.
+    *
+    * @param arg the release argument.  This value is conveyed to
+    *        {@link #tryReleaseShared} but is otherwise uninterpreted
+    *        and can represent anything you like.
+    * @return the value returned from {@link #tryReleaseShared}
+    */
+public final boolean releaseShared(int arg) {
+    // 如果 tryReleaseShared 返回 false，则 releaseShared 返回false
+    // 如果 tryReleaseShared 返回 true, 执行 doReleaseShared
+    if (tryReleaseShared(arg)) {
+        doReleaseShared();
+        return true;
+    }
+    return false;
+}
+```
+
+* countDownLatch 的tryReleaseShared方法：不断的while循环CAS操作让state减少1，如果成功就返回true;如果state已经等于0了，就直接返回false
+
+```java
+protected boolean tryReleaseShared(int releases) {
+    // Decrement count; signal when transition to zero
+    for (;;) {
+        int c = getState();
+        if (c == 0)
+            return false;
+        int nextc = c-1;
+        if (compareAndSetState(c, nextc))
+            return nextc == 0;
+    }
+}
+```
+
+* aqs的doReleaseShared方法
+
+1. doReleaseShared会尝试唤醒head后继的代表线程，如果线程已经唤醒，则仅仅设置PROPAGATE状态
+2. 步骤一的“尝试唤醒head后继的代表线程”和“设置PROPAGATE状态”都是CAS操作，如果CAS失败，则会循环再次尝试
+
+```java
+/**
+* Release action for shared mode -- signals successor and ensures
+* propagation. (Note: For exclusive mode, release just amounts
+* to calling unparkSuccessor of head if it needs signal.)
+*/
+private void doReleaseShared() {
+    /*
+        * Ensure that a release propagates, even if there are other
+        * in-progress acquires/releases.  This proceeds in the usual
+        * way of trying to unparkSuccessor of head if it needs
+        * signal. But if it does not, status is set to PROPAGATE to
+        * ensure that upon release, propagation continues.
+        * Additionally, we must loop in case a new node is added
+        * while we are doing this. Also, unlike other uses of
+        * unparkSuccessor, we need to know if CAS to reset status
+        * fails, if so rechecking.
+        */
+    for (;;) {
+        Node h = head;
+        if (h != null && h != tail) {
+            int ws = h.waitStatus;
+            if (ws == Node.SIGNAL) {
+                if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
+                    continue;            // loop to recheck cases
+                unparkSuccessor(h);
+            }
+            else if (ws == 0 &&
+                        !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))
+                continue;                // loop on failed CAS
+        }
+        if (h == head)                   // loop if head changed
+            break;
+    }
+}
+```
+
+### countDownLatch.await()
 
 ```java
 /**
@@ -158,7 +247,17 @@ public final void acquireSharedInterruptibly(int arg)
 }
 ```
 
+* CountdownLatch的tryAcquireShared方法：如果`state==0`返回1，否则返回-1；所以只要state不是0，`if (tryAcquireShared(arg) < 0)`条件就成立，则执行`doAcquireSharedInterruptibly`方法
+
+```java
+protected int tryAcquireShared(int acquires) {
+    return (getState() == 0) ? 1 : -1;
+}
+```
+
 * Aqs的`doAcquireSharedInterruptibly`方法
+
+用当前线程构造一个共享模式Node，然后CAS操作加入CLH队列尾部，接着仍然是while(true)判断`tryAcquireShared(arg)`,一定要是返回1，才会return，否则就是判断node的前驱节点，然后判断`tryAcquireShared(arg)`判断
 
 ```java
 /**

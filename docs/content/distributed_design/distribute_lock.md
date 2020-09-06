@@ -230,6 +230,33 @@ public String deductStockLock() throws Exception {
 
 开启线程，每隔一段时间，判断锁还在不在，然后重新设置过期时间
 
+#### 附：redis命令和分布式锁
+
+1. setnx（SET if Not eXists）
+
+2. EXPIRE key seconds：设置key 的生存时间,当key过期(生存时间为0),会自动删除
+
+如下，一个原子操作设置key:value,并设置10秒的超时
+
+![](../../content/distributed_design/imgs/redis_setnx.png)
+
+```java
+boolean lock(){
+    ret = set key value(thread Id) 10 nx;
+    if (!ret) {
+        return false;
+    }
+    return true;
+}
+
+void unlock(){
+    val = get key
+    if ( val != null && val.equals( thread Id) ) {
+       del key;
+    }
+}
+```
+
 #### Redisson
 
 ##### 代码&测试
@@ -265,13 +292,13 @@ public String deductStockRedisson() throws Exception {
 
 ![](../../content/distributed_design/imgs/lock-jmeter-04.png)
 
-##### 底层原理
+##### Redisson 底层原理
 
 ![](../../content/distributed_design/imgs/redisson_frame.png)
 
 * setnx的设置key与过期时间用脚本实现原子操作
 * key设置成功默认30s，则有后台线程每10秒(1/3的原始过期时间定时检查)检查判断，延长过期时间()
-* 未获取到锁的线程会自旋，知道获取到锁的其它线程的释放
+* 未获取到锁的线程会自旋，直到那个获取到锁的线程将锁释放
 
 ###### redis主从架构问题？
 
@@ -329,7 +356,7 @@ redis无法保证强一致性？zookeeper解决，但是zk性能不如redis
 
 比如1000个并发，只有1个客户端获取锁成功，其它999个客户端都处在监听并等待中；如果成功释放锁了，那么999个客户端都监听到，再次继续进行创建锁的流程。
 
-所以每次锁有变化，几乎所有客户端节点都要监听并作出反应，这会给集群带来巨大压力，即为<font color='red'>羊群效应</font>
+所以每次锁有变化，几乎所有客户端节点都要监听并作出反应，这会给集群带来巨大压力，即为:<font color='red'>羊群效应</font>
 
 ##### 顺序节点（公平，避免羊群效应）
 
@@ -343,9 +370,9 @@ redis无法保证强一致性？zookeeper解决，但是zk性能不如redis
 
 4. 所以，每个线程在尝试占用锁之前，首先判断自己是排号是不是当前最小，如果是，则获取锁。
 
-利用顺序性：<font color='red'>每个线程都只监听前一个线程，事件通知也只通知后面都一个线程，而不是通知全部</font>
+利用顺序性：<font color='red'>每个线程都只监听前一个线程，事件通知也只通知后面都一个线程，而不是通知全部，从而避免羊群效应</font>
 
-#### Curator InterProcessMutex
+#### Curator InterProcessMutex(可重入公平锁)
 
 <a href="https://curator.apache.org/getting-started.html" target="_blank">curator官方文档</a>
 

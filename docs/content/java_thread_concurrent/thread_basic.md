@@ -215,7 +215,7 @@ private native void start0();
 
 native方法`start0()`:调用JVM方法创建一个本地线程，并处于可运行状态；获取到CPU时间片就能执行run方法
 
-start0(); method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.
+`start0()` method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.
 
 ## stackSize(线程所需栈空间)
 
@@ -828,6 +828,12 @@ TimeUnit
 ```
 
 sleep休眠**不会放弃monitor锁的所有权**，各个线程的休眠不会相互影响，sleep只会导致当前线程休眠
+
+* sleep 底层原理
+
+1. 挂起进程（或线程）并修改其运行状态（**可以被中断**）
+2. 用sleep()提供的参数来设置一个定时器。（可变定时器(variable timer)一般在硬件层面是通过一个固定的时钟和计数器来实现的，每经过一个时钟周期将计数器递减，当计数器的值为0时产生中断。内核注册一个定时器后可以在一段时间后收到中断。）
+3. 当时间结束，定时器会触发，内核收到**中断**后修改进程（或线程）的运行状态。例如线程会被标志为就绪而进入就绪队列等待调度。
 
 ## yield
 

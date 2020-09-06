@@ -114,6 +114,28 @@ final class Singleton{
 private volatile static Singleton instance = null;
 ```
 
+### double check 单例模式需要 volatile 吗
+
+正确答案：需要
+
+`Object o = new Object();`的汇编指令
+
+```java
+0 new #2 <java/lang/Object>
+3 dup
+4 invokespecial #1 <java/lang/Object.<init>>
+7 astore_1
+8 return
+```
+
+隐含一个对象创建的过程：(记住3步)
+
+1. 堆内存中申请了一块内存 （new指令）【半初始化状态，成员变量初始化为默认值】
+2. 这块内存的构造方法执行（invokespecial指令）
+3. 栈中变量建立连接到这块内存（astore_1指令）
+
+<font color='red'>问题</font>：由于指令重排和半初始化状态，导致多线程会使用半初始化的对象
+
 ## Holder方式（静态内部类：线程安全 & 懒汉式）
 
 ```java

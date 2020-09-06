@@ -186,3 +186,5 @@ public static void main(String[] args) throws Exception {
 
 1. 记录在markword中
 2. 与hash table密切相关
+
+<a href="https://blog.csdn.net/qq_26437925/article/details/104336710">对象hashcode不重写可能导致内存泄漏问题</a>

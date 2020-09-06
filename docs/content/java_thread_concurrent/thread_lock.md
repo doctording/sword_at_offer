@@ -255,11 +255,6 @@ main end
 * 通过Lock可以知道有没有成功获取锁，而synchronized却无法办到。
 * Lock可以提高多个线程进行读操作的效率。
 
-作者：TomyZhang
-链接：https://www.jianshu.com/p/1927e60f358f
-来源：简书
-简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
-
 ## 线程同步概念
 
 多线程对共享资源的操作按照一定次序，避免出现不可预知的结局
@@ -270,17 +265,23 @@ main end
 
 ### 乐观锁
 
-乐观锁是一种乐观思想，即认为读多写少，遇到并发竞争写的可能性很低，每次去`读`数据的时候都认为别人不会修改，所以**不会上锁**，但是在`写`操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据：采取在写时先读出当前版本号，然后加锁比较（即比较跟上一次的版本号，如果一样则进行写操作），如果失败则要重复`读-比较-写`的操作(不断CAS操作，CAS就是典型的乐观锁)。
+乐观锁是一种乐观思想，即认为读多写少，遇到并发竞争写的可能性很低，每次去`读`数据的时候都认为别人不会修改，所以**不会上锁**，但是在`写`操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据。
+
+* 在此期间：是指 拿到数据到更新数据的这段时间。因为没有加锁，所以别的线程可能会更改。还有一点那就是乐观锁其实是不加锁的。
+
+* 如何判断：采取在写时先读出当前版本号，比较跟上一次的版本号，如果一样则进行写操作，如果失败则要重复`读-比较-写`的操作(不断CAS操作，CAS就是典型的乐观锁)。
 
 ### 悲观锁
 
-悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性很高，每次去拿数据的时候都认为别人会修改，所以每次在`读/写`数据的时候**都会上锁**，这样别人想读/写这个数据就会被`Block`住，直到锁释放且自己抢到锁。Java中的悲观锁如`synchronized`,AQS框架下的锁则一般是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁，如偏向锁(RetreenLock)。
+悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性很高，每次去拿数据的时候都认为别人会修改，所以每次在`读/写`数据的时候**都会上锁**，这样别人想读/写这个数据就会被`Block`住，直到锁释放且自己抢到锁。Java中的悲观锁如`synchronized`,AQS框架下的锁则一般是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁
+
+悲观并发控制实际上是“先取锁再访问”的保守策略，为数据处理的安全提供了保证。数据库里面也用到了这种悲观锁的机制,比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。这样其它的线程就不能同步操作，必须要等到锁释放才可以。
 
 ## 自旋锁
 
 <a href="https://en.wikipedia.org/wiki/Spinlock" target="_blank">Spinlock WikiPedia</a>
 
-自旋锁是采用让当前线程不停地的在循环体内执行实现的，只有当循环的条件被其它线程改变时，才能进入临界区；否则一直自旋，消耗CPU
+自旋锁是采用让当前线程不停地的在循环体内执行实现的，只有当循环的条件被其它线程改变时，才能进入临界区；否则一直判断条件(自旋），消耗CPU，但自身线程状态不改变
 
 ### 自旋锁存在的意义与使用场景
 
@@ -466,7 +467,18 @@ class SpinLock{
 
 * 自旋时会适当放弃线程优先级之间的差异
 
-## ReentrantLock (可重入锁)
+## ReentrantLock (可重入锁，AQS独占锁)
+
+附：**独占锁**被某个线程持有时，其它线程只能等待当前线程释放后才能去竞争锁，而且只有一个线程能竞争锁成功。
+
+### 锁演变过程
+
+参考：<a href='https://blog.csdn.net/qq_23864697/article/details/104052712' target='_blank'>ReentrantLock源码解析</a>
+
+1. 自旋（空转，耗费CPU）
+2. 自旋 + yield（放弃CPU，随机）
+3. 自旋 + sleep（阻塞，让出CPU），sleep时间不确定？
+4. 自旋 + park/unpark，获取不到锁则park进入队列中，释放CPU；获取到锁再释放的时候进行unpark操作唤醒队列中的线程（park是等待一个许可，unpark是为某线程提供一个许可）
 
 ### 公平&非公平锁
 
@@ -476,7 +488,9 @@ class SpinLock{
 
 #### 公平锁
 
-表示线程获取锁的顺序是按照线程申请锁的顺序来分配的，即`FIFO`, 队列结构
+表示线程获取锁的顺序是按照线程申请锁的顺序来分配的，即`FIFO`, 队列结构； 回先判断是否有前驱Node，没有才进行CAS操作，不是一上来就CAS开始抢占锁
+
+##### 加锁过程
 
 ```java
  /**
@@ -485,6 +499,7 @@ class SpinLock{
 static final class FairSync extends Sync {
     private static final long serialVersionUID = -3000897897090466540L;
 
+    // 公平锁 lock 方法：acquire(1)
     final void lock() {
         acquire(1);
     }
@@ -494,15 +509,21 @@ static final class FairSync extends Sync {
         * recursive call or no waiters or is first.
         */
     protected final boolean tryAcquire(int acquires) {
+        // 获取当前线程
         final Thread current = Thread.currentThread();
+        // 获取state的值,state是volatie修饰的,线程之间可见
         int c = getState();
+
+        // 如果state==0，则说明还没有线程获取到资源
         if (c == 0) {
+            // 继续判断是否有线程排队,并尝试着通过CAS修改state的值为acquires,然后将当前线程设置到成员变量保存
             if (!hasQueuedPredecessors() &&
                 compareAndSetState(0, acquires)) {
                 setExclusiveOwnerThread(current);
                 return true;
             }
         }
+        // 如果state!=0,说明有线程占用。则判断该线程是否为自身,这里主要做线程的重入。如果是自身,则将state加1
         else if (current == getExclusiveOwnerThread()) {
             int nextc = c + acquires;
             if (nextc < 0)
@@ -510,18 +531,256 @@ static final class FairSync extends Sync {
             setState(nextc);
             return true;
         }
+        // 最后失败返回 false
+        // 失败后，会通过addwaitor将当前线程以排它性节点的方式加到CLH队列的末尾（通过CAS），然后通过acquireQueued开始排队
         return false;
     }
 }
 ```
 
+* Aqs的acquire方法：
+
+1. 尝试获取锁`tryAcquire(arg)`返回true，代表获取成功，则直接返回
+2. 否则执行`acquireQueued(addWaiter(Node.EXCLUSIVE), arg)`, `addWaiter`方法独占(exclusive)模式添加到CLH队列到末尾
+3. addWaiter底层是CAS操作，如果操作成功返回CLH中的该`Node`节点,并执行 acquireQueued(node, arg) 方法
+4. acquireQueued方法判断 node 的前置节点是不是CLH的head，如果是则尝试获取锁`tryAcquire(arg)`(这是个while(true)操作)
+
+```java
+public final void acquire(int arg) {
+    if (!tryAcquire(arg) &&
+        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        selfInterrupt();
+}
+```
+
+第一个线程执行lock()方法,tryAcquire执行的时候，hasQueuedPredecessors()返回false,那么直接执行如下语句并返回，lock()返回,则表示获取锁成功，这样线程能继续执行获取锁之后的代码了
+
+```java
+// unsafe.compareAndSwapInt操作设置state变量为1
+compareAndSetState(0, acquires))
+// 设置aqs中的 exclusiveOwnerThread 为 当前线程
+setExclusiveOwnerThread(current);
+// 返回，代表获取锁成功
+return true;
+```
+
+* 获取锁前
+
+![](../../content/java_thread_concurrent/imgs/reentrant01.png)
+
+* 获取锁之后(未释放之前)
+
+![](../../content/java_thread_concurrent/imgs/reentrant02.png)
+
+##### 锁排队debug图
+
+如下图，threadB持有锁，然后threadC是在排队中，然后又来了个threadA，那么threadA就继续排队着
+
+![](../../content/java_thread_concurrent/imgs/reentrant03.png)
+
+附：debug代码
+
+```java
+public static void main(String[] args) throws Exception{
+    ReentrantLock lock = new ReentrantLock(true);
+
+    Thread threadA = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                lock.lock();
+                System.out.println("A start");
+                TimeUnit.SECONDS.sleep(3);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                lock.unlock();
+                System.out.println("A end");
+            }
+        }
+    }, "threadA");
+
+    Thread threadB = new Thread(()-> {
+        try {
+            lock.lock();
+            System.out.println("B start");
+            TimeUnit.SECONDS.sleep(60);
+        } catch (Exception e) {
+            System.out.println("B Exception");
+            e.printStackTrace();
+        }finally {
+            System.out.println("B end");
+            lock.unlock();
+        }
+    }, "threadB");
+
+    Thread threadC = new Thread(()-> {
+        try {
+            lock.lock();
+            System.out.println("C start");
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            System.out.println("C Exception");
+            e.printStackTrace();
+        }finally {
+            System.out.println("C end");
+            lock.unlock();
+        }
+    }, "threadC");
+
+    threadB.start();
+    TimeUnit.SECONDS.sleep(1);
+    threadA.start();
+    threadC.start();
+
+    threadA.join();
+    threadB.join();
+    threadC.join();
+    System.out.println("main end");
+}
+```
+
+##### 释放锁过程
+
+ReentranctLock内部类Sync的`tryRelease`方法
+
+```java
+public void unlock() {
+    sync.release(1);
+}
+
+protected final boolean tryRelease(int releases) {
+    // statue变量减少release数量，同时设置 exclusiveOwnerThread 为null
+    // 这里判断了 exclusiveOwnerThread 必须是当前线程才能执行成功
+    int c = getState() - releases;
+    if (Thread.currentThread() != getExclusiveOwnerThread())
+        throw new IllegalMonitorStateException();
+    boolean free = false;
+    if (c == 0) {
+        free = true;
+        setExclusiveOwnerThread(null);
+    }
+    setState(c);
+    return free;
+}
+```
+
+* aqs release方法
+
+```java
+/**
+* Releases in exclusive mode.  Implemented by unblocking one or
+* more threads if {@link #tryRelease} returns true.
+* This method can be used to implement method {@link Lock#unlock}.
+*
+* @param arg the release argument.  This value is conveyed to
+*        {@link #tryRelease} but is otherwise uninterpreted and
+*        can represent anything you like.
+* @return the value returned from {@link #tryRelease}
+*/
+public final boolean release(int arg) {
+    if (tryRelease(arg)) {
+        // 释放成功，如果CLH队列中有等待的线程，进行unpark唤醒CLH队列头部Node
+        Node h = head;
+        if (h != null && h.waitStatus != 0)
+            unparkSuccessor(h);
+        return true;
+    }
+    return false;
+}
+```
+
+##### 公平锁优缺点
+
 * 公平锁每次获取到锁为同步队列中的第一个节点，保证请求资源时间上的绝对顺序，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其它线程永远无法获取到锁，造成`饥饿`现象。
 
 * 公平锁为了保证时间上的绝对顺序，需要**频繁的上下文切换**；而非公平锁会降低了一定的上下文切换，降低性能开销。
 
-#### 非公平锁
+#### 非公平锁（ReentrantLock默认非公平）
 
 就是一种获取锁的`抢占`机制，是随机获得锁的，和公平锁不一样的就是先来的不一定先得到锁，这个方式可能造成某些线程一直拿不到锁，结果也就是不公平。尝试抢占失败，就再采用公平锁的那种方式，`吞吐量`大于公平锁
+
+##### 获取锁（区别非公平锁）
+
+1. 直接先进行的CAS操作:`compareAndSetState(0, 1)`(即是可抢占锁的)，获取到就设置`exclusiveOwnerThread`
+2. 如果CAS操作失败，再进行`acquire(1)`操作
+
+只要state=0(即锁是空闲的了)，就直接CAS尝试获取，而不需要判断是否CLH队列中前驱节点
+
+```java
+/**
+* Sync object for non-fair locks
+*/
+static final class NonfairSync extends Sync {
+    private static final long serialVersionUID = 7316153563782823691L;
+
+    /**
+        * Performs lock.  Try immediate barge, backing up to normal
+        * acquire on failure.
+        */
+    final void lock() {
+        if (compareAndSetState(0, 1))
+            setExclusiveOwnerThread(Thread.currentThread());
+        else
+            acquire(1);
+    }
+
+    protected final boolean tryAcquire(int acquires) {
+        return nonfairTryAcquire(acquires);
+    }
+}
+
+* AQS的`acquire`方法
+
+```java
+/**
+* Acquires in exclusive mode, ignoring interrupts.  Implemented
+* by invoking at least once {@link #tryAcquire},
+* returning on success.  Otherwise the thread is queued, possibly
+* repeatedly blocking and unblocking, invoking {@link
+* #tryAcquire} until success.  This method can be used
+* to implement method {@link Lock#lock}.
+*
+* @param arg the acquire argument.  This value is conveyed to
+*        {@link #tryAcquire} but is otherwise uninterpreted and
+*        can represent anything you like.
+*/
+public final void acquire(int arg) {
+    if (!tryAcquire(arg) &&
+        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        selfInterrupt();
+}
+```
+
+* NonfairSync的`tryAcquire`方法
+
+```java
+/**
+* Performs non-fair tryLock.  tryAcquire is implemented in
+* subclasses, but both need nonfair try for trylock method.
+*/
+final boolean nonfairTryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    // 如果该锁未被任何线程占有
+    if (c == 0) {
+        // 不管对列是否有排队线程，直接cas尝试获取，不考虑当前同步队列中线程等待的情况（区别于公平方式）
+        if (compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
+    }
+    // 如果state!=0,说明有线程占用。则判断该线程是否为自身,这里主要做线程的重入。如果是自身,则将state加1
+    else if (current == getExclusiveOwnerThread()) {
+        int nextc = c + acquires;
+        if (nextc < 0) // overflow
+            throw new Error("Maximum lock count exceeded");
+        setState(nextc);
+        return true;
+    }
+    return false;
+}
+```
 
 ### 什么是可重入？
 
@@ -653,7 +912,7 @@ ReentrantLock继承父类AQS（AQS内部维护了一个同步状态status来计�
 
 ![](../../content/java_thread_concurrent/imgs/lock_sync_state_2.png)
 
-* 可重入后 `state = state - 1`
+* 可重入之后再 `state = state - 1`
 
 ![](../../content/java_thread_concurrent/imgs/lock_sync_state_3.png)
 
@@ -739,11 +998,42 @@ public class Main {
 }
 ```
 
-## 读写锁(例:`ReentrantReadWriteLock`)
+## 读写锁(例:`ReentrantReadWriteLock`，Aqs共享)
 
 读写锁实际是一种特殊的`自旋锁`，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。
 
 一次只有一个线程可以占有`写模式`的读写锁, 但是可以有多个线程同时占有`读模式`的读写锁.
+
+### ReentrantReadWriteLock（默认，非公平）
+
+* ReentrantReadWriteLock 的构造，内部有：readerLock 和 writerLock，都是使用的`NonfairSync`或者`FairSync`
+
+```java
+/**
+* Creates a new {@code ReentrantReadWriteLock} with
+* the given fairness policy.
+*
+* @param fair {@code true} if this lock should use a fair ordering policy
+*/
+public ReentrantReadWriteLock(boolean fair) {
+    sync = fair ? new FairSync() : new NonfairSync();
+    readerLock = new ReadLock(this);
+    writerLock = new WriteLock(this);
+}
+
+/**
+* Fair version of Sync
+*/
+static final class FairSync extends Sync {
+    private static final long serialVersionUID = -2274990926593161451L;
+    final boolean writerShouldBlock() {
+        return hasQueuedPredecessors();
+    }
+    final boolean readerShouldBlock() {
+        return hasQueuedPredecessors();
+    }
+}
+```
 
 ### 伪代码
 
@@ -940,14 +1230,11 @@ A shared lock on a resource can be owned by several tasks at the same time. Howe
 轻量级锁是由偏向锁升级来的，偏向锁运行在一个线程进入同步块的情况下，当第二个线程加入锁竞争的时候，偏向锁就会升级为轻量级锁。（轻量级锁是用户态的，通常会自旋占用CPU）
 
 轻量锁与偏向锁不同的是：
+    1. 轻量级锁每次退出同步块都需要释放锁，而偏向锁是在竞争发生时才释放锁
+    2. 每次进入/退出同步块都需要CAS更新对象头
+    3. 争夺轻量级锁失败时，自旋尝试抢占锁
 
-1. 轻量级锁每次退出同步块都需要释放锁，而偏向锁是在竞争发生时才释放锁
-2. 每次进入/退出同步块都需要CAS更新对象头
-3. 争夺轻量级锁失败时，自旋尝试抢占锁
-
-可以看到轻量锁适合在竞争情况下使用，其自旋锁可以保证响应速度快，但自旋操作会占用CPU，所以一些计算时间长的操作不适合使用轻量级锁。
-
-当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。
+可以看到轻量锁适合在竞争情况下使用，其自旋锁可以保证响应速度快，但自旋操作会占用CPU，所以一些计算时间长的操作不适合使用轻量级锁。当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。
 
 ## 重量级锁（内核控制）
 
@@ -962,6 +1249,8 @@ A shared lock on a resource can be owned by several tasks at the same time. Howe
 ## AQS
 
 `AbstractQuenedSynchronizer`抽象的队列式同步器,是除了Java自带的`synchronized`关键字之外的锁机制
+
+AQS技术栈：自旋，park/unpark，CAS
 
 同步工具|同步工具与AQS的关联
 -|-

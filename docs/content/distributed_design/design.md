@@ -1,5 +1,5 @@
 ---
-title: "网络设计模式"
+title: "网络IO设计模式"
 layout: page
 date: 2019-06-07 00:00
 ---
@@ -15,6 +15,8 @@ date: 2019-06-07 00:00
 * reactor: n. 核反应堆;
 
 基于事件驱动，主程序将事件以及对应事件处理的方法在Reactor上进行注册, 如果相应的事件发生（比如轮询判断），Reactor将会主动调用事件注册的接口，即 回调函数.
+
+![](../../content/distributed_design/imgs/reactor.png)
 
 最简单的Reactor模式：注册所有感兴趣的事件处理器，单线程轮询选择就绪事件，执行事件处理器。
 
@@ -93,7 +95,6 @@ while(true){
 ## Callable 接口
 
 ```java
-
 /**
  * A task that returns a result and may throw an exception.
  * Implementors define a single method with no arguments called
