@@ -1926,7 +1926,7 @@
 <li><div><a href="#&#x5BF9;&#x8C61;&#x7684;hashcode&#x65B9;&#x6CD5;">&#x5BF9;&#x8C61;&#x7684;hashcode&#x65B9;&#x6CD5;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x4F8B;&#x5B50;&#xFF0C;&#x9700;&#x8981;&#x91CD;&#x5199;-hashcode-&#x65B9;&#x6CD5;">&#x4F8B;&#x5B50;&#xFF0C;&#x9700;&#x8981;&#x91CD;&#x5199; hashcode &#x65B9;&#x6CD5;</a><i></i></div></li>
-<li><div><a href="#hash&#x51FD;&#x6570;">hash&#x51FD;&#x6570;</a><i></i></div></li>
+<li><div><a href="#hash&#x51FD;&#x6570;&#x53CA;&#x5176;&#x7279;&#x70B9;">hash&#x51FD;&#x6570;&#x53CA;&#x5176;&#x7279;&#x70B9;</a><i></i></div></li>
 <li><div><a href="#java-&#x5BF9;&#x8C61;-hashcode&#x7684;&#x4F5C;&#x7528;">Java &#x5BF9;&#x8C61; hashcode&#x7684;&#x4F5C;&#x7528;</a><i></i></div></li>
 </ul></li>
 </ul></li>
@@ -2024,7 +2024,7 @@
 </li>
 </ul>
 <h2 id="&#x5BF9;&#x8C61;&#x7684;hashcode&#x65B9;&#x6CD5;">&#x5BF9;&#x8C61;&#x7684;hashcode&#x65B9;&#x6CD5;</h2>
-<p><code>hashCode()</code>&#x5728;&#x6563;&#x5217;&#x8868;&#x4E2D;&#x624D;&#x6709;&#x7528;&#xFF0C;&#x5728;&#x5176;&#x5B83;&#x60C5;&#x51B5;&#x4E0B;&#x6CA1;&#x7528;&#x3002;&#x5728;&#x6563;&#x5217;&#x8868;&#x4E2D;<code>hashCode()</code>&#x7684;&#x4F5C;&#x7528;&#x662F;&#x83B7;&#x53D6;&#x5BF9;&#x8C61;&#x7684;&#x6563;&#x5217;&#x7801;&#xFF0C;&#x8FDB;&#x800C;&#x786E;&#x5B9A;&#x8BE5;&#x5BF9;&#x8C61;&#x5728;&#x6563;&#x5217;&#x8868;&#x4E2D;&#x7684;&#x4F4D;&#x7F6E;(&#x6563;&#x5217;&#x8868;&#x5B58;&#x50A8;&#x7684;&#x662F;&#x952E;&#x503C;&#x5BF9;(key-value)&#xFF0C;&#x5B83;&#x7684;&#x7279;&#x70B9;&#x662F;&#xFF1A;&#x80FD;&#x6839;&#x636E;&#x201C;&#x952E;&#x201D;&#x5FEB;&#x901F;&#x7684;&#x68C0;&#x7D22;&#x51FA;&#x5BF9;&#x5E94;&#x7684;&#x201C;&#x503C;&#x201D;&#x3002;&#x8FD9;&#x5176;&#x4E2D;&#x5C31;&#x5229;&#x7528;&#x5230;&#x4E86;&#x6563;&#x5217;&#x7801;&#xFF01;)</p>
+<p><code>hashCode()</code>&#x5728;&#x6563;&#x5217;&#x8868;&#x4E2D;&#x624D;&#x6709;&#x7528;&#xFF0C;&#x5728;&#x5176;&#x5B83;&#x60C5;&#x51B5;&#x4E0B;&#x6CA1;&#x7528;&#x3002;&#x5728;&#x6563;&#x5217;&#x8868;&#x4E2D;<code>hashCode()</code>&#x7684;&#x4F5C;&#x7528;&#x662F;&#x83B7;&#x53D6;&#x5BF9;&#x8C61;&#x7684;&#x6563;&#x5217;&#x7801;&#xFF0C;&#x8FDB;&#x800C;&#x786E;&#x5B9A;&#x8BE5;&#x5BF9;&#x8C61;&#x5728;&#x6563;&#x5217;&#x8868;&#x4E2D;&#x7684;&#x4F4D;&#x7F6E;(&#x6563;&#x5217;&#x8868;&#x5B58;&#x50A8;&#x7684;&#x662F;&#x952E;&#x503C;&#x5BF9;(key-value)&#xFF0C;&#x5B83;&#x7684;&#x7279;&#x70B9;&#x662F;&#xFF1A;&#x80FD;&#x6839;&#x636E;&#x201C;&#x952E;&#x201D;&#x5FEB;&#x901F;&#x7684;&#x68C0;&#x7D22;&#x51FA;&#x5BF9;&#x5E94;&#x7684;&#x201C;&#x503C;&#x201D;&#xFF0C;&#x8FD9;&#x5176;&#x4E2D;&#x5C31;&#x5229;&#x7528;&#x5230;&#x4E86;&#x6563;&#x5217;&#x7801;&#xFF01;)</p>
 <pre class="language-"><code class="lang-java"> <span class="token comment">/**
      * Returns a hash code value for the object. This method is
      * supported for the benefit of hash tables such as those provided by
@@ -2113,12 +2113,12 @@
     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>hashMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>p2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// null</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h3 id="hash&#x51FD;&#x6570;">hash&#x51FD;&#x6570;</h3>
+<h3 id="hash&#x51FD;&#x6570;&#x53CA;&#x5176;&#x7279;&#x70B9;">hash&#x51FD;&#x6570;&#x53CA;&#x5176;&#x7279;&#x70B9;</h3>
 <p>&#x7279;&#x70B9;</p>
 <ol>
 <li>&#x5355;&#x5411;&#x51FD;&#x6570;&#xFF0C;&#x53CD;&#x5411;&#x8FD0;&#x7B97;&#x65E0;&#x6CD5;&#x5B8C;&#x6210;</li>
 <li>&#x4EFB;&#x52A1;&#x4E00;&#x957F;&#x5EA6;&#x8F93;&#x5165;&#xFF0C;&#x5F97;&#x5230; &#x56FA;&#x5B9A;&#x957F;&#x5EA6;&#x8F93;&#x51FA;</li>
-<li>&#x8F93;&#x5165;&#x4E0D;&#x53D8;&#xFF0C;&#x8F93;&#x51FA;&#x5C31;&#x4E0D;&#x4F1A;&#x53D8;&#xFF08;Whenever it is invoked on the same object more than once during an execution of a Java application, the {@code hashCode} method must consistently return the same integer&#xFF09;</li>
+<li><font color="red">&#x8F93;&#x5165;&#x4E0D;&#x53D8;&#xFF0C;&#x8F93;&#x51FA;&#x5C31;&#x4E0D;&#x4F1A;&#x53D8;</font>&#xFF0C;hash&#x51FD;&#x6570;&#x662F;&#x7A33;&#x5B9A;&#x7684;&#xFF08;Whenever it is invoked on the same object more than once during an execution of a Java application, the {@code hashCode} method must consistently return the same integer&#xFF09;</li>
 </ol>
 <p>&#x5E38;&#x89C1;&#x7684;&#x6709;&#x6570;&#x767E;&#x79CD;hash&#x51FD;&#x6570;&#xFF0C;eg: MD5&#x52A0;&#x5BC6; + salt</p>
 <h3 id="java-&#x5BF9;&#x8C61;-hashcode&#x7684;&#x4F5C;&#x7528;">Java &#x5BF9;&#x8C61; hashcode&#x7684;&#x4F5C;&#x7528;</h3>
@@ -2128,7 +2128,7 @@
 </ol>
 <p><a href="https://blog.csdn.net/qq_26437925/article/details/104336710" target="_blank">&#x5BF9;&#x8C61;hashcode&#x4E0D;&#x91CD;&#x5199;&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x5185;&#x5B58;&#x6CC4;&#x6F0F;&#x95EE;&#x9898;</a></p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-09-04 18:49:09
+2020-09-11 21:16:56
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2173,7 +2173,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"== & equals方法 & hashcode方法","layout":"page","date":"2018-11-24 00:00","level":"1.9.4","depth":2,"next":{"title":"Calendar & Date","level":"1.9.5","depth":2,"path":"content/java_utils/Calendar.md","ref":"./content/java_utils/Calendar.md","articles":[]},"previous":{"title":"System.arraycopy, Array.copyOf","level":"1.9.3","depth":2,"path":"content/java_data_structure/System_arraycopy.md","ref":"./content/java_data_structure/System_arraycopy.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk","advanced-emoji"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/equals_hashcode.md","mtime":"2020-09-04T10:49:09.820Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-06T15:32:43.959Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"== & equals方法 & hashcode方法","layout":"page","date":"2018-11-24 00:00","level":"1.9.4","depth":2,"next":{"title":"Calendar & Date","level":"1.9.5","depth":2,"path":"content/java_utils/Calendar.md","ref":"./content/java_utils/Calendar.md","articles":[]},"previous":{"title":"System.arraycopy, Array.copyOf","level":"1.9.3","depth":2,"path":"content/java_data_structure/System_arraycopy.md","ref":"./content/java_data_structure/System_arraycopy.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/equals_hashcode.md","mtime":"2020-09-11T13:16:56.050Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-12T09:47:12.118Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -2223,7 +2223,15 @@
         
     
         
+        <script src="../../gitbook/gitbook-plugin-copy-code-button/toggle.js"></script>
+        
+    
+        
         <script src="../../gitbook/gitbook-plugin-gittalk/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
         
     
         

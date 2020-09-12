@@ -1948,6 +1948,7 @@
 <ul>
 <li><div><a href="#&#x4E3A;&#x4EC0;&#x4E48;&#x53BB;&#x6389;&#x65B9;&#x6CD5;&#x533A;&#xFF0C;&#x5143;&#x7A7A;&#x95F4;&#x7528;&#x975E;&#x5806;&#x7684;&#x673A;&#x5668;&#x5185;&#x5B58;&#xFF1F;">&#x4E3A;&#x4EC0;&#x4E48;&#x53BB;&#x6389;&#x65B9;&#x6CD5;&#x533A;&#xFF0C;&#x5143;&#x7A7A;&#x95F4;&#x7528;&#x975E;&#x5806;&#x7684;&#x673A;&#x5668;&#x5185;&#x5B58;&#xFF1F;</a><i></i></div></li>
 <li><div><a href="#&#x5143;&#x7A7A;&#x95F4;&#x8C03;&#x4F18;&#xFF1F;">&#x5143;&#x7A7A;&#x95F4;&#x8C03;&#x4F18;&#xFF1F;</a><i></i></div></li>
+<li><div><a href="#class&#x5B9E;&#x4F8B;&#x7A76;&#x7ADF;&#x5728;method-area&#x8FD8;&#x662F;&#x5728;heap&#x4E2D;">Class&#x5B9E;&#x4F8B;&#x7A76;&#x7ADF;&#x5728;Method Area&#x8FD8;&#x662F;&#x5728;Heap&#x4E2D;</a><i></i></div></li>
 </ul></li>
 <li><div><a href="#&#x5E38;&#x91CF;&#x6C60;">&#x5E38;&#x91CF;&#x6C60;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
@@ -2120,6 +2121,9 @@
 </ul>
 <h3 id="&#x5143;&#x7A7A;&#x95F4;&#x8C03;&#x4F18;&#xFF1F;">&#x5143;&#x7A7A;&#x95F4;&#x8C03;&#x4F18;&#xFF1F;</h3>
 <p>&#x5143;&#x7A7A;&#x95F4;&#x8981;&#x9650;&#x5236;&#xFF0C;&#x673A;&#x5668;&#x5185;&#x5B58;OOM&#x95EE;&#x9898;</p>
+<h3 id="class&#x5B9E;&#x4F8B;&#x7A76;&#x7ADF;&#x5728;method-area&#x8FD8;&#x662F;&#x5728;heap&#x4E2D;">Class&#x5B9E;&#x4F8B;&#x7A76;&#x7ADF;&#x5728;Method Area&#x8FD8;&#x662F;&#x5728;Heap&#x4E2D;</h3>
+<p><img src="imgs/method_area.png" alt=""></p>
+<p>Java8&#x4E2D;<code>O.class</code>&#x5728;&#x5806;&#x4E2D;&#xFF0C;&#x5176;&#x4E2D;c++&#x5BF9;&#x8C61;&#x5728;&#x65B9;&#x6CD5;&#x533A;&#x4E2D;</p>
 <h2 id="&#x5E38;&#x91CF;&#x6C60;">&#x5E38;&#x91CF;&#x6C60;</h2>
 <p>&#x5927;&#x4F53;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#xFF1A;&#x9759;&#x6001;&#x5E38;&#x91CF;&#x6C60;&#xFF0C;&#x8FD0;&#x884C;&#x65F6;&#x5E38;&#x91CF;&#x6C60;&#x3002;</p>
 <ul>
@@ -2187,8 +2191,7 @@ java version <span class="token string">&quot;1.8.0_171&quot;</span>
 <li>+UseCompressedClassPointers&#xFF1A;64bit&#x673A;&#x5668;&#xFF0C;&#x4E00;&#x4E2A;&#x6307;&#x9488;8&#x4E2A;&#x5B57;&#x8282;&#xFF0C;&#x5982;&#x679C;&#x4F7F;&#x7528;&#x538B;&#x7F29;&#x4F1A;&#x53EA;&#x6709;4&#x4E2A;&#x5B57;&#x8282;</li>
 <li>-XX:+UseCompressedOops&#xFF1A;&#x666E;&#x901A;&#x5BF9;&#x8C61;&#x6307;&#x9488;&#xFF0C;&#x5982;&#x679C;&#x538B;&#x7F29;&#x4E5F;&#x662F;4&#x4E2A;&#x5B57;&#x8282;</li>
 </ul>
-<pre class="language-"><code class="lang-java">
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
 
     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
         <span class="token class-name">Object</span> o <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -2214,7 +2217,7 @@ _kclass:4&#x4E2A;&#x5B57;&#x8282;
 */</span>
 </code></pre>
 <h3 id="&#x5BF9;&#x8C61;&#x5934;--markword">&#x5BF9;&#x8C61;&#x5934; &amp; markword</h3>
-<p>markword 8&#x4E2A;&#x5B57;&#x8282;&#xFF0C;64bit</p>
+<p>markword 8&#x4E2A;&#x5B57;&#x8282;&#xFF0C;64bit&#xFF0C;&#x5305;&#x62EC;&#xFF1A;<strong>&#x9501;&#x4FE1;&#x606F;</strong>&#xFF0C;<strong>gc&#x4FE1;&#x606F;</strong>&#xFF0C;<strong>identity hashcode</strong></p>
 <p><img src="imgs/hotspot_markword.png" alt=""></p>
 <ul>
 <li>&#x65E0;&#x9501;&#x4F8B;&#x5B50;</li>
@@ -2964,7 +2967,7 @@ mubi<span class="token annotation punctuation">@mubideMacBook</span><span class=
 <p>&#x6570;&#x636E;&#x5E93;&#x9A71;&#x52A8;&#x52A0;&#x8F7D;&#x63A5;&#x53E3;&#x88AB;&#x4F5C;&#x4E3A;JDK&#x6838;&#x5FC3;&#x6807;&#x51C6;&#x7C7B;&#x5E93;&#x7684;&#x4E00;&#x90E8;&#x5206;&#xFF0C;&#x7531;&#x4E8E;JVM&#x7C7B;&#x52A0;&#x8F7D;&#x7684;&#x53CC;&#x4EB2;&#x59D4;&#x6258;(<code>parents delegate</code>)&#x673A;&#x5236;&#x7684;&#x9650;&#x5236;&#xFF0C;&#x542F;&#x52A8;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#x4E0D;&#x53EF;&#x80FD;&#x52A0;&#x8F7D;&#x5F97;&#x5230;&#x7B2C;&#x4E09;&#x65B9;&#x5382;&#x5546;&#x63D0;&#x4F9B;&#x7684;&#x5177;&#x4F53;&#x5B9E;&#x73B0;&#x3002;&#x5982;&#x4F55;&#x89E3;&#x51B3;&#xFF1F;</p>
 <p>&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#xFF1A;&#x6709;&#x4E86;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#xFF0C;&#x542F;&#x52A8;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;(&#x6839;&#x52A0;&#x8F7D;&#x5668;)&#x53CD;&#x5012;&#x9700;&#x8981;&#x59D4;&#x6258;&#x5B50;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#x53BB;&#x52A0;&#x8F7D;&#x5382;&#x5546;&#x63D0;&#x4F9B;&#x7684;&#x5BF9;JDK&#x5B9A;&#x4E49;&#x7684;SPI(Service Provider Interface)&#x7684;&#x5B9E;&#x73B0;</p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-09-03 12:41:57
+2020-09-11 10:13:38
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -3009,7 +3012,7 @@ mubi<span class="token annotation punctuation">@mubideMacBook</span><span class=
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"类加载机制,类加载器,内存布局","layout":"page","date":"2019-02-15 00:00","level":"1.12.2","depth":2,"next":{"title":"堆栈 & 各种GC","level":"1.12.3","depth":2,"path":"content/java_jvm/jvm_mem_gc.md","ref":"./content/java_jvm/jvm_mem_gc.md","articles":[]},"previous":{"title":"内存模型与线程","level":"1.12.1","depth":2,"path":"content/java_jvm/jvm_mem_model.md","ref":"./content/java_jvm/jvm_mem_model.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk","advanced-emoji"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_jvm/jvm_class_load.md","mtime":"2020-09-03T04:41:57.884Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-06T15:32:43.959Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"类加载机制,类加载器,内存布局","layout":"page","date":"2019-02-15 00:00","level":"1.12.2","depth":2,"next":{"title":"堆栈 & 各种GC","level":"1.12.3","depth":2,"path":"content/java_jvm/jvm_mem_gc.md","ref":"./content/java_jvm/jvm_mem_gc.md","articles":[]},"previous":{"title":"内存模型与线程","level":"1.12.1","depth":2,"path":"content/java_jvm/jvm_mem_model.md","ref":"./content/java_jvm/jvm_mem_model.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_jvm/jvm_class_load.md","mtime":"2020-09-11T02:13:38.528Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-12T09:47:12.118Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -3059,7 +3062,15 @@ mubi<span class="token annotation punctuation">@mubideMacBook</span><span class=
         
     
         
+        <script src="../../gitbook/gitbook-plugin-copy-code-button/toggle.js"></script>
+        
+    
+        
         <script src="../../gitbook/gitbook-plugin-gittalk/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
         
     
         

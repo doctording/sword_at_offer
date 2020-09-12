@@ -1989,21 +1989,19 @@
 <li>&#x4EE3;&#x7801;&#x91CD;&#x6392;&#x5E8F;&#x7ED3;&#x5408;&#x7EBF;&#x7A0B;&#x4EA4;&#x53C9;&#x6267;&#x884C;</li>
 <li>&#x5171;&#x4EAB;&#x53D8;&#x91CF;&#x66F4;&#x65B0;&#x540E;&#x7684;&#x503C;&#x6CA1;&#x6709;&#x5728;&#x5DE5;&#x4F5C;&#x5185;&#x5B58;&#x4E0E;&#x4E3B;&#x5185;&#x5B58;&#x4E4B;&#x95F4;&#x53CA;&#x65F6;&#x66F4;&#x65B0;</li>
 </ol>
-<p><code>volatile</code> &#x901A;&#x8FC7;<strong>&#x52A0;&#x5165;&#x5185;&#x5B58;&#x5C4F;&#x969C;</strong>,<strong>&#x7981;&#x6B62;&#x6307;&#x4EE4;&#x91CD;&#x6392;&#x4F18;&#x5316;</strong>&#x6765;&#x5B9E;&#x73B0;&#x53EF;&#x89C1;&#x6027;</p>
-<p>&#x5373;&#x88AB;<code>volatile</code>&#x5173;&#x952E;&#x5B57;&#x4FEE;&#x9970;&#x7684;&#x53D8;&#x91CF;&#xFF0C;&#x5728;&#x6BCF;&#x4E2A;&#x5199;&#x64CD;&#x4F5C;&#x4E4B;&#x540E;&#xFF0C;&#x90FD;&#x4F1A;&#x52A0;&#x5165;&#x4E00;&#x6761;<code>store</code>&#x5185;&#x5B58;&#x5C4F;&#x969C;&#x547D;&#x4EE4;&#xFF0C;&#x6B64;&#x547D;&#x4EE4;&#x5F3A;&#x5236;&#x5DE5;&#x4F5C;&#x5185;&#x5B58;&#x5C06;&#x6B64;&#x53D8;&#x91CF;&#x7684;&#x6700;&#x65B0;&#x503C;&#x4FDD;&#x5B58;&#x81F3;&#x4E3B;&#x5185;&#x5B58;&#xFF1B;&#x5728;&#x6BCF;&#x4E2A;&#x8BFB;&#x64CD;&#x4F5C;&#x4E4B;&#x524D;&#xFF0C;&#x90FD;&#x4F1A;&#x52A0;&#x5165;&#x4E00;&#x6761;<code>load</code>&#x5185;&#x5B58;&#x5C4F;&#x969C;&#x547D;&#x4EE4;&#xFF0C;&#x6B64;&#x547D;&#x4EE4;&#x5F3A;&#x5236;&#x5DE5;&#x4F5C;&#x5185;&#x5B58;&#x4ECE;&#x4E3B;&#x5185;&#x5B58;&#x4E2D;&#x52A0;&#x8F7D;&#x6B64;&#x53D8;&#x91CF;&#x7684;&#x6700;&#x65B0;&#x503C;&#x81F3;&#x5DE5;&#x4F5C;&#x5185;&#x5B58;&#x3002;</p>
-<p><code>synchronized</code> monitor enter exit &#x786E;&#x4FDD;&#x53EF;&#x89C1;&#x6027;</p>
+<p><code>volatile</code> &#x901A;&#x8FC7;<strong>&#x52A0;&#x5165;&#x5185;&#x5B58;&#x5C4F;&#x969C;</strong>,<strong>&#x7981;&#x6B62;&#x6307;&#x4EE4;&#x91CD;&#x6392;&#x4F18;&#x5316;</strong>&#x6765;&#x5B9E;&#x73B0;&#x53EF;&#x89C1;&#x6027;&#x548C;&#x6709;&#x5E8F;&#x6027;</p>
 <h3 id="&#x6709;&#x5E8F;&#x6027;">&#x6709;&#x5E8F;&#x6027;</h3>
 <p>&#x7A0B;&#x5E8F;&#x6267;&#x884C;&#x7684;&#x987A;&#x5E8F;&#x6309;&#x7167;&#x4EE3;&#x7801;&#x7684;&#x5148;&#x540E;&#x987A;&#x5E8F;&#x6267;&#x884C;&#xFF0C;<strong>&#x5185;&#x5B58;&#x5C4F;&#x969C;</strong>&#xFF08;JVM&#x89C4;&#x8303;&#x8981;&#x6C42;&#xFF09;</p>
 <ol>
 <li>&#x6BCF;&#x4E2A;volatile&#x5199;&#x64CD;&#x4F5C;&#x7684;&#x524D;&#x9762;&#x63D2;&#x5165;&#x4E00;&#x4E2A;<code>StoreStore</code>&#x5C4F;&#x969C;&#xFF1B;</li>
 <li>&#x5728;&#x6BCF;&#x4E2A;volatile&#x5199;&#x64CD;&#x4F5C;&#x7684;&#x540E;&#x9762;&#x63D2;&#x5165;&#x4E00;&#x4E2A;<code>StoreLoad</code>&#x5C4F;&#x969C;&#xFF1B;</li>
-</ol>
-<p>StoreStoreBarrier =&#x300B; &#x5199;&#x64CD;&#x4F5C; =&#x300B; StoreStoreLoadBarrier</p>
-<ol>
 <li>&#x5728;&#x6BCF;&#x4E2A;volatile&#x8BFB;&#x64CD;&#x4F5C;&#x7684;&#x540E;&#x9762;&#x63D2;&#x5165;&#x4E00;&#x4E2A;<code>LoadLoad</code>&#x5C4F;&#x969C;&#xFF1B;</li>
 <li>&#x5728;&#x6BCF;&#x4E2A;volatile&#x8BFB;&#x64CD;&#x4F5C;&#x7684;&#x540E;&#x9762;&#x63D2;&#x5165;&#x4E00;&#x4E2A;<code>LoadStore</code>&#x5C4F;&#x969C;&#x3002;</li>
 </ol>
-<p>LoadLoadBarrier =&#x300B; &#x8BFB;&#x64CD;&#x4F5C; =&#x300B; LoadStoreBarrier</p>
+<p>&#x5373;&#x5982;&#x4E0B;</p>
+<pre class="language-"><code class="lang-java"><span class="token class-name">StoreStoreBarrier</span> <span class="token operator">=</span>&#x300B; &#x5199;&#x64CD;&#x4F5C; <span class="token operator">=</span>&#x300B; <span class="token class-name">StoreStoreLoadBarrier</span>
+<span class="token class-name">LoadLoadBarrier</span> <span class="token operator">=</span>&#x300B; &#x8BFB;&#x64CD;&#x4F5C; <span class="token operator">=</span>&#x300B; <span class="token class-name">LoadStoreBarrier</span>
+</code></pre>
 <ul>
 <li>Java&#x5185;&#x5B58;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;&#x5141;&#x8BB8;<strong>&#x7F16;&#x8BD1;&#x5668;</strong>&#x548C;<strong>&#x5904;&#x7406;&#x5668;</strong>&#x5BF9;&#x6307;&#x4EE4;&#x8FDB;&#x884C;&#x91CD;&#x6392;&#x5E8F;&#xFF0C;&#x4F46;&#x91CD;&#x6392;&#x5E8F;&#x8FC7;&#x7A0B;&#x4E0D;&#x4F1A;&#x5F71;&#x54CD;&#x5230;&#x5355;&#x7EBF;&#x7A0B;&#x7A0B;&#x5E8F;&#x7684;&#x6267;&#x884C;&#xFF0C;&#x5374;&#x4F1A;&#x5F71;&#x54CD;&#x5230;&#x591A;&#x7EBF;&#x7A0B;&#x5E76;&#x53D1;&#x6267;&#x884C;&#x7684;&#x6B63;&#x786E;&#x6027;(<code>CPU&#x6307;&#x4EE4;&#x6D41;&#x6C34;&#x7EBF;</code>)</li>
 </ul>
@@ -2069,7 +2067,7 @@
 <li>&#x8FD9;&#x5757;&#x5185;&#x5B58;&#x7684;&#x6784;&#x9020;&#x65B9;&#x6CD5;&#x6267;&#x884C;&#xFF08;invokespecial&#x6307;&#x4EE4;&#xFF09;</li>
 <li>&#x6808;&#x4E2D;&#x53D8;&#x91CF;&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;&#x5230;&#x8FD9;&#x5757;&#x5185;&#x5B58;&#xFF08;astore_1&#x6307;&#x4EE4;&#xFF09;</li>
 </ol>
-<p><font color="red">&#x95EE;&#x9898;</font>&#xFF1A;&#x7531;&#x4E8E;&#x6307;&#x4EE4;&#x91CD;&#x6392;&#x548C;&#x534A;&#x521D;&#x59CB;&#x5316;&#x72B6;&#x6001;&#xFF0C;&#x5BFC;&#x81F4;&#x591A;&#x7EBF;&#x7A0B;&#x4F1A;&#x4F7F;&#x7528;&#x534A;&#x521D;&#x59CB;&#x5316;&#x7684;&#x5BF9;&#x8C61;</p>
+<p><font color="red">&#x95EE;&#x9898;</font>&#xFF1A;&#x7531;&#x4E8E;&#x6307;&#x4EE4;&#x91CD;&#x6392;&#x548C;&#x534A;&#x521D;&#x59CB;&#x5316;&#x72B6;&#x6001;&#xFF0C;&#x4F1A;&#x5BFC;&#x81F4;&#x591A;&#x7EBF;&#x7A0B;&#x4F1A;&#x4F7F;&#x7528;&#x534A;&#x521D;&#x59CB;&#x5316;&#x7684;&#x5BF9;&#x8C61;&#xFF0C;&#x5373;&#x65E0;&#x6CD5;&#x786E;&#x4FDD;&#x539F;&#x5B50;&#x6027;</p>
 <p>&#x9644;&#xFF1A;<a href="https://doctording.github.io/sword_at_offer/design_pattern/singleton.html" target="_blank">&#x5355;&#x4F8B;&#x6A21;&#x5F0F;</a></p>
 <h2 id="&#x56DE;&#x987E;-java-&#x5185;&#x5B58;&#x6A21;&#x578B;">&#x56DE;&#x987E; Java &#x5185;&#x5B58;&#x6A21;&#x578B;</h2>
 <p>CPU -&gt; &#x7F13;&#x5B58; -&gt; &#x4E3B;&#x5B58; -&gt; &#x7EBF;&#x7A0B;&#x5DE5;&#x4F5C;&#x5185;&#x5B58;</p>
@@ -2103,7 +2101,7 @@ instance <span class="token operator">=</span> memory<span class="token punctuat
 <span class="token function">ctorInstance</span><span class="token punctuation">(</span>memory<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//2&#xFF1A;&#x521D;&#x59CB;&#x5316;&#x5BF9;&#x8C61;</span>
 </code></pre>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-09-04 18:48:58
+2020-09-11 10:13:34
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2148,7 +2146,7 @@ instance <span class="token operator">=</span> memory<span class="token punctuat
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"volatile 关键字","layout":"page","date":"2019-03-09 00:00","level":"1.10.3","depth":2,"next":{"title":"synchronized 关键字","level":"1.10.4","depth":2,"path":"content/java_thread_concurrent/synchronized.md","ref":"./content/java_thread_concurrent/synchronized.md","articles":[]},"previous":{"title":"CAS(Conmpare And Swap/Exchange) & unsafe","level":"1.10.2","depth":2,"path":"content/java_thread_concurrent/cas.md","ref":"./content/java_thread_concurrent/cas.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","uml","page-treeview","gittalk","advanced-emoji"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/volatile.md","mtime":"2020-09-04T10:48:58.782Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-06T15:32:43.959Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"volatile 关键字","layout":"page","date":"2019-03-09 00:00","level":"1.10.3","depth":2,"next":{"title":"synchronized 关键字","level":"1.10.4","depth":2,"path":"content/java_thread_concurrent/synchronized.md","ref":"./content/java_thread_concurrent/synchronized.md","articles":[]},"previous":{"title":"CAS(Conmpare And Swap/Exchange) & unsafe","level":"1.10.2","depth":2,"path":"content/java_thread_concurrent/cas.md","ref":"./content/java_thread_concurrent/cas.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/volatile.md","mtime":"2020-09-11T02:13:34.167Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-12T09:47:12.118Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -2198,7 +2196,15 @@ instance <span class="token operator">=</span> memory<span class="token punctuat
         
     
         
+        <script src="../../gitbook/gitbook-plugin-copy-code-button/toggle.js"></script>
+        
+    
+        
         <script src="../../gitbook/gitbook-plugin-gittalk/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
         
     
         
