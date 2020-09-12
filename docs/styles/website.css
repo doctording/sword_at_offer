@@ -5,3 +5,7 @@
 .page-inner {
     max-width: 1200px;
 }
+
+input[type=checkbox]{
+    margin-left: -2em;
+}

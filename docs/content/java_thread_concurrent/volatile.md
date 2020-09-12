@@ -59,11 +59,7 @@ public class Main {
 2. 代码重排序结合线程交叉执行
 3. 共享变量更新后的值没有在工作内存与主内存之间及时更新
 
-`volatile` 通过**加入内存屏障**,**禁止指令重排优化**来实现可见性
-
-即被`volatile`关键字修饰的变量，在每个写操作之后，都会加入一条`store`内存屏障命令，此命令强制工作内存将此变量的最新值保存至主内存；在每个读操作之前，都会加入一条`load`内存屏障命令，此命令强制工作内存从主内存中加载此变量的最新值至工作内存。
-
-`synchronized` monitor enter exit 确保可见性
+`volatile` 通过**加入内存屏障**,**禁止指令重排优化**来实现可见性和有序性
 
 ### 有序性
 
@@ -71,13 +67,14 @@ public class Main {
 
 1. 每个volatile写操作的前面插入一个`StoreStore`屏障；
 2. 在每个volatile写操作的后面插入一个`StoreLoad`屏障；
-
-StoreStoreBarrier =》 写操作 =》 StoreStoreLoadBarrier
-
 3. 在每个volatile读操作的后面插入一个`LoadLoad`屏障；
 4. 在每个volatile读操作的后面插入一个`LoadStore`屏障。
 
+即如下
+```java
+StoreStoreBarrier =》 写操作 =》 StoreStoreLoadBarrier
 LoadLoadBarrier =》 读操作 =》 LoadStoreBarrier
+```
 
 * Java内存模型中，允许**编译器**和**处理器**对指令进行重排序，但重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性(`CPU指令流水线`)
 
@@ -153,7 +150,7 @@ public class Main {
 2. 这块内存的构造方法执行（invokespecial指令）
 3. 栈中变量建立连接到这块内存（astore_1指令）
 
-<font color='red'>问题</font>：由于指令重排和半初始化状态，导致多线程会使用半初始化的对象
+<font color='red'>问题</font>：由于指令重排和半初始化状态，会导致多线程会使用半初始化的对象，即无法确保原子性
 
 附：<a href="https://doctording.github.io/sword_at_offer/design_pattern/singleton.html" target="_blank">单例模式</a>
 

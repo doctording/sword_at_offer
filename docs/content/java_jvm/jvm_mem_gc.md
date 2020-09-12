@@ -143,8 +143,8 @@ JVM stack, native method stack, run-time constant pool, static references in met
 * 虚拟机栈（栈帧中的本地变量表）中引用的对象
 * 本地方法栈中JNI(即一般说的Native方法)引用的对象
 * 运行方法区中常量池引用的对象
-* 方法区中中的类静态属性引用的对象
-* load的Clazz
+* 方法区中的类静态属性引用的对象
+* 加载的Clazz
 
 <a href='https://www.dynatrace.com/resources/ebooks/javabook/how-garbage-collection-works/' target='_blank'>参考学习文章链接</a>
 
@@ -363,8 +363,8 @@ public static void main(String[] args) throws Exception{
 
 管理堆外内存：
 
-1. jvm对象用虚引用，指向堆外内存
-2. jvm 堆 里面把引用回收掉，然后堆外也回收掉
+1. jvm对象用虚引用，指向堆外内存，虚引用**必须和引用队列关联使用**
+2. 当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会把这个虚引用加入到与之 关联的引用队列中。程序可以通过判断引用队列中是否已经加入了虚引用，来了解被引用的对象是否将要被垃圾回收；如果程序发现某个虚引用已经被加入到引用队列，那么就可以在所引用的对象的内存被回收之前采取必要的行动
 
 ## 对象是生存还是死亡的？
 
@@ -628,7 +628,9 @@ mubi@mubideMacBook-Pro ~ $
 
 ![](../../content/java_jvm/imgs/gc_fen_dai_2.png)
 
-线程TLAB局部缓存区域（Thread Local Allocation Buffer）：Sun Hotspot JVM为了提升对象内存分配的效率，对于所创建的线程都会分配一块独立的空间TLAB（Thread Local Allocation Buffer），其大小由JVM根据运行的情况计算而得，在TLAB上分配对象时不需要加锁，因此JVM在给线程的对象分配内存时会尽量的在TLAB上分配，在这种情况下JVM中分配对象内存的性能和C基本是一样高效的，但如果对象过大的话则仍然是直接使用堆空间分配（堆是JVM中所有线程共享的，因此在其上进行对象内存的分配均需要进行加锁，这也导致了new对象的开销是比较大的）
+* 线程TLAB局部缓存区域（Thread Local Allocation Buffer）
+
+Sun Hotspot JVM为了提升对象内存分配的效率，对于所创建的线程都会分配一块独立的空间TLAB（Thread Local Allocation Buffer），其大小由JVM根据运行的情况计算而得，在TLAB上分配对象时不需要加锁，因此JVM在给线程的对象分配内存时会尽量的在TLAB上分配，在这种情况下JVM中分配对象内存的性能和C基本是一样高效的，但如果对象过大的话则仍然是直接使用堆空间分配（堆是JVM中所有线程共享的，因此在其上进行对象内存的分配均需要进行加锁，这也导致了new对象的开销是比较大的）
 
 ## CMS(Concurrent Mark Sweep)垃圾回收器
 
@@ -644,33 +646,33 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 ![](../../content/java_jvm/imgs/cms_deal_flow.png)
 
-1. 初始标记（CMS initial mark)，需要:`Stop The World`
+* 初始标记（CMS initial mark)，需要:`Stop The World`
 
 这个过程从垃圾回收的"根对象"开始，只扫描到能够和"根对象"直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。
 
-2. 并发标记（CMS concurrent mark）
+* 并发标记（CMS concurrent mark）
 
 这个阶段紧随`初始标记`阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。
 
-3. 重新标记（CMS remark）正确标记，需要`Stop The World`
+* 重新标记（CMS remark）正确标记，需要`Stop The World`
 
 这个阶段会暂停虚拟机，收集器线程扫描在CMS堆中剩余的对象。扫描从"根对象"开始向下追溯，并处理对象关联。
 
-4. 并发清除（CMS concurrent sweep）
+* 并发清除（CMS concurrent sweep）
 
 清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行；会产生浮动垃圾
 
 ### 缺点
 
-1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做的事情就是在`并发标记`和`并发清除`的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
+1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是<font color='red'>会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低</font>，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做的事情就是在`并发标记`和`并发清除`的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
 
 2. CMS处理器无法处理浮动垃圾（`Floating Garbage`）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"；因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
 
-3. CMS是基于(`mark-sweep`)"标记-清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发`full gc`。
+3. <font color='red'>CMS是基于(`mark-sweep`)"标记-清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生</font>。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发`full gc`。
 
 为了解决这个问题，CMS提供了一个开关参数（`-XX: UseCMSCompactAtFullCollection`），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(`-XX: CMSFullGCsBeforeCompaction`)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）
 
-### 三色标记
+### 三色标记（gc标记算法：dfs三色标记算法）
 
 把遍历对象图过程中遇到的对象，按“是否访问过”这个条件标记成以下三种颜色
 
@@ -681,7 +683,7 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 遍历标记过程：
 
 1. 初始时，所有对象都在【白色集合】中；
-2. 将GC Roots 直接引用到的对象 挪到 【灰色集合】中；
+2. 将GC Roots 直接引用到的对象 挪到【灰色集合】中；
 3. 从灰色集合中获取对象：
     * 将本对象 引用到的 其他对象 全部挪到 【灰色集合】中；
     * 将本对象 挪到 【黑色集合】里面。
@@ -704,6 +706,16 @@ objD.fieldG = G;  // 黑色D 引用 白色G
 ![](../../content/java_jvm/imgs/cms_color.png)
 
 此时切回GC线程继续跑，因为E已经没有对G的引用了，所以不会将G放到灰色集合；尽管因为D重新引用了G，但因为D已经是黑色了，是不会再重新做遍历处理。最终结局就是：G会一直停留在白色集合中，最后被当作垃圾进行清除。但是G显然是不能被回收的，这种情况影响到了应用程序的正确性，是不可接受的。
+
+##### 漏标的解决方案
+
+漏标只有同时满足以下两个条件时才会发生：
+* 条件一：灰色对象 断开了 白色对象的引用；即灰色对象 原来成员变量的引用 发生了变化。
+* 条件二：黑色对象 重新引用了 该白色对象；即黑色对象 成员变量增加了新的引用。
+
+解决
+* inremental update 增量更新：关注引用的增加，当对象增加引用时把对象重新标记为灰色，以便下一次重新扫描（即黑色新增引用，把黑色再次变成灰色）；（CMS 使用）
+* SATB Snapshot At The Beginning 开始快照，关注引用的删除，当删除引用时把这个引用推给GC的堆栈，让GC可以还可以找到这个引用；（G1使用）
 
 #### CMS解决方案和`remark`
 

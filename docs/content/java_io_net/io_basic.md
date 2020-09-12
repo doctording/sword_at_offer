@@ -298,7 +298,7 @@ public class Server {
 }
 ```
 
-### NIO reactor模式（多线程轮询）
+### NIO reactor模式（非阻塞，单线程处理连接）
 
 The reactor design pattern is an event handling pattern for handling service requests delivered concurrently to a service handler by one or more inputs. The service handler then demultiplexes the incoming requests and dispatches them synchronously to the associated request handlers.
 
@@ -322,7 +322,7 @@ The reactor design pattern is an event handling pattern for handling service req
 
 2. 将数据从内核缓冲区复制到进程缓冲区（copying the data from the kernel to the process）
 
-**IO多路复用**是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。I
+**IO多路复用**是一种同步IO模型，实现一个线程可以监视多个文件句柄；一旦某个文件句柄就绪，就能够通知应用程序进行相应的读写操作；没有文件句柄就绪时会阻塞应用程序，交出cpu。多路是指网络连接，复用指的是同一个线程
 
 ### select
 

@@ -12,6 +12,11 @@ date: 2020-05-10 00:00
 
 Factory Method is a creational design pattern that provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created.（Factory方法是一种创造性的设计模式，它提供了在超类中创建对象的接口，但允许子类更改将要创建的对象的类型。）
 
+* 意图：定义一个创建对象的接口，让其子类自己决定实例化哪一个工厂类，工厂模式使其创建过程延迟到子类进行。
+* 主要解决：主要解决接口选择的问题。
+* 何时使用：我们明确地计划不同条件下创建不同实例时。
+* 如何解决：让其子类实现工厂接口，返回的也是一个抽象的产品。
+
 ## 简单工厂模式
 
 eg:

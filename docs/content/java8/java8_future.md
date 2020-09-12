@@ -51,7 +51,8 @@ public class Main {
             price = futurePrice.get(1,TimeUnit.SECONDS);
         }catch (Exception e){
             System.out.println("cannot get within 1 sec");
-            futurePrice.cancel(false);
+            boolean b = futurePrice.cancel(true);
+            System.out.println("cancel:" + b);
             throw new RuntimeException(e);
         }
         System.out.println(price);
@@ -180,6 +181,8 @@ public interface Runnable {
 ```
 
 * Callable
+
+可以有返回值，范型设置返回值类型；无法完成计算，可以抛出异常
 
 ```java
 @FunctionalInterface

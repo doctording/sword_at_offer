@@ -14,32 +14,13 @@ date: 2019-02-15 00:00
 
 ## 实现思路
 
-* Thread类有一个类型为`ThreadLocal.ThreadLocalMap`的实例变量`threadLocals`，也就是说每个线程有一个自己的ThreadLocalMap(是线程自己拥有的一个map)。
+* Thread类有一个类型为`ThreadLocal.ThreadLocalMap`的实例变量`threadLocals`，也就是说每个线程有一个自己的`ThreadLocalMap`(是线程自己拥有的一个map，ThreadLocalMap有个静态类Entry使用了弱引用`Entry extends WeakReference<ThreadLocal<?>>`)。
 
 * 使用例子
 
-```java
-public class ThreadLocalTest {
+![](../../content/java_thread_concurrent/imgs/thread_local2.png)
 
-    private static ThreadLocal<String> threadLocal = new ThreadLocal<>();
-
-    public static void main(String[] args) {
-        set();
-        System.out.println(get()); // 打印 abc
-    }
-
-    private static String get() {
-        return threadLocal.get();
-    }
-
-    private static void set() {
-        threadLocal.set("abc");
-    }
-
-}
-```
-
-`new ThreadLocal<>();`就仅仅实例化一个`ThreadLocal`对象，会作为线程`ThreadLocal.ThreadLocalMap`的key
+`new ThreadLocal<>();`就仅仅实例化一个`ThreadLocal`对象，该对象会作为线程`ThreadLocal.ThreadLocalMap`的`Entry`对象中的key
 
 ### set源码
 
@@ -54,8 +35,7 @@ public void set(T value) {
 }
 ```
 
-* this 是`ThreadLocal`对象自身，即set到Map的`<key, value>`也即set`<ThreadLocal.this, value>`
-* 只有一个key，new几个ThreadLocal就能有多少个键值对
+* this 是`ThreadLocal`对象自身，即set到Map的`<key, value>`也即set`<ThreadLocal.this, value>`，new几个ThreadLocal就能有多少个键值对
 
 ```java
 private void set(ThreadLocal<?> key, Object value) {
@@ -84,7 +64,7 @@ private void set(ThreadLocal<?> key, Object value) {
             return;
         }
     }
-
+    // 新增一个Entry,key就是`ThreadLocal.this`
     tab[i] = new Entry(key, value);
     int sz = ++size;
     if (!cleanSomeSlots(i, sz) && sz >= threshold)
@@ -102,13 +82,13 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 }
 ```
 
-* `Entry`是个弱引用`WeakReference<ThreadLocal<?>`
+* 注意到`Entry`是个弱引用`WeakReference<ThreadLocal<?>`，如下图所示
 
 ![](../../content/java_thread_concurrent/imgs/thread_local.png)
 
-1. 当定义出来的`threadLocal`不用了，即指向`ThreadLocal`的引用没了，那么`ThreadLocal`要被回收
+1. 如果当定义出来的`ThreadLocal`对象tl1不用了，即指向`ThreadLocal`的引用没了，那么`ThreadLocal`对象要被回收
 2. 假如说this是个强引用，那么显然只要线程不结束，`ThreadLocalMap`就存在，引用关系就存在；那么`ThreadLocal`就永远不会被回收，即有内存泄漏了
-3. 所以this被设计成为一个弱引用，只要gc发现不用了，就会进行回收；但是当`ThreadLocal`被回收时，`ThreadLocalMap`里面的key是个null被回收；不过这使得value就访问不到，会出现内存泄漏
+3. 所以this被设计成为一个弱引用，只要gc发现不用了，就会将`ThreadLocal`对象tl1进行回收；这样当`ThreadLocal`对象被回收后，`ThreadLocalMap`里面的key是个null被回收，这使得value就访问不到，但是value的引用是存在的，这就会导致内存泄漏
 5. 所以需要显示的remove掉value，即执行`tl1.remove();`
 
 ## 使用场景

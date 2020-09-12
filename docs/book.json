@@ -17,10 +17,13 @@
       "expandable-chapters",
       "back-to-top-button",
       "code",
+      "copy-code-button",
       "uml",
       "page-treeview",
       "gittalk",
-      "advanced-emoji"
+      "advanced-emoji",
+      "todo",
+      "github"
     ],
     "pluginsConfig": {
       "gittalk": {
@@ -40,6 +43,9 @@
         "copyright": "Copyright @doctording",
         "minHeaderCount": "2",
         "minHeaderDeep": "2"
+      },
+      "github": {
+        "url": "https://github.com/doctording"
       }
     },
     "styles": {

@@ -158,7 +158,6 @@ public class UserController {
         return userService;
     }
 }
-
 ```
 
 * UserService
@@ -316,11 +315,13 @@ public Class<?> loadClass(String name) throws ClassNotFoundException {
 
 Reflection is powerful, but should not be used indiscriminately. If it is possible to perform an operation without using reflection, then it is preferable to avoid using it. The following concerns should be kept in mind when accessing code via reflection.
 
+尽管反射非常强大，但也不能滥用。如果一个功能可以不用反射完成，那么最好就不用。在我们使用反射技术时，下面几条内容应该牢记于心：
+
 * Performance Overhead（性能开销）
 
 Because reflection involves types that are dynamically resolved, certain Java virtual machine optimizations can not be performed. Consequently, reflective operations have slower performance than their non-reflective counterparts, and should be avoided in sections of code which are called frequently in performance-sensitive applications.
 
-反射包括了一些动态类型，所以JVM无法对这些代码进行优化；因此，反射操作的效率要比那些非反射操作低得多。我们应该避免在经常被执行的代码或对性能要求很高的程序中使用反射。
+反射包括了一些要动态解析的类型，所以JVM无法对这些代码进行优化；因此，反射操作的效率要比那些非反射操作低得多。我们应该避免在经常被执行的代码或对性能要求很高的程序中使用反射。
 
 * Security Restrictions（安全限制）
 

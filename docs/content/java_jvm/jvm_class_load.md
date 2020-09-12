@@ -146,6 +146,12 @@ gc问题, OOM, 应用越来越大(调优不友好)
 
 元空间要限制，机器内存OOM问题
 
+### Class实例究竟在Method Area还是在Heap中
+
+![](../../content/java_jvm/imgs/method_area.png)
+
+Java8中`O.class`在堆中，其中c++对象在方法区中
+
 ## 常量池
 
 大体可以分为：静态常量池，运行时常量池。
@@ -210,7 +216,6 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)
 * -XX:+UseCompressedOops：普通对象指针，如果压缩也是4个字节
 
 ```java
-
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -239,7 +244,7 @@ _kclass:4个字节
 
 ### 对象头 & markword
 
-markword 8个字节，64bit
+markword 8个字节，64bit，包括：**锁信息**，**gc信息**，**identity hashcode**
 
 ![](../../content/java_jvm/imgs/hotspot_markword.png)
 

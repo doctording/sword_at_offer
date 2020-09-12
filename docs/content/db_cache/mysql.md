@@ -59,7 +59,7 @@ date: 2020-03-08 18:00
 2. 如果需要对输入存储过程的参数进行更改，或者要更改由其返回的数据，则您仍需要更新程序集中的代码以添加参数、更新调用，等等，这时候估计会比较繁琐了。
 3. 开发调试复杂，由于IDE的问题，存储过程的开发调试要比一般程序困难。
 4. 没办法应用缓存。虽然有全局临时表之类的方法可以做缓存，但同样加重了数据库的负担。如果缓存并发严重，经常要加锁，那效率实在堪忧。
-5. 不支持群集，数据库服务器无法水平扩展，或者数据库的切割（水平或垂直切割）。数据库切割之后，存储过程并不清楚数据存储在哪个数据库中。
+5. 不支持集群，数据库服务器无法水平扩展，或者数据库的切割（水平或垂直切割）。数据库切割之后，存储过程并不清楚数据存储在哪个数据库中。
 
 ### 数据库范式
 
@@ -566,16 +566,15 @@ A non-clustering index is defined in the non-ordering field of the table. This t
 
 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-index-types.html" target='_blank'>innodb-index-types</a>
 
-Mysql中管局聚集索引的说明
+Mysql中关于聚集索引的说明
     * 如果一个主键被定义了，那么这个主键就是作为聚集索引
     * 如果没有主键被定义，那么该表的第一个唯一非空索引会被作为聚集索引
     * 如果没有主键也没有合适的唯一索引，那么innodb内部会生成一个隐藏的主键作为聚集索引，这个隐藏的主键是一个6个字节的列，该列的值会随着数据的插入进行自增
 
 聚集索引的特点
-
-1. 聚集索引表记录的排列顺序和索引的排列顺序保持一致，所以查询效率相当快。只要找到第一个索引记录的值，其余的连续性的记录也一定是连续存放的
-2. 聚集索引的缺点就是修改起来比较慢，因为它需要保持表中记录和索引的顺序一致，在插入新记录的时候就会对数据也重新做一次排序。
-3. InnoDB表数据本身就是一个按B+Tree组织的一个索引结构文件，叶节点包含了完整的数据记录（.ibd文件）;MyIsam数据和索引文件是分开的（.MYD文件，.MYI文件）
+    * 聚集索引表记录的排列顺序和索引的排列顺序保持一致，所以查询效率相当快。只要找到第一个索引记录的值，其余的连续性的记录也一定是连续存放的
+    * 聚集索引的缺点就是修改，删除等操作会比较慢，因为它需要保持表中记录和索引的顺序一致，在插入新记录的时候就会对数据也重新做一次排序，可能产生页分裂/创建操作
+    * InnoDB表数据本身就是一个按B+Tree组织的一个索引结构文件，叶节点包含了完整的数据记录(.ibd文件)；MyIsam数据和索引文件是分开的（.MYD文件，.MYI文件）
 
 * myisam
 
@@ -595,13 +594,13 @@ Mysql中管局聚集索引的说明
 
 推荐使用整型？
 
-* B+Tree搜索比对，显然整型比字符串比较快（原因1），整型占用空间小（原因2）
+* B+Tree搜索进行比较操作时，显然整型比字符串比较快（原因1）；整型占用空间小（原因2）
 
 推荐使用自增？
 
-补充：hash索引，直接定位到记录的磁盘地址（等值查找）**区间查找**用hash行不同，所以hash索引用的少
+补充：hash索引，直接定位到记录的磁盘地址（等值查找）；但是**区间查找**用hash行不同，所以hash索引在数据库中用的少
 
-自增是页不断的创建新增，后面加，调整小；如果非自增，涉及到页分裂/创建，B+Tree调整大
+自增是页不断的创建新增，尾部数据增加，调整小；如果非自增，涉及到页分裂/创建，B+Tree调整大
 
 <a href='https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html' href='_blank'>B+Tree 可视化操作</a>
 
@@ -611,7 +610,7 @@ Mysql中管局聚集索引的说明
 
 ![](../db_cache/imgs/index_union.png)
 
-仍然是B+Tree, 索引中包含多个字段，按照联合索引的先后顺序
+仍然是B+Tree, 索引中包含多个字段，按照联合索引的先后顺序；如`a,b,c`联合索引，则`a; a,b; a,b,c; a,c`可以走索引，其它则不能
 
 ### 联合索引为什么是最左前缀匹配？
 
@@ -619,9 +618,16 @@ Mysql中管局聚集索引的说明
 
 #### MySql索引概述
 
+Most MySQL indexes (PRIMARY KEY, UNIQUE, INDEX, and FULLTEXT) are stored in B-trees. Exceptions: Indexes on spatial data types use R-trees; MEMORY tables also support hash indexes; InnoDB uses inverted lists for FULLTEXT indexes.
+
+* 普通索引
+* 主键索引：是一种特殊的唯一索引，一个表只能有一个主键，不允许有空值
+* 唯一索引：索引列的值必须唯一，但允许有空值。如果是组合索引，则列值的组合必须唯一；唯一索引可以保证数据记录的唯一性。事实上，在许多场合，人们创建唯一索引的目的往往不是为了提高访问速度，而只是为了避免数据出现重复。
+* 全文索引
+
 <a href='https://dev.mysql.com/doc/refman/5.7/en/mysql-indexes.html' target='_blank'>https://dev.mysql.com/doc/refman/5.7/en/mysql-indexes.html</a>
 
-Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data file without having to look at all the data. This is much faster than reading every row sequentially.
+Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data file without having to look at all the data. This is much faster than reading every row sequentially.（索引适用于快速查找某些行,而不需要让引擎去做全表扫描.当然这些做是有条件的,索引的创建和更新是需要资源的(CPU IO 内存 磁盘空间).所以索引通过牺牲插入和更新的效率来大幅度提高读的效率.）
 
 Most MySQL indexes (PRIMARY KEY, UNIQUE, INDEX, and FULLTEXT) are stored in B-trees. Exceptions: Indexes on spatial data types use R-trees; MEMORY tables also support hash indexes; InnoDB uses inverted lists for FULLTEXT indexes.
 
@@ -631,7 +637,7 @@ MySQL uses indexes for these operations:
 
 * To eliminate rows from consideration. If there is a choice between multiple indexes, MySQL normally uses the index that finds the smallest number of rows (**the most selective** index).
 
-* If the table has a multiple-column index, any **leftmost prefix** of the index can be used by the optimizer to look up rows. For example, if you have a three-column index on (col1, col2, col3), you have indexed search capabilities on (col1), (col1, col2), and (col1, col2, col3). 
+* If the table has a multiple-column index, any **leftmost prefix** of the index can be used by the optimizer to look up rows. For example, if you have a three-column index on (col1, col2, col3), you have indexed search capabilities on (col1), (col1, col2), and (col1, col2, col3).
 
 * To retrieve rows from other tables when performing joins. MySQL can use indexes on columns more efficiently if they are declared as the same type and size. In this context, VARCHAR and CHAR are considered the same if they are declared as the same size. For example, VARCHAR(10) and CHAR(10) are the same size, but VARCHAR(10) and CHAR(15) are not.
 
@@ -788,7 +794,7 @@ T1回滚会释放其获取到到排它锁，T2,T3都要请求排它锁，但是�
 
 ### 原子性：undo log
 
-undo log是为了实现事务的原子性，在Mysql数据库Innodb存储引擎中，还用undo log来实现多版本并发控制(MVCC)
+`undo log`是为了实现事务的原子性，在Mysql数据库Innodb存储引擎中，还用`undo log`来实现多版本并发控制(MVCC)
 
 在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为undo log）；然后进行数据的修改。如果出现了错误或者用户执行了`rollback`,系统利用undo log的备份数据将数据恢复到事务开始之前的状态
 
@@ -796,7 +802,7 @@ undo log是逻辑日志，可以理解为：只要有insert操作，就可以记
 
 ### 持久性：redo log
 
-和undo log相反，redo log记录的是新数据的备份，<font color='red'>当事务提交前，只要将redo log持久化即可，不需要将数据持久化</font>，当系统崩溃时，虽然数据没有持久化，但是redo log已经持久化，系统可以根据redo log的内容，将所有数据恢复到最新的状态
+和undo log相反，`redo log`记录的是新数据的备份，<font color='red'>当事务提交前，只要将redo log持久化即可，不需要将数据持久化</font>，当系统崩溃时，虽然数据没有持久化，但是redo log已经持久化，系统可以根据redo log的内容，将所有数据恢复到最新的状态
 
 ### undo / redo log文件操作
 
@@ -902,7 +908,7 @@ mixed|statement和row模式的混合|准确性强，文件大小适中|当binlog
 
 用户在浏览商品列表时，只有对某商品感兴趣时才会查看该商品的详细描述。因此，商品信息中商品`描述字段`访问频次较低，且该字段存储占用空间较大，访问单个数据IO时间较长；商品信息中`商品名称`、`商品图片`、`商品价格`等其它字段数据访问频次较高。由于这两种数据的特性不一样，因此考虑将商品信息表拆分成：将访问频次低的商品描述信息单独存放在一张表中，访问频次较高的商品基本信息单独放在一张表中；即 商品表 可拆分成 商品信息表 和 商品描述表。
 
-**垂直分表定义**：将一个表按照字段分成多表，每个表存储其中一部分字段。
+**垂直分表定义**：<font color='red'>将一个表按照字段分成多表，每个表存储其中一部分字段</font>
 
 * 为什么大字段IO效率低
     1. 第一是由于数据量本身大，需要更长的读取时间；
@@ -937,7 +943,7 @@ mixed|statement和row模式的混合|准确性强，文件大小适中|当binlog
 
 按照水平分库的思路把PRODUCT_DB_X(商品库)内的表也可以进行水平拆分，其目的也是为解决单表数据量大的问题，与水平分库的思路类似，不过这次操作的目标是表
 
-**水平分表**：是在同一个数据库内，把同一个表的数据按一定规则拆到多个表中
+**水平分表**：<font color='red'>是在同一个数据库内，把同一个表的数据按一定规则拆到多个表中</font>
 
 ### 分库分表带来的问题
 

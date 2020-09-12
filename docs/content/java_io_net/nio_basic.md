@@ -28,7 +28,7 @@ socket编程：一个socket连接来了， 就创建一个新的线程或者从�
 
 结论：当面对十万甚至百万级连接的时候，传统的BIO模型是无能为力的。
 
-### what defines an active thread ？
+### 附：what defines an active thread
 
 In this context I take "active" to mean that they are executing code. Inactive threads--those that are blocked on I/O calls or awaiting locks--consume only memory resources without affecting the CPU (or only marginally).
 
@@ -71,9 +71,26 @@ public class BIOServer {
 }
 ```
 
-### NIO（用`ServerSocketChannel`实现非阻塞）
+#### BIO的问题
 
-<font color='red'>用单线程去解决两个阻塞(accept阻塞，read阻塞)问题</font>
+1. 系统调用clone创建线程
+2. 线程是消耗资源的，如JVM默认1M的线程栈内存
+3. 线程很多的时候，CPU调度，上下文切换频繁
+4. 阻塞IO，会有CPU时间片的浪费
+
+### NIO（socket的`SOCK_NONBLOCK`选项）
+
+`man socket`查看socket函数
+
+```java
+SOCK_NONBLOCK   Set the O_NONBLOCK file status flag  on  the  new  open
+                file description.  Using this flag saves extra calls to
+                fcntl(2) to achieve the same result.
+```
+
+### NIO（Java中用`ServerSocketChannel`实现非阻塞）
+
+<font color='red'>如果accept不阻塞，read不阻塞，可以用单线程去解决连接问题，然后遍历这些连接处理即可，不用开多线程</font>
 
 ```java
 import java.io.IOException;
@@ -93,7 +110,7 @@ public class NioServer {
     public static void main(String[] args) throws IOException {
         ServerSocketChannel ssc = ServerSocketChannel.open();
         ssc.socket().bind(new InetSocketAddress("127.0.0.1", 8889));
-        // 设置 accept 非阻塞
+        // 设置 accept 非阻塞（os层面的非阻塞socket）
         ssc.configureBlocking(false);
 
         System.out.println("nio server listen on:" + ssc.getLocalAddress());
@@ -137,6 +154,35 @@ public class NioServer {
 ```
 
 ![](../../content/java_io_net/imgs/nio.png)
+
+#### linux下strace追踪NIO系统调用
+
+![](../../content/java_io_net/imgs/niostrace.png)
+
+![](../../content/java_io_net/imgs/niostrace2.png)
+
+<font color='red'>nio主线程不断的进行accept系统调用</font>（其中没有客户端连接过来，accept返回了-1）
+
+![](../../content/java_io_net/imgs/niostrace3.png)
+
+* 客户端成功连接如下
+
+![](../../content/java_io_net/imgs/niostrace4.png)
+
+* 使用SocketChannel的read方法是不阻塞的，可以看到，如果没有read到数据，read直接返回了`read(6, 0x7ff4080dd030, 1024)           = -1 EAGAIN (Resource temporarily unavailable)`，读取到客户端数据`read(6, "aaa\n", 1024)                  = 4`
+
+![](../../content/java_io_net/imgs/niostrace5.png)
+
+### NIO仍有问题
+
+nio能解决BIO的问题：
+1. 没有多线程问题
+2. 没有阻塞，没有大量的CPU时间片浪费
+
+但仍然有如下问题
+
+1. 大量的系统调用（用户空间内程序不断的遍历fd集合，要切换到内核空间通过系统调用判断fd状态，这会产生大量系统调用）
+2. 每次轮询一遍fds集合recv(非阻塞)，如果fd没有数据则立即返回错误，有则读取进行处理；每次轮询所有fd（包括没有发生读写事件的fd）会很浪费cpu，可能很多fd都是没有准备好的，没有拷贝,遍历的必要
 
 ## NIO与IO的区别
 

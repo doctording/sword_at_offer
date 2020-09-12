@@ -77,7 +77,7 @@ public boolean equals(Object obj) {
 
 ## 对象的hashcode方法
 
-`hashCode()`在散列表中才有用，在其它情况下没用。在散列表中`hashCode()`的作用是获取对象的散列码，进而确定该对象在散列表中的位置(散列表存储的是键值对(key-value)，它的特点是：能根据“键”快速的检索出对应的“值”。这其中就利用到了散列码！)
+`hashCode()`在散列表中才有用，在其它情况下没用。在散列表中`hashCode()`的作用是获取对象的散列码，进而确定该对象在散列表中的位置(散列表存储的是键值对(key-value)，它的特点是：能根据“键”快速的检索出对应的“值”，这其中就利用到了散列码！)
 
 ```java
  /**
@@ -172,13 +172,13 @@ public static void main(String[] args) throws Exception {
 }
 ```
 
-### hash函数
+### hash函数及其特点
 
 特点
 
 1. 单向函数，反向运算无法完成
 2. 任务一长度输入，得到 固定长度输出
-3. 输入不变，输出就不会变（Whenever it is invoked on the same object more than once during an execution of a Java application, the {@code hashCode} method must consistently return the same integer）
+3. <font color='red'>输入不变，输出就不会变</font>，hash函数是稳定的（Whenever it is invoked on the same object more than once during an execution of a Java application, the {@code hashCode} method must consistently return the same integer）
 
 常见的有数百种hash函数，eg: MD5加密 + salt
 

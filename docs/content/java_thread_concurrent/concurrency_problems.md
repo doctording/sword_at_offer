@@ -8,13 +8,13 @@ date: 2019-03-12 00:00
 
 # 高并发、任务执行时间短的业务怎样使用线程池？并发不高、任务执行时间长的业务怎样使用线程池？并发高、业务执行时间长的业务怎样使用线程池？
 
-1. `高并发`、`任务执行时间短`的业务：所以线程池线程数可以设置为CPU核数+1，减少线程上下文切换
+1. `高并发`、`任务执行时间短`的业务：任务执行时间短，即线程很快就执行完成了，可能会有频繁的线程切换，所以线程池线程数可以设置为CPU核数+1，以减少线程上下文切换
 
 2. `并发不高`、`任务执行时间长`的业务
     * 假如业务时间长是集中在IO操作上，也就是`IO密集型`的任务，因为IO操作并不占用CPU，所以不要让所有的CPU闲下来，可以加大线程池中的线程数目，让CPU处理更多的业务
     * 假如是集中在计算操作上，也就是`计算密集型`任务，和（1）类似，线程池中的线程数设置得少一些，减少线程上下文切换
 
-3. `并发高`、且`业务执行时间长`的业务：解决这种类型任务的关键不在于线程池而在于整体架构的设计，看看这些业务里面某些数据是否能`缓存`；增加服务器；需要分析业务执行时间长的问题，看看能不能使用中间件对任务进行拆分和解耦。
+3. `并发高`、且`业务执行时间长`的业务：解决这种类型任务的关键不在于线程池而在于整体架构的设计，看看这些业务里面某些数据是否能`缓存`；增加服务器；需要分析业务执行时间长的问题，看看能不能使用中间件对任务进行拆分和解耦
 
 # 三个线程：怎么能实现依次打印ABC的功能
 
@@ -284,3 +284,164 @@ public class Main {
 5. SynchronousQueue：一个不存储元素的阻塞队列
 6. LinkedTransferQueue：一个由链表结构组成的无界阻塞队列
 7. LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列
+
+# Future & guava
+
+## future + 观察者模式
+
+```java
+public static void listenFutureTest() throws Exception{
+    ExecutorService executor = Executors.newFixedThreadPool(2);
+    ListeningExecutorService service = MoreExecutors.listeningDecorator(executor);
+    ListenableFuture<Double> future = service.submit(new Callable<Double>() {
+        @Override
+        public Double call() throws Exception {
+            delay(5);
+            System.out.println("cal ok");
+            return 10.0;
+        }
+    });
+
+    Futures.addCallback(future, new FutureCallback<Double>() {
+        @Override
+        public void onSuccess(@Nullable Double aDouble) {
+            System.out.println("onSuccess:" + aDouble);
+        }
+
+        @Override
+        public void onFailure(Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }, service);
+
+//        service.shutdown();
+}
+```
+
+## CompletableFuture的应用
+
+场景：一个任务T有N个子任务，每个子任务完成时间不一样；若其中一个子任务失败，则该任务T结束，要求:fail fast。
+
+```java
+public class Main {
+
+    /**
+     * 模拟sec秒延迟
+     */
+    public static void delay(int sec) {
+        try {
+            TimeUnit.SECONDS.sleep(sec);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        testTask2();
+    }
+
+    static List<MyTask> taskList = new ArrayList<>();
+
+    public static void testTask2() throws Exception{
+        MyTask myTask1 = new MyTask("task1", 3, Result.SUCCESS);
+        MyTask myTask2 = new MyTask("task2", 4, Result.SUCCESS);
+        MyTask myTask3 = new MyTask("task3", 1, Result.FAIL);
+
+        taskList.add(myTask1);
+        taskList.add(myTask2);
+        taskList.add(myTask3);
+
+        for(MyTask task : taskList) {
+            CompletableFuture f =
+                    CompletableFuture.supplyAsync(() ->
+                            task.runTask()).thenAccept(
+                                    (result) -> callback(result, task));
+        }
+
+        System.in.read();
+    }
+
+    private static void callback(Result result, MyTask task){
+        if(result == Result.FAIL){
+            // 一个失败，其它所有任务按需要处理，可能回滚，取消，忽略等
+            for(MyTask _task : taskList) {
+                if(task != _task){
+                    _task.cancel();
+                }
+            }
+        }
+    }
+
+    private enum Result{
+        SUCCESS("cancel"),
+        FAIL("fail"),
+        CANCELED("canceled");
+
+        Result(String value) {
+            this.value = value;
+        }
+
+        String value;
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    private static class MyTask{
+        private String name;
+        private int timeOut;
+        private Result ret;
+        volatile boolean cancelled = false;
+
+        public MyTask(String name, int timeOut, Result ret) {
+            this.name = name;
+            this.timeOut = timeOut;
+            this.ret = ret;
+        }
+
+        public Result runTask(){
+            int interval = 100;
+            int total = 0;
+
+            try{
+                for (;;){
+                    // 模拟CPU密集型
+                    TimeUnit.MILLISECONDS.sleep(interval);
+                    total += interval;
+                    if(total > timeOut * 1000){
+                        break;
+                    }
+                    if(cancelled){
+                        return Result.CANCELED;
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                return Result.FAIL;
+            }
+            System.out.println(name + ":end");
+            return ret;
+        }
+
+        public void cancel(){
+            if(!cancelled) {
+                synchronized (this) {
+                    if (cancelled) {
+                        return;
+                    }
+                    System.out.println(name + ": cancelling");
+                    try {
+                        delay(1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(name + ": cancelled");
+                }
+                cancelled = true;
+            }
+        }
+    }
+
+}
+```
