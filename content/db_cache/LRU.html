@@ -678,6 +678,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1.1" data-path="../design_pattern/asm.html">
+            
+                <a href="../design_pattern/asm.html">
+            
+                    
+                    ASM字节码操纵
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.7.2" data-path="../design_pattern/singleton.html">
@@ -1914,7 +1933,17 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <p>[TOC]</p>
+                                <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#lruleast-recently-used">LRU(Least Recently Used)</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x53CC;&#x5411;&#x94FE;&#x8868;&#x5E26;&#x5934;&#x8282;&#x70B9;--map">&#x53CC;&#x5411;&#x94FE;&#x8868;(&#x5E26;&#x5934;&#x8282;&#x70B9;) + Map</a><i></i></div></li>
+<li><div><a href="#&#x4F7F;&#x7528;linkedhashmap&#x5B9E;&#x73B0;&#x4E00;&#x4E2A;lru&#x7F13;&#x5B58;leetcode">&#x4F7F;&#x7528;LinkedHashMap&#x5B9E;&#x73B0;&#x4E00;&#x4E2A;LRU&#x7F13;&#x5B58;(LeetCode)</a><i></i></div></li>
+</ul></li>
+</ul>
+</div>
+
+
+<p>[TOC]</p>
 <h1 id="lruleast-recently-used">LRU(Least Recently Used)</h1>
 <p>&#x9009;&#x62E9;&#x6700;&#x8FD1;&#x6700;&#x4E45;&#x672A;&#x4F7F;&#x7528;&#x7684;&#x9875;&#x9762;&#x4E88;&#x4EE5;&#x6DD8;&#x6C70;</p>
 <p>leetcode 146&#x9898;&#xFF0C;eg</p>
@@ -1934,10 +1963,8 @@ cache<span class="token punctuation">.</span><span class="token function">get</s
 &#x94FE;&#x63A5;&#xFF1A;https<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>leetcode<span class="token operator">-</span>cn<span class="token punctuation">.</span>com<span class="token operator">/</span>problems<span class="token operator">/</span>lru<span class="token operator">-</span>cache
 &#x8457;&#x4F5C;&#x6743;&#x5F52;&#x9886;&#x6263;&#x7F51;&#x7EDC;&#x6240;&#x6709;&#x3002;&#x5546;&#x4E1A;&#x8F6C;&#x8F7D;&#x8BF7;&#x8054;&#x7CFB;&#x5B98;&#x65B9;&#x6388;&#x6743;&#xFF0C;&#x975E;&#x5546;&#x4E1A;&#x8F6C;&#x8F7D;&#x8BF7;&#x6CE8;&#x660E;&#x51FA;&#x5904;&#x3002;
 </code></pre>
-<ul>
-<li>Java&#x7684;&#x4E00;&#x4E2A;&#x6C42;&#x89E3;&#x5982;&#x4E0B;</li>
-</ul>
-<p>&#x53CC;&#x5411;&#x94FE;&#x8868;(&#x5E26;&#x5934;&#x8282;&#x70B9;) + Map</p>
+<h2 id="&#x53CC;&#x5411;&#x94FE;&#x8868;&#x5E26;&#x5934;&#x8282;&#x70B9;--map">&#x53CC;&#x5411;&#x94FE;&#x8868;(&#x5E26;&#x5934;&#x8282;&#x70B9;) + Map</h2>
+<p><img src="imgs/lru.png" alt=""></p>
 <pre class="language-"><code class="lang-java"><span class="token comment">// &#x666E;&#x901A;&#x53CC;&#x5411;&#x94FE;&#x8868;,&#x6709;&#x4E00;&#x4E2A;&#x521D;&#x59CB;&#x7684;dummyNode</span>
 <span class="token keyword">class</span> <span class="token class-name">DoubleList</span> <span class="token punctuation">{</span>
     <span class="token keyword">private</span> <span class="token class-name">DoubleNode</span> head<span class="token punctuation">,</span> tail<span class="token punctuation">;</span> <span class="token comment">// &#x5934;&#x5C3E;&#x865A;&#x8282;&#x70B9;</span>
@@ -2059,8 +2086,93 @@ cache<span class="token punctuation">.</span><span class="token function">get</s
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<h2 id="&#x4F7F;&#x7528;linkedhashmap&#x5B9E;&#x73B0;&#x4E00;&#x4E2A;lru&#x7F13;&#x5B58;leetcode">&#x4F7F;&#x7528;LinkedHashMap&#x5B9E;&#x73B0;&#x4E00;&#x4E2A;LRU&#x7F13;&#x5B58;(LeetCode)</h2>
+<pre class="language-"><code class="lang-java"><span class="token keyword">class</span> <span class="token class-name">BaseLRUCache</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token keyword">extends</span> <span class="token class-name">LinkedHashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">int</span> cacheSize<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">BaseLRUCache</span><span class="token punctuation">(</span><span class="token keyword">int</span> cacheSize<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">,</span><span class="token number">0.75f</span><span class="token punctuation">,</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>cacheSize <span class="token operator">=</span> cacheSize<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * &#x5224;&#x65AD;&#x5143;&#x7D20;&#x4E2A;&#x6570;&#x662F;&#x5426;&#x8D85;&#x8FC7;&#x7F13;&#x5B58;&#x5BB9;&#x91CF;
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">boolean</span> <span class="token function">removeEldestEntry</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token class-name">Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span> <span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> eldest<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> cacheSize<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">LRUCache</span> <span class="token punctuation">{</span>
+
+    <span class="token class-name">BaseLRUCache</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> baseLRUCache<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">LRUCache</span><span class="token punctuation">(</span><span class="token keyword">int</span> capacity<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        baseLRUCache <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BaseLRUCache</span><span class="token punctuation">(</span>capacity<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">int</span> key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>baseLRUCache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> baseLRUCache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">put</span><span class="token punctuation">(</span><span class="token keyword">int</span> key<span class="token punctuation">,</span> <span class="token keyword">int</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        baseLRUCache<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>&#x63D2;&#x5165;&#x4E4B;&#x540E;&#x7684;removeEldestEntry&#x65B9;&#x6CD5;(&#x9ED8;&#x8BA4;&#x8FD4;&#x56DE;:false)&#xFF0C;&#x5220;&#x9664;&#x6700;&#x4E45;&#x8FDC;&#x7684;&#x8BBF;&#x95EE;&#x5143;&#x7D20;&#xFF0C;LinkedHashMap&#x9ED8;&#x8BA4;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;false,&#x5373;&#x4E0D;&#x4F1A;&#x8FDB;&#x884C;&#x5220;&#x9664;&#x64CD;&#x4F5C;&#xFF0C;&#x53EF;&#x4EE5;&#x91CD;&#x5199;&#x8BE5;&#x65B9;&#x6CD5;</p>
+<pre class="language-"><code class="lang-java"><span class="token comment">/**
+* Returns &lt;tt&gt;true&lt;/tt&gt; if this map should remove its eldest entry.
+* This method is invoked by &lt;tt&gt;put&lt;/tt&gt; and &lt;tt&gt;putAll&lt;/tt&gt; after
+* inserting a new entry into the map.  It provides the implementor
+* with the opportunity to remove the eldest entry each time a new one
+* is added.  This is useful if the map represents a cache: it allows
+* the map to reduce memory consumption by deleting stale entries.
+*
+* &lt;p&gt;Sample use: this override will allow the map to grow up to 100
+* entries and then delete the eldest entry each time a new entry is
+* added, maintaining a steady state of 100 entries.
+* &lt;pre&gt;
+*     private static final int MAX_ENTRIES = 100;
+*
+*     protected boolean removeEldestEntry(Map.Entry eldest) {
+*        return size() &amp;gt; MAX_ENTRIES;
+*     }
+* &lt;/pre&gt;
+*
+* &lt;p&gt;This method typically does not modify the map in any way,
+* instead allowing the map to modify itself as directed by its
+* return value.  It &lt;i&gt;is&lt;/i&gt; permitted for this method to modify
+* the map directly, but if it does so, it &lt;i&gt;must&lt;/i&gt; return
+* &lt;tt&gt;false&lt;/tt&gt; (indicating that the map should not attempt any
+* further modification).  The effects of returning &lt;tt&gt;true&lt;/tt&gt;
+* after modifying the map from within this method are unspecified.
+*
+* &lt;p&gt;This implementation merely returns &lt;tt&gt;false&lt;/tt&gt; (so that this
+* map acts like a normal map - the eldest element is never removed).
+*
+* @param    eldest The least recently inserted entry in the map, or if
+*           this is an access-ordered map, the least recently accessed
+*           entry.  This is the entry that will be removed it this
+*           method returns &lt;tt&gt;true&lt;/tt&gt;.  If the map was empty prior
+*           to the &lt;tt&gt;put&lt;/tt&gt; or &lt;tt&gt;putAll&lt;/tt&gt; invocation resulting
+*           in this invocation, this will be the entry that was just
+*           inserted; in other words, if the map contains a single
+*           entry, the eldest entry is also the newest.
+* @return   &lt;tt&gt;true&lt;/tt&gt; if the eldest entry should be removed
+*           from the map; &lt;tt&gt;false&lt;/tt&gt; if it should be retained.
+*/</span>
+<span class="token keyword">protected</span> <span class="token keyword">boolean</span> <span class="token function">removeEldestEntry</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token class-name">Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span><span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> eldest<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-09-07 19:01:02
+2020-09-14 23:29:10
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2105,7 +2217,7 @@ cache<span class="token punctuation">.</span><span class="token function">get</s
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"LRU","layout":"page","date":"2020-03-08 18:00","level":"1.6.2","depth":2,"next":{"title":"一致性Hash","level":"1.6.3","depth":2,"path":"content/db_cache/consistent_hash.md","ref":"./content/db_cache/consistent_hash.md","articles":[]},"previous":{"title":"LFU","level":"1.6.1","depth":2,"path":"content/db_cache/LFU.md","ref":"./content/db_cache/LFU.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/LRU.md","mtime":"2020-09-07T11:01:02.569Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-12T09:47:12.118Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"LRU","layout":"page","date":"2020-03-08 18:00","level":"1.6.2","depth":2,"next":{"title":"一致性Hash","level":"1.6.3","depth":2,"path":"content/db_cache/consistent_hash.md","ref":"./content/db_cache/consistent_hash.md","articles":[]},"previous":{"title":"LFU","level":"1.6.1","depth":2,"path":"content/db_cache/LFU.md","ref":"./content/db_cache/LFU.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/LRU.md","mtime":"2020-09-14T15:29:10.041Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-14T15:37:01.984Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
