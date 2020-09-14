@@ -81,17 +81,73 @@ date: 2020-03-08 18:00
 
 ## HTTP 1.0
 
-HTTP 1.0规定浏览器与服务器只保持短暂的连接，浏览器的每次请求都需要与服务器建立一个TCP连接，服务器完成请求处理后立即断开TCP连接，服务器不跟踪每个客户也不记录过去的请求。
+HTTP 1.0规定浏览器与服务器只保持**短暂连接**，浏览器的每次请求都需要与服务器建立一个TCP连接，服务器完成请求处理后立即断开TCP连接，服务器不跟踪每个客户也不记录过去的请求。HTTP 是无状态的，服务端无需保存状态数据，能较少服务器的CPU及内存消耗。
 
 ## HTTP 1.1
 
-HTTP 1.1的持续连接，也需要增加新的请求头来帮助实现，例如，Connection请求头的值为Keep-Alive时，客户端通知服务器返回本次请求结果后保持连接；Connection请求头的值为close时，客户端通知服务器返回本次请求结果后关闭连接。HTTP 1.1还提供了与身份认证、状态管理和Cache缓存等机制相关的请求头和响应头。
+HTTP 1.1的**持久连接**，也需要增加新的请求头来帮助实现，例如，Connection请求头的值为Keep-Alive时，客户端通知服务器返回本次请求结果后保持连接；Connection请求头的值为close时，客户端通知服务器返回本次请求结果后关闭连接。HTTP 1.1还提供了与身份认证、状态管理和Cache缓存等机制相关的请求头和响应头。
 
-请求的流水线（Pipelining）处理，在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。例如：一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍然需要使用各自的连接。 HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容。
+请求的流水线（Pipelining）处理，在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。例如：一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍然需要使用各自的连接。HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容。
 
 HTTP 1.1增加host字段:在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。HTTP1.1的请求消息和响应消息都应支持Host头域，且请求消息中如果没有Host头域会报告一个错误（400 Bad Request）。此外，服务器应该接受以绝对路径标记的资源请求。
 
+### Cookie
+
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">mozilla doc of cookie</a>
+
+An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to the user's web browser. The browser may store it and send it back with the next request to the same server. Typically, it's used to tell if two requests came from the same browser — keeping a user logged-in, for example. It remembers stateful information for the **stateless** HTTP protocol.
+
+Cookie总是保存在客户端中，按在客户端中的存储位置，可分为内存Cookie和硬盘Cookie。内存Cookie由浏览器维护，保存在内存中，浏览器关闭后就消失了，其存在时间是短暂的。硬盘Cookie保存在硬盘里，有一个过期时间，除非用户手工清理或到了过期时间，硬盘Cookie不会被删除，其存在时间是长期的。所以，按存在时间，可分为非持久Cookie和持久Cookie。Cookie由服务端生成，响应给客户端，客户端存储后下次访问可以带上，发送给服务端。
+
+![](../../content/java_io_net/imgs/http_cookie.png)
+
+#### Cookie的作用
+
+* Session management(会话管理：登录信息，购物车等类似功能)
+
+Logins, shopping carts, game scores, or anything else the server should remember
+
+* Personalization（个性化设置，如用户偏好主题等）
+
+User preferences, themes, and other settings
+
+* Tracking（追踪用户行为）
+
+Recording and analyzing user behavior
+
+#### 如何创建Cookie
+
+When receiving an HTTP request, a server can send a `Set-Cookie header` with the response. The cookie is usually stored by the browser, and then the cookie is sent with requests made to the same server inside a `Cookie HTTP header`. An expiration date or duration can be specified, after which the cookie is no longer sent. Additionally, restrictions to a specific domain and path can be set, limiting where the cookie is sent.
+
+#### Cookie的缺陷
+
+* Cookie会被附加在每个HTTP请求中，所以无形中增加了流量
+* 由于在HTTP请求中的cookie是明文传递的，所以安全性成问题(除非用HTTPS)
+* Cookie的大小限制在4KB左右。对于复杂的存储需求来说是不够用的
+
+### Session
+
+A session creates a file in a temporary directory on the server where registered session variables and their values are stored. This data will be available to all pages on the site during that visit. A session ends when the user closes the browser or after leaving the site, the server will terminate the session after a predetermined period of time, commonly 30 minutes duration.
+
+session存在于服务端，会增加服务端存储压力；客户端浏览器访问服务器的时候，服务端把客户端信息以某种形式记录在服务器上
+
+Session生成后，只要用户继续访问，服务器就会更新Session的最后访问时间，并维护该Session。用户每访问一次，无论是否读写Session，服务器都认为该用户的Session活跃（active）了一次。由于有越来越多的用户访问服务器，因此Session也会越来越多。为防止内存溢出，服务器会把长时间没有活跃的Session从内存中删除。这个时间就是Session的超时时间。如果超过了超时时间没有访问过服务器，Session就自动失效。
+
+#### Session 需要借助 Cookie
+
+虽然Session保存在服务器，对客户端是透明的，他的正常运行任然需要客户端浏览器的支持。这是因为Session需要使用Cookie作为识别标志。HTTP协议是无状态的，Session不能依据HTTP链接来判断是否为同一客户，因此服务器先客户端浏览器发送一个名为JSESSIONID的Cookie，他的值为该Session的id（也就是HTTPSession.getId()的返回值）。Session依据Cookie来识别是否为同一用户。
+
+该Cookie为服务器自动生成的，它的maxAge属性一般为-1，表示仅当前浏览器内有效，并且个浏览器窗口间不共享，关闭浏览器就会失效。
+
+因此同一机器的两个浏览器窗口访问服务器时，会生成两个不同的Session、但是由浏览器窗口内的链接、脚本等打开的新窗口（也就是说不是双击=桌面浏览器图标打开 的窗口）除外。这类子窗口会共享父窗口的Cookie，因此会共享一个Session。
+
 ## HTTP 2.0
+
+<a href='https://http2.github.io/http2-spec/'>http2-spec</a>
+
+HTTP/2 enables a more efficient use of network resources and a reduced perception of latency by introducing header field compression and allowing multiple concurrent exchanges on the same connection. It also introduces unsolicited push of representations from servers to clients.
+
+关键词：压缩，IO多路复用
 
 ## 1.0和1.1和2.0之间的区别
 
@@ -130,7 +186,7 @@ TCP本身是面向流的，作为网络服务器，如何从这源源不断涌�
 
 1. 发送端给每个数据包添加包首部，首部中应该至少包含数据包的长度，这样接收端在接收到数据后，通过读取包首部的长度字段，便知道每一个数据包的实际长度了。
 2. 发送端将每个数据包封装为固定长度（不够的可以通过补0填充），这样接收端每次从接收缓冲区中读取固定长度的数据就自然而然的把每个数据包拆分开来。
-3. 可以在数据包之间设置边界，如添加特殊符号，这样，接收端通过这个边界就可以将不同的数据包拆分开。
+3. 可以在数据包之间设置边界，如添加特殊符号；这样，接收端通过这个边界就可以将不同的数据包拆分开。
 
 # TCP半连接，半关闭，半打开？
 

@@ -228,6 +228,14 @@ snowflake算法的特性是有序、唯一，并且要求高性能，低延迟�
 
 Java简单实现：<a href='https://github.com/beyondfengyu/SnowFlake/blob/master/SnowFlake.java' target='_blank'>snowflake算法</a>
 
+优点：
+* 毫秒数在高位，自增序列在低位，整个ID都是趋势递增的。
+* 不依赖数据库等第三方系统，以服务的方式部署，稳定性更高，生成ID的性能也是非常高的。
+* 可以根据自身业务特性分配bit位，非常灵活。
+
+缺点：
+* 强依赖机器时钟，如果机器上时钟回拨，会导致发号重复或者服务会处于不可用状态。
+
 ## Leaf(美团点评分布式ID生成系统)
 
 <a href="https://tech.meituan.com/2017/04/21/mt-leaf.html" target="_blank">美团Leaf</a>

@@ -199,31 +199,293 @@ eg, `new ConcurrentHashMap()`:
 
 只需要锁住这个链表/红黑树的head节点，并不会影响其他的table元素的读写，影响更小
 
-#### Java8的扩容
+#### Java8的扩容机制？
 
-* 在并发扩容的时候，由于操作的table都是同一个，不像JDK7中分段控制，所以这里需要等扩容完之后，所有的读写操作才能进行，所以扩容的效率就成为了整个并发的一个瓶颈点
-
-* 引入了一个ForwardingNode类，在一个线程发起扩容的时候，就会改变`sizeCtl`这个值
+##### 初始容量的设置（tableSizeFor方法返回一个大于输入参数且最小的为2的n次幂的数）
 
 ```java
-sizeCtl ：默认为0，用来控制table的初始化和扩容操作，具体应用在后续会体现出来。
--1 代表table正在初始化
--N 表示有N-1个线程正在进行扩容操作
-其余情况：
-1、如果table未初始化，表示table需要初始化的大小。
-2、如果table初始化完成，表示table的容量，默认是table大小的0.75倍
+public ConcurrentHashMap(int initialCapacity) {
+    if (initialCapacity < 0)
+        throw new IllegalArgumentException();
+    int cap = ((initialCapacity >= (MAXIMUM_CAPACITY >>> 1)) ?
+                MAXIMUM_CAPACITY :
+                tableSizeFor(initialCapacity + (initialCapacity >>> 1) + 1));
+    this.sizeCtl = cap;
+}
 ```
 
-扩容时候会判断这个值，如果超过阈值就要扩容，首先根据运算得到需要遍历的次数i，然后利用tabAt方法获得i位置的元素f，初始化一个forwardNode实例fwd，如果f == null，则在table中的i位置放入fwd，否则采用头插法的方式把当前旧table数组的指定任务范围的数据给迁移到新的数组中，然后 给旧table原位置赋值fwd。直到遍历过所有的节点以后就完成了复制工作，把table指向nextTable，并更新sizeCtl为新数组大小的0.75倍 ，扩容完成。在此期间如果其他线程的有读写操作都会判断head节点是否为forwardNode节点，如果是就帮助扩容。
+##### 为什么tableSizeFor()的参数为initialCapacity + (initialCapacity >>> 1) + 1而不是直接传入initialCapacity呢?
 
-* 参考
+在ConcurrentHashMap有一个参数LOAD_FACTOR，默认值为0.75f。假设当前map容量为16，当其中的元素个数达到16*0.75f，也就是12个的时候，map为了最大化利用hash的作用，会进行扩容，也就是map中的元素个数一般不会达到容量的大小。
 
-作者：葬月魔帝
-来源：CSDN
-原文：<a href="https://blog.csdn.net/u010454030/article/details/82458413" target="_blank">理解Java7和8里面HashMap+ConcurrentHashMap的扩容策略
-</a>
+使用参数initialCapacity + (initialCapacity >>> 1) + 1来设置容量，不至于在初始化时就超过上述"12"这个元素，并且能提供一些多余的空间，不至于在插入元素后马上就进行比较耗时的扩容操作。
 
-版权声明：本文为博主原创文章，转载请附上博文链接！
+##### 为什么扩容两倍？
+
+table的size为n的时候，通过key.hash & (n-1)确定在table中的位置i，当table扩容后（2倍），新的索引要么在原来的位置`i`,要么是`i+n`
+
+所以扩容处理，要么原来key保持不变，要么做迁移，而table中原来的各个节点是互相不影响的
+
+<font color='red'>因为旧table的各个桶中的节点迁移不会互相影响，所以就可以用“分治”的方式，将整个table数组划分为很多部分，每一部分包含一定区间的桶，每个数据迁移线程处理各自区间中的节点，对多线程同时进行数据迁移非常有利</font>
+
+参考：<a href='https://segmentfault.com/a/1190000016124883'>ConcurrentHashMap扩容分析博文</a>
+
+##### 扩容的时机？
+
+```java
+/**
+    * Replaces all linked nodes in bin at given index unless table is
+    * too small, in which case resizes instead.
+    */
+private final void treeifyBin(Node<K,V>[] tab, int index) {
+    Node<K,V> b; int n, sc;
+    if (tab != null) {
+        // 1: table的容量 < MIN_TREEIFY_CAPACITY(64)时，直接进行table扩容，不进行红黑树转换
+        if ((n = tab.length) < MIN_TREEIFY_CAPACITY)
+            tryPresize(n << 1);
+        // 2: table的容量 ≥ MIN_TREEIFY_CAPACITY(64)时，进行链表 -> 红黑树的转换
+        else if ((b = tabAt(tab, index)) != null && b.hash >= 0) {
+            synchronized (b) {
+                if (tabAt(tab, index) == b) {
+                    TreeNode<K,V> hd = null, tl = null;
+                    for (Node<K,V> e = b; e != null; e = e.next) {
+                        TreeNode<K,V> p =
+                            new TreeNode<K,V>(e.hash, e.key, e.val,
+                                                null, null);
+                        if ((p.prev = tl) == null)
+                            hd = p;
+                        else
+                            tl.next = p;
+                        tl = p;
+                    }
+                    setTabAt(tab, index, new TreeBin<K,V>(hd));
+                }
+            }
+        }
+    }
+}
+```
+
+<font color='red'>链表 转化为 红黑树</font>这一步并不一定会进行的，当table长度较小时，ConcurrentHashMap先考虑扩容，而非立即转化为红黑树
+
+```java
+private final void tryPresize(int size) {
+    int c = (size >= (MAXIMUM_CAPACITY >>> 1)) ? MAXIMUM_CAPACITY :
+        tableSizeFor(size + (size >>> 1) + 1);
+    int sc;
+    while ((sc = sizeCtl) >= 0) {
+        Node<K,V>[] tab = table; int n;
+        if (tab == null || (n = tab.length) == 0) {
+            n = (sc > c) ? sc : c;
+            if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
+                try {
+                    if (table == tab) {
+                        @SuppressWarnings("unchecked")
+                        Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n];
+                        table = nt;
+                        sc = n - (n >>> 2);
+                    }
+                } finally {
+                    sizeCtl = sc;
+                }
+            }
+        }
+        // c <= sc说明已经被扩容过了；n >= MAXIMUM_CAPACITY说明table数组已达到最大容量</span>
+        else if (c <= sc || n >= MAXIMUM_CAPACITY)
+            break;
+        else if (tab == table) {
+            // 根据n并生成一个随机标志表示扩容操作
+            int rs = resizeStamp(n);
+            if (sc < 0) {
+                Node<K,V>[] nt;
+                if ((sc >>> RESIZE_STAMP_SHIFT) != rs || sc == rs + 1 ||
+                    sc == rs + MAX_RESIZERS || (nt = nextTable) == null ||
+                    transferIndex <= 0)
+                    break;
+                // 协助数据迁移，把正在执行transfer任务的线程数加1
+                if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1))
+                    transfer(tab, nt);
+            }
+            // 当前线程自身成为第一个执行transfer的线程
+            else if (U.compareAndSwapInt(this, SIZECTL, sc,
+                                            (rs << RESIZE_STAMP_SHIFT) + 2))
+                transfer(tab, null);
+        }
+    }
+}
+```
+
+##### transfer 迁移数据原理
+
+nextTable； 扩容期间，将table数组中的元素 迁移到 nextTable
+
+多线程之间，以volatile的方式读取sizeCtl属性，来判断ConcurrentHashMap当前所处的状态。通过cas设置sizeCtl属性，告知其他线程ConcurrentHashMap的状态变更。
+
+不同状态，sizeCtl所代表的含义也有所不同。
+
+未初始化：
+* sizeCtl=0：表示没有指定初始容量。
+* sizeCtl>0：表示初始容量。
+
+初始化中：
+* sizeCtl=-1,标记作用，告知其他线程，正在初始化
+
+正常状态：
+* sizeCtl=0.75n ,扩容阈值
+
+扩容中:
+* sizeCtl < 0 : 表示有其他线程正在执行扩容
+* sizeCtl = (resizeStamp(n) << RESIZE_STAMP_SHIFT) + 2 :表示此时只有一个线程在执行扩容
+
+transferIndex：扩容索引，表示已经分配给扩容线程的table数组索引位置。主要用来协调多个线程，并发安全地获取迁移任务（hash桶）
+
+如果遍历到的节点是forward节点，就向后继续遍历，再加上给节点上锁的机制，就完成了多线程的控制。多线程遍历节点，处理了一个节点，就把对应点的值set为forward，另一个线程看到forward，就向后遍历。这样交叉就完成了复制工作。而且还很好的解决了线程安全的问题。
+
+![](../../content/java_data_structure/imgs/concurrent_hash_resize.png)
+
+```java
+/**
+    * Moves and/or copies the nodes in each bin to new table. See
+    * above for explanation.
+    */
+private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
+    int n = tab.length, stride;
+    // stride可理解为”步长“,即数据迁移时，每个线程要负责旧table中多少个桶
+    if ((stride = (NCPU > 1) ? (n >>> 3) / NCPU : n) < MIN_TRANSFER_STRIDE)
+        stride = MIN_TRANSFER_STRIDE; // subdivide range
+    if (nextTab == null) {            // initiating
+        try {
+            // 创建新的table数组
+            @SuppressWarnings("unchecked")
+            Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n << 1];
+            nextTab = nt;
+        } catch (Throwable ex) {      // try to cope with OOME
+            sizeCtl = Integer.MAX_VALUE;
+            return;
+        }
+        nextTable = nextTab;
+        transferIndex = n;
+    }
+    int nextn = nextTab.length;
+    // ForwardingNode节点：当旧table的某个桶中的所有节点迁移完成后，用该节点占据这个桶
+    ForwardingNode<K,V> fwd = new ForwardingNode<K,V>(nextTab);
+    // 标示一个桶是否迁移完成，如果迁移完成，则可以进行下一个桶的迁移
+    boolean advance = true;
+    boolean finishing = false; // to ensure sweep before committing nextTab
+    for (int i = 0, bound = 0;;) {
+        Node<K,V> f; int fh;
+        while (advance) {
+            int nextIndex, nextBound;
+            if (--i >= bound || finishing)
+                advance = false;
+            else if ((nextIndex = transferIndex) <= 0) {
+                i = -1;
+                advance = false;
+            }
+            else if (U.compareAndSwapInt
+                        (this, TRANSFERINDEX, nextIndex,
+                        nextBound = (nextIndex > stride ?
+                                    nextIndex - stride : 0))) {
+                bound = nextBound;
+                i = nextIndex - 1;
+                advance = false;
+            }
+        }
+        if (i < 0 || i >= n || i + n >= nextn) {
+            int sc;
+            if (finishing) { // 所有桶迁移完成
+                nextTable = null;
+                table = nextTab;
+                sizeCtl = (n << 1) - (n >>> 1);
+                return;
+            }
+            // 扩容线程减少1，并判断是否是最后一个迁移线程，并做检查
+            if (U.compareAndSwapInt(this, SIZECTL, sc = sizeCtl, sc - 1)) {
+                if ((sc - 2) != resizeStamp(n) << RESIZE_STAMP_SHIFT)
+                    return;
+                finishing = advance = true;
+                i = n; // recheck before commit
+            }
+        }
+        else if ((f = tabAt(tab, i)) == null)
+            advance = casTabAt(tab, i, null, fwd);
+        else if ((fh = f.hash) == MOVED)
+            advance = true; // already processed
+        else {
+            synchronized (f) {
+                if (tabAt(tab, i) == f) {
+                    Node<K,V> ln, hn;
+                    if (fh >= 0) {
+                        int runBit = fh & n;
+                        Node<K,V> lastRun = f;
+                        for (Node<K,V> p = f.next; p != null; p = p.next) {
+                            int b = p.hash & n;
+                            if (b != runBit) {
+                                runBit = b;
+                                lastRun = p;
+                            }
+                        }
+                        if (runBit == 0) {
+                            ln = lastRun;
+                            hn = null;
+                        }
+                        else {
+                            hn = lastRun;
+                            ln = null;
+                        }
+                        for (Node<K,V> p = f; p != lastRun; p = p.next) {
+                            int ph = p.hash; K pk = p.key; V pv = p.val;
+                            if ((ph & n) == 0)
+                                ln = new Node<K,V>(ph, pk, pv, ln);
+                            else
+                                hn = new Node<K,V>(ph, pk, pv, hn);
+                        }
+                        setTabAt(nextTab, i, ln);
+                        setTabAt(nextTab, i + n, hn);
+                        setTabAt(tab, i, fwd);
+                        advance = true;
+                    }
+                    else if (f instanceof TreeBin) {
+                        TreeBin<K,V> t = (TreeBin<K,V>)f;
+                        TreeNode<K,V> lo = null, loTail = null;
+                        TreeNode<K,V> hi = null, hiTail = null;
+                        int lc = 0, hc = 0;
+                        for (Node<K,V> e = t.first; e != null; e = e.next) {
+                            int h = e.hash;
+                            TreeNode<K,V> p = new TreeNode<K,V>
+                                (h, e.key, e.val, null, null);
+                            if ((h & n) == 0) {
+                                if ((p.prev = loTail) == null)
+                                    lo = p;
+                                else
+                                    loTail.next = p;
+                                loTail = p;
+                                ++lc;
+                            }
+                            else {
+                                if ((p.prev = hiTail) == null)
+                                    hi = p;
+                                else
+                                    hiTail.next = p;
+                                hiTail = p;
+                                ++hc;
+                            }
+                        }
+                        ln = (lc <= UNTREEIFY_THRESHOLD) ? untreeify(lo) :
+                            (hc != 0) ? new TreeBin<K,V>(lo) : t;
+                        hn = (hc <= UNTREEIFY_THRESHOLD) ? untreeify(hi) :
+                            (lc != 0) ? new TreeBin<K,V>(hi) : t;
+                        setTabAt(nextTab, i, ln);
+                        setTabAt(nextTab, i + n, hn);
+                        setTabAt(tab, i, fwd);
+                        advance = true;
+                    }
+                }
+            }
+        }
+    }
+}
+```
 
 ## ConcurrentLinkedQueue(class) 无界线程安全
 

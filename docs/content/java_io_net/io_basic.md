@@ -322,11 +322,11 @@ The reactor design pattern is an event handling pattern for handling service req
 
 2. 将数据从内核缓冲区复制到进程缓冲区（copying the data from the kernel to the process）
 
-**IO多路复用**是一种同步IO模型，实现一个线程可以监视多个文件句柄；一旦某个文件句柄就绪，就能够通知应用程序进行相应的读写操作；没有文件句柄就绪时会阻塞应用程序，交出cpu。多路是指网络连接，复用指的是同一个线程
+**IO多路复用**是一种同步IO模型，实现一个线程可以监视多个文件句柄；一旦某个文件句柄就绪，就能够通知应用程序进行相应的读写操作；没有文件句柄就绪时会阻塞应用程序，交出cpu。<font color='red'>多路是指网络连接，复用指的是同一个线程</font>
 
 ### select
 
-Select是通过将需要监听的文件描述符加入相应的文件描述符集合(readset、writeset，exceptset)，由内核负责监视相应的文件描述符是否就绪。
+select是通过将需要监听的文件描述符加入相应的文件描述符集合(readset、writeset，exceptset)，由内核负责监视相应的文件描述符是否就绪。
 
 目前几乎在所有的平台上支持，其良好跨平台支持也是它的一个优点，但select有如下的一些局限
 

@@ -45,7 +45,7 @@ UNIQUE KEY `uidx_method_name` (`method_name `) USING BTREE ) ENGINE=InnoDB DEFAU
     * 非重入锁：同一个线程在没有释放锁之前无法再次获得该锁。因为数据中数据已经存在记录了
     * 非公平锁
 
-2. 通过数据库的`排他锁`来实现
+2. 通过数据库的`排它锁`来实现
 
 在查询语句后面增加`for update`(表锁，行锁)，数据库会在查询过程中给数据库表增加`排它锁`。当某条记录被加上排他锁之后，其它线程无法再在该行记录上增加`排它锁`。可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过connection.commit()操作来释放锁
 
@@ -57,7 +57,7 @@ public boolean lock(){
             result = select * from methodLock where method_name=xxx for update;
             if (result == null) {
                 return true;
-            } 
+            }
         } catch (Exception e) {
         }
         sleep(1000);
@@ -297,7 +297,7 @@ public String deductStockRedisson() throws Exception {
 ![](../../content/distributed_design/imgs/redisson_frame.png)
 
 * setnx的设置key与过期时间用脚本实现原子操作
-* key设置成功默认30s，则有后台线程每10秒(1/3的原始过期时间定时检查)检查判断，延长过期时间()
+* key设置成功默认30s，则有后台线程每10秒(1/3的原始过期时间定时检查)检查判断，延长过期时间
 * 未获取到锁的线程会自旋，直到那个获取到锁的线程将锁释放
 
 ###### redis主从架构问题？

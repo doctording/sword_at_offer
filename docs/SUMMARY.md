@@ -37,6 +37,7 @@
     * [限流](./content/distributed_design/flow_limit.md)
 * [常见设计模式]
     * [代理模式](./content/design_pattern/proxy.md)
+        * [ASM字节码操纵](./content/design_pattern/asm.md)
     * [单例模式](./content/design_pattern/singleton.md)
     * [工厂模式](./content/design_pattern/factory.md)
     * [模板方法](./content/design_pattern/template.md)
