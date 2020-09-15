@@ -792,17 +792,91 @@ T1回滚会释放其获取到到排它锁，T2,T3都要请求排它锁，但是�
 
 <a href="https://blog.csdn.net/qq_26437925/article/details/50739813" target="_blank">数据库事务的4个特性理解</a>
 
+### MVCC(Multiversion concurrency control)
+
+MVCC全称是： Multiversion concurrency control，多版本并发控制，提供并发访问数据库时，对事务内读取的到的内存做处理，用来避免写操作堵塞读操作的并发问题。
+
+eg: 程序员A正在读数据库中某些内容，而程序员B正在给这些内容做修改（假设是在一个事务内修改，大概持续10s左右），A在这10s内 则可能看到一个不一致的数据，在B没有提交前，如何让A能够一直读到的数据都是一致的呢？
+* 第一种： 基于锁的并发控制，程序员B开始修改数据时，给这些数据加上锁，程序员A这时再读，就发现读取不了，处于等待情况，只能等B操作完才能读数据，这保证A不会读到一个不一致的数据，但是这个会影响程序的运行效率。
+* MVCC，每个用户连接数据库时，看到的都是某一特定时刻的数据库快照，在B的事务没有提交之前，A始终读到的是某一特定时刻的数据库快照，不会读到B事务中的数据修改情况，直到B事务提交，才会读取B的修改内容。
+
+MVCC在InnoDB中的实现：
+
+InnoDB的MVCC，通过在每行记录后面保存两个隐藏的列来实现：一个保存了行的创建时间，一个保存行的过期时间（删除时间），当然，这里的时间并不是时间戳，而是系统版本号，每开始一个新的事务，系统版本号就会递增。在RR隔离级别下，MVCC的操作如下
+
+* select操作
+    * InnoDB只查找版本早于（包含等于）当前事务版本的数据行。可以确保事务读取的行，要么是事务开始前就已存在，或者事务自身插入或修改的记录。
+    * 行的删除版本要么未定义，要么大于当前事务版本号。可以确保事务读取的行，在事务开始之前未删除。 
+
+* insert操作。将新插入的行保存当前版本号为行版本号。
+
+* delete操作。将删除的行保存当前版本号为删除标识。
+
+* update操作。变为insert和delete操作的组合，insert的行保存当前版本号为行版本号，delete则保存当前版本号到原来的行作为删除标识。
+
+由于旧数据并不真正的删除，所以必须对这些数据进行清理，innodb会开启一个后台线程执行清理工作，具体的规则是将删除版本号小于当前系统版本的行删除，这个过程叫做purge。
+
 ### 原子性：undo log
 
 `undo log`是为了实现事务的原子性，在Mysql数据库Innodb存储引擎中，还用`undo log`来实现多版本并发控制(MVCC)
 
-在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为undo log）；然后进行数据的修改。如果出现了错误或者用户执行了`rollback`,系统利用undo log的备份数据将数据恢复到事务开始之前的状态
+在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的 地方称为undo log）；然后进行数据的修改。如果出现了错误或者用户执行了`rollback`,系统利用undo log的备份数据将数据恢复到事务开始之前的状态
 
-undo log是逻辑日志，可以理解为：只要有insert操作，就可以记录一条删除记录；有delete操作，就记录一条新增记录，有update操作，记录update前的数据update操作;这样恢复操作去执行，就能回到事务之前的状态
+undo log是逻辑日志。可以理解为：只要有insert操作，就可以记录一条删除记录；有delete操作，就记录一条新增记录，有update操作，记录update前的数据update操作;这样恢复操作去执行，就能回到事务之前的状态
+
+#### undo log 相关参数
+
+```java
+mysql> show global variables like '%undo%';
++--------------------------+------------+
+| Variable_name            | Value      |
++--------------------------+------------+
+| innodb_max_undo_log_size | 1073741824 |
+| innodb_undo_directory    | ./         |
+| innodb_undo_log_truncate | OFF        |
+| innodb_undo_logs         | 128        |
+| innodb_undo_tablespaces  | 0          |
++--------------------------+------------+
+5 rows in set (0.05 sec)
+
+mysql> show global variables like '%truncate%';
++--------------------------------------+-------+
+| Variable_name                        | Value |
++--------------------------------------+-------+
+| innodb_purge_rseg_truncate_frequency | 128   |
+| innodb_undo_log_truncate             | OFF   |
++--------------------------------------+-------+
+2 rows in set (0.00 sec)
+
+mysql>
+```
+
+* innodb_max_undo_log_size
+
+    控制最大undo tablespace文件的大小，当启动了innodb_undo_log_truncate 时，undo tablespace 超过innodb_max_undo_log_size 阀值时才会去尝试truncate。该值默认大小为1G，truncate后的大小默认为10M。
+
+* innodb_undo_tablespaces
+
+    设置undo独立表空间个数，范围为0-128， 默认为0，0表示表示不开启独立undo表空间 且 undo日志存储在ibdata文件中。该参数只能在最开始初始化MySQL实例的时候指定，如果实例已创建，这个参数是不能变动的，如果在数据库配置文 件 .cnf 中指定innodb_undo_tablespaces 的个数大于实例创建时的指定个数，则会启动失败，提示该参数设置有误。如果设置了该参数为n（n>0），那么就会在undo目录下创建n个undo文件（undo001，undo002 ...... undo n），每个文件默认大小为10M.
+
+什么时候需要来设置这个参数呢？
+    当DB写压力较大时，可以设置独立UNDO表空间，把UNDO LOG从ibdata文件中分离开来，指定 innodb_undo_directory目录存放，可以指定到高速磁盘上，加快UNDO LOG 的读写性能。
+
+* innodb_undo_log_truncate
+
+    InnoDB的purge线程，根据innodb_undo_log_truncate设置开启或关闭、innodb_max_undo_log_size的参数值，以及truncate的频率来进行空间回收和 undo file 的重新初始化。
+
+* innodb_purge_rseg_truncate_frequency
+
+    用于控制purge回滚段的频度，默认为128。假设设置为n，则说明，当Innodb Purge操作的协调线程 purge事务128次时，就会触发一次History purge，检查当前的undo log 表空间状态是否会触发truncate。
 
 ### 持久性：redo log
 
 和undo log相反，`redo log`记录的是新数据的备份，<font color='red'>当事务提交前，只要将redo log持久化即可，不需要将数据持久化</font>，当系统崩溃时，虽然数据没有持久化，但是redo log已经持久化，系统可以根据redo log的内容，将所有数据恢复到最新的状态
+
+![](../../content/db_cache/imgs/redo.png)
+
+redo log记录的物理格式日志，其记录的是对于每个页的修改，记录了事务的行为
 
 ### undo / redo log文件操作
 
@@ -812,9 +886,9 @@ undo log是逻辑日志，可以理解为：只要有insert操作，就可以记
 
 mysql进程挂？机器挂？性能问题考虑？数据一致性考虑？
 
-0. 只写redo log，每秒落地一次，性能最高，数据一致性最差，如果mysql奔溃可能丢失一秒的数据
-1. 写redo log，buffer同时落地，性能最差，一致性最高
-2. 写redo log，buffer同时写入到os buffer，性能好，安全性也高，只要os不宕机就能保证数据一致性
+* 0 只写redo log，每秒落地一次，性能最高，数据一致性最差，如果mysql奔溃可能丢失一秒的数据（master thread每隔1秒进行一次fsync操作）
+* 1（默认值）表示每次事务提交时进行写redo log file的操作，性能最差，一致性最高
+* 2 写redo log，buffer同时写入到os buffer，性能好，安全性也高，只要os不宕机就能保证数据一致性（不进行fsync操作）
 
 ### 隔离性
 

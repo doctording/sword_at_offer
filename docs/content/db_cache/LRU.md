@@ -34,6 +34,8 @@ cache.get(4);       // 返回  4
 
 ![](../../content/db_cache/imgs/lru.png)
 
+* <font color='red'>注意更新链表的同时，要更新Map内容(更新，删除，新增操作不能漏掉)</font>
+
 ```java
 // 普通双向链表,有一个初始的dummyNode
 class DoubleList {
@@ -42,7 +44,7 @@ class DoubleList {
 
     public DoubleList() {
         head = new DoubleNode(0, 0);
-        tail = new DoubleNode(0, 0);
+        tail = head;
         head.next = tail;
         tail.prev = head;
         size = 0;
@@ -84,8 +86,9 @@ class DoubleList {
         return head.next;
     }
 
-
-    public DoubleNode putFirst(DoubleNode node) {
+    // O(1)
+    // 已存在元素移动到第一个位置
+    public DoubleNode moveFirst(DoubleNode node) {
         remove(node);
         addFirst(node);
         return head.next;
@@ -98,7 +101,7 @@ class DoubleList {
     }
 
     // 双向链表的节点
-    class DoubleNode {
+    static class DoubleNode {
         public int key, val;
         public DoubleNode next, prev;
         public DoubleNode(int k, int v) {
@@ -106,55 +109,61 @@ class DoubleList {
             this.val = v;
         }
     }
+
+    public static DoubleNode newNode(int key, int val){
+        return new DoubleNode(key, val);
+    }
 }
 
 class LRUCache {
 
     DoubleList doubleList;
     Map<Integer, DoubleList.DoubleNode> mp;
-
     int cap;
 
     public LRUCache(int capacity) {
-        cap = capacity;
-        mp = new HashMap<>();
         doubleList = new DoubleList();
+        mp = new HashMap<>();
+        cap = capacity;
     }
 
     public int get(int key) {
-        if (mp.containsKey(key)) {
-            // 已存在，位置要重置
-            DoubleList.DoubleNode node = mp.get(key);
-            DoubleList.DoubleNode node1 = doubleList.putFirst(node);
-            mp.put(key, node1);
-            return node1.val;
-        } else {
-            // 不存在返回-1
+        if (!mp.containsKey(key)) {
             return -1;
         }
+        DoubleList.DoubleNode node = mp.get(key);
+        int retVal = node.val;
+        // 移动node到链表头部,并重新设置mp
+        doubleList.moveFirst(node);
+        mp.put(key, doubleList.getFirst());
+        return retVal;
     }
 
     public void put(int key, int value) {
-        if ( mp.containsKey(key) ) {
-            // 已存在，位置要重置，且要修改value
+        if (mp.containsKey(key)) {
+            // 更新并移动到链表头部
             DoubleList.DoubleNode node = mp.get(key);
-            doubleList.remove(node);
-
             node.val = value;
-            doubleList.addFirst(node);
+            // 移动node到链表头部,,并重新设置mp
+            doubleList.moveFirst(node);
             mp.put(key, doubleList.getFirst());
-        } else {
-            if( doubleList.size() == cap) {
-                DoubleList.DoubleNode lastNode = doubleList.removeLast();
-                mp.remove(lastNode.key);
-            }
-            // 添加新节点
-            DoubleList.DoubleNode newNode = doubleList.new DoubleNode(key,value);
-            doubleList.addFirst(newNode);
-            mp.put(key, doubleList.getFirst());
+            return;
         }
+        // 要添加新元素，先判断是否已经超了，要删除链表尾部元素
+        if (doubleList.size() == cap) {
+            DoubleList.DoubleNode node = doubleList.removeLast();
+            mp.remove(node.key);
+        }
+        doubleList.addFirst(DoubleList.newNode(key, value));
+        mp.put(key, doubleList.getFirst());
     }
 }
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
 ```
 
 ## 使用LinkedHashMap实现一个LRU缓存(LeetCode)
