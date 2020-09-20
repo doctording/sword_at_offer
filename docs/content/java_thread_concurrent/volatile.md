@@ -22,7 +22,7 @@ date: 2019-03-09 00:00
 
 当多个线程访问同一个变量的时候，一旦线程修改了这个变量的值，其它线程能够立即看到修改的值。
 
-#### volatile 可见性例子
+#### volatile 可见性例子程序
 
 ```java
 public class Main {
@@ -61,20 +61,32 @@ public class Main {
 
 `volatile` 通过**加入内存屏障**,**禁止指令重排优化**来实现可见性和有序性
 
-### 有序性
+### 有序性 & 内存屏障
 
 程序执行的顺序按照代码的先后顺序执行，**内存屏障**（JVM规范要求）
 
 1. 每个volatile写操作的前面插入一个`StoreStore`屏障；
 2. 在每个volatile写操作的后面插入一个`StoreLoad`屏障；
-3. 在每个volatile读操作的后面插入一个`LoadLoad`屏障；
+3. 在每个volatile读操作的前面插入一个`LoadLoad`屏障；
 4. 在每个volatile读操作的后面插入一个`LoadStore`屏障。
 
 即如下
+
 ```java
-StoreStoreBarrier =》 写操作 =》 StoreStoreLoadBarrier
-LoadLoadBarrier =》 读操作 =》 LoadStoreBarrier
+StoreStore Barrier =》 写操作 =》 StoreLoad Barrier
+LoadLoad Barrier =》 读操作 =》 LoadStore Barrier
 ```
+
+屏障类型|指令示例|说明
+-|-|-
+LoadLoad Barriers | Load1;LoadLoad;Load2 | 该屏障确保Load1数据的装载先于Load2及其后所有装载指令的的操作
+StoreStore Barriers | Store1;StoreStore;Store2 | 该屏障确保Store1立刻刷新数据到内存(使其对其他处理器可见)的操作先于Store2及其后所有存储指令的操作
+LoadStore Barriers | Load1;LoadStore;Store2 | 确保Load1的数据装载先于Store2及其后所有的存储指令刷新数据到内存的操作
+StoreLoad Barriers | Store1;StoreLoad;Load2 | 该屏障确保Store1立刻刷新数据到内存的操作先于Load2及其后所有装载装载指令的操作。它会使该屏障之前的所有内存访问指令(存储指令和访问指令)完成之后,才执行该屏障之后的内存访问指令
+
+其中<font color='red'>StoreLoad Barriers</font>同时具备其他三个屏障的效果，因此也称之为全能屏障（mfence），是目前大多数处理器所支持的；但是相对其他屏障，该屏障的开销相对昂贵。
+
+---
 
 * Java内存模型中，允许**编译器**和**处理器**对指令进行重排序，但重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性(`CPU指令流水线`)
 
@@ -130,7 +142,7 @@ public class Main {
 }
 ```
 
-#### double check 单例模式需要 volatile吗
+#### double check 单例模式需要 volatile 吗？
 
 正确答案：需要
 
@@ -159,6 +171,21 @@ public class Main {
 CPU -> 缓存 -> 主存 -> 线程工作内存
 
 <a target='_blank' href='https://doctording.github.io/sword_at_offer/java_jvm/jvm_mem_model.html'>参考</a>
+
+![](../../content/java_jvm/imgs/java_working_mem.png)
+
+主内存与工作线程交互的操作有以下几种：
+
+* lock（锁定）：作用于主内存的变量，它把一个变量标识为一条线程独占的状态
+* unlock（解锁）：作用于主内存的变量，释放锁定状态的变量
+* read（读取）：作用于主内存的变量，把一个变量从主内存传输到线程的工作内存中，以便随后的load动作使用
+* load（载入）：作用于工作内存的变量，把read操作从主内存中得到的变量值放入工作内存的变量副本中。
+* use（使用）：作用于工作内存的变量，把工作内存中一个变量的值传递给执行引擎，每当虚拟机遇到一个需要使用到变量的值的字节码指令时将会执行这个操作
+* assign（赋值）：作用于工作内存的变量，把一个从执行引擎收到的值赋给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时将会执行这个操作
+* store（存储）：作用于工作内存的变量，把工作内存的一个变量值传送到主内存，以便随后的write操作使用
+* write（写入）：作用于主内存的变量，把store操作从工作内存得到的变量的值放入主内存变量中。
+
+虚拟机实现必须保证上面的每一种操作都是原子的
 
 ## volatile 使用场景
 

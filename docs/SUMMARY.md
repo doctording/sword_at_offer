@@ -63,6 +63,7 @@
         * [B/B+ Tree](./content/java_data_structure/b_tree.md)
         * [LSM Tree](./content/java_data_structure/lsm.md)
 * [Java基础问题]
+    * [序列化问题](./content/db_cache/serialize.md)
     * [Java SPI机制](./content/java_utils/spi.md)
     * [java.lang.Object](./content/java_utils/object.md)
     * [System.arraycopy, Array.copyOf](./content/java_data_structure/System_arraycopy.md)
@@ -85,6 +86,13 @@
     * [《Java编程思想》第8章：多态](./content/java_thinking_in_Java/polymorphism.md)
     * [《Java编程思想》第9章：接口 补充：抽象类](./content/java_thinking_in_Java/class_final.md)
     * [《Java编程思想》第10章：内部类](./content/java_thinking_in_Java/innner_class.md)
+* [JVM]
+    * [JVM规范](./content/java_jvm/jvm.md)
+    * [类加载机制,运行时内存](./content/java_jvm/jvm_class_load.md)
+    * [Java内存模型与线程](./content/java_jvm/jvm_mem_model.md)
+    * [堆栈 & 各种GC](./content/java_jvm/jvm_mem_gc.md)
+    * [JVM参数](./content/java_jvm/jvm_params.md)
+    * [JVM命令工具(jstack,jmap,jcmd...)](./content/java_jvm/jvm_tools.md)
 * [Java多线程 & 并发基础]
     * [AQS](./content/java_thread_concurrent/aqs.md)
     * [CAS(Conmpare And Swap/Exchange) & unsafe](./content/java_thread_concurrent/cas.md)
@@ -114,12 +122,6 @@
     * [Java8 Optional](./content/java8/java8_optional.md)
     * [Java8 Streams](./content/java8/streams.md)
     * [Java8 并行数据处理与性能](./content/java8/streams_parallel.md)
-* [JVM]
-    * [内存模型与线程](./content/java_jvm/jvm_mem_model.md)
-    * [类加载机制,类加载器,内存布局](./content/java_jvm/jvm_class_load.md)
-    * [堆栈 & 各种GC](./content/java_jvm/jvm_mem_gc.md)
-    * [JVM参数](./content/java_jvm/jvm_params.md)
-    * [JVM命令工具(jstack,jmap,jcmd...)](./content/java_jvm/jvm_tools.md)
 * [系统设计]
     * [秒杀系统](./content/system_design/seckill.md)
 * [剑指Offer]

@@ -43,7 +43,7 @@ date: 2019-03-09 00:00
 
 * `synchronized` 提供了一种锁对机制，能确保共享变量的互斥访问，从而防止数据不一致问题的出现
 
-* `synchronized` 包括了`monitor enter`和`monitor exit`两个JVM指令，他能确保在任何时候，任何线程执行到`monitor enter`成功之前都必须从`主内存`中获取数据，而不是从`缓存`中，在`monitor exit`运行成功之后，共享变量被更新后的值必须刷入`主内存`内
+* `synchronized` 包括了`monitorenter`和`monitorexit`两个JVM指令，他能确保在任何时候，任何线程执行到`monitor enter`成功之前都必须从`主内存`中获取数据，而不是从`缓存`中，在`monitor exit`运行成功之后，共享变量被更新后的值必须刷入`主内存`内
 
 * `synchronized` 严格准守`Java happends-before`规则，一个`monitor exit`指令之前必定要有一个`monitor enter`
 
@@ -118,7 +118,7 @@ public synchronized static void sync(){}
 private final Object Mutex = new Object()
 
 public void sync(){
-    // Mutex 一定不能为null
+    // Mutex 一定不能为null(If objectref is null, monitorenter throws a NullPointerException.)
     synchronized(Mutex){
 
     }
@@ -653,6 +653,10 @@ Exception in thread "Thread-0" java.lang.IllegalMonitorStateException
 ```
 
 参考：<a href="https://blog.csdn.net/xad707348125/article/details/46956911" target="_blank">synchronized锁分析</a>
+
+## synchronized修饰静态方法和非静态方法的区别？
+
+synchronized在静态方法上表示调用前要获得类的锁，而在非静态方法上表示调用此方法前要获得对象的锁。锁是加在单个对象上，不同的对象没有竞争关系；锁是加载类上，这个类所有的对象竞争一把锁。
 
 ## synchronized 可重入吗？
 

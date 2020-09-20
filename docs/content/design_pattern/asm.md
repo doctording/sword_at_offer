@@ -32,7 +32,24 @@ ASM是一个通用的Java字节码操作和分析框架。 它可以用于修改
 
 ![](../../content/java_jvm/imgs/jvm_stack.png)
 
-## `i++`面试题
+## iload, istore指令认识
+
+`int a = 10; int b = 11; int c = a + b`
+
+![](../../content/java_jvm/imgs/iload.png)
+
+```java
+0: bipush        10
+2: istore_1
+3: bipush        11
+5: istore_2
+6: iload_1
+7: iload_2
+8: iadd
+9: istore_3
+```
+
+## i++面试题
 
 ```java
 public class MyTest {
@@ -45,10 +62,32 @@ public class MyTest {
 }
 ```
 
+```java
+public class Hello {
+  public Hello();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: iconst_2
+       1: istore_1
+       2: iload_1
+       3: iinc          1, 1
+       6: istore_1
+       7: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      10: iload_1
+      11: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
+      14: return
+}
+```
+
 需要理解：Class结构，JVM指令码，线程栈，局部变量表
 
-* `inc`指令不会改变操作数栈的，`istore`指令会把操作数栈顶部的栈赋到局部变量表中
-* `i++` 在指令层面是:先`iload`,然后在`inc`
+* `iinc`指令不会改变操作数栈的，`istore`指令会把int变量(从操作栈或常量池中)加到局部变量表中
+* `i++` 在指令层面是:先`iload`把数据从局部变量表中压入到操作数栈(不改变局部变量表)，再`iinc`指在局部变量表中进行加1操作
 
 ![](../../content/design_pattern/imgs/asm.png)
 
