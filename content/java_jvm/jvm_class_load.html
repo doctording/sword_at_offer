@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>类加载机制,类加载器,内存布局 · java-note</title>
+        <title>类加载机制,运行时内存 · java-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -93,10 +93,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="jvm_mem_gc.html" />
+    <link rel="next" href="jvm_mem_model.html" />
     
     
-    <link rel="prev" href="jvm_mem_model.html" />
+    <link rel="prev" href="jvm.html" />
     
 
     </head>
@@ -1048,7 +1048,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.9.1" data-path="../java_utils/spi.html">
+        <li class="chapter " data-level="1.9.1" data-path="../db_cache/serialize.html">
+            
+                <a href="../db_cache/serialize.html">
+            
+                    
+                    序列化问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../java_utils/spi.html">
             
                 <a href="../java_utils/spi.html">
             
@@ -1061,7 +1074,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.2" data-path="../java_utils/object.html">
+        <li class="chapter " data-level="1.9.3" data-path="../java_utils/object.html">
             
                 <a href="../java_utils/object.html">
             
@@ -1074,7 +1087,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.3" data-path="../java_data_structure/System_arraycopy.html">
+        <li class="chapter " data-level="1.9.4" data-path="../java_data_structure/System_arraycopy.html">
             
                 <a href="../java_data_structure/System_arraycopy.html">
             
@@ -1087,7 +1100,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.4" data-path="../java_utils/equals_hashcode.html">
+        <li class="chapter " data-level="1.9.5" data-path="../java_utils/equals_hashcode.html">
             
                 <a href="../java_utils/equals_hashcode.html">
             
@@ -1100,7 +1113,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.5" data-path="../java_utils/Calendar.html">
+        <li class="chapter " data-level="1.9.6" data-path="../java_utils/Calendar.html">
             
                 <a href="../java_utils/Calendar.html">
             
@@ -1113,7 +1126,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.6" data-path="../java_utils/Compare.html">
+        <li class="chapter " data-level="1.9.7" data-path="../java_utils/Compare.html">
             
                 <a href="../java_utils/Compare.html">
             
@@ -1126,7 +1139,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.7" data-path="../java_utils/int_Integer.html">
+        <li class="chapter " data-level="1.9.8" data-path="../java_utils/int_Integer.html">
             
                 <a href="../java_utils/int_Integer.html">
             
@@ -1139,7 +1152,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.8" data-path="../java_utils/exception.html">
+        <li class="chapter " data-level="1.9.9" data-path="../java_utils/exception.html">
             
                 <a href="../java_utils/exception.html">
             
@@ -1152,7 +1165,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.9" data-path="../java_utils/String.html">
+        <li class="chapter " data-level="1.9.10" data-path="../java_utils/String.html">
             
                 <a href="../java_utils/String.html">
             
@@ -1165,7 +1178,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.10" data-path="../java_utils/reflect.html">
+        <li class="chapter " data-level="1.9.11" data-path="../java_utils/reflect.html">
             
                 <a href="../java_utils/reflect.html">
             
@@ -1178,7 +1191,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.11" data-path="../java_utils/call_back.html">
+        <li class="chapter " data-level="1.9.12" data-path="../java_utils/call_back.html">
             
                 <a href="../java_utils/call_back.html">
             
@@ -1191,7 +1204,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.12" data-path="../java_utils/array_collection.html">
+        <li class="chapter " data-level="1.9.13" data-path="../java_utils/array_collection.html">
             
                 <a href="../java_utils/array_collection.html">
             
@@ -1204,7 +1217,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.13" data-path="../java_utils/annotation.html">
+        <li class="chapter " data-level="1.9.14" data-path="../java_utils/annotation.html">
             
                 <a href="../java_utils/annotation.html">
             
@@ -1217,7 +1230,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.14" data-path="jvm_runtime.html">
+        <li class="chapter " data-level="1.9.15" data-path="jvm_runtime.html">
             
                 <a href="jvm_runtime.html">
             
@@ -1230,7 +1243,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.15" data-path="../java_data_structure/unsafe.html">
+        <li class="chapter " data-level="1.9.16" data-path="../java_data_structure/unsafe.html">
             
                 <a href="../java_data_structure/unsafe.html">
             
@@ -1243,7 +1256,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.16" data-path="../java_thinking_in_Java/basic.html">
+        <li class="chapter " data-level="1.9.17" data-path="../java_thinking_in_Java/basic.html">
             
                 <a href="../java_thinking_in_Java/basic.html">
             
@@ -1256,7 +1269,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.17" data-path="../java_thinking_in_Java/constructor.html">
+        <li class="chapter " data-level="1.9.18" data-path="../java_thinking_in_Java/constructor.html">
             
                 <a href="../java_thinking_in_Java/constructor.html">
             
@@ -1269,7 +1282,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.18" data-path="../java_thinking_in_Java/public_private_protect.html">
+        <li class="chapter " data-level="1.9.19" data-path="../java_thinking_in_Java/public_private_protect.html">
             
                 <a href="../java_thinking_in_Java/public_private_protect.html">
             
@@ -1282,7 +1295,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.19" data-path="../java_thinking_in_Java/class_final.html">
+        <li class="chapter " data-level="1.9.20" data-path="../java_thinking_in_Java/class_final.html">
             
                 <a href="../java_thinking_in_Java/class_final.html">
             
@@ -1295,7 +1308,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.20" data-path="../java_thinking_in_Java/polymorphism.html">
+        <li class="chapter " data-level="1.9.21" data-path="../java_thinking_in_Java/polymorphism.html">
             
                 <a href="../java_thinking_in_Java/polymorphism.html">
             
@@ -1308,7 +1321,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.21" data-path="../java_thinking_in_Java/class_final.html">
+        <li class="chapter " data-level="1.9.22" data-path="../java_thinking_in_Java/class_final.html">
             
                 <a href="../java_thinking_in_Java/class_final.html">
             
@@ -1321,7 +1334,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.22" data-path="../java_thinking_in_Java/innner_class.html">
+        <li class="chapter " data-level="1.9.23" data-path="../java_thinking_in_Java/innner_class.html">
             
                 <a href="../java_thinking_in_Java/innner_class.html">
             
@@ -1344,7 +1357,7 @@
                 <span>
             
                     
-                    [Java多线程 & 并发基础]
+                    [JVM]
             
                 </span>
             
@@ -1353,12 +1366,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.1" data-path="../java_thread_concurrent/aqs.html">
+        <li class="chapter " data-level="1.10.1" data-path="jvm.html">
             
-                <a href="../java_thread_concurrent/aqs.html">
+                <a href="jvm.html">
             
                     
-                    AQS
+                    JVM规范
             
                 </a>
             
@@ -1366,12 +1379,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2" data-path="../java_thread_concurrent/cas.html">
+        <li class="chapter active" data-level="1.10.2" data-path="jvm_class_load.html">
             
-                <a href="../java_thread_concurrent/cas.html">
+                <a href="jvm_class_load.html">
             
                     
-                    CAS(Conmpare And Swap/Exchange) & unsafe
+                    类加载机制,运行时内存
             
                 </a>
             
@@ -1379,12 +1392,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_thread_concurrent/volatile.html">
+        <li class="chapter " data-level="1.10.3" data-path="jvm_mem_model.html">
             
-                <a href="../java_thread_concurrent/volatile.html">
+                <a href="jvm_mem_model.html">
             
                     
-                    volatile 关键字
+                    Java内存模型与线程
             
                 </a>
             
@@ -1392,12 +1405,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../java_thread_concurrent/synchronized.html">
+        <li class="chapter " data-level="1.10.4" data-path="jvm_mem_gc.html">
             
-                <a href="../java_thread_concurrent/synchronized.html">
+                <a href="jvm_mem_gc.html">
             
                     
-                    synchronized 关键字
+                    堆栈 & 各种GC
             
                 </a>
             
@@ -1405,26 +1418,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../java_thread_concurrent/thread_basic.html">
+        <li class="chapter " data-level="1.10.5" data-path="jvm_params.html">
             
-                <a href="../java_thread_concurrent/thread_basic.html">
-            
-                    
-                    线程基础
-            
-                </a>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.10.5.1" data-path="../java_thread_concurrent/park_unpark.html">
-            
-                <a href="../java_thread_concurrent/park_unpark.html">
+                <a href="jvm_params.html">
             
                     
-                    park unpark
+                    JVM参数
             
                 </a>
             
@@ -1432,179 +1431,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5.2" data-path="../java_thread_concurrent/thread_condition.html">
+        <li class="chapter " data-level="1.10.6" data-path="jvm_tools.html">
             
-                <a href="../java_thread_concurrent/thread_condition.html">
-            
-                    
-                    Condition
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.5.3" data-path="../java_thread_concurrent/semaphore.html">
-            
-                <a href="../java_thread_concurrent/semaphore.html">
+                <a href="jvm_tools.html">
             
                     
-                    Semaphore
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.5.4" data-path="../java_thread_concurrent/hook_thread.html">
-            
-                <a href="../java_thread_concurrent/hook_thread.html">
-            
-                    
-                    Hook线程
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.5.5" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
-            
-                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
-            
-                    
-                    CountDownLatch & CyclicBarrier
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.5.6" data-path="../java_thread_concurrent/longAdder.html">
-            
-                <a href="../java_thread_concurrent/longAdder.html">
-            
-                    
-                    LongAdder
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.5.7" data-path="../java_thread_concurrent/thread_design.html">
-            
-                <a href="../java_thread_concurrent/thread_design.html">
-            
-                    
-                    多线程设计模式
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.6" >
-            
-                <span>
-            
-                    
-                    [线程池]
-            
-                </span>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.10.6.1" data-path="../java_thread_concurrent/thread_pool.html">
-            
-                <a href="../java_thread_concurrent/thread_pool.html">
-            
-                    
-                    Java线程池
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.6.2" data-path="../java_thread_concurrent/concurrency_problems.html">
-            
-                <a href="../java_thread_concurrent/concurrency_problems.html">
-            
-                    
-                    常见的多线程题目
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.6.3" data-path="../java_thread_concurrent/thread_pool_self.html">
-            
-                <a href="../java_thread_concurrent/thread_pool_self.html">
-            
-                    
-                    自定义线程池
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.7" data-path="../java_thread_concurrent/thread_lock.html">
-            
-                <a href="../java_thread_concurrent/thread_lock.html">
-            
-                    
-                    Java Lock
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.8" data-path="../java_thread_concurrent/thread_deadlock.html">
-            
-                <a href="../java_thread_concurrent/thread_deadlock.html">
-            
-                    
-                    死锁问题
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.10.9" data-path="../java_thread_concurrent/threadLocal.html">
-            
-                <a href="../java_thread_concurrent/threadLocal.html">
-            
-                    
-                    ThreadLocal对象
+                    JVM命令工具(jstack,jmap,jcmd...)
             
                 </a>
             
@@ -1622,7 +1454,7 @@
                 <span>
             
                     
-                    [Java8]
+                    [Java多线程 & 并发基础]
             
                 </span>
             
@@ -1631,12 +1463,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.11.1" data-path="../java8/java8_future.html">
+        <li class="chapter " data-level="1.11.1" data-path="../java_thread_concurrent/aqs.html">
             
-                <a href="../java8/java8_future.html">
+                <a href="../java_thread_concurrent/aqs.html">
             
                     
-                    Future
+                    AQS
             
                 </a>
             
@@ -1644,12 +1476,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.2" data-path="../java8/java8_completableFuture.html">
+        <li class="chapter " data-level="1.11.2" data-path="../java_thread_concurrent/cas.html">
             
-                <a href="../java8/java8_completableFuture.html">
+                <a href="../java_thread_concurrent/cas.html">
             
                     
-                    CompletableFuture
+                    CAS(Conmpare And Swap/Exchange) & unsafe
             
                 </a>
             
@@ -1657,12 +1489,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../java8/interface_default.html">
+        <li class="chapter " data-level="1.11.3" data-path="../java_thread_concurrent/volatile.html">
             
-                <a href="../java8/interface_default.html">
+                <a href="../java_thread_concurrent/volatile.html">
             
                     
-                    interface defalt static
+                    volatile 关键字
             
                 </a>
             
@@ -1670,12 +1502,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.4" data-path="../java8/java8_mem.html">
+        <li class="chapter " data-level="1.11.4" data-path="../java_thread_concurrent/synchronized.html">
             
-                <a href="../java8/java8_mem.html">
+                <a href="../java_thread_concurrent/synchronized.html">
             
                     
-                    Java8 jvm内存结构
+                    synchronized 关键字
             
                 </a>
             
@@ -1683,12 +1515,26 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5" data-path="../java8/lambda.html">
+        <li class="chapter " data-level="1.11.5" data-path="../java_thread_concurrent/thread_basic.html">
             
-                <a href="../java8/lambda.html">
+                <a href="../java_thread_concurrent/thread_basic.html">
             
                     
-                    Java8 lambda表达式
+                    线程基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.5.1" data-path="../java_thread_concurrent/park_unpark.html">
+            
+                <a href="../java_thread_concurrent/park_unpark.html">
+            
+                    
+                    park unpark
             
                 </a>
             
@@ -1696,12 +1542,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6" data-path="../java8/java8_optional.html">
+        <li class="chapter " data-level="1.11.5.2" data-path="../java_thread_concurrent/thread_condition.html">
             
-                <a href="../java8/java8_optional.html">
+                <a href="../java_thread_concurrent/thread_condition.html">
             
                     
-                    Java8 Optional
+                    Condition
             
                 </a>
             
@@ -1709,12 +1555,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.7" data-path="../java8/streams.html">
+        <li class="chapter " data-level="1.11.5.3" data-path="../java_thread_concurrent/semaphore.html">
             
-                <a href="../java8/streams.html">
+                <a href="../java_thread_concurrent/semaphore.html">
             
                     
-                    Java8 Streams
+                    Semaphore
             
                 </a>
             
@@ -1722,12 +1568,153 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.8" data-path="../java8/streams_parallel.html">
+        <li class="chapter " data-level="1.11.5.4" data-path="../java_thread_concurrent/hook_thread.html">
             
-                <a href="../java8/streams_parallel.html">
+                <a href="../java_thread_concurrent/hook_thread.html">
             
                     
-                    Java8 并行数据处理与性能
+                    Hook线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.5" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.6" data-path="../java_thread_concurrent/longAdder.html">
+            
+                <a href="../java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.7" data-path="../java_thread_concurrent/thread_design.html">
+            
+                <a href="../java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6" >
+            
+                <span>
+            
+                    
+                    [线程池]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.6.1" data-path="../java_thread_concurrent/thread_pool.html">
+            
+                <a href="../java_thread_concurrent/thread_pool.html">
+            
+                    
+                    Java线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6.2" data-path="../java_thread_concurrent/concurrency_problems.html">
+            
+                <a href="../java_thread_concurrent/concurrency_problems.html">
+            
+                    
+                    常见的多线程题目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6.3" data-path="../java_thread_concurrent/thread_pool_self.html">
+            
+                <a href="../java_thread_concurrent/thread_pool_self.html">
+            
+                    
+                    自定义线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.8" data-path="../java_thread_concurrent/thread_deadlock.html">
+            
+                <a href="../java_thread_concurrent/thread_deadlock.html">
+            
+                    
+                    死锁问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.9" data-path="../java_thread_concurrent/threadLocal.html">
+            
+                <a href="../java_thread_concurrent/threadLocal.html">
+            
+                    
+                    ThreadLocal对象
             
                 </a>
             
@@ -1745,7 +1732,7 @@
                 <span>
             
                     
-                    [JVM]
+                    [Java8]
             
                 </span>
             
@@ -1754,12 +1741,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.12.1" data-path="jvm_mem_model.html">
+        <li class="chapter " data-level="1.12.1" data-path="../java8/java8_future.html">
             
-                <a href="jvm_mem_model.html">
+                <a href="../java8/java8_future.html">
             
                     
-                    内存模型与线程
+                    Future
             
                 </a>
             
@@ -1767,12 +1754,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.12.2" data-path="jvm_class_load.html">
+        <li class="chapter " data-level="1.12.2" data-path="../java8/java8_completableFuture.html">
             
-                <a href="jvm_class_load.html">
+                <a href="../java8/java8_completableFuture.html">
             
                     
-                    类加载机制,类加载器,内存布局
+                    CompletableFuture
             
                 </a>
             
@@ -1780,12 +1767,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.12.3" data-path="jvm_mem_gc.html">
+        <li class="chapter " data-level="1.12.3" data-path="../java8/interface_default.html">
             
-                <a href="jvm_mem_gc.html">
+                <a href="../java8/interface_default.html">
             
                     
-                    堆栈 & 各种GC
+                    interface defalt static
             
                 </a>
             
@@ -1793,12 +1780,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.12.4" data-path="jvm_params.html">
+        <li class="chapter " data-level="1.12.4" data-path="../java8/java8_mem.html">
             
-                <a href="jvm_params.html">
+                <a href="../java8/java8_mem.html">
             
                     
-                    JVM参数
+                    Java8 jvm内存结构
             
                 </a>
             
@@ -1806,12 +1793,51 @@
             
         </li>
     
-        <li class="chapter " data-level="1.12.5" data-path="jvm_tools.html">
+        <li class="chapter " data-level="1.12.5" data-path="../java8/lambda.html">
             
-                <a href="jvm_tools.html">
+                <a href="../java8/lambda.html">
             
                     
-                    JVM命令工具(jstack,jmap,jcmd...)
+                    Java8 lambda表达式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.6" data-path="../java8/java8_optional.html">
+            
+                <a href="../java8/java8_optional.html">
+            
+                    
+                    Java8 Optional
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.7" data-path="../java8/streams.html">
+            
+                <a href="../java8/streams.html">
+            
+                    
+                    Java8 Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.8" data-path="../java8/streams_parallel.html">
+            
+                <a href="../java8/streams_parallel.html">
+            
+                    
+                    Java8 并行数据处理与性能
             
                 </a>
             
@@ -1918,7 +1944,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >类加载机制,类加载器,内存布局</a>
+        <a href="../.." >类加载机制,运行时内存</a>
     </h1>
 </div>
 
@@ -1934,6 +1960,7 @@
                                 <section class="normal markdown-section">
                                 
                                 <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#jvm&#x89C4;&#x8303;">JVM&#x89C4;&#x8303;</a><i></i></div></li>
 <li><div><a href="#class-&#x6587;&#x4EF6;">Class &#x6587;&#x4EF6;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#class-&#x5BF9;&#x8C61;">Class &#x5BF9;&#x8C61;</a><i></i></div></li>
@@ -2042,6 +2069,14 @@
 
 
 <p>[TOC]</p>
+<h1 id="jvm&#x89C4;&#x8303;">JVM&#x89C4;&#x8303;</h1>
+<p>JVM&#x7EC4;&#x6210;&#xFF1A;</p>
+<ul>
+<li>&#x7C7B;&#x52A0;&#x8F7D;&#x5B50;&#x7CFB;&#x7EDF;&#xFF08;.class -&gt; loading -&gt; linking -&gt; Initailization&#xFF09;</li>
+<li>&#x8FD0;&#x884C;&#x65F6;&#x6570;&#x636E;&#x533A;(&#x65B9;&#x6CD5;&#x533A;&#xFF0C;&#x5806;&#xFF0C;thread stack, native statck, pc registor)</li>
+<li>&#x6267;&#x884C;&#x5F15;&#x64CE;(interpreter, jit compiler, garbage collector; native method interface/Library)</li>
+</ul>
+<p><a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html" target="_blank">jvm oracale&#x5B98;&#x65B9;&#x6587;&#x6863;</a></p>
 <h1 id="class-&#x6587;&#x4EF6;">Class &#x6587;&#x4EF6;</h1>
 <p>Class&#x6587;&#x4EF6;&#x662F;&#x4E00;&#x7EC4;&#x4EE5;8&#x4F4D;&#x5B57;&#x8282;&#x4E3A;&#x57FA;&#x7840;&#x5355;&#x4F4D;&#x7684;<code>&#x4E8C;&#x8FDB;&#x5236;&#x6D41;</code>&#xFF0C;&#x4EFB;&#x4F55;&#x4E00;&#x4E2A;Class&#x6587;&#x4EF6;&#x90FD;&#x5BF9;&#x5E94;&#x552F;&#x4E00;&#x4E00;&#x4E2A;&#x7C7B;&#x6216;&#x63A5;&#x53E3;&#x7684;&#x5B9A;&#x4E49;&#x4FE1;&#x606F;</p>
 <h2 id="class-&#x5BF9;&#x8C61;">Class &#x5BF9;&#x8C61;</h2>
@@ -2090,8 +2125,19 @@
 <h3 id="&#x64CD;&#x4F5C;&#x6570;&#x6808;&#xFF08;&#x8FD0;&#x7B97;&#x4E2D;&#x7684;&#x64CD;&#x4F5C;&#x6570;&#xFF0C;&#x6682;&#x5B58;&#x7A7A;&#x95F4;&#xFF09;">&#x64CD;&#x4F5C;&#x6570;&#x6808;&#xFF08;&#x8FD0;&#x7B97;&#x4E2D;&#x7684;&#x64CD;&#x4F5C;&#x6570;&#xFF0C;&#x6682;&#x5B58;&#x7A7A;&#x95F4;&#xFF09;</h3>
 <p>&#x64CD;&#x4F5C;&#x6570;&#x6808;&#xFF08;Operand Stack&#xFF09;&#x4E5F;&#x5E38;&#x88AB;&#x6210;&#x4E3A;&#x64CD;&#x4F5C;&#x6808;&#xFF0C;&#x662F;&#x4E00;&#x4E2A;&#x540E;&#x5165;&#x5148;&#x51FA;&#x6808;&#xFF0C;<strong>&#x7528;&#x4E8E;&#x4FDD;&#x5B58;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#x4E2D;&#x7684;&#x4E2D;&#x95F4;&#x7ED3;&#x679C;&#xFF0C;&#x540C;&#x65F6;&#x4F5C;&#x4E3A;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#x4E2D;&#x53D8;&#x91CF;&#x4E34;&#x65F6;&#x7684;&#x5B58;&#x50A8;&#x7A7A;&#x95F4;</strong></p>
 <h3 id="&#x52A8;&#x6001;&#x94FE;&#x63A5;">&#x52A8;&#x6001;&#x94FE;&#x63A5;</h3>
+<p>&#x52A8;&#x6001;&#x94FE;&#x63A5;&#xFF1A;&#x7A0B;&#x5E8F;&#x8FD0;&#x884C;&#x671F;&#x95F4;&#xFF0C;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x8F6C;&#x5316;&#x4E3A;&#x76F4;&#x63A5;&#x5F15;&#x7528;</p>
+<p>&#x4F8B;&#x5982;<code>Object o = new Object()</code>,&#x5806;&#x4E2D;&#x5BF9;&#x8C61;&#x7684;&#x6307;&#x9488;&#x5730;&#x5740;&#x653E;&#x5230;&#x3010;&#x5C40;&#x90E8;&#x53D8;&#x91CF;&#x8868;&#x3011;&#x4E2D;&#xFF0C;&#x8FD9;&#x4E2A;&#x6307;&#x9488;&#x6307;&#x5411;&#x4E86;&#x5806;&#x4E2D;&#x7684;&#x5BF9;&#x8C61;&#xFF0C;&#x8FD9;&#x79CD;&#x79F0;&#x4E3A;<font color="red">&#x76F4;&#x63A5;&#x5F15;&#x7528;</font>;&#x8FD0;&#x884C;&#x65F6;&#x5E38;&#x91CF;&#x6C60;&#xFF0C;&#x6BD4;&#x5982;&#x7C7B;&#x7684;<strong>&#x5168;&#x9650;&#x5B9A;&#x540D;</strong>&#x5B57;&#x7B26;&#x4E32;&#xFF0C;&#x8FD9;&#x4E9B;&#x90FD;&#x662F;<font color="red">&#x7B26;&#x53F7;&#x5F15;&#x7528;</font></p>
+<ul>
+<li>&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x4EE5;&#x4E00;&#x7EC4;&#x7B26;&#x53F7;&#x6765;&#x63CF;&#x8FF0;&#x6240;&#x5F15;&#x7528;&#x7684;&#x76EE;&#x6807;&#xFF0C;&#x7B26;&#x53F7;&#x53EF;&#x4EE5;&#x662F;&#x4EFB;&#x4F55;&#x5F62;&#x5F0F;&#x7684;&#x5B57;&#x9762;&#x91CF;&#xFF0C;&#x53EA;&#x8981;&#x4F7F;&#x7528;&#x65F6;&#x80FD;&#x591F;&#x65E0;&#x6B67;&#x4E49;&#x7684;&#x5B9A;&#x4F4D;&#x5230;&#x76EE;&#x6807;&#x5373;&#x53EF;</li>
+<li>&#x76F4;&#x63A5;&#x5F15;&#x7528;&#x662F;&#x548C;&#x865A;&#x62DF;&#x673A;&#x7684;&#x5E03;&#x5C40;&#x76F8;&#x5173;&#x7684;&#xFF0C;&#x540C;&#x4E00;&#x4E2A;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x865A;&#x62DF;&#x673A;&#x5B9E;&#x4F8B;&#x4E0A;&#x7FFB;&#x8BD1;&#x51FA;&#x6765;&#x7684;&#x76F4;&#x63A5;&#x5F15;&#x7528;&#x4E00;&#x822C;&#x4E0D;&#x4F1A;&#x76F8;&#x540C;&#xFF1B;&#x5982;&#x679C;&#x6709;&#x4E86;&#x76F4;&#x63A5;&#x5F15;&#x7528;&#xFF0C;&#x90A3;&#x5F15;&#x7528;&#x7684;&#x76EE;&#x6807;&#x5FC5;&#x5B9A;&#x5DF2;&#x7ECF;&#x88AB;&#x52A0;&#x8F7D;&#x5165;&#x5185;&#x5B58;&#x4E2D;&#x4E86;&#x3002;</li>
+</ul>
 <p>&#x6BCF;&#x4E2A;&#x6808;&#x5E27;&#x90FD;&#x5305;&#x542B;&#x4E00;&#x4E2A;&#x6307;&#x5411;&#x8FD0;&#x884C;&#x65F6;&#x5E38;&#x91CF;&#x6C60;&#x4E2D;&#x8BE5;&#x6808;&#x5E27;&#x6240;&#x5C5E;&#x65B9;&#x6CD5;&#x7684;&#x5F15;&#x7528;&#xFF0C;&#x6301;&#x6709;&#x8FD9;&#x4E2A;&#x5F15;&#x7528;&#x662F;&#x4E3A;&#x4E86;&#x652F;&#x6301;&#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x8FC7;&#x7A0B;&#x4E2D;&#x7684;&#x52A8;&#x6001;&#x94FE;&#x63A5;&#xFF08;Dynamic Linking&#xFF09;&#x3002;Class &#x6587;&#x4EF6;&#x7684;&#x5E38;&#x91CF;&#x6C60;&#x4E2D;&#x5B58;&#x5728;&#x5927;&#x91CF;&#x7684;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#xFF0C;&#x5B57;&#x8282;&#x7801;&#x4E2D;&#x7684;&#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x6307;&#x4EE4;&#x5C31;&#x4EE5;&#x5E38;&#x91CF;&#x6C60;&#x4E2D;&#x6307;&#x5411;&#x65B9;&#x6CD5;&#x7684;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x4F5C;&#x4E3A;&#x53C2;&#x6570;&#xFF0C;&#x8FD9;&#x4E9B;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x4E00;&#x90E8;&#x5206;&#x4F1A;&#x5728;&#x7C7B;&#x52A0;&#x8F7D;&#x9636;&#x6BB5;&#x6216;&#x7B2C;&#x4E00;&#x6B21;&#x4F7F;&#x7528;&#x65F6;&#x8F6C;&#x5316;&#x4E3A;&#x76F4;&#x63A5;&#x5F15;&#x7528;&#xFF0C;&#x8FD9;&#x79CD;&#x8F6C;&#x5316;&#x6210;&#x4E3A;&#x9759;&#x6001;&#x89E3;&#x6790;&#x3002;&#x53E6;&#x4E00;&#x90E8;&#x5206;&#x5C06;&#x5728;&#x6BCF;&#x4E00;&#x6B21;&#x8FD0;&#x884C;&#x671F;&#x95F4;&#x8F6C;&#x5316;&#x4E3A;&#x76F4;&#x63A5;&#x5F15;&#x7528;&#xFF0C;&#x8FD9;&#x90E8;&#x5206;&#x79F0;&#x4E3A;&#x52A8;&#x6001;&#x8FDE;&#x63A5;&#x3002;</p>
-<p>&#x6BD4;&#x5982;&#xFF1A;&#x63CF;&#x8FF0;&#x4E00;&#x4E2A;&#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x4E86;&#x53E6;&#x5916;&#x7684;&#x5176;&#x5B83;&#x65B9;&#x6CD5;&#x65F6;&#xFF0C;&#x5C31;&#x662F;&#x901A;&#x8FC7;&#x5E38;&#x91CF;&#x6C60;&#x4E2D;&#x6307;&#x5411;&#x65B9;&#x6CD5;&#x7684;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x6765;&#x8868;&#x793A;&#x7684;&#xFF0C;&#x90A3;&#x4E48;&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x7684;&#x4F5C;&#x7528;&#x5C31;&#x662F;&#x4E3A;&#x4E86;&#x5C06;&#x8FD9;&#x4E9B;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x8F6C;&#x6362;&#x4E3A;&#x8C03;&#x7528;&#x65B9;&#x6CD5;&#x7684;&#x76F4;&#x63A5;&#x5F15;&#x7528;</p>
+<p>&#x6BD4;&#x5982;&#xFF1A;&#x63CF;&#x8FF0;&#x4E00;&#x4E2A;&#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x4E86;&#x53E6;&#x5916;&#x7684;&#x5176;&#x5B83;&#x65B9;&#x6CD5;&#x65F6;&#xFF0C;&#x5C31;&#x662F;&#x901A;&#x8FC7;&#x5E38;&#x91CF;&#x6C60;&#x4E2D;&#x6307;&#x5411;&#x65B9;&#x6CD5;&#x7684;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x6765;&#x8868;&#x793A;&#x7684;&#xFF0C;&#x90A3;&#x4E48;&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x7684;&#x4F5C;&#x7528;&#x5C31;&#x662F;&#x4E3A;&#x4E86;&#x5C06;&#x8FD9;&#x4E9B;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x8F6C;&#x6362;&#x4E3A;&#x8C03;&#x7528;&#x65B9;&#x6CD5;&#x7684;&#x76F4;&#x63A5;&#x5F15;&#x7528;&#x3002;</p>
+<p>&#x9644;&#xFF1A;Class&#x6587;&#x4EF6;&#x7684;&#x5E38;&#x91CF;&#x6C60;&#x4E2D;&#x5B58;&#x5728;&#x6709;&#x5927;&#x91CF;&#x7684;&#x7B26;&#x53F7;&#x5F15;&#x7528;,&#x5B57;&#x8282;&#x7801;&#x4E2D;&#x7684;&#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x6307;&#x4EE4;&#x5C31;&#x4EE5;&#x6307;&#x5411;&#x5E38;&#x91CF;&#x6C60;&#x7684;&#x5F15;&#x7528;&#x4F5C;&#x4E3A;&#x53C2;&#x6570;</p>
+<ul>
+<li>&#x90E8;&#x5206;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x5728;&#x7C7B;&#x52A0;&#x8F7D;&#x9636;&#x6BB5;(&#x89E3;&#x6790;)&#x7684;&#x65F6;&#x5019;&#x5C31;&#x8F6C;&#x5316;&#x4E3A;&#x76F4;&#x63A5;&#x5F15;&#x7528;,&#x8FD9;&#x79CD;&#x8F6C;&#x5316;&#x4E3A;&#x9759;&#x6001;&#x94FE;&#x63A5;</li>
+<li>&#x90E8;&#x5206;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x5728;&#x8FD0;&#x884C;&#x671F;&#x95F4;&#x8F6C;&#x5316;&#x4E3A;&#x76F4;&#x63A5;&#x5F15;&#x7528;,&#x8FD9;&#x79CD;&#x8F6C;&#x5316;&#x4E3A;&#x52A8;&#x6001;&#x94FE;&#x63A5;</li>
+</ul>
 <h3 id="&#x65B9;&#x6CD5;&#x51FA;&#x53E3;">&#x65B9;&#x6CD5;&#x51FA;&#x53E3;</h3>
 <p>&#x65B9;&#x6CD5;&#x8FD4;&#x56DE;&#x5730;&#x5740;&#xFF0C;&#x6267;&#x884C;&#x65B9;&#x6CD5;&#x524D;&#x5C31;&#x4FDD;&#x5B58;&#x4E86;&#xFF1B;&#x5F53;&#x4E00;&#x4E2A;&#x65B9;&#x6CD5;&#x5F00;&#x59CB;&#x6267;&#x884C;&#x540E;&#xFF0C;&#x53EA;&#x6709;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;&#x53EF;&#x4EE5;&#x9000;&#x51FA;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;</p>
 <ul>
@@ -2310,8 +2356,14 @@ markword 64bit&#xFF0C;&#x5982;&#x4E0B;
 </code></pre>
 <p>&#x7F16;&#x8BD1;&#x65F6;javac&#x5C06;&#x4F1A;&#x4E3A;value&#x751F;&#x6210;ConstantValue&#x5C5E;&#x6027;&#xFF0C;&#x5728;&#x51C6;&#x5907;&#x9636;&#x6BB5;&#x865A;&#x62DF;&#x673A;&#x5C31;&#x4F1A;&#x6839;&#x636E;ConstantValue&#x7684;&#x8BBE;&#x7F6E;&#x5C06;value&#x8BBE;&#x7F6E;&#x4E3A;123&#x3002;</p>
 <h3 id="2-3-&#x8FDE;&#x63A5;&#xFF1A;&#x89E3;&#x6790;">2-3 &#x8FDE;&#x63A5;&#xFF1A;&#x89E3;&#x6790;</h3>
-<p>&#x89E3;&#x6790;&#x9636;&#x6BB5;&#x662F;&#x865A;&#x62DF;&#x673A;&#x5E38;&#x91CF;&#x6C60;&#x5185;&#x7684;&#x7B26;&#x53F7;&#x5F15;&#x7528;&#x66FF;&#x6362;&#x4E3A;&#x76F4;&#x63A5;&#x5F15;&#x7528;&#x7684;&#x8FC7;&#x7A0B;&#x3002;</p>
-<p>&#x76F4;&#x63A5;&#x5F15;&#x7528;&#x53EF;&#x4EE5;&#x662F;&#x6307;&#x5411;&#x76EE;&#x6807;&#x7684;&#x6307;&#x9488;&#xFF0C;&#x76F8;&#x5BF9;&#x504F;&#x79FB;&#x91CF;&#x6216;&#x662F;&#x4E00;&#x4E2A;&#x80FD;&#x95F4;&#x63A5;&#x5B9A;&#x4F4D;&#x5230;&#x76EE;&#x6807;&#x7684;&#x53E5;&#x67C4;&#x3002;&#x5982;&#x679C;&#x6709;&#x4E86;&#x76F4;&#x63A5;&#x5F15;&#x7528;&#xFF0C;&#x90A3;&#x5F15;&#x7528;&#x7684;&#x76EE;&#x6807;&#x5FC5;&#x5B9A;&#x5DF2;&#x7ECF;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x5B58;&#x5728;&#x3002;</p>
+<p>&#x89E3;&#x6790;&#x9636;&#x6BB5;&#x662F;&#x865A;&#x62DF;&#x673A;&#x5E38;&#x91CF;&#x6C60;&#x5185;&#x7684;<strong>&#x7B26;&#x53F7;&#x5F15;&#x7528;</strong>&#x66FF;&#x6362;&#x4E3A;<strong>&#x76F4;&#x63A5;&#x5F15;&#x7528;</strong>&#x7684;&#x8FC7;&#x7A0B;&#x3002;</p>
+<p>&#x89E3;&#x6790;&#x540E;&#x7684;&#x4FE1;&#x606F;&#x5B58;&#x50A8;&#x5728;ConstantPoolCache&#x7C7B;&#x5B9E;&#x4F8B;&#x4E2D;&#xFF0C;&#x5982;</p>
+<ul>
+<li>&#x7C7B;&#x6216;&#x63A5;&#x53E3;&#x7684;&#x89E3;&#x6790;</li>
+<li>&#x5B57;&#x6BB5;&#x89E3;&#x6790;</li>
+<li>&#x65B9;&#x6CD5;&#x89E3;&#x6790;</li>
+<li>&#x63A5;&#x53E3;&#x65B9;&#x6CD5;&#x89E3;&#x6790;</li>
+</ul>
 <h3 id="3-&#x521D;&#x59CB;&#x5316;">3 &#x521D;&#x59CB;&#x5316;</h3>
 <p>&#x521D;&#x59CB;&#x5316;&#x9636;&#x6BB5;&#x662F;&#x7C7B;&#x52A0;&#x8F7D;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x9636;&#x6BB5;&#xFF0C;&#x524D;&#x9762;&#x7684;&#x7C7B;&#x52A0;&#x8F7D;&#x9636;&#x6BB5;&#x4E4B;&#x540E;&#xFF0C;&#x9664;&#x4E86;&#x5728;&#x52A0;&#x8F7D;&#x9636;&#x6BB5;&#x53EF;&#x4EE5;&#x81EA;&#x5B9A;&#x4E49;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#x4EE5;&#x5916;&#xFF0C;&#x5176;&#x5B83;&#x64CD;&#x4F5C;&#x90FD;<strong>&#x7531;JVM&#x4E3B;&#x5BFC;</strong>&#x3002;&#x5230;&#x4E86;&#x521D;&#x59CB;&#x9636;&#x6BB5;&#xFF0C;&#x624D;&#x5F00;&#x59CB;&#x771F;&#x6B63;&#x6267;&#x884C;&#x7C7B;&#x4E2D;&#x5B9A;&#x4E49;&#x7684;Java&#x7A0B;&#x5E8F;&#x4EE3;&#x7801;&#x3002;</p>
 <p>&#x521D;&#x59CB;&#x5316;&#x9636;&#x6BB5;&#x662F;&#x6267;&#x884C;&#x7C7B;&#x6784;&#x9020;&#x5668;<code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>clinit</span><span class="token punctuation">&gt;</span></span></code>&#x65B9;&#x6CD5;&#x7684;&#x8FC7;&#x7A0B;&#x3002;</p>
@@ -2986,7 +3038,7 @@ mubi<span class="token annotation punctuation">@mubideMacBook</span><span class=
 <p>&#x6570;&#x636E;&#x5E93;&#x9A71;&#x52A8;&#x52A0;&#x8F7D;&#x63A5;&#x53E3;&#x88AB;&#x4F5C;&#x4E3A;JDK&#x6838;&#x5FC3;&#x6807;&#x51C6;&#x7C7B;&#x5E93;&#x7684;&#x4E00;&#x90E8;&#x5206;&#xFF0C;&#x7531;&#x4E8E;JVM&#x7C7B;&#x52A0;&#x8F7D;&#x7684;&#x53CC;&#x4EB2;&#x59D4;&#x6258;(<code>parents delegate</code>)&#x673A;&#x5236;&#x7684;&#x9650;&#x5236;&#xFF0C;&#x542F;&#x52A8;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#x4E0D;&#x53EF;&#x80FD;&#x52A0;&#x8F7D;&#x5F97;&#x5230;&#x7B2C;&#x4E09;&#x65B9;&#x5382;&#x5546;&#x63D0;&#x4F9B;&#x7684;&#x5177;&#x4F53;&#x5B9E;&#x73B0;&#x3002;&#x5982;&#x4F55;&#x89E3;&#x51B3;&#xFF1F;</p>
 <p>&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#xFF1A;&#x6709;&#x4E86;&#x7EBF;&#x7A0B;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#xFF0C;&#x542F;&#x52A8;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;(&#x6839;&#x52A0;&#x8F7D;&#x5668;)&#x53CD;&#x5012;&#x9700;&#x8981;&#x59D4;&#x6258;&#x5B50;&#x7C7B;&#x52A0;&#x8F7D;&#x5668;&#x53BB;&#x52A0;&#x8F7D;&#x5382;&#x5546;&#x63D0;&#x4F9B;&#x7684;&#x5BF9;JDK&#x5B9A;&#x4E49;&#x7684;SPI(Service Provider Interface)&#x7684;&#x5B9E;&#x73B0;</p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-09-14 19:25:03
+2020-09-19 17:54:28
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -3015,12 +3067,12 @@ mubi<span class="token annotation punctuation">@mubideMacBook</span><span class=
 
             
                 
-                <a href="jvm_mem_model.html" class="navigation navigation-prev " aria-label="Previous page: 内存模型与线程">
+                <a href="jvm.html" class="navigation navigation-prev " aria-label="Previous page: JVM规范">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="jvm_mem_gc.html" class="navigation navigation-next " aria-label="Next page: 堆栈 & 各种GC">
+                <a href="jvm_mem_model.html" class="navigation navigation-next " aria-label="Next page: Java内存模型与线程">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -3031,7 +3083,7 @@ mubi<span class="token annotation punctuation">@mubideMacBook</span><span class=
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"类加载机制,类加载器,内存布局","layout":"page","date":"2019-02-15 00:00","level":"1.12.2","depth":2,"next":{"title":"堆栈 & 各种GC","level":"1.12.3","depth":2,"path":"content/java_jvm/jvm_mem_gc.md","ref":"./content/java_jvm/jvm_mem_gc.md","articles":[]},"previous":{"title":"内存模型与线程","level":"1.12.1","depth":2,"path":"content/java_jvm/jvm_mem_model.md","ref":"./content/java_jvm/jvm_mem_model.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_jvm/jvm_class_load.md","mtime":"2020-09-14T11:25:03.864Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-15T14:32:25.811Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"类加载机制,运行时内存","layout":"page","date":"2019-02-15 00:00","level":"1.10.2","depth":2,"next":{"title":"Java内存模型与线程","level":"1.10.3","depth":2,"path":"content/java_jvm/jvm_mem_model.md","ref":"./content/java_jvm/jvm_mem_model.md","articles":[]},"previous":{"title":"JVM规范","level":"1.10.1","depth":2,"path":"content/java_jvm/jvm.md","ref":"./content/java_jvm/jvm.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_jvm/jvm_class_load.md","mtime":"2020-09-19T09:54:28.030Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-20T14:29:37.552Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
