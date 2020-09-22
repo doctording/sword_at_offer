@@ -19,6 +19,7 @@
     * [局部性原理&磁盘IO](./content/db_cache/io.md)
     * [MySQL](./content/db_cache/mysql.md)
     * [Redis](./content/db_cache/redis.md)
+    * [rabbitmq](./content/db_cache/mq.md)
 * [分布式]
     * [分布式基础]
         * [分布式&微服务](./content/distributed_design/distribute.md)

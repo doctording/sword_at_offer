@@ -101,7 +101,58 @@ Class文件中不会保存各个方法、字段的最终内存布局信息；因
 
 每个栈帧都包含一个指向运行时常量池中该栈帧所属方法的引用，持有这个引用是为了支持方法调用过程中的动态链接（Dynamic Linking）。Class 文件的常量池中存在大量的符号引用，字节码中的方法调用指令就以常量池中指向方法的符号引用作为参数，这些符号引用一部分会在类加载阶段或第一次使用时转化为直接引用，这种转化成为静态解析。另一部分将在每一次运行期间转化为直接引用，这部分称为动态连接。
 
-比如：描述一个方法调用了另外的其它方法时，就是通过常量池中指向方法的符号引用来表示的，那么动态链接的作用就是为了将这些符号引用转换为调用方法的直接引用。
+比如：**描述一个方法调用了另外的其它方法时，就是通过常量池中指向方法的符号引用来表示的，那么动态链接的作用就是为了将这些符号引用转换为调用方法的直接引用**。比如重载方法的调用，`invokevirtual`指令调用方法的符号引用是运行时期转化的
+
+* code
+
+```java
+abstract class Human {
+    abstract void call();
+}
+
+class Father extends Human{
+    @Override
+    void call() {
+        System.out.println("I am the Father!");
+    }
+}
+
+class Mother extends Human{
+    @Override
+    void call() {
+        System.out.println("I am the Mother!");
+    }
+}
+
+public class DynamicDispatch {
+    public static void main(String[] args) {
+        Human father = new Father();
+        Human mother = new Mother();
+        father.call();
+        mother.call();
+    }
+}
+```
+
+* 汇编
+
+```java
+public static void main(java.lang.String[]);
+    Code:
+       0: new           #2                  // class Father
+       3: dup
+       4: invokespecial #3                  // Method Father."<init>":()V
+       7: astore_1
+       8: new           #4                  // class Mother
+      11: dup
+      12: invokespecial #5                  // Method Mother."<init>":()V
+      15: astore_2
+      16: aload_1
+      17: invokevirtual #6                  // Method Human.call:()V
+      20: aload_2
+      21: invokevirtual #6                  // Method Human.call:()V
+      24: return
+```
 
 附：Class文件的常量池中存在有大量的符号引用,字节码中的方法调用指令就以指向常量池的引用作为参数
 * 部分符号引用在类加载阶段(解析)的时候就转化为直接引用,这种转化为静态链接
@@ -1105,4 +1156,4 @@ private static boolean isDriverAllowed(Driver driver, ClassLoader classLoader) {
 
 数据库驱动加载接口被作为JDK核心标准类库的一部分，由于JVM类加载的双亲委托(`parents delegate`)机制的限制，启动类加载器不可能加载得到第三方厂商提供的具体实现。如何解决？
 
-线程上下文类加载器：有了线程上下文类加载器，启动类加载器(根加载器)反倒需要委托子类加载器去加载厂商提供的对JDK定义的SPI(Service Provider Interface)的实现
+自定义类加载器，线程上下文类加载器：有了线程上下文类加载器，启动类加载器(根加载器)反倒需要委托子类加载器去加载厂商提供的对JDK定义的SPI(Service Provider Interface)的实现
