@@ -40,22 +40,27 @@ LinkedHashMap 的特性， 每个节点间由一个before引用 和 after 引用
 // 10 是初始大小，0.75 是装载因子，true 是表示按照访问时间排序
 HashMap<Integer, Integer> m = new LinkedHashMap<>(10, 0.75f, true);
 m.put(3, 11);
-m.put(1, 12);
+m.put(2, 12);
 m.put(5, 23);
-m.put(2, 22);
+m.put(1, 22);
+
+// 3 2 5 1
+for (Map.Entry e : m.entrySet()) {
+    System.out.print(e.getKey() + " ");
+}
+System.out.println();
 
 m.put(3, 26);
 m.get(5);
 
+// 2 1 3 5
 for (Map.Entry e : m.entrySet()) {
-    System.out.println(e.getKey());
+    System.out.print(e.getKey() + " ");
 }
-/*
-输出的结果就是 1，2，3，5
-*/
+System.out.println();
 ```
 
-## get方法(类似LRU)
+## get方法(类似LRU,不过最新访问的元素放到了链表最末尾)
 
 会将当前被访问到的节点e，移动至内部的双向链表的尾部。
 

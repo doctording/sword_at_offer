@@ -27,7 +27,7 @@ date: 2020-07-12 00:00
 
 * 分布式锁：Zookeeper 提供两种锁：独占锁、共享锁。独占锁即一次只能有一个线程使用资源，共享锁是读锁共享，读写互斥，即可以有多线线程同时读同一个资源，如果要使用写锁也只能有一个线程使用。Zookeeper 可以对分布式锁进行控制
 
-* 命名服务：在分布式系统中，通过使用命名服务，客户端应用能够根据指定名字来获取资源或服务的地址，提供者等信息
+* 分布式存储配置中心，命名服务：在分布式系统中，通过使用命名服务，客户端应用能够根据指定名字来获取资源或服务的地址，提供者等信息
 
 ## 谈下你对 ZAB 协议的了解？
 
@@ -58,52 +58,174 @@ ZAB 协议是为分布式协调服务 Zookeeper 专门设计的一种支持崩�
 
 最终一致性就属于弱一致性
 
-## zk节点的几种类型？
+## zk节点
 
-* PERSISTENT-持久节点
+### zk节点关联的stat结构
+
+ZooKeeper命名空间中的每个znode都有一个与之关联的stat结构，类似于Unix/Linux文件系统中文件的stat结构。 znode的stat结构中的字段显示如下，各自的含义如下：
+* cZxid：创建znode的事务ID。
+* mZxid：最后修改znode的事务ID。
+* pZxid：最后修改添加或删除子节点的事务ID。
+* ctime：表示从1970-01-01T00:00:00Z开始以毫秒为单位的znode创建时间。
+* mtime：表示从1970-01-01T00:00:00Z开始以毫秒为单位的znode最近修改时间。
+* dataVersion：表示对该znode的数据所做的更改次数。
+* cversion：这表示对此znode的子节点进行的更改次数。
+* aclVersion：表示对此znode的ACL进行更改的次数。
+* ephemeralOwner：如果znode是ephemeral类型节点，则这是znode所有者的 session ID。 如果znode不是ephemeral节点,则该字段设置为零。
+* dataLength：这是znode数据字段的长度。
+* numChildren：这表示znode的子节点的数量。
+
+eg1: 创建一个空的znode,并修改数据
+
+```java
+[zk: 127.0.0.1:2181(CONNECTED) 3] stat /mylock
+cZxid = 0x6
+ctime = Sat Sep 26 10:41:45 CST 2020
+mZxid = 0x6
+mtime = Sat Sep 26 10:41:45 CST 2020
+pZxid = 0x6
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 0
+numChildren = 0
+[zk: 127.0.0.1:2181(CONNECTED) 4] get /mylock
+null
+[zk: 127.0.0.1:2181(CONNECTED) 5] set /mylock lockdata
+[zk: 127.0.0.1:2181(CONNECTED) 6] stat /mylock
+cZxid = 0x6
+ctime = Sat Sep 26 10:41:45 CST 2020
+mZxid = 0xd // 数据节点最后一次更新时的事务ID 改变
+mtime = Sun Sep 27 17:35:18 CST 2020
+pZxid = 0x6
+cversion = 0 // 子节点的版本号为0，初始状态
+dataVersion = 1 // data version改变
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 8 // 数据长度改变
+numChildren = 0
+[zk: 127.0.0.1:2181(CONNECTED) 7] get /mylock
+lockdata
+[zk: 127.0.0.1:2181(CONNECTED) 8]
+```
+
+eg2:创建子节点
+
+```java
+[zk: 127.0.0.1:2181(CONNECTED) 8] create /mylock/son1 son1data
+Created /mylock/son1
+[zk: 127.0.0.1:2181(CONNECTED) 9] stat /mylock
+cZxid = 0x6
+ctime = Sat Sep 26 10:41:45 CST 2020
+mZxid = 0xd
+mtime = Sun Sep 27 17:35:18 CST 2020
+pZxid = 0xe // 最后修改添加或删除子节点的事务ID
+cversion = 1 // 子节点的版本号为1
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 8
+numChildren = 1 // 孩子数量是1
+[zk: 127.0.0.1:2181(CONNECTED) 10] create /mylock/son2 son2data
+Created /mylock/son2
+[zk: 127.0.0.1:2181(CONNECTED) 11] stat /mylock
+cZxid = 0x6
+ctime = Sat Sep 26 10:41:45 CST 2020
+mZxid = 0xd
+mtime = Sun Sep 27 17:35:18 CST 2020
+pZxid = 0xf // 最后修改添加或删除子节点的事务ID
+cversion = 2 // 子节点的版本号为2
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 8
+numChildren = 2 // 孩子数量是2
+[zk: 127.0.0.1:2181(CONNECTED) 12]
+```
+
+### zk节点的几种类型？
+
+* 持久节点（PERSISTENT）
+
+`create /path data`
 
 除非手动删除，否则节点一直存在于 Zookeeper 上
 
-* EPHEMERAL-临时节点
+* 临时节点（EPHEMERAL）
+
+`create -e /path data`
 
 临时节点的生命周期与客户端会话绑定，一旦客户端会话失效（客户端与zookeeper 连接断开不一定会话失效），那么这个客户端创建的所有临时节点都会被移除。
 
-* PERSISTENT_SEQUENTIAL-持久顺序节点
+* 持久顺序节点（PERSISTENT_SEQUENTIAL）
+
+`create -s /path data`
 
 基本特性同持久节点，只是增加了顺序属性，节点名后边会追加一个由父节点维护的自增整型数字。
 
-* EPHEMERAL_SEQUENTIAL-临时顺序节点
+* 临时顺序节点（EPHEMERAL_SEQUENTIAL）
+
+`create -e -s /path data`
 
 基本特性同临时节点，增加了顺序属性，节点名后边会追加一个由父节点维护的自增整型数字。
 
-## 节点操作与产生的事件
+---
+
+zookeeper 3.6 版本后新增
+
+* 容器节点（CONTAINER）
+
+`create -c /path data`
+
+只有添加过子节点，容器节点的特性才会生效，容器节点的特性是：节点的最后一个子节点被删除过，该节点会自动删除（可能延迟一段时间）
+
+![](../../content/distributed_design/imgs/zk-08.png)
+
+* ttl节点（PERSISTENT_WITH_TTL）
+
+`create -t 3000 /path data`
+
+TTL节点创建后，如果3秒内没有数据修改，并且没有子节点，则会自动删除
+
+前提是，服务端支持了TTL节点，默认没有开启，通过`-Dzookeeper.extendedTypesEnabled=true`可以开启
+
+* ttl顺序节点（PERSISTENT_SEQUENTIAL_WITH_TTL）
+
+`create -s -t 3000 /path data`
+
+### zk节点操作与产生的事件
 
 ZooKeeper的Java API中，可以通过`getData()`方法、`Exists()`方法、`getChildren()`方法来绑定监听事件，凡是所有的事务型的操作(增、删、改)，都会触发到监听事件
 
-```java
-None(-1),   客户端连接状态发生变化的时候，会收到None的事件
-NodeCreated(1),  创建节点的事件
-NodeDeleted(2),  删除节点的事件
-NodeDataChanged(3),  节点数据发生变更
-NodeChildrenChanged(4);  子节点被创建、被删除，会发生事件触发
-```
+zk事件 | 事件描述
+|:---: | :---: |
+None(-1) | 当zookeeper客户端的连接状态发生变更时，即KeeperState.Expired、KeeperState.Disconnected、KeeperState.SyncConnected、KeeperState.AuthFailed状态切换时，描述的事件类型为EventType.None
+NodeCreated(1) | 创建节点的事件
+NodeDeleted(2) |删除节点的事件
+NodeDataChanged(3) | 节点数据发生变更
+NodeChildrenChanged(4) | 子节点被创建、被删除，会发生事件触发
+
+zk各种操作产生的事件
 
 - | 监听父节点 | 监听子节点
 -|-|-
 create(父节点) | NodeCreated |无
 delete(父节点) | NodeDeleted |无
 setData(父节点) |NodeDataChanged |无
-create(子节点) |NodeChildrenChanged | NodeCreated
-delete(子节点) |NodeChildrenChanged |NodeDeleted
+create(子节点) | NodeChildrenChanged | NodeCreated
+delete(子节点) | NodeChildrenChanged |NodeDeleted
 setData(子节点) |无| NodeDataChanged
 
 ## 通知(Watch)机制原理？
 
 ![](../../content/distributed_design/imgs/zk-04.webp)
 
-* zk客户端向zk服务器注册watcher的同时，会将watcher对象存储在客户端的watchManager。
+* zk客户端向zk服务器注册watcher的同时，会将watcher对象存储在客户端的WatchManager。
 
-* zk服务器触发watcher事件后，会向客户端发送通知，客户端线程从watchManager中回调watcher执行相应的功能。
+* zk服务器触发watcher事件后，会向客户端发送通知，客户端线程从WatchManager中回调watcher执行相应的功能。
+
+* Watch是轻量级的，其实就是本地JVM的Callback，服务器端只是存了是否有设置了Watcher的布尔类型
 
 ### 回到zk的架构
 
@@ -113,7 +235,7 @@ setData(子节点) |无| NodeDataChanged
 
 ![](../../content/distributed_design/imgs/zk-06.jpg)
 
-其中`SendThread`是真正处理网络IO的线程，所有通过网络发送和接受的数据包都在这个线程中处理,线程的主体是一个while循环;SendThread 负责将ZooKeeper的请求信息封装成一个Packet，发送给 Server ,并维持同Server的心跳;`EventThread`负责解析通过通过SendThread得到的Response，之后发送给Watcher::processEvent进行详细的事件处理
+其中`SendThread`是真正处理网络IO的线程，所有通过网络发送和接受的数据包都在这个线程中处理,线程的主体是一个while循环；SendThread 负责将ZooKeeper的请求信息封装成一个Packet，发送给 Server，并维持同Server的心跳;`EventThread`负责解析通过通过SendThread得到的Response，之后发送给Watcher::processEvent进行详细的事件处理
 
 * SendThread
 
@@ -179,7 +301,7 @@ class SendThread extends ZooKeeperThread {
                 } else {
                     to = connectTimeout - clientCnxnSocket.getIdleRecv();
                 }
-                
+
                 if (to <= 0) {
                     String warnInfo;
                     warnInfo = "Client session timed out, have not heard from server in "
@@ -332,7 +454,7 @@ class EventThread extends ZooKeeperThread {
     }
 ```
 
-### Watcher 具有以下几个特性
+### Watcher 旧版本的一些特性
 
 * 一次性
 
@@ -345,3 +467,188 @@ class EventThread extends ZooKeeperThread {
 * 轻量
 
 WatcherEvent 是 ZooKeeper 整个 Watcher 通知机制的最小通知单元，这个数据结构中只包含三部分内容：`通知状态`、`事件类型`和`节点路径`。也就是说，Watcher 通知非常简单，只会告诉客户端发生了事件，而不会说明事件的具体内容。例如针对 NodeDataChanged 事件，ZooKeeper 的Watcher 只会通知客户端指定数据节点的数据内容发生了变更，而对于原始数据以及变更后的新数据都无法从这个事件中直接获取到，而是需要客户端主动重新去获取数据——这也是 ZooKeeper 的 Watcher 机制的一个非常重要的特性。
+
+## Curator 客户端
+
+1. 封装ZooKeeper client与ZooKeeper server之间的连接处理
+2. 提供了一套Fluent风格的操作API
+3. 提供ZooKeeper各种应用场景(recipe, 比如共享锁服务, 集群领导选举机制)的抽象封装
+
+### curator三种监听器（Cache）方式
+
+cache是一种缓存机制，可以借助cache实现监听。cache在客户端缓存了znode的各种状态，当感知到zk集群的znode状态变化，会触发event事件，注册的监听器会处理这些事件。
+
+* Path Cache
+
+Path Cache用来观察ZNode的子节点并缓存状态，如果ZNode的子节点被创建，更新或者删除，那么Path Cache会更新缓存，并且触发事件给注册的监听器。
+
+Path Cache是通过PathChildrenCache类来实现的，监听器注册是通过PathChildrenCacheListener。
+
+* Node Cache
+
+Node Cache用来观察ZNode自身，如果ZNode节点本身被创建，更新或者删除，那么Node Cache会更新缓存，并触发事件给注册的监听器。
+
+Node Cache是通过NodeCache类来实现的，监听器对应的接口为NodeCacheListener。
+
+* Tree Cache
+
+可以看做是上两种的合体，Tree Cache观察的是所有节点的所有数据。
+
+#### Java 例子代码
+
+`compile 'org.apache.curator:curator-recipes:4.0.1'`
+
+```java
+package zklock;
+
+import org.apache.curator.RetryPolicy;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.ChildData;
+import org.apache.curator.framework.recipes.cache.NodeCache;
+import org.apache.curator.framework.recipes.cache.NodeCacheListener;
+import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
+import org.apache.curator.framework.recipes.cache.TreeCache;
+import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
+import org.apache.curator.framework.recipes.cache.TreeCacheListener;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+
+
+/**
+ * @Author mubi
+ * @Date 2020/3/27 23:43
+ */
+public class CuratorTest {
+    private static String clusterNode = "/mylock";
+
+    private static CuratorFramework cf;
+    private static PathChildrenCache pathChildrenCache;
+    private static NodeCache nodeCache;
+    private static TreeCache treeCache;
+
+    public static void main(String[] args) throws Exception {
+        CuratorTest curatorTest = new CuratorTest();
+
+        RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000,3);
+        cf = CuratorFrameworkFactory.newClient("127.0.0.1:2181",
+                5000,1000,retryPolicy);
+        cf.start();
+        curatorTest.setPathCacheListener(clusterNode, true);
+        curatorTest.setNodeCacheListener(clusterNode, false);
+        curatorTest.setTreeCacheListener(clusterNode);
+        System.in.read();
+    }
+
+    /**
+     *  设置Path Cache, 监控本节点的子节点被创建,更新或者删除，注意是子节点, 子节点下的子节点不能递归监控
+     *  可重入监听
+     */
+    public void setPathCacheListener(String path, boolean cacheData) throws Exception{
+        try {
+            pathChildrenCache = new PathChildrenCache(cf, path, cacheData);
+            PathChildrenCacheListener childrenCacheListener = new PathChildrenCacheListener() {
+                @Override
+                public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) {
+                    ChildData data = event.getData();
+                    switch (event.getType()) {
+                        case CHILD_ADDED:
+                            System.out.println("子节点增加" + data.getPath() + " " +  data.getData());
+                            try{
+                                String rs = new String(data.getData(), "utf-8");
+                                System.out.println("data string:" + rs);
+                            }catch (Exception e){
+                            }
+                            break;
+                        case CHILD_UPDATED:
+                            System.out.println("子节点更新" + data.getPath() + " " +  data.getData());
+                            break;
+                        case CHILD_REMOVED:
+                            System.out.println("子节点删除" + data.getPath() + " " +  data.getData());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
+            pathChildrenCache.getListenable().addListener(childrenCacheListener);
+            pathChildrenCache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
+        } catch (Exception e) {
+            System.out.println("PathCache监听失败, path=" + path);
+        }
+    }
+
+    /**
+     * 设置Node Cache, 监控本节点的新增,删除,更新
+     */
+    public void setNodeCacheListener(String path, boolean dataIsCompressed) {
+        try {
+            nodeCache = new NodeCache(cf, path, dataIsCompressed);
+            NodeCacheListener nodeCacheListener = new NodeCacheListener() {
+                @Override
+                public void nodeChanged() throws Exception {
+                    ChildData childData = nodeCache.getCurrentData();
+                    System.out.println("ZNode节点状态改变, path=" + childData.getPath());
+                    System.out.println("ZNode节点状态改变, data=" + childData.getData());
+                    try{
+                        String rs = new String(childData.getData(), "utf-8");
+                        System.out.println("data string:" + rs);
+                    }catch (Exception e){
+                    }
+                    System.out.println("ZNode节点状态改变, stat=" + childData.getStat());
+                }
+            };
+            nodeCache.getListenable().addListener(nodeCacheListener);
+            nodeCache.start();
+        } catch (Exception e) {
+            System.out.println("创建NodeCache监听失败, path=" + path);
+        }
+    }
+
+    /**
+     * 设置Tree Cache, 监控本节点的新增,删除,更新
+     * 节点的update可以监控到, 如果删除不会自动再次创建
+     * 可重入监听
+     */
+    public void setTreeCacheListener(final String path) {
+        try {
+            treeCache = new TreeCache(cf, path);
+            TreeCacheListener treeCacheListener = new TreeCacheListener() {
+                @Override
+                public void childEvent(CuratorFramework client, TreeCacheEvent event) throws Exception {
+                    ChildData data = event.getData();
+                    if(data != null){
+                        switch (event.getType()) {
+                            case NODE_ADDED:
+                                System.out.println("[TreeCache]子节点增加" + data.getPath() + " " +  data.getData());
+                                break;
+                            case NODE_UPDATED:
+                                System.out.println("[TreeCache]子节点更新" + data.getPath() + " " +  data.getData());
+                                try{
+                                    String rs = new String(data.getData(), "utf-8");
+                                    System.out.println("data string:" + rs);
+                                }catch (Exception e){
+                                }
+                                System.out.println();
+                                break;
+                            case NODE_REMOVED:
+                                System.out.println("[TreeCache]子节点删除" + data.getPath() + " " +  data.getData());
+                                break;
+                            default:
+                                break;
+                        }
+                    }else{
+                        System.out.println("[TreeCache]节点数据为空, path=" + data.getPath());
+                    }
+                }
+            };
+            treeCache.getListenable().addListener(treeCacheListener);
+            treeCache.start();
+        } catch (Exception e) {
+            System.out.println("创建TreeCache监听失败, path=" + path);
+        }
+
+    }
+}
+```

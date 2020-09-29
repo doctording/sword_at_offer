@@ -54,15 +54,16 @@
         * [ArrayList & LinkedList & Vector](./content/java_data_structure/array_list.md)
         * [HashMap](./content/java_data_structure/hash_map.md)
         * [HashTable](./content/java_data_structure/hash_table.md)
-        * [LinkedHashMap](./content/java_data_structure/linked_hash_map.md)
-        * [TreeMap](./content/java_data_structure/tree_map.md)
+            * [LinkedHashMap](./content/java_data_structure/linked_hash_map.md)
+            * [TreeMap](./content/java_data_structure/tree_map.md)
         * [fail-fast,ConcurrentModificationException](./content/java_data_structure/fail_fast.md)
         * [快排(没事手写写)](./content/java_utils/quick_sort.md)
         * [concurrent数据结构](./content/java_data_structure/concurrent_datastructure.md)
         * [HashMap,HashTable,ConcurrentHashMap 对比](./content/java_data_structure/Map.md)
     * [高级数据结构](./content/java_data_structure/advanced_structure.md)
         * [B/B+ Tree](./content/java_data_structure/b_tree.md)
-        * [LSM Tree](./content/java_data_structure/lsm.md)
+        * [LSM Tree](./content/java_data_structure/inversed_index.md)
+        * [LSM Tree](./content/java_data_structure/lsm_tree.md)
 * [Java基础问题]
     * [序列化问题](./content/db_cache/serialize.md)
     * [Java SPI机制](./content/java_utils/spi.md)
@@ -125,5 +126,7 @@
     * [Java8 并行数据处理与性能](./content/java8/streams_parallel.md)
 * [系统设计]
     * [秒杀系统](./content/system_design/seckill.md)
+* [脚本]
+    * [统计词频bash脚本](./content/shell/words_count.md)
 * [剑指Offer]
     * [剑指Offer解题思路(全)](./content/thought_of_solve/thought.md)

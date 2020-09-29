@@ -400,7 +400,7 @@ As a general rule, the default load factor (.75) offers a good tradeoff between 
 
 通常，默认负载因子（0.75）在时间和空间成本之间提供了一个很好的折衷方案。较高的值会减少空间开销，但会增加查找成本（在HashMap类的大多数操作中都得到体现，包括get和put）。设置映射表的初始容量时，应考虑映射中的预期条目数及其负载因子，以最大程度地减少重新哈希操作的数量。如果初始容量大于最大条目数除以负载因子，则将不会进行任何哈希操作。
 
-## 有序?
+## 如何实现有序?
 
 ### LinkedHashMap(HashMap + 双向链表)
 
