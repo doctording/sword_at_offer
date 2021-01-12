@@ -56,7 +56,7 @@ print li2
 
 ## 二维定义1
 
-```
+```python
 # -*- coding:utf-8 -*-
 li2 = [ [0 for i in range(5)] for i in range(3)]
 

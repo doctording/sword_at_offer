@@ -1,0 +1,2974 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>MySQL优化 · java-note</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="doctording">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-page-treeview/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="mysql_monitor.html" />
+    
+    
+    <link rel="prev" href="mysql.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [计算机组成]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../computer/cpu_cache.html">
+            
+                <a href="../computer/cpu_cache.html">
+            
+                    
+                    CPU,缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../computer/process_thread.html">
+            
+                <a href="../computer/process_thread.html">
+            
+                    
+                    进程和线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../computer/memory_manage.html">
+            
+                <a href="../computer/memory_manage.html">
+            
+                    
+                    物理内存管理算法
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [I/O & 网络]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../java_io_net/io_interrupte.html">
+            
+                <a href="../java_io_net/io_interrupte.html">
+            
+                    
+                    IO与中断
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" >
+            
+                <span>
+            
+                    
+                    [IO基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1" data-path="../java_io_net/io_basic.html">
+            
+                <a href="../java_io_net/io_basic.html">
+            
+                    
+                    Java IO基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1.1" data-path="../java_io_net/io_basic_pro.html">
+            
+                <a href="../java_io_net/io_basic_pro.html">
+            
+                    
+                    Java IO面试题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.2" data-path="../java_io_net/nio_basic.html">
+            
+                <a href="../java_io_net/nio_basic.html">
+            
+                    
+                    BIO 到 NIO & 多线程问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.3" data-path="../java_io_net/from_io_to_epoll.html">
+            
+                <a href="../java_io_net/from_io_to_epoll.html">
+            
+                    
+                    再谈select & epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.4" data-path="../java_io_net/server_socket_channel.html">
+            
+                <a href="../java_io_net/server_socket_channel.html">
+            
+                    
+                    ServerSocketChannel
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../distributed_design/design.html">
+            
+                <a href="../distributed_design/design.html">
+            
+                    
+                    网络IO设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" >
+            
+                <span>
+            
+                    
+                    [网络协议]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.4.1" data-path="../java_io_net/http_tcp.html">
+            
+                <a href="../java_io_net/http_tcp.html">
+            
+                    
+                    tcp & udp
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.2" data-path="../java_io_net/http_tcp_tcpdump.html">
+            
+                <a href="../java_io_net/http_tcp_tcpdump.html">
+            
+                    
+                    tcp tcpdump
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.3" data-path="../java_io_net/http_tcp_pro.html">
+            
+                <a href="../java_io_net/http_tcp_pro.html">
+            
+                    
+                    http & tcp面试题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../distributed_design/nginx.html">
+            
+                <a href="../distributed_design/nginx.html">
+            
+                    
+                    nginx基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../java_io_net/netty.html">
+            
+                <a href="../java_io_net/netty.html">
+            
+                    
+                    netty
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    [数据库]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="io.html">
+            
+                <a href="io.html">
+            
+                    
+                    局部性原理&磁盘IO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="mysql.html">
+            
+                <a href="mysql.html">
+            
+                    
+                    MySQL
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.4.2.1" data-path="mysql_opt.html">
+            
+                <a href="mysql_opt.html">
+            
+                    
+                    MySQL优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="mysql_monitor.html">
+            
+                <a href="mysql_monitor.html">
+            
+                    
+                    MySQL线上监控 & 指标
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="mysql_batis.html">
+            
+                <a href="mysql_batis.html">
+            
+                    
+                    MySQL & MyBatis
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="redis.html">
+            
+                <a href="redis.html">
+            
+                    
+                    Redis
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.1" data-path="redis_skip_list.html">
+            
+                <a href="redis_skip_list.html">
+            
+                    
+                    跳表&zset
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="mq.html">
+            
+                <a href="mq.html">
+            
+                    
+                    rabbitmq
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    [分布式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" >
+            
+                <span>
+            
+                    
+                    [分布式基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1.1" data-path="../distributed_design/distribute.html">
+            
+                <a href="../distributed_design/distribute.html">
+            
+                    
+                    分布式&微服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.2" data-path="../distributed_design/distribute_data.html">
+            
+                <a href="../distributed_design/distribute_data.html">
+            
+                    
+                    分布式存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.3" data-path="../distributed_design/distribute_tx.html">
+            
+                <a href="../distributed_design/distribute_tx.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.4" data-path="../distributed_design/distribute_lock.html">
+            
+                <a href="../distributed_design/distribute_lock.html">
+            
+                    
+                    分布式锁
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.1.5" data-path="../distributed_design/distribute_id.html">
+            
+                <a href="../distributed_design/distribute_id.html">
+            
+                    
+                    分布式ID
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../distributed_design/rpc.html">
+            
+                <a href="../distributed_design/rpc.html">
+            
+                    
+                    rpc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../distributed_design/zk.html">
+            
+                <a href="../distributed_design/zk.html">
+            
+                    
+                    zookeeper
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1" data-path="../distributed_design/zk2.html">
+            
+                <a href="../distributed_design/zk2.html">
+            
+                    
+                    zookeeper单机源码 & Watch机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="../distributed_design/zk3.html">
+            
+                <a href="../distributed_design/zk3.html">
+            
+                    
+                    zookeeper集群 & Zab协议
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="LFU.html">
+            
+                <a href="LFU.html">
+            
+                    
+                    LFU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="LRU.html">
+            
+                <a href="LRU.html">
+            
+                    
+                    LRU
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="consistent_hash.html">
+            
+                <a href="consistent_hash.html">
+            
+                    
+                    一致性Hash
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    [缓存 & 限流]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="cache.html">
+            
+                <a href="cache.html">
+            
+                    
+                    缓存
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1.1" data-path="bloom.html">
+            
+                <a href="bloom.html">
+            
+                    
+                    布隆过滤器
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../distributed_design/flow_limit.html">
+            
+                <a href="../distributed_design/flow_limit.html">
+            
+                    
+                    限流
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    [常见设计模式]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../design_pattern/proxy.html">
+            
+                <a href="../design_pattern/proxy.html">
+            
+                    
+                    代理模式
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1.1" data-path="../design_pattern/asm.html">
+            
+                <a href="../design_pattern/asm.html">
+            
+                    
+                    ASM字节码操纵
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../design_pattern/singleton.html">
+            
+                <a href="../design_pattern/singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../design_pattern/factory.html">
+            
+                <a href="../design_pattern/factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../design_pattern/template.html">
+            
+                <a href="../design_pattern/template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../design_pattern/strategy.html">
+            
+                <a href="../design_pattern/strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="../design_pattern/decorator.html">
+            
+                <a href="../design_pattern/decorator.html">
+            
+                    
+                    装饰器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.7" data-path="../design_pattern/observer.html">
+            
+                <a href="../design_pattern/observer.html">
+            
+                    
+                    观察者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.8" data-path="../design_pattern/publish.html">
+            
+                <a href="../design_pattern/publish.html">
+            
+                    
+                    发布订阅模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.9" data-path="../design_pattern/visitor.html">
+            
+                <a href="../design_pattern/visitor.html">
+            
+                    
+                    访问者模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.10" data-path="../design_pattern/iterator.html">
+            
+                <a href="../design_pattern/iterator.html">
+            
+                    
+                    迭代器模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.11" data-path="../design_pattern/facade.html">
+            
+                <a href="../design_pattern/facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" >
+            
+                <span>
+            
+                    
+                    [数据结构和算法基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../java_data_structure/algorithm_structure.html">
+            
+                <a href="../java_data_structure/algorithm_structure.html">
+            
+                    
+                    Java算法数据结构使用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1.1" data-path="../java_utils/sort.html">
+            
+                <a href="../java_utils/sort.html">
+            
+                    
+                    常见排序(没事手写写)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../java_data_structure/java_basic_datastructure.html">
+            
+                <a href="../java_data_structure/java_basic_datastructure.html">
+            
+                    
+                    常见基础数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.2.1" data-path="../java_data_structure/array_list.html">
+            
+                <a href="../java_data_structure/array_list.html">
+            
+                    
+                    ArrayList & LinkedList & Vector
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.2" data-path="../java_data_structure/hash_map.html">
+            
+                <a href="../java_data_structure/hash_map.html">
+            
+                    
+                    Java8 HashMap
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.2.2.1" data-path="../java_data_structure/hash_map_java7.html">
+            
+                <a href="../java_data_structure/hash_map_java7.html">
+            
+                    
+                    Java1.7 HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.2.2" data-path="../java_data_structure/hash_table.html">
+            
+                <a href="../java_data_structure/hash_table.html">
+            
+                    
+                    HashTable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.2.3" data-path="../java_data_structure/linked_hash_map.html">
+            
+                <a href="../java_data_structure/linked_hash_map.html">
+            
+                    
+                    LinkedHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.2.4" data-path="../java_data_structure/tree_map.html">
+            
+                <a href="../java_data_structure/tree_map.html">
+            
+                    
+                    TreeMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.3" data-path="../java_data_structure/fail_fast.html">
+            
+                <a href="../java_data_structure/fail_fast.html">
+            
+                    
+                    fail-fast,ConcurrentModificationException
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.4" data-path="../java_data_structure/concurrent_datastructure.html">
+            
+                <a href="../java_data_structure/concurrent_datastructure.html">
+            
+                    
+                    concurrent数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.2.4.1" data-path="../java_data_structure/concurrent_hashmap.html">
+            
+                <a href="../java_data_structure/concurrent_hashmap.html">
+            
+                    
+                    Java8 ConcurrentMap
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.2.4.1.1" data-path="../java_data_structure/concurrent_hashmap7.html">
+            
+                <a href="../java_data_structure/concurrent_hashmap7.html">
+            
+                    
+                    Jdk1.7 ConcurrentMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.4.2" data-path="../java_data_structure/queue.html">
+            
+                <a href="../java_data_structure/queue.html">
+            
+                    
+                    Java中的队列
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.5" data-path="../java_data_structure/Map.html">
+            
+                <a href="../java_data_structure/Map.html">
+            
+                    
+                    HashMap,HashTable,ConcurrentHashMap对比
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../java_data_structure/advanced_structure.html">
+            
+                <a href="../java_data_structure/advanced_structure.html">
+            
+                    
+                    高级数据结构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.3.1" data-path="../java_data_structure/b_tree.html">
+            
+                <a href="../java_data_structure/b_tree.html">
+            
+                    
+                    B/B+ Tree
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3.2" data-path="../java_data_structure/inversed_index.html">
+            
+                <a href="../java_data_structure/inversed_index.html">
+            
+                    
+                    倒排索引
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3.3" data-path="../java_data_structure/lsm_tree.html">
+            
+                <a href="../java_data_structure/lsm_tree.html">
+            
+                    
+                    LSM Tree
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" >
+            
+                <span>
+            
+                    
+                    [Java基础问题]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="serialize.html">
+            
+                <a href="serialize.html">
+            
+                    
+                    序列化问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../java_utils/spi.html">
+            
+                <a href="../java_utils/spi.html">
+            
+                    
+                    Java SPI机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="../java_utils/synthetic.html">
+            
+                <a href="../java_utils/synthetic.html">
+            
+                    
+                    Java Synthetic
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="../java_utils/object.html">
+            
+                <a href="../java_utils/object.html">
+            
+                    
+                    java.lang.Object
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="../java_data_structure/System_arraycopy.html">
+            
+                <a href="../java_data_structure/System_arraycopy.html">
+            
+                    
+                    System.arraycopy, Array.copyOf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="../java_utils/equals_hashcode.html">
+            
+                <a href="../java_utils/equals_hashcode.html">
+            
+                    
+                    == & equals方法 & hashcode方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.7" data-path="../java_utils/Calendar.html">
+            
+                <a href="../java_utils/Calendar.html">
+            
+                    
+                    Calendar & Date
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.8" data-path="../java_utils/Compare.html">
+            
+                <a href="../java_utils/Compare.html">
+            
+                    
+                    Comparison method violates its general contract
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.9" data-path="../java_utils/int_Integer.html">
+            
+                <a href="../java_utils/int_Integer.html">
+            
+                    
+                    int(基本类型) & Integer(包装类类型)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.10" data-path="../java_utils/exception.html">
+            
+                <a href="../java_utils/exception.html">
+            
+                    
+                    Java异常&错误
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.11" data-path="../java_utils/String.html">
+            
+                <a href="../java_utils/String.html">
+            
+                    
+                    String,StringBuffer,StringBuilder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.12" data-path="../java_utils/reflect.html">
+            
+                <a href="../java_utils/reflect.html">
+            
+                    
+                    反射机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.13" data-path="../java_utils/call_back.html">
+            
+                <a href="../java_utils/call_back.html">
+            
+                    
+                    回调 & 事件机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.14" data-path="../java_utils/array_collection.html">
+            
+                <a href="../java_utils/array_collection.html">
+            
+                    
+                    数组，集合转换等问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.15" data-path="../java_utils/annotation.html">
+            
+                <a href="../java_utils/annotation.html">
+            
+                    
+                    注解 Annotation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.16" data-path="../java_jvm/jvm_runtime.html">
+            
+                <a href="../java_jvm/jvm_runtime.html">
+            
+                    
+                    Runtime类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.17" data-path="../java_utils/override_overload.html">
+            
+                <a href="../java_utils/override_overload.html">
+            
+                    
+                    重载和重写
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.18" data-path="../java_utils/reg.html">
+            
+                <a href="../java_utils/reg.html">
+            
+                    
+                    正则
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.19" data-path="../java_data_structure/unsafe.html">
+            
+                <a href="../java_data_structure/unsafe.html">
+            
+                    
+                    unsafe
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.20" data-path="../java_utils/val_static.html">
+            
+                <a href="../java_utils/val_static.html">
+            
+                    
+                    Java static关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.21" data-path="../java_thinking_in_Java/basic.html">
+            
+                <a href="../java_thinking_in_Java/basic.html">
+            
+                    
+                    《Java编程思想》第3章：操作符，第4章：控制执行流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.22" data-path="../java_thinking_in_Java/constructor.html">
+            
+                <a href="../java_thinking_in_Java/constructor.html">
+            
+                    
+                    《Java编程思想》第5章：初始化和清理(重点)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.23" data-path="../java_thinking_in_Java/public_private_protect.html">
+            
+                <a href="../java_thinking_in_Java/public_private_protect.html">
+            
+                    
+                    《Java编程思想》第6章：访问权限控制(重要)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.24" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第7章：复用类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.25" data-path="../java_thinking_in_Java/polymorphism.html">
+            
+                <a href="../java_thinking_in_Java/polymorphism.html">
+            
+                    
+                    《Java编程思想》第8章：多态
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.26" data-path="../java_thinking_in_Java/class_final.html">
+            
+                <a href="../java_thinking_in_Java/class_final.html">
+            
+                    
+                    《Java编程思想》第9章：接口 补充：抽象类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.27" data-path="../java_thinking_in_Java/innner_class.html">
+            
+                <a href="../java_thinking_in_Java/innner_class.html">
+            
+                    
+                    《Java编程思想》第10章：内部类
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    [JVM]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../java_jvm/jvm.html">
+            
+                <a href="../java_jvm/jvm.html">
+            
+                    
+                    JVM规范
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="../java_jvm/jvm_class_load.html">
+            
+                <a href="../java_jvm/jvm_class_load.html">
+            
+                    
+                    类加载机制,运行时内存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../java_jvm/jvm_mem_model.html">
+            
+                <a href="../java_jvm/jvm_mem_model.html">
+            
+                    
+                    Java内存模型与线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../java_jvm/jvm_mem_gc.html">
+            
+                <a href="../java_jvm/jvm_mem_gc.html">
+            
+                    
+                    堆栈 & GC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../java_jvm/jvm_params.html">
+            
+                <a href="../java_jvm/jvm_params.html">
+            
+                    
+                    JVM参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" data-path="../java_jvm/jvm_tools.html">
+            
+                <a href="../java_jvm/jvm_tools.html">
+            
+                    
+                    JVM命令工具(jstack,jmap,jcmd...)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    [Java多线程 & 并发基础]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../java_thread_concurrent/aqs.html">
+            
+                <a href="../java_thread_concurrent/aqs.html">
+            
+                    
+                    AQS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="../java_thread_concurrent/cas.html">
+            
+                <a href="../java_thread_concurrent/cas.html">
+            
+                    
+                    CAS & 原子变量
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.3" data-path="../java_thread_concurrent/volatile.html">
+            
+                <a href="../java_thread_concurrent/volatile.html">
+            
+                    
+                    volatile 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.4" data-path="../java_thread_concurrent/synchronized.html">
+            
+                <a href="../java_thread_concurrent/synchronized.html">
+            
+                    
+                    synchronized 关键字
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5" data-path="../java_thread_concurrent/thread_basic.html">
+            
+                <a href="../java_thread_concurrent/thread_basic.html">
+            
+                    
+                    线程基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.5.1" data-path="../java_thread_concurrent/park_unpark.html">
+            
+                <a href="../java_thread_concurrent/park_unpark.html">
+            
+                    
+                    park unpark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.2" data-path="../java_thread_concurrent/thread_condition.html">
+            
+                <a href="../java_thread_concurrent/thread_condition.html">
+            
+                    
+                    Condition
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.3" data-path="../java_thread_concurrent/semaphore.html">
+            
+                <a href="../java_thread_concurrent/semaphore.html">
+            
+                    
+                    Semaphore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.4" data-path="../java_thread_concurrent/hook_thread.html">
+            
+                <a href="../java_thread_concurrent/hook_thread.html">
+            
+                    
+                    Hook线程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.5" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+            
+                    
+                    CountDownLatch & CyclicBarrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.6" data-path="../java_thread_concurrent/longAdder.html">
+            
+                <a href="../java_thread_concurrent/longAdder.html">
+            
+                    
+                    LongAdder
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.7" data-path="../java_thread_concurrent/exchanger.html">
+            
+                <a href="../java_thread_concurrent/exchanger.html">
+            
+                    
+                    Exchanger
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5.8" data-path="../java_thread_concurrent/thread_design.html">
+            
+                <a href="../java_thread_concurrent/thread_design.html">
+            
+                    
+                    多线程设计模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6" >
+            
+                <span>
+            
+                    
+                    [线程池]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.6.1" data-path="../java_thread_concurrent/thread_pool.html">
+            
+                <a href="../java_thread_concurrent/thread_pool.html">
+            
+                    
+                    Java线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6.2" data-path="../java_thread_concurrent/concurrency_problems.html">
+            
+                <a href="../java_thread_concurrent/concurrency_problems.html">
+            
+                    
+                    常见的多线程题目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6.3" data-path="../java_thread_concurrent/thread_pool_self.html">
+            
+                <a href="../java_thread_concurrent/thread_pool_self.html">
+            
+                    
+                    自定义线程池
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7" data-path="../java_thread_concurrent/linux_lock.html">
+            
+                <a href="../java_thread_concurrent/linux_lock.html">
+            
+                    
+                    Linux spin lock & mutex
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.8" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.9" data-path="../java_thread_concurrent/thread_deadlock.html">
+            
+                <a href="../java_thread_concurrent/thread_deadlock.html">
+            
+                    
+                    死锁问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.10" data-path="../java_thread_concurrent/threadLocal.html">
+            
+                <a href="../java_thread_concurrent/threadLocal.html">
+            
+                    
+                    ThreadLocal对象
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="../java8/java8.html">
+            
+                <a href="../java8/java8.html">
+            
+                    
+                    Java8
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="../java8/java8_future.html">
+            
+                <a href="../java8/java8_future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.2" data-path="../java8/java8_completableFuture.html">
+            
+                <a href="../java8/java8_completableFuture.html">
+            
+                    
+                    CompletableFuture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.3" data-path="../java8/interface_default.html">
+            
+                <a href="../java8/interface_default.html">
+            
+                    
+                    interface defalt static
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.4" data-path="../java8/java8_mem.html">
+            
+                <a href="../java8/java8_mem.html">
+            
+                    
+                    Java8 jvm内存结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.5" data-path="../java8/lambda.html">
+            
+                <a href="../java8/lambda.html">
+            
+                    
+                    Java8 lambda表达式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.6" data-path="../java8/java8_optional.html">
+            
+                <a href="../java8/java8_optional.html">
+            
+                    
+                    Java8 Optional
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.7" data-path="../java8/streams.html">
+            
+                <a href="../java8/streams.html">
+            
+                    
+                    Java8 Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12.8" data-path="../java8/streams_parallel.html">
+            
+                <a href="../java8/streams_parallel.html">
+            
+                    
+                    Java8 并行数据处理与性能
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" >
+            
+                <span>
+            
+                    
+                    [项目经验]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.13.1" data-path="../system_design/seckill.html">
+            
+                <a href="../system_design/seckill.html">
+            
+                    
+                    系统设计
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13.2" data-path="../system_design/db_split.html">
+            
+                <a href="../system_design/db_split.html">
+            
+                    
+                    10亿级订单系统分库分表
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13.3" data-path="../system_design/pdd.html">
+            
+                <a href="../system_design/pdd.html">
+            
+                    
+                    个人项目介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" >
+            
+                <span>
+            
+                    
+                    [脚本]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.14.1" data-path="../shell/awk.html">
+            
+                <a href="../shell/awk.html">
+            
+                    
+                    awk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14.2" data-path="../shell/words_count.html">
+            
+                <a href="../shell/words_count.html">
+            
+                    
+                    统计词频bash脚本
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" >
+            
+                <span>
+            
+                    
+                    [python]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.15.1" data-path="../python/py.html">
+            
+                <a href="../python/py.html">
+            
+                    
+                    python基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15.2" data-path="../python/py_coroutine.html">
+            
+                <a href="../python/py_coroutine.html">
+            
+                    
+                    python协程gevent
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15.3" data-path="../python/py_object.html">
+            
+                <a href="../python/py_object.html">
+            
+                    
+                    python可变对象与不可变对象
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15.4" data-path="../python/py_time.html">
+            
+                <a href="../python/py_time.html">
+            
+                    
+                    python时间处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15.5" data-path="../python/py_contextor.html">
+            
+                <a href="../python/py_contextor.html">
+            
+                    
+                    python上线文管理器
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" >
+            
+                <span>
+            
+                    
+                    [算法]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.16.1" data-path="../thought_of_solve/thought.html">
+            
+                <a href="../thought_of_solve/thought.html">
+            
+                    
+                    剑指Offer解题思路(全)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >MySQL优化</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
+<li><div><a href="#mysql&#x4F18;&#x5316;">MySQL&#x4F18;&#x5316;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x67E5;&#x8BE2;&#x4F18;&#x5316;">&#x67E5;&#x8BE2;&#x4F18;&#x5316;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#explain">explain</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#&#x7D22;&#x5F15;&#x4F18;&#x5316;">&#x7D22;&#x5F15;&#x4F18;&#x5316;</a><i></i></div></li>
+<li><div><a href="#&#x5B58;&#x50A8;&#x4F18;&#x5316;">&#x5B58;&#x50A8;&#x4F18;&#x5316;</a><i></i></div></li>
+<li><div><a href="#&#x6570;&#x636E;&#x5E93;&#x7ED3;&#x6784;&#x4F18;&#x5316;">&#x6570;&#x636E;&#x5E93;&#x7ED3;&#x6784;&#x4F18;&#x5316;</a><i></i></div></li>
+<li><div><a href="#&#x786C;&#x4EF6;&#x4F18;&#x5316;&#x548C;&#x7F13;&#x5B58;">&#x786C;&#x4EF6;&#x4F18;&#x5316;&#x548C;&#x7F13;&#x5B58;</a><i></i></div></li>
+<li><div><a href="#&#x7D22;&#x5F15;&#x5931;&#x6548;&#xFF1F;">&#x7D22;&#x5F15;&#x5931;&#x6548;&#xFF1F;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#or&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;">or&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;</a><i></i></div></li>
+<li><div><a href="#like&#x6A21;&#x7CCA;&#x67E5;&#x8BE2;&#x4F1A;&#x5BFC;&#x81F4;&#x5168;&#x8868;&#x626B;&#x63CF;">like&#x6A21;&#x7CCA;&#x67E5;&#x8BE2;&#x4F1A;&#x5BFC;&#x81F4;&#x5168;&#x8868;&#x626B;&#x63CF;</a><i></i></div></li>
+<li><div><a href="#&#x67E5;&#x8BE2;&#x7684;&#x5217;&#x4E0A;&#x6709;&#x8FD0;&#x7B97;&#x6216;&#x8005;&#x51FD;&#x6570;&#x7684;&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;">&#x67E5;&#x8BE2;&#x7684;&#x5217;&#x4E0A;&#x6709;&#x8FD0;&#x7B97;&#x6216;&#x8005;&#x51FD;&#x6570;&#x7684;&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;</a><i></i></div></li>
+<li><div><a href="#&#x5B57;&#x7B26;&#x4E32;&#x5217;&#xFF0C;&#x8981;&#x5728;&#x6761;&#x4EF6;&#x4E2D;&#x5C06;&#x6570;&#x636E;&#x4F7F;&#x7528;&#x5F15;&#x53F7;&#xFF0C;&#x5426;&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;">&#x5B57;&#x7B26;&#x4E32;&#x5217;&#xFF0C;&#x8981;&#x5728;&#x6761;&#x4EF6;&#x4E2D;&#x5C06;&#x6570;&#x636E;&#x4F7F;&#x7528;&#x5F15;&#x53F7;&#xFF0C;&#x5426;&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;</a><i></i></div></li>
+<li><div><a href="#&#x5DE6;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x53F3;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x67E5;&#x8BE2;&#x5173;&#x8054;&#x7684;&#x5B57;&#x6BB5;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x4E0D;&#x4E00;&#x6837;">&#x5DE6;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x53F3;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x67E5;&#x8BE2;&#x5173;&#x8054;&#x7684;&#x5B57;&#x6BB5;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x4E0D;&#x4E00;&#x6837;</a><i></i></div></li>
+<li><div><a href="#&#x5982;&#x679C;mysql&#x4F30;&#x8BA1;&#x4F7F;&#x7528;&#x5168;&#x8868;&#x626B;&#x63CF;&#x8981;&#x6BD4;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5FEB;&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;">&#x5982;&#x679C;mysql&#x4F30;&#x8BA1;&#x4F7F;&#x7528;&#x5168;&#x8868;&#x626B;&#x63CF;&#x8981;&#x6BD4;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5FEB;,&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;</a><i></i></div></li>
+<li><div><a href="#&#x5982;&#x679C;&#x67E5;&#x8BE2;&#x4E2D;&#x6CA1;&#x6709;&#x7528;&#x5230;&#x8054;&#x5408;&#x7D22;&#x5F15;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BB5;&#xFF0C;&#x5219;&#x4E0D;&#x4F1A;&#x8D70;&#x7D22;&#x5F15;">&#x5982;&#x679C;&#x67E5;&#x8BE2;&#x4E2D;&#x6CA1;&#x6709;&#x7528;&#x5230;&#x8054;&#x5408;&#x7D22;&#x5F15;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BB5;&#xFF0C;&#x5219;&#x4E0D;&#x4F1A;&#x8D70;&#x7D22;&#x5F15;</a><i></i></div></li>
+<li><div><a href="#is-null-&#xFF0C;is-not-null-&#xFF0C;&#xFF01;-&#x662F;&#x5426;&#x8D70;&#x7D22;&#x5F15;">IS NUll &#xFF0C;IS NOT NUll &#xFF0C;&#xFF01;= &#x662F;&#x5426;&#x8D70;&#x7D22;&#x5F15;</a><i></i></div></li>
+</ul></li>
+<li><div><a href="#mysql-&#x57FA;&#x7840;&#x8BED;&#x53E5;&#x7EC3;&#x4E60;&#xFF08;&#xFF09;">MySql &#x57FA;&#x7840;&#x8BED;&#x53E5;&#x7EC3;&#x4E60;&#xFF08;*&#xFF09;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x5EFA;&#x7ACB;&#x8868;">&#x5EFA;&#x7ACB;&#x8868;</a><i></i></div></li>
+<li><div><a href="#&#x63D2;&#x5165;&#x6570;&#x636E;">&#x63D2;&#x5165;&#x6570;&#x636E;</a><i></i></div></li>
+<li><div><a href="#&#x5E38;&#x89C1;sql&#x8BED;&#x53E5;&#x7EC3;&#x4E60;">&#x5E38;&#x89C1;sql&#x8BED;&#x53E5;&#x7EC3;&#x4E60;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#&#x67E5;&#x8BE2;score&#x8868;&#x4E2D;&#x7684;&#x6700;&#x9AD8;&#x5206;&#x7684;&#x5B66;&#x751F;&#x5B66;&#x53F7;&#x548C;&#x8BFE;&#x7A0B;&#x53F7;&#x3002;&#xFF08;&#x5B50;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x6392;&#x5E8F;&#xFF09;">&#x67E5;&#x8BE2;Score&#x8868;&#x4E2D;&#x7684;&#x6700;&#x9AD8;&#x5206;&#x7684;&#x5B66;&#x751F;&#x5B66;&#x53F7;&#x548C;&#x8BFE;&#x7A0B;&#x53F7;&#x3002;&#xFF08;&#x5B50;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x6392;&#x5E8F;&#xFF09;</a><i></i></div></li>
+<li><div><a href="#&#x67E5;&#x8BE2;&#x6BCF;&#x95E8;&#x8BFE;&#x7684;&#x5E73;&#x5747;&#x6210;&#x7EE9;">&#x67E5;&#x8BE2;&#x6BCF;&#x95E8;&#x8BFE;&#x7684;&#x5E73;&#x5747;&#x6210;&#x7EE9;</a><i></i></div></li>
+<li><div><a href="#&#x67E5;&#x8BE2;score&#x8868;&#x4E2D;&#x81F3;&#x5C11;&#x6709;2&#x540D;&#x5B66;&#x751F;&#x9009;&#x4FEE;&#x7684;&#x5E76;&#x4EE5;3&#x5F00;&#x5934;&#x7684;&#x8BFE;&#x7A0B;&#x7684;&#x5E73;&#x5747;&#x5206;&#x6570;">&#x67E5;&#x8BE2;Score&#x8868;&#x4E2D;&#x81F3;&#x5C11;&#x6709;2&#x540D;&#x5B66;&#x751F;&#x9009;&#x4FEE;&#x7684;&#x5E76;&#x4EE5;3&#x5F00;&#x5934;&#x7684;&#x8BFE;&#x7A0B;&#x7684;&#x5E73;&#x5747;&#x5206;&#x6570;</a><i></i></div></li>
+<li><div><a href="#&#x67E5;&#x8BE2;&#x9009;&#x4FEE;3-105&#x8BFE;&#x7A0B;&#x7684;&#x4E14;&#x6210;&#x7EE9;&#x9AD8;&#x4E8E;109&#x53F7;&#x540C;&#x5B66;&#x6210;&#x7EE9;&#x7684;&#x6240;&#x6709;&#x540C;&#x5B66;&#x7684;&#x8BB0;&#x5F55;">&#x67E5;&#x8BE2;&#x9009;&#x4FEE;&#x201C;3-105&#x201D;&#x8BFE;&#x7A0B;&#x7684;&#x4E14;&#x6210;&#x7EE9;&#x9AD8;&#x4E8E;&#x201C;109&#x201D;&#x53F7;&#x540C;&#x5B66;&#x6210;&#x7EE9;&#x7684;&#x6240;&#x6709;&#x540C;&#x5B66;&#x7684;&#x8BB0;&#x5F55;</a><i></i></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+
+
+<p>[TOC]</p>
+<h1 id="mysql&#x4F18;&#x5316;">MySQL&#x4F18;&#x5316;</h1>
+<p>&#x56DE;&#x987E;mysql&#x67B6;&#x6784;</p>
+<p><img src="imgs/mysql_frame.png" alt=""></p>
+<h2 id="&#x67E5;&#x8BE2;&#x4F18;&#x5316;">&#x67E5;&#x8BE2;&#x4F18;&#x5316;</h2>
+<ul>
+<li>&#x6162;&#x67E5;&#x8BE2;</li>
+<li>explain</li>
+</ul>
+<h3 id="explain">explain</h3>
+<ul>
+<li><p>&#x67E5;&#x770B;&#x7D22;&#x5F15;&#xFF1A;<code>show index from mytable;</code></p>
+</li>
+<li><p><code>alter table mytable drop index key_name;</code></p>
+</li>
+</ul>
+<pre class="language-"><code class="lang-java">mysql<span class="token operator">&gt;</span> explain select a from test where a<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> table <span class="token operator">|</span> partitions <span class="token operator">|</span> type <span class="token operator">|</span> possible_keys <span class="token operator">|</span> key  <span class="token operator">|</span> key_len <span class="token operator">|</span> ref   <span class="token operator">|</span> rows <span class="token operator">|</span> filtered <span class="token operator">|</span> <span class="token class-name">Extra</span>       <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> SIMPLE      <span class="token operator">|</span> test  <span class="token operator">|</span> NULL       <span class="token operator">|</span> ref  <span class="token operator">|</span> a             <span class="token operator">|</span> a    <span class="token operator">|</span> <span class="token number">5</span>       <span class="token operator">|</span> <span class="token keyword">const</span> <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token class-name">Using</span> index <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token number">1</span> row in set<span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span> explain select a from test where b<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> table <span class="token operator">|</span> partitions <span class="token operator">|</span> type  <span class="token operator">|</span> possible_keys <span class="token operator">|</span> key  <span class="token operator">|</span> key_len <span class="token operator">|</span> ref  <span class="token operator">|</span> rows <span class="token operator">|</span> filtered <span class="token operator">|</span> <span class="token class-name">Extra</span>                    <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> SIMPLE      <span class="token operator">|</span> test  <span class="token operator">|</span> NULL       <span class="token operator">|</span> index <span class="token operator">|</span> NULL          <span class="token operator">|</span> a    <span class="token operator">|</span> <span class="token number">15</span>      <span class="token operator">|</span> NULL <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token class-name">Using</span> where<span class="token punctuation">;</span> <span class="token class-name">Using</span> index <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token number">1</span> row in set<span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<ul>
+<li>id&#xFF1A;&#x9009;&#x62E9;&#x6807;&#x8BC6;&#x7B26;</li>
+<li>select_type&#xFF1A;&#x8868;&#x793A;&#x67E5;&#x8BE2;&#x7684;&#x7C7B;&#x578B;</li>
+<li>table&#xFF1A;&#x8F93;&#x51FA;&#x7ED3;&#x679C;&#x96C6;&#x7684;&#x8868;</li>
+<li>partitions&#xFF1A;&#x5339;&#x914D;&#x7684;&#x5206;&#x533A;</li>
+<li>type&#xFF1A;&#x8868;&#x793A;&#x8868;&#x7684;&#x8FDE;&#x63A5;&#x7C7B;&#x578B;</li>
+<li>possible_keys&#xFF1A;&#x8868;&#x793A;&#x67E5;&#x8BE2;&#x65F6;&#xFF0C;&#x53EF;&#x80FD;&#x4F7F;&#x7528;&#x7684;&#x7D22;&#x5F15;</li>
+<li>key&#xFF1A;&#x8868;&#x793A;&#x5B9E;&#x9645;&#x4F7F;&#x7528;&#x7684;&#x7D22;&#x5F15;</li>
+<li>key_len&#xFF1A;&#x7D22;&#x5F15;&#x5B57;&#x6BB5;&#x7684;&#x957F;&#x5EA6;</li>
+<li>ref&#xFF1A;&#x5217;&#x4E0E;&#x7D22;&#x5F15;&#x7684;&#x6BD4;&#x8F83;</li>
+<li>rows&#xFF1A;&#x626B;&#x63CF;&#x51FA;&#x7684;&#x884C;&#x6570;(&#x4F30;&#x7B97;&#x7684;&#x884C;&#x6570;)</li>
+<li>filtered&#xFF1A;&#x6309;&#x8868;&#x6761;&#x4EF6;&#x8FC7;&#x6EE4;&#x7684;&#x884C;&#x767E;&#x5206;&#x6BD4;</li>
+<li>Extra&#xFF1A;&#x6267;&#x884C;&#x60C5;&#x51B5;&#x7684;&#x63CF;&#x8FF0;&#x548C;&#x8BF4;&#x660E;</li>
+</ul>
+<h2 id="&#x7D22;&#x5F15;&#x4F18;&#x5316;">&#x7D22;&#x5F15;&#x4F18;&#x5316;</h2>
+<h2 id="&#x5B58;&#x50A8;&#x4F18;&#x5316;">&#x5B58;&#x50A8;&#x4F18;&#x5316;</h2>
+<h2 id="&#x6570;&#x636E;&#x5E93;&#x7ED3;&#x6784;&#x4F18;&#x5316;">&#x6570;&#x636E;&#x5E93;&#x7ED3;&#x6784;&#x4F18;&#x5316;</h2>
+<h2 id="&#x786C;&#x4EF6;&#x4F18;&#x5316;&#x548C;&#x7F13;&#x5B58;">&#x786C;&#x4EF6;&#x4F18;&#x5316;&#x548C;&#x7F13;&#x5B58;</h2>
+<h2 id="&#x7D22;&#x5F15;&#x5931;&#x6548;&#xFF1F;">&#x7D22;&#x5F15;&#x5931;&#x6548;&#xFF1F;</h2>
+<h3 id="or&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;"><code>or</code>&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;</h3>
+<pre class="language-"><code class="lang-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span><span class="token keyword">user</span><span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>name<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>age<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>address<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>id<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_name<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_age<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>age<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_address<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>address<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token operator">=</span><span class="token number">19</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8mb4<span class="token punctuation">;</span>
+
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>job<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>id<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>userId<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>job<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>name<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">25</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>name_index<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token operator">=</span><span class="token number">42</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8mb4<span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5982;&#x4E0B;&#x4F1A;&#x5168;&#x8868;&#x626B;&#x63CF;</p>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">explain</span> <span class="token keyword">SELECT</span> name<span class="token punctuation">,</span>age<span class="token punctuation">,</span>address <span class="token keyword">FROM</span> <span class="token keyword">user</span> <span class="token keyword">where</span> name <span class="token operator">=</span> <span class="token string">&apos;aa&apos;</span> <span class="token operator">or</span> age<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+----------------------+------+---------+------+------+----------+-------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span> <span class="token operator">|</span> possible_keys        <span class="token operator">|</span> <span class="token keyword">key</span>  <span class="token operator">|</span> key_len <span class="token operator">|</span> ref  <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra       <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+----------------------+------+---------+------+------+----------+-------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> <span class="token keyword">user</span>  <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">ALL</span>  <span class="token operator">|</span> index_name<span class="token punctuation">,</span>index_age <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+----------------------+------+---------+------+------+----------+-------------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="like&#x6A21;&#x7CCA;&#x67E5;&#x8BE2;&#x4F1A;&#x5BFC;&#x81F4;&#x5168;&#x8868;&#x626B;&#x63CF;">like&#x6A21;&#x7CCA;&#x67E5;&#x8BE2;&#x4F1A;&#x5BFC;&#x81F4;&#x5168;&#x8868;&#x626B;&#x63CF;</h3>
+<h3 id="&#x67E5;&#x8BE2;&#x7684;&#x5217;&#x4E0A;&#x6709;&#x8FD0;&#x7B97;&#x6216;&#x8005;&#x51FD;&#x6570;&#x7684;&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;">&#x67E5;&#x8BE2;&#x7684;&#x5217;&#x4E0A;&#x6709;&#x8FD0;&#x7B97;&#x6216;&#x8005;&#x51FD;&#x6570;&#x7684;&#x5BFC;&#x81F4;&#x7684;&#x5168;&#x8868;&#x626B;&#x63CF;</h3>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">explain</span> <span class="token keyword">SELECT</span> name<span class="token punctuation">,</span>age<span class="token punctuation">,</span>address <span class="token keyword">FROM</span> <span class="token keyword">user</span> <span class="token keyword">where</span> substr<span class="token punctuation">(</span>name<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token string">&apos;aa&apos;</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span> <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>  <span class="token operator">|</span> key_len <span class="token operator">|</span> ref  <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra       <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> <span class="token keyword">user</span>  <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">ALL</span>  <span class="token operator">|</span> <span class="token boolean">NULL</span>          <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span> <span class="token keyword">explain</span> <span class="token keyword">SELECT</span> name<span class="token punctuation">,</span>age<span class="token punctuation">,</span>address <span class="token keyword">FROM</span> <span class="token keyword">user</span> <span class="token keyword">where</span> name<span class="token operator">=</span><span class="token string">&apos;aa&apos;</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------------+---------+-------+------+----------+-------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span> <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>        <span class="token operator">|</span> key_len <span class="token operator">|</span> ref   <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------------+---------+-------+------+----------+-------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> <span class="token keyword">user</span>  <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> ref  <span class="token operator">|</span> index_name    <span class="token operator">|</span> index_name <span class="token operator">|</span> <span class="token number">1023</span>    <span class="token operator">|</span> const <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>  <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------------+---------+-------+------+----------+-------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<h3 id="&#x5B57;&#x7B26;&#x4E32;&#x5217;&#xFF0C;&#x8981;&#x5728;&#x6761;&#x4EF6;&#x4E2D;&#x5C06;&#x6570;&#x636E;&#x4F7F;&#x7528;&#x5F15;&#x53F7;&#xFF0C;&#x5426;&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;">&#x5B57;&#x7B26;&#x4E32;&#x5217;&#xFF0C;&#x8981;&#x5728;&#x6761;&#x4EF6;&#x4E2D;&#x5C06;&#x6570;&#x636E;&#x4F7F;&#x7528;&#x5F15;&#x53F7;&#xFF0C;&#x5426;&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;</h3>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">explain</span> <span class="token keyword">SELECT</span> name<span class="token punctuation">,</span>age<span class="token punctuation">,</span>address <span class="token keyword">FROM</span> <span class="token keyword">user</span> <span class="token keyword">where</span> name <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span> <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>  <span class="token operator">|</span> key_len <span class="token operator">|</span> ref  <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra       <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> <span class="token keyword">user</span>  <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">ALL</span>  <span class="token operator">|</span> index_name    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token keyword">warnings</span> <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span> <span class="token keyword">explain</span> <span class="token keyword">SELECT</span> name<span class="token punctuation">,</span>age<span class="token punctuation">,</span>address <span class="token keyword">FROM</span> <span class="token keyword">user</span> <span class="token keyword">where</span> name <span class="token operator">=</span> <span class="token string">&apos;10&apos;</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------------+---------+-------+------+----------+-------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span> <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>        <span class="token operator">|</span> key_len <span class="token operator">|</span> ref   <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------------+---------+-------+------+----------+-------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> <span class="token keyword">user</span>  <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> ref  <span class="token operator">|</span> index_name    <span class="token operator">|</span> index_name <span class="token operator">|</span> <span class="token number">1023</span>    <span class="token operator">|</span> const <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>  <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+------+---------------+------------+---------+-------+------+----------+-------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<h3 id="&#x5DE6;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x53F3;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x67E5;&#x8BE2;&#x5173;&#x8054;&#x7684;&#x5B57;&#x6BB5;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x4E0D;&#x4E00;&#x6837;">&#x5DE6;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x53F3;&#x8FDE;&#x63A5;&#x67E5;&#x8BE2;&#x67E5;&#x8BE2;&#x5173;&#x8054;&#x7684;&#x5B57;&#x6BB5;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x4E0D;&#x4E00;&#x6837;</h3>
+<p>&#x8BBE;&#x7F6E;varchar&#x4E0D;&#x540C;&#x7F16;&#x7801;</p>
+<pre class="language-"><code class="lang-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>job2<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>id<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>userId<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>job<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>name<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">CHARACTER</span> <span class="token keyword">SET</span> gbk <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_name<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token operator">=</span><span class="token number">22</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8mb4<span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>explain&#x5BF9;&#x6BD4;</li>
+</ul>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">select</span> a<span class="token punctuation">.</span>name<span class="token punctuation">,</span>b<span class="token punctuation">.</span>name<span class="token punctuation">,</span>b<span class="token punctuation">.</span>job <span class="token keyword">from</span> <span class="token keyword">user</span> a <span class="token keyword">left</span> <span class="token keyword">JOIN</span> job b <span class="token keyword">ON</span> a<span class="token punctuation">.</span>name <span class="token operator">=</span>b<span class="token punctuation">.</span>name<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+-------------+------+----------+-------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span>  <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>        <span class="token operator">|</span> key_len <span class="token operator">|</span> ref         <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra       <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+-------------+------+----------+-------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> a     <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">index</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>          <span class="token operator">|</span> index_name <span class="token operator">|</span> <span class="token number">1023</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span>        <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">index</span> <span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> b     <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> ref   <span class="token operator">|</span> name_index    <span class="token operator">|</span> name_index <span class="token operator">|</span> <span class="token number">103</span>     <span class="token operator">|</span> test<span class="token punctuation">.</span>a<span class="token punctuation">.</span>name <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+-------------+------+----------+-------------+</span>
+<span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">select</span> a<span class="token punctuation">.</span>name<span class="token punctuation">,</span>b<span class="token punctuation">.</span>name<span class="token punctuation">,</span>b<span class="token punctuation">.</span>job <span class="token keyword">from</span> <span class="token keyword">user</span> a <span class="token keyword">left</span> <span class="token keyword">JOIN</span> job2 b <span class="token keyword">ON</span> a<span class="token punctuation">.</span>name <span class="token operator">=</span>b<span class="token punctuation">.</span>name<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+------+------+----------+----------------------------------------------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span>  <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>        <span class="token operator">|</span> key_len <span class="token operator">|</span> ref  <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra                                              <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+------+------+----------+----------------------------------------------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> a     <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">index</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>          <span class="token operator">|</span> index_name <span class="token operator">|</span> <span class="token number">1023</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">index</span>                                        <span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> b     <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">ALL</span>   <span class="token operator">|</span> <span class="token boolean">NULL</span>          <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token boolean">NULL</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span><span class="token punctuation">;</span> <span class="token keyword">Using</span> <span class="token keyword">join</span> buffer <span class="token punctuation">(</span>Block Nested <span class="token keyword">Loop</span><span class="token punctuation">)</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+------+------+----------+----------------------------------------------------+</span>
+<span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<p>&#x6CE8;&#xFF1A;&#x5982;&#x679C;&#x662F;&#x7528;&#x8986;&#x76D6;&#x7D22;&#x5F15;&#x7684;&#x8BDD;&#xFF0C;&#x90A3;&#x4E48;b&#x8868;&#x5C31;&#x4F1A;&#x8D70;&#x7D22;&#x5F15;&#x4E86;</p>
+<h3 id="&#x5982;&#x679C;mysql&#x4F30;&#x8BA1;&#x4F7F;&#x7528;&#x5168;&#x8868;&#x626B;&#x63CF;&#x8981;&#x6BD4;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5FEB;&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;">&#x5982;&#x679C;mysql&#x4F30;&#x8BA1;&#x4F7F;&#x7528;&#x5168;&#x8868;&#x626B;&#x63CF;&#x8981;&#x6BD4;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5FEB;,&#x5219;&#x4E0D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;</h3>
+<pre class="language-"><code class="lang-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>user3<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>name<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>age<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>address<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>id<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_name<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_age<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>age<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_address<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>address<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token operator">=</span><span class="token number">3</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8mb4<span class="token punctuation">;</span>
+<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> <span class="token punctuation">`</span>test<span class="token punctuation">`</span><span class="token punctuation">.</span><span class="token punctuation">`</span>user3<span class="token punctuation">`</span><span class="token punctuation">(</span><span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>age<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>address<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token string">&apos;&#x5149;&#x5934;&#x5F3A;&apos;</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token string">&apos;&#x72D7;&#x718A;&#x5CAD;&apos;</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> <span class="token punctuation">`</span>test<span class="token punctuation">`</span><span class="token punctuation">.</span><span class="token punctuation">`</span>user3<span class="token punctuation">`</span><span class="token punctuation">(</span><span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>age<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>address<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token string">&apos;&#x718A;&#x5927;&apos;</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token string">&apos;&#x72D7;&#x718A;&#x5CAD;2&apos;</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<pre class="language-"><code class="lang-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>job3<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>id<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>userId<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>job<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>name<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">CHARACTER</span> <span class="token keyword">SET</span> utf8mb4 <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>index_name<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token operator">=</span><span class="token number">22</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8mb4<span class="token punctuation">;</span>
+<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> <span class="token punctuation">`</span>test<span class="token punctuation">`</span><span class="token punctuation">.</span><span class="token punctuation">`</span>job3<span class="token punctuation">`</span><span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>userId<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>job<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&apos;java&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;&#x5149;&#x5934;&#x5F3A;&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> <span class="token punctuation">`</span>test<span class="token punctuation">`</span><span class="token punctuation">.</span><span class="token punctuation">`</span>job3<span class="token punctuation">`</span><span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>userId<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>job<span class="token punctuation">`</span><span class="token punctuation">,</span> <span class="token punctuation">`</span>name<span class="token punctuation">`</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">&apos;php&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;&#x718A;&#x5927;&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>&#x7531;&#x4E8E;&#x8981;&#x67E5;&#x8BE2;<code>b.name</code>&#xFF0C;mysql&#x9700;&#x8981;&#x56DE;&#x8868;&#xFF0C;mysql&#x8BA4;&#x4E3A;&#x8D70;&#x5168;&#x8868;&#x626B;&#x63CF;&#x4F1A;&#x5FEB;&#x4E00;&#x4E9B;&#xFF0C;&#x6240;&#x4EE5;&#x5373;&#x4F7F;b&#x8868;&#x7684;name&#x6709;&#x7D22;&#x5F15;&#xFF0C;&#x4E5F;&#x4E0D;&#x4F1A;&#x8D70;&#x8FD9;&#x4E2A;&#x7D22;&#x5F15;</li>
+</ul>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">select</span> a<span class="token punctuation">.</span>name<span class="token punctuation">,</span>b<span class="token punctuation">.</span>name<span class="token punctuation">,</span>b<span class="token punctuation">.</span>job <span class="token keyword">from</span> user3 a <span class="token keyword">left</span> <span class="token keyword">JOIN</span> job3 b <span class="token keyword">ON</span> a<span class="token punctuation">.</span>name <span class="token operator">=</span>b<span class="token punctuation">.</span>name<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+------+------+----------+----------------------------------------------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span> <span class="token operator">|</span> partitions <span class="token operator">|</span> <span class="token keyword">type</span>  <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>        <span class="token operator">|</span> key_len <span class="token operator">|</span> ref  <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> filtered <span class="token operator">|</span> Extra                                              <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+------+------+----------+----------------------------------------------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> a     <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">index</span> <span class="token operator">|</span> <span class="token boolean">NULL</span>          <span class="token operator">|</span> index_name <span class="token operator">|</span> <span class="token number">1023</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span>    <span class="token number">2</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">index</span>                                        <span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> b     <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token keyword">ALL</span>   <span class="token operator">|</span> index_name    <span class="token operator">|</span> <span class="token boolean">NULL</span>       <span class="token operator">|</span> <span class="token boolean">NULL</span>    <span class="token operator">|</span> <span class="token boolean">NULL</span> <span class="token operator">|</span>    <span class="token number">2</span> <span class="token operator">|</span>   <span class="token number">100.00</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span><span class="token punctuation">;</span> <span class="token keyword">Using</span> <span class="token keyword">join</span> buffer <span class="token punctuation">(</span>Block Nested <span class="token keyword">Loop</span><span class="token punctuation">)</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+-------+---------------+------------+---------+------+------+----------+----------------------------------------------------+</span>
+<span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<h3 id="&#x5982;&#x679C;&#x67E5;&#x8BE2;&#x4E2D;&#x6CA1;&#x6709;&#x7528;&#x5230;&#x8054;&#x5408;&#x7D22;&#x5F15;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BB5;&#xFF0C;&#x5219;&#x4E0D;&#x4F1A;&#x8D70;&#x7D22;&#x5F15;">&#x5982;&#x679C;&#x67E5;&#x8BE2;&#x4E2D;&#x6CA1;&#x6709;&#x7528;&#x5230;&#x8054;&#x5408;&#x7D22;&#x5F15;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BB5;&#xFF0C;&#x5219;&#x4E0D;&#x4F1A;&#x8D70;&#x7D22;&#x5F15;</h3>
+<h3 id="is-null-&#xFF0C;is-not-null-&#xFF0C;&#xFF01;-&#x662F;&#x5426;&#x8D70;&#x7D22;&#x5F15;">IS NUll &#xFF0C;IS NOT NUll &#xFF0C;&#xFF01;= &#x662F;&#x5426;&#x8D70;&#x7D22;&#x5F15;</h3>
+<p>MySQL&#x4E2D;&#x51B3;&#x5B9A;&#x4F7F;&#x4E0D;&#x4F7F;&#x7528;&#x67D0;&#x4E2A;&#x7D22;&#x5F15;&#x6267;&#x884C;&#x67E5;&#x8BE2;&#x7684;&#x4F9D;&#x636E;&#x5C31;&#x662F;&#x6210;&#x672C;&#x591F;&#x4E0D;&#x591F;&#x5C0F;&#xFF0C;&#x5982;&#x679C;null&#x503C;&#x5F88;&#x591A;&#xFF0C;&#x8FD8;&#x662F;&#x4F1A;&#x7528;&#x5230;&#x7D22;&#x5F15;&#x7684;&#x3002;</p>
+<p>&#x4E00;&#x4E2A;&#x5927;&#x6982;3&#x4E07;&#x6570;&#x636E;&#x7684;&#x8868;&#xFF0C;&#x5982;&#x679C;&#x53EA;&#x6709;10&#x591A;&#x4E2A;&#x8BB0;&#x5F55;&#x662F;null&#x503C;&#xFF0C;is null&#x8D70;&#x7D22;&#x5F15;&#xFF0C;not null&#x548C;!=&#x6CA1;&#x8D70;&#x7D22;&#x5F15;&#xFF0C;&#x5982;&#x679C;&#x5927;&#x90E8;&#x5206;&#x90FD;&#x662F;null&#x503C;&#xFF0C;&#x53EA;&#x6709;&#x90E8;&#x5206;&#x51E0;&#x6761;&#x6570;&#x636E;&#x6709;&#x503C;&#xFF0C;is null&#xFF0C;not null&#x548C;!=&#x90FD;&#x8D70;&#x7D22;&#x5F15;&#x3002;</p>
+<h2 id="mysql-&#x57FA;&#x7840;&#x8BED;&#x53E5;&#x7EC3;&#x4E60;&#xFF08;&#xFF09;">MySql &#x57FA;&#x7840;&#x8BED;&#x53E5;&#x7EC3;&#x4E60;&#xFF08;*&#xFF09;</h2>
+<h3 id="&#x5EFA;&#x7ACB;&#x8868;">&#x5EFA;&#x7ACB;&#x8868;</h3>
+<pre class="language-"><code class="lang-sql"><span class="token comment">-- &#x5EFA;&#x5B66;&#x751F;&#x4FE1;&#x606F;&#x8868;student</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>student<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>sno<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>sname<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>ssex<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>sbirthday<span class="token punctuation">`</span> <span class="token keyword">datetime</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>class<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>sno<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
+
+<span class="token comment">-- &#x521B;&#x5EFA;&#x8BFE;&#x7A0B;&#x8868;course</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>course<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>Cno<span class="token punctuation">`</span> <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">COMMENT</span> <span class="token string">&apos;&#x8BFE;&#x7A0B;&#x53F7;&#xFF08;&#x4E3B;&#x7801;&#xFF09;&apos;</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>Cname<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">COMMENT</span> <span class="token string">&apos;&#x8BFE;&#x7A0B;&#x540D;&#x79F0;&apos;</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>Tno<span class="token punctuation">`</span> <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">COMMENT</span> <span class="token string">&apos;&#x6559;&#x5DE5;&#x7F16;&#x53F7;&#xFF08;&#x5916;&#x7801;&#xFF09;&apos;</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>Cno<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
+
+<span class="token comment">-- &#x521B;&#x5EFA;&#x5206;&#x6570;&#x8868;score</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>score<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>Sno<span class="token punctuation">`</span> <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>Cno<span class="token punctuation">`</span> <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>Degree<span class="token punctuation">`</span> <span class="token keyword">decimal</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
+
+<span class="token comment">-- &#x521B;&#x5EFA;&#x6559;&#x5E08;&#x8868;teacher</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>teacher<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>tno<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>tname<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>tsex<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>tbirthday<span class="token punctuation">`</span> <span class="token keyword">datetime</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>prof<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>depart<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>tno<span class="token punctuation">`</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
+</code></pre>
+<h3 id="&#x63D2;&#x5165;&#x6570;&#x636E;">&#x63D2;&#x5165;&#x6570;&#x636E;</h3>
+<pre class="language-"><code class="lang-sql"><span class="token comment">-- &#x63D2;&#x5165;student&#x6570;&#x636E;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> student <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;108&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x66FE;&#x534E;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7537;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1977-09-01&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;95033&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> student <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x5321;&#x660E;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7537;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1975-10-02&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;95031&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> student <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;107&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x738B;&#x4E3D;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x5973;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1976-01-23&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;95033&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> student <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;101&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x674E;&#x519B;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7537;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1976-02-20&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;95033&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> student <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;109&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x738B;&#x82B3;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x5973;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1975-02-10&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;95031&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> student <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;103&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x9646;&#x541B;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7537;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1974-06-03&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;95031&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- &#x63D2;&#x5165;course&#x6570;&#x636E;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> course <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;3-105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x8BA1;&#x7B97;&#x673A;&#x5BFC;&#x8BBA;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;825&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> course <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;3-245&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;804&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> course <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;6-166&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x6570;&#x5B57;&#x7535;&#x8DEF;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;856&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> course <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;9-888&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x9AD8;&#x7B49;&#x6570;&#x5B66;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;831&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- &#x63D2;&#x5165;score&#x6570;&#x636E;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;103&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-245&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;86&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-245&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;75&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;109&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-245&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;68&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;103&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;92&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;88&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;109&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;76&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;101&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;64&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;107&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;91&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;108&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;3-105&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;78&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;101&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;6-166&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;85&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;107&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;6-166&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;79&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> score <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;108&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;6-166&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;81&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- &#x63D2;&#x5165;teacher&#x6570;&#x636E;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> teacher <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;804&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x674E;&#x8BDA;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7537;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1958-12-02&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x526F;&#x6559;&#x6388;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x8BA1;&#x7B97;&#x673A;&#x7CFB;&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> teacher <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;856&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x5F20;&#x65ED;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7537;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1969-03-12&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x8BB2;&#x5E08;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7535;&#x5B50;&#x5DE5;&#x7A0B;&#x7CFB;&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> teacher <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;825&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x738B;&#x840D;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x5973;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1972-05-05&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x52A9;&#x6559;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x8BA1;&#x7B97;&#x673A;&#x7CFB;&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> teacher <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">&apos;831&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x5218;&#x51B0;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x5973;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;1977-08-14&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x52A9;&#x6559;&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;&#x7535;&#x5B50;&#x5DE5;&#x7A0B;&#x7CFB;&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="&#x5E38;&#x89C1;sql&#x8BED;&#x53E5;&#x7EC3;&#x4E60;">&#x5E38;&#x89C1;sql&#x8BED;&#x53E5;&#x7EC3;&#x4E60;</h3>
+<h4 id="&#x67E5;&#x8BE2;score&#x8868;&#x4E2D;&#x7684;&#x6700;&#x9AD8;&#x5206;&#x7684;&#x5B66;&#x751F;&#x5B66;&#x53F7;&#x548C;&#x8BFE;&#x7A0B;&#x53F7;&#x3002;&#xFF08;&#x5B50;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x6392;&#x5E8F;&#xFF09;">&#x67E5;&#x8BE2;Score&#x8868;&#x4E2D;&#x7684;&#x6700;&#x9AD8;&#x5206;&#x7684;&#x5B66;&#x751F;&#x5B66;&#x53F7;&#x548C;&#x8BFE;&#x7A0B;&#x53F7;&#x3002;&#xFF08;&#x5B50;&#x67E5;&#x8BE2;&#x6216;&#x8005;&#x6392;&#x5E8F;&#xFF09;</h4>
+<ul>
+<li>&#x4F7F;&#x7528;&#x5B50;&#x67E5;&#x8BE2;</li>
+</ul>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">select</span> Sno<span class="token punctuation">,</span>Cno<span class="token punctuation">,</span>Degree <span class="token keyword">from</span> score <span class="token keyword">where</span> Degree <span class="token operator">&gt;=</span> <span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token function">max</span><span class="token punctuation">(</span>Degree<span class="token punctuation">)</span> <span class="token keyword">from</span> score<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">------+-------+--------+</span>
+<span class="token operator">|</span> Sno  <span class="token operator">|</span> Cno   <span class="token operator">|</span> Degree <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">------+-------+--------+</span>
+<span class="token operator">|</span> <span class="token number">103</span>  <span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">105</span> <span class="token operator">|</span>   <span class="token number">92.0</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">------+-------+--------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<ul>
+<li>score&#x964D;&#x5E8F;&#x53D6;limit 1</li>
+</ul>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">SELECT</span> sno &#x5B66;&#x751F;&#x5B66;&#x53F7;<span class="token punctuation">,</span>cno &#x8BFE;&#x7A0B;&#x53F7;<span class="token punctuation">,</span>degree &#x5206;&#x6570;
+    <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token keyword">FROM</span> score
+    <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> degree <span class="token keyword">desc</span>
+    <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token keyword">LIMIT</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">--------------+-----------+--------+</span>
+<span class="token operator">|</span> &#x5B66;&#x751F;&#x5B66;&#x53F7;     <span class="token operator">|</span> &#x8BFE;&#x7A0B;&#x53F7;    <span class="token operator">|</span> &#x5206;&#x6570;   <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">--------------+-----------+--------+</span>
+<span class="token operator">|</span> <span class="token number">103</span>          <span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">105</span>     <span class="token operator">|</span>   <span class="token number">92.0</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">--------------+-----------+--------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<h4 id="&#x67E5;&#x8BE2;&#x6BCF;&#x95E8;&#x8BFE;&#x7684;&#x5E73;&#x5747;&#x6210;&#x7EE9;">&#x67E5;&#x8BE2;&#x6BCF;&#x95E8;&#x8BFE;&#x7684;&#x5E73;&#x5747;&#x6210;&#x7EE9;</h4>
+<p>&#x9700;&#x8981;<code>group by cno</code>&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x4F7F;&#x7528;avg&#x51FD;&#x6570;</p>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">SELECT</span> cno &#x8BFE;&#x7A0B;&#x540D;&#x79F0;<span class="token punctuation">,</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token function">AVG</span><span class="token punctuation">(</span>IFNULL<span class="token punctuation">(</span>degree<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span> &#x5E73;&#x5747;&#x6210;&#x7EE9;
+    <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token keyword">FROM</span> score
+    <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> cno<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">--------------+--------------+</span>
+<span class="token operator">|</span> &#x8BFE;&#x7A0B;&#x540D;&#x79F0;     <span class="token operator">|</span> &#x5E73;&#x5747;&#x6210;&#x7EE9;     <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">--------------+--------------+</span>
+<span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">105</span>        <span class="token operator">|</span>        <span class="token number">81.50</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">245</span>        <span class="token operator">|</span>        <span class="token number">76.33</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">6</span><span class="token operator">-</span><span class="token number">166</span>        <span class="token operator">|</span>        <span class="token number">85.00</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">--------------+--------------+</span>
+<span class="token number">3</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.02</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<p>&#x6216;&#x8005;&#x4F7F;&#x7528;&#x9664;&#x6CD5;&#x5373;&#x53EF;&#xFF1A;<code>sum(degree)/count(degree)</code></p>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">SELECT</span> cno<span class="token punctuation">,</span> <span class="token function">sum</span><span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token function">count</span><span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token keyword">from</span> score <span class="token keyword">group</span> <span class="token keyword">by</span> cno<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">-------+-----------------------------+</span>
+<span class="token operator">|</span> cno   <span class="token operator">|</span> <span class="token function">sum</span><span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token function">count</span><span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">-------+-----------------------------+</span>
+<span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">105</span> <span class="token operator">|</span>                    <span class="token number">81.50000</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">245</span> <span class="token operator">|</span>                    <span class="token number">76.33333</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">6</span><span class="token operator">-</span><span class="token number">166</span> <span class="token operator">|</span>                    <span class="token number">85.00000</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">-------+-----------------------------+</span>
+<span class="token number">3</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<h4 id="&#x67E5;&#x8BE2;score&#x8868;&#x4E2D;&#x81F3;&#x5C11;&#x6709;2&#x540D;&#x5B66;&#x751F;&#x9009;&#x4FEE;&#x7684;&#x5E76;&#x4EE5;3&#x5F00;&#x5934;&#x7684;&#x8BFE;&#x7A0B;&#x7684;&#x5E73;&#x5747;&#x5206;&#x6570;">&#x67E5;&#x8BE2;Score&#x8868;&#x4E2D;&#x81F3;&#x5C11;&#x6709;2&#x540D;&#x5B66;&#x751F;&#x9009;&#x4FEE;&#x7684;&#x5E76;&#x4EE5;3&#x5F00;&#x5934;&#x7684;&#x8BFE;&#x7A0B;&#x7684;&#x5E73;&#x5747;&#x5206;&#x6570;</h4>
+<ul>
+<li>group by &amp; having&#x7684;&#x4F7F;&#x7528;</li>
+</ul>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">select</span> cno<span class="token punctuation">,</span><span class="token function">avg</span><span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token keyword">from</span> score <span class="token keyword">group</span> <span class="token keyword">by</span> cno <span class="token keyword">having</span> cno <span class="token operator">like</span> <span class="token string">&apos;3-%&apos;</span> <span class="token operator">and</span> <span class="token function">count</span><span class="token punctuation">(</span>cno<span class="token punctuation">)</span><span class="token operator">&gt;</span><span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">-------+-------------+</span>
+<span class="token operator">|</span> cno   <span class="token operator">|</span> <span class="token function">avg</span><span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">-------+-------------+</span>
+<span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">105</span> <span class="token operator">|</span>    <span class="token number">81.50000</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">3</span><span class="token operator">-</span><span class="token number">245</span> <span class="token operator">|</span>    <span class="token number">76.33333</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">-------+-------------+</span>
+<span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<h4 id="&#x67E5;&#x8BE2;&#x9009;&#x4FEE;3-105&#x8BFE;&#x7A0B;&#x7684;&#x4E14;&#x6210;&#x7EE9;&#x9AD8;&#x4E8E;109&#x53F7;&#x540C;&#x5B66;&#x6210;&#x7EE9;&#x7684;&#x6240;&#x6709;&#x540C;&#x5B66;&#x7684;&#x8BB0;&#x5F55;">&#x67E5;&#x8BE2;&#x9009;&#x4FEE;&#x201C;3-105&#x201D;&#x8BFE;&#x7A0B;&#x7684;&#x4E14;&#x6210;&#x7EE9;&#x9AD8;&#x4E8E;&#x201C;109&#x201D;&#x53F7;&#x540C;&#x5B66;&#x6210;&#x7EE9;&#x7684;&#x6240;&#x6709;&#x540C;&#x5B66;&#x7684;&#x8BB0;&#x5F55;</h4>
+<p>&#x5B50;&#x67E5;&#x8BE2;</p>
+<pre class="language-"><code class="lang-sql">mysql<span class="token operator">&gt;</span> <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> student <span class="token keyword">where</span> sno <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token keyword">select</span> sno <span class="token keyword">from</span> score <span class="token keyword">where</span> degree <span class="token operator">&gt;</span> <span class="token punctuation">(</span><span class="token keyword">select</span> degree <span class="token keyword">from</span> score <span class="token keyword">where</span> sno<span class="token operator">=</span><span class="token string">&apos;109&apos;</span> <span class="token operator">and</span> cno <span class="token operator">=</span> <span class="token string">&apos;3-105&apos;</span><span class="token punctuation">)</span> <span class="token operator">and</span> cno <span class="token operator">=</span> <span class="token string">&apos;3-105&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">-----+--------+------+---------------------+-------+</span>
+<span class="token operator">|</span> sno <span class="token operator">|</span> sname  <span class="token operator">|</span> ssex <span class="token operator">|</span> sbirthday           <span class="token operator">|</span> class <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">-----+--------+------+---------------------+-------+</span>
+<span class="token operator">|</span> <span class="token number">103</span> <span class="token operator">|</span> &#x9646;&#x541B;   <span class="token operator">|</span> &#x7537;   <span class="token operator">|</span> <span class="token number">1974</span><span class="token operator">-</span><span class="token number">06</span><span class="token operator">-</span><span class="token number">03</span> <span class="token number">00</span>:<span class="token number">00</span>:<span class="token number">00</span> <span class="token operator">|</span> <span class="token number">95031</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">105</span> <span class="token operator">|</span> &#x5321;&#x660E;   <span class="token operator">|</span> &#x7537;   <span class="token operator">|</span> <span class="token number">1975</span><span class="token operator">-</span><span class="token number">10</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">00</span>:<span class="token number">00</span>:<span class="token number">00</span> <span class="token operator">|</span> <span class="token number">95031</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">107</span> <span class="token operator">|</span> &#x738B;&#x4E3D;   <span class="token operator">|</span> &#x5973;   <span class="token operator">|</span> <span class="token number">1976</span><span class="token operator">-</span><span class="token number">01</span><span class="token operator">-</span><span class="token number">23</span> <span class="token number">00</span>:<span class="token number">00</span>:<span class="token number">00</span> <span class="token operator">|</span> <span class="token number">95033</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">108</span> <span class="token operator">|</span> &#x66FE;&#x534E;   <span class="token operator">|</span> &#x7537;   <span class="token operator">|</span> <span class="token number">1977</span><span class="token operator">-</span><span class="token number">09</span><span class="token operator">-</span><span class="token number">01</span> <span class="token number">00</span>:<span class="token number">00</span>:<span class="token number">00</span> <span class="token operator">|</span> <span class="token number">95033</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">-----+--------+------+---------------------+-------+</span>
+<span class="token number">4</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">&gt;</span>
+</code></pre>
+<p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
+2021-01-10 17:59:00
+</span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="mysql.html" class="navigation navigation-prev " aria-label="Previous page: MySQL">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="mysql_monitor.html" class="navigation navigation-next " aria-label="Next page: MySQL线上监控 & 指标">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"MySQL优化","layout":"page","date":"2020-03-08 18:00","level":"1.4.2.1","depth":3,"next":{"title":"MySQL线上监控 & 指标","level":"1.4.2.2","depth":3,"path":"content/db_cache/mysql_monitor.md","ref":"./content/db_cache/mysql_monitor.md","articles":[]},"previous":{"title":"MySQL","level":"1.4.2","depth":2,"path":"content/db_cache/mysql.md","ref":"./content/db_cache/mysql.md","articles":[{"title":"MySQL优化","level":"1.4.2.1","depth":3,"path":"content/db_cache/mysql_opt.md","ref":"./content/db_cache/mysql_opt.md","articles":[]},{"title":"MySQL线上监控 & 指标","level":"1.4.2.2","depth":3,"path":"content/db_cache/mysql_monitor.md","ref":"./content/db_cache/mysql_monitor.md","articles":[]},{"title":"MySQL & MyBatis","level":"1.4.2.3","depth":3,"path":"content/db_cache/mysql_batis.md","ref":"./content/db_cache/mysql_batis.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql_opt.md","mtime":"2021-01-10T09:59:00.050Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-01-12T13:37:21.090Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-copy-code-button/toggle.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-gittalk/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
