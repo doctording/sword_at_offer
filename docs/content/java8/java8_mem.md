@@ -81,3 +81,15 @@ Java7的`Perm space`在堆中，设置小了，容易`OutOfMemory`；设置大�
 1. <a href="http://openjdk.java.net/jeps/122">http://openjdk.java.net/jeps/122</a>
 
 2. <a href="https://blog.csdn.net/wodewutai17quiet/article/details/80746103">Java8中的metaspace</a>
+
+### 元空间溢出
+
+元空间存放什么：
+  * 虚拟机加载的类信息
+  * 常量池
+  * 静态变量
+  * 即时编译后的代码
+
+导致元空间溢出的可能原因：
+  * 大量类加载
+  * 代理，cglib导致的大量类生成

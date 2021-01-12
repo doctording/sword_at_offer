@@ -106,7 +106,7 @@ public class SynchronizedDemo {
 
 ## 基本用法
 
-`synchronized` 可用于代码块或方法进行修饰，而不能对class以及变量进行修饰, eg:
+`synchronized`成员方法，this，全局变量
 
 ```java
 public synchronized void sync(){}
@@ -209,7 +209,6 @@ public class Main {
         main.printNum();
     }
 }
-
 ```
 
 * this指代当前类的实例
@@ -471,82 +470,106 @@ T1 enter to method 1
 
 * 无法控制阻塞时长
 * 阻塞不可被中断
+* 是非公平锁
 
 ```java
-public class Main {
+import java.util.concurrent.TimeUnit;
 
-    public synchronized void syncMethod() {
-        try {
-            TimeUnit.HOURS.sleep(1);
-        } catch (InterruptedException e) {
-            e. printStackTrace();
+
+/**
+ * synchronized无法被中断，导致死锁
+ * @Author mubi
+ * @Date 2020/12/6 10:50
+ */
+public class Hello extends Thread {
+    private static final Object o1 = new Object();
+    private static final Object o2 = new Object();
+
+    public static void main(String[] args) throws InterruptedException {
+        t1.start();
+        t2.start();
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println("before interrupt");
+        t1.interrupt();
+        t2.interrupt();
+        System.out.println("end interrupt");
+        t1.join();
+        t2.join();
+    }
+
+    static Thread t1 = new Thread(() -> {
+        synchronized (o1){
+            try {
+                System.out.println("start t1");
+                TimeUnit.SECONDS.sleep(1);
+                synchronized (o2){
+                    System.out.println("t1 lock o2");
+                }
+            } catch (InterruptedException e) {
+                System.out.println("t1 interrupted");
+                e.printStackTrace();
+            }
         }
-    }
+    });
 
-    public static void main(String[] args) throws Exception{
-        Main defect=new Main();
-
-        Thread thread1 = new Thread(defect:: syncMethod,"T1");
-        // thread1 将先于 thread2 执行
-        thread1. start();
-        TimeUnit.MILLISECONDS.sleep(2);
-
-        Thread thread2 = new Thread(defect::syncMethod,"T2");
-        thread2.start();
-    }
+    static Thread t2 = new Thread(() -> {
+        synchronized (o2){
+            try {
+                System.out.println("start t2");
+                TimeUnit.SECONDS.sleep(1);
+                synchronized (o1){
+                    System.out.println("t2 lock o1");
+                }
+            } catch (InterruptedException e) {
+                System.out.println("t2 interrupted");
+                e.printStackTrace();
+            }
+        }
+    });
 }
 ```
 
-1. thread1 先执行进入同步方法，然后sleep
-2. 接着 thread2 进入同步方法，会阻塞，其获得执行权取决于 thread1 何时释放 monitor (如果thread2计划最多1分钟获得执行权，否则就放弃，使用 synchronized 无法做到)
-3. thread2 竞争 monitor 而陷入阻塞状态，那么 thread2 会无法中断（因为**synchronized 无法被打断**）
+* jstack查看出现死锁
 
 ```java
-public class Main {
+Found one Java-level deadlock:
+=============================
+"Thread-1":
+  waiting to lock monitor 0x00007fe9c7010aa8 (object 0x000000076ab751d8, a java.lang.Object),
+  which is held by "Thread-0"
+"Thread-0":
+  waiting to lock monitor 0x00007fe9c71fe408 (object 0x000000076ab751e8, a java.lang.Object),
+  which is held by "Thread-1"
 
-    public synchronized void syncMethod() {
-        try {
-            TimeUnit.HOURS.sleep(1);
-        } catch (InterruptedException e) {
-            e. printStackTrace();
-        }
-    }
+Java stack information for the threads listed above:
+===================================================
+"Thread-1":
+	at Hello.lambda$static$1(Hello.java:47)
+	- waiting to lock <0x000000076ab751d8> (a java.lang.Object)
+	- locked <0x000000076ab751e8> (a java.lang.Object)
+	at Hello$$Lambda$2/1826771953.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:748)
+"Thread-0":
+	at Hello.lambda$static$0(Hello.java:32)
+	- waiting to lock <0x000000076ab751e8> (a java.lang.Object)
+	- locked <0x000000076ab751d8> (a java.lang.Object)
+	at Hello$$Lambda$1/135721597.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:748)
 
-    public static void main(String[] args) throws Exception{
-        Main defect=new Main();
-
-        Thread thread1 = new Thread(defect:: syncMethod,"T1");
-        // thread1 将先于 thread2 执行
-        thread1. start();
-        TimeUnit.MILLISECONDS.sleep(2);
-
-        Thread thread2 = new Thread(defect::syncMethod,"T2");
-        thread2.start();
-
-        TimeUnit.MILLISECONDS.sleep(2);
-        thread2.interrupt();
-        // true
-        System.out.println(thread2.isInterrupted());
-        // BLOCKED
-        System.out.println(thread2.getState());
-        // TIMED_WAITING
-        System.out.println(thread1.getState());
-
-    }
-}
+Found 1 deadlock.
 ```
 
-`synchronized`是基于JVM层面实现的，如果一个代码块被`synchronized`修饰了，当一个线程获取了对应的锁，并执行该代码块时，其它线程便只能一直等待，等待获取锁的线程释放锁，而这里获取锁的线程释放锁会有三种情况：
+`synchronized`是基于JVM层面实现的，如果一个代码块被`synchronized`修饰了，当一个线程获取了对应的锁，并执行该代码块时，其它线程便**只能一直等待**，等待获取锁的线程释放锁，而这里获取锁的线程释放锁会有3种情况：
 
 1. 获取锁的线程执行完了该代码块，然后线程释放对锁的占有；
 2. 线程执行发生异常，此时JVM会让线程自动释放锁。
 3. wait()方法释放锁，方便其它的线程使用锁。而且被唤醒时，就在此处唤醒
 
-### synchronized 缺陷例子
+### synchronized 缺陷例子(无法实现读写锁？)
 
 当有多个线程读写文件时，`读操作和写操作`，`写操作和写操作`会发生冲突现象，但是`读操作和读操作`不会发生冲突现象。如果采用`synchronized`关键字来实现同步的话，就会导致一个问题：
 
-* 当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用`synchronized`，一个线程占用了monitor,其它线程就只能等)
+* 当一个线程在进行读操作时，其它线程只能等待无法进行读操作。(因为使用`synchronized`，一个线程占用了monitor，其它线程就只能等)
 
 参考：<a href="https://www.cnblogs.com/dolphin0520/p/3923167.html" target="_blank">lock</a>
 
@@ -556,7 +579,7 @@ public class Main {
 
 2. 尽可能把synchronized范围缩小，线程互斥是以牺牲并发度为代价的
 
-3. 尽量不要在可变引用上`wait()`和`notify()`，例如:
+3. 尽量不要在**可变引用**上`wait()`和`notify()`，例如:
 
 ```java
 synchronized (a) {
@@ -564,7 +587,7 @@ synchronized (a) {
 }
 ```
 
-若其他线程在线程1进入(1)时更改了a值，那么线程1会直接抛出一个`IllegalMonitorStateException`，表示在`a.wait()`前没有获得a的对象锁。推荐的做法还是声明一个专门用于线程同步的Object，这个Object永远不变。
+若其它线程在线程1进入(1)时更改了a值，那么线程1会直接抛出一个`IllegalMonitorStateException`，表示在`a.wait()`前没有获得a的对象锁。推荐的做法还是声明一个专门用于线程同步的Object，这个Object永远不变。
 
 ```java
 import java.util.ArrayList;
@@ -669,10 +692,10 @@ JDK早期`synchronized`直接重量级锁(操作系统层面)
 JDK1.6对`synchronized`做了优化，`synchronized`锁有一个升级的过程，升级到最后才会变成重量级锁！
 
 ```java
-                【偏向锁】
+                【偏向锁】(匿名对象)
                 /      \
 对象new出来(无锁)         \
-                \        \
+                \        \（只要有线程竞争，就会偏向-->轻量）
                   \       \
                     \      \
                       \     \
@@ -685,11 +708,15 @@ JDK1.6对`synchronized`做了优化，`synchronized`锁有一个升级的过程�
 
 偏向锁默认启动，会延迟启动(普通对象，有了偏向锁就是个匿名偏向)
 
+轻量级锁,自旋锁,无锁：指向线程栈中`Lock Record`的指针(CAS操作)
+
+重量级锁：操作系统层面，有竞争队列，等待队列(wait_set)，不需要消耗CPU，后续操作系统调度
+
 ### 为什么会有偏向锁？
 
-实践中发现：多数`sychronized方法`，在很多情况下，只有一个线程在运行，例如
+实践中发现：多数`sychronized`方法，在很多情况下，只有一个线程在运行，例如
 
-* StringBUffer中的一些sync方法
+* StringBuffer中的一些sync方法
 * Vector中的一些sync方法
 
 重量级锁没必要，不需要操作系统，直接用户态搞定
@@ -706,7 +733,7 @@ JDK1.6对`synchronized`做了优化，`synchronized`锁有一个升级的过程�
 
 ### 轻量级锁 什么时候升级为 重量级锁？
 
-JDK1.6之前：自旋次数10次；或者多个线程等待(超过CPU核心树1/2) 就会发生升级;目前是JVM自适应自旋的升级
+JDK1.6之前：自旋次数10次；或者多个线程等待(超过CPU核心数的1/2) 就会发生升级；目前是JVM自适应自旋的升级
 
 * <font color="red">轻量级锁:消耗CPU（用户态，不经过操作系统）</font>
 

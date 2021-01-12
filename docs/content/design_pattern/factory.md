@@ -56,3 +56,63 @@ eg:
 ```
 
 这样:增加一种新的plane方式,同时再新增一个plane工厂即可；原有代码不需要修改
+
+```java
+package factory;
+
+interface Phone{
+    void call();
+}
+
+class XiaoMiPhone implements Phone{
+
+    @Override
+    public void call() {
+        System.out.println("Xiaomi call");
+    }
+}
+
+class HuaweiPhone implements Phone{
+
+    @Override
+    public void call() {
+        System.out.println("Huawei call");
+    }
+}
+
+/**
+ * 抽象工厂
+ */
+interface PhoneFactory{
+    Phone genPhone();
+}
+
+class XiaomiPhoneFactory implements PhoneFactory{
+
+    @Override
+    public Phone genPhone() {
+        return new XiaoMiPhone();
+    }
+}
+
+class HuaweiPhoneFactory implements PhoneFactory{
+
+    @Override
+    public Phone genPhone() {
+        return new HuaweiPhone();
+    }
+}
+
+public class FactoryTest {
+
+    public static void main(String[] args) {
+        PhoneFactory phoneXiaomiFactory = new XiaomiPhoneFactory();
+        Phone xiaomiPhone = phoneXiaomiFactory.genPhone();
+        xiaomiPhone.call();
+
+        PhoneFactory phoneHuaweiFactory = new HuaweiPhoneFactory();
+        Phone huaweiPhone = phoneHuaweiFactory.genPhone();
+        huaweiPhone.call();
+    }
+}
+```

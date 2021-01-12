@@ -16,6 +16,12 @@ date: 2019-03-20 00:00
 
 * 饿汉：在初始化的时候，就创建了唯一的实例，不管是否需要用到。不需要自己加同步，一定产生唯一的实例。
 
+## 单例不能被new出来？
+
+<font color='red'>单例类的构造方法必须是私有的，这样确保是不能被new出来的</font>
+
+![](../../content/design_pattern/imgs/single_a.png)
+
 ## 懒汉式 + 非同步
 
 ```java
@@ -106,7 +112,7 @@ final class Singleton{
 
 创建一个变量需要：一个是申请一块内存，调用构造方法进行初始化操作，另一个是分配一个指针指向这块内存。这两个操作谁在前,谁在后呢？JVM规范并没有规定。那么就存在这么一种情况，JVM是先开辟出一块内存，然后把指针指向这块内存，最后调用构造方法进行初始化。
 
-## double-check & volatile（懒汉式）
+## double-check + volatile（实现 懒汉 且 线程安全）
 
 `volatile`止指令重排，保证顺序性
 
@@ -114,7 +120,7 @@ final class Singleton{
 private volatile static Singleton instance = null;
 ```
 
-### double check 单例模式需要 volatile 吗
+### double check 单例模式需要 volatile 吗？
 
 正确答案：需要
 
@@ -130,7 +136,7 @@ private volatile static Singleton instance = null;
 
 隐含一个对象创建的过程：(记住3步)
 
-1. 堆内存中申请了一块内存 （new指令）【半初始化状态，成员变量初始化为默认值】
+1. 堆内存中申请了一块内存（new指令）【半初始化状态，成员变量初始化为默认值】
 2. 这块内存的构造方法执行（invokespecial指令）
 3. 栈中变量建立连接到这块内存（astore_1指令）
 
@@ -155,7 +161,7 @@ final class Singleton{
 }
 ```
 
-### 回顾:什么时候需要对类进行初始化
+### 回顾：什么时候需要对类进行初始化
 
 1. 使用`new`该类实例化对象的时候
 2. 读取或设置`类静态字段`的时候（但被final修饰的字段，在编译器时就被放入常量池(static final)的静态字段除外）

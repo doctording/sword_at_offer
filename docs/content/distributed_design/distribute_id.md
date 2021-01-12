@@ -1,12 +1,12 @@
 ---
-title: "分布式Id"
+title: "分布式ID"
 layout: page
 date: 2020-06-07 00:00
 ---
 
 [TOC]
 
-# 分布式Id
+# 分布式ID
 
 ## 数据库自增ID
 
@@ -218,15 +218,16 @@ ID的生成规则完全由机器信息独立计算，不依赖任何配置信息
 
 ### snowflake算法
 
-snowflake算法的特性是有序、唯一，并且要求高性能，低延迟（每台机器每秒至少生成10k条数据，并且响应时间在2ms以内），要在分布式环境（多集群，跨机房）下使用，因此snowflake算法得到的ID是分段组成的：
+snowflake算法的特性是有序、唯一，并且要求高性能，低延迟（每台机器每秒至少生成10k条数据，并且响应时间在2ms以内），要在分布式环境（多集群，跨机房）下使用，因此snowflake算法得到的ID是分段组成的，64bit如下：
 
-* 与指定日期的时间差（毫秒级），41位，够用69年
-* 集群ID + 机器ID， 10位，最多支持1024台机器
-* 序列，12位，每台机器每毫秒内最多产生4096个序列号
+* 符号位标记，1bit
+* 与指定日期的时间差（毫秒级），41bit，够用69年
+* 集群ID + 机器ID， 10bit，最多支持1024台机器
+* 序列，12bit，每台机器每毫秒内最多产生4096个序列号
 
 ![](../../content/distributed_design/imgs/snow.png)
 
-Java简单实现：<a href='https://github.com/beyondfengyu/SnowFlake/blob/master/SnowFlake.java' target='_blank'>snowflake算法</a>
+Java简单实现：<a href='https://github.com/beyondfengyu/SnowFlake/blob/master/SnowFlake.java' target='_blank'>snow flake算法</a>
 
 优点：
 * 毫秒数在高位，自增序列在低位，整个ID都是趋势递增的。

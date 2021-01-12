@@ -48,7 +48,7 @@ CAP理论指的是一个分布式系统最多只能同时满足一致性（Consi
 
 两阶段提交协议（two phase commit protocol，2PC）可以保证数据的强一致性，许多分布式关系型数据管理系统采用此协议来完成分布式事务。它是协调所有分布式原子事务参与者，并决定提交或取消（回滚）的分布式算法。同时也是解决一致性问题的一致性算法。该算法能够解决很多的临时性系统故障（包括进程、网络节点、通信等故障），被广泛地使用。
 
-### 系统组件
+### 2PC系统组件
 
 1. 协调者coordinator，通常一个系统中只有一个
 2. 事务参与者 participants，cohorts或workers，一般包含多个
@@ -58,7 +58,7 @@ CAP理论指的是一个分布式系统最多只能同时满足一致性（Consi
 1. 阶段1：请求阶段（commit-request phase，或称表决阶段，voting phase）
     * 在请求阶段，协调者将通知事务参与者准备提交或取消事务，然后进入表决过程。在表决过程中，参与者将告知协调者自己的决策：同意（事务参与者本地作业执行成功）或取消（本地作业执行故障）。
 2. 阶段2：提交阶段（commit phase）
-    * 在该阶段，协调者将基于第一个阶段的投票结果进行决策：提交或取消。当且仅当所有的参与者同意提交事务协调者才通知所有的参与者提交事务，否则协调者将通知所有的参与者取消事务。参与者在接收到协调者发来的消息后将执行响应的操作。
+    * 在该阶段，协调者将基于第一个阶段的投票结果进行决策：提交或取消。当且仅当所有的参与者同意提交事务协调者才通知所有的参与者提交事务，否则协调者将通知所有的参与者取消事务。参与者在接收到协调者发来的消息后将执行相应的提交或取消操作。
 
 例子说明：A将成为该活动的协调者，B、C和D将成为该活动的参与者。
 
@@ -69,9 +69,9 @@ CAP理论指的是一个分布式系统最多只能同时满足一致性（Consi
     * 此时A收到了所有活动参与者的邮件，并且A发现D下周三不能去爬山。那么A将发邮件通知B、C和D，下周三爬长城活动取消。
     * 此时B、C回复A“太可惜了”，D回复A“不好意思”。至此该事务终止。
 
-### 缺点
+### 2PC缺点
 
-1. 同步阻塞：最大的问题即同步阻塞，即：所有参与事务的逻辑均处于阻塞状态。
+1. 同步阻塞：最大的问题即同步阻塞，即所有参与事务的逻辑均处于阻塞状态。
 2. 单点：协调者存在单点问题，如果协调者出现故障，参与者将一直处于锁定状态。
 3. 脑裂：在阶段2中，如果只有部分参与者接收并执行了Commit请求，会导致节点数据不一致。
 
@@ -79,12 +79,15 @@ CAP理论指的是一个分布式系统最多只能同时满足一致性（Consi
 
 3PC，三阶段提交协议，是2PC的改进版本；协调者、参与者都引入了超时机制；三阶段 CanCommit、PreCommit（其中一个超时或者执行失败，则发起中断）和doCommit
 
+优缺点：降低了参与者同步阻塞范围，但是又引入了数据不一致性问题（若出现网络分区）、单点问题依然存在；
+
+![](../db_cache/imgs/tcc.png)
+
 ### 三阶段执行过程
 
 1. CanCommit阶段
 
-3PC的CanCommit阶段其实和2PC的准备阶段很像。
-协调者向参与者发送commit请求，参与者如果可以提交就返回Yes响应，否则返回No响应。
+3PC的CanCommit阶段其实和2PC的准备阶段很像：协调者向参与者发送commit请求，参与者如果可以提交就返回Yes响应，否则返回No响应。
 
 2. PreCommit阶段
 
@@ -124,7 +127,7 @@ Coordinator没有接收到Cohort发送的ACK响应（可能是接受者发送的
 * Commit <---> confirm : 确认执行业务操作
 * Rollback <---> cancel : 取消执行业务操作
 
-例子说明: A,B,C三个账户事务(A：-30，B：-50，C：+80)
+例子1说明: A,B,C三个账户事务(A：-30，B：-50，C：+80)
 
 1. Try：尝试执行业务
     * 完成所有业务检查(一致性)：检查A、B、C的帐户状态是否正常，帐户A的余额是否不少于30元，帐户B的余额是否不少于50元。
@@ -135,6 +138,18 @@ Coordinator没有接收到Cohort发送的ACK响应（可能是接受者发送的
     * 只使用Try阶段预留的业务资源：只需要使用Try阶段帐户A和帐户B冻结的金额即可。
 3. Cancel：取消执行业务
     * 释放Try阶段预留的业务资源：如果Try阶段部分成功，比如帐户A的余额够用，且冻结相应金额成功，帐户B的余额不够而冻结失败，则需要对帐户A做Cancel操作，将帐户A被冻结的金额解冻掉。
+
+例子2: 银行转账
+
+* A扣钱对应服务A(ServiceA)
+* B加钱对应服务B(ServiceB)
+* 转账订单服务(OrderService)
+
+x | ServiceA | ServiceB | OrderService
+:---:|:---:|:---:|:---:
+try() |校验余额(并发控制);冻结余额+1000;余额-1000 | 冻结余额+1000 | 创建转账订单，状态待转账
+confirm() | 冻结余额-1000;余额+1000;冻结余额-1000 | 状态变为转账成功
+cancle() | 冻结余额-1000;余额+1000|冻结余额-1000 | 状态变为转账失败
 
 ## seata
 
@@ -150,9 +165,9 @@ We say, a Distributed Transaction is a **Global Transaction** which is made up w
 
 ### There are 3 basic components in Seata
 
-1. **Transaction Coordinator(TC)**: Maintain status of global and branch transactions, drive the global commit or rollback.
-2. **Transaction Manager(TM)**: Define the scope of global transaction: begin a global transaction, commit or rollback a global transaction.
-3. **Resource Manager(RM)**: Manage resources that branch transactions working on, talk to TC for registering branch transactions and reporting status of branch transactions, and drive the branch transaction commit or rollback.
+1. **Transaction Coordinator(TC)**: Maintain status of global and branch transactions, drive the global commit or rollback.（事务协调器，维护全局事务的运行状态，负责协调并驱动全局事务的提交或回滚）
+2. **Transaction Manager(TM)**: Define the scope of global transaction: begin a global transaction, commit or rollback a global transaction.（控制全局事务的边界，负责开启一个全局事务，并最终发起全局提交或全局回滚的决议）
+3. **Resource Manager(RM)**: Manage resources that branch transactions working on, talk to TC for registering branch transactions and reporting status of branch transactions, and drive the branch transaction commit or rollback.（控制分支事务，负责分支注册、状态汇报，并接收事务协调器的指令，驱动分支（本地）事务的提交和回滚。）
 
 A typical lifecycle of Seata managed distributed transaction:
 
@@ -161,5 +176,13 @@ A typical lifecycle of Seata managed distributed transaction:
 3. RM register local transaction as a branch of the corresponding global transaction of XID to TC.
 4. TM asks TC for committing or rollbacking the corresponding global transaction of XID.
 5. TC drives all branch transactions under the corresponding global transaction of XID to finish branch committing or rollbacking.
+
+1. TM 向 TC 申请开启一个全局事务，全局事务创建成功并生成一个全局唯一的 XID
+2. XID 在微服务调用链路的上下文中传播
+3. RM 向 TC 注册分支事务，接着执行这个分支事务并提交（重点：RM在第一阶段就已经执行了本地事务的提交/回滚），最后将执行结果汇报给TC
+4. TM 根据 TC 中所有的分支事务的执行情况，发起全局提交或回滚决议
+5. TC 调度 XID 下管辖的全部分支事务完成提交或回滚请求
+
+如下图，其中，TM是一个分布式事务的发起者和终结者，TC负责维护分布式事务的运行状态，而RM则负责本地事务的运行。
 
 ![](../../content/distributed_design/imgs/seata.png)

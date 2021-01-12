@@ -150,7 +150,7 @@ public ThreadPoolExecutor(int corePoolSize,
 
 * `maximumPoolSize`: 指定了线程池中的最大线程数量，这个参数会根据你使用的workQueue任务队列的类型，决定线程池会开辟的最大线程数量
 
-* `keepAliveTime`: 当线程池中空闲线程数量超过corePoolSize时，多余的线程会在多长时间内被销毁；
+* `keepAliveTime`: 线程存活时间(在`corePoolSize<*<maximumPoolSize`情况下有用)；超过`corePoolSize`的多余的线程会在多长时间内被销毁；
 
 * `unit`: keepAliveTime的单位
 
@@ -171,7 +171,7 @@ public ThreadPoolExecutor(int corePoolSize,
 
 2、如果当前线程池的线程数大于或等于核心大小(poolSize >= corePoolSize) 且任务队列未满时，就将新提交的任务提交到阻塞队列排队，等候处理workQueue.offer(command)；
 
-3、如果当前线程池的线程数大于或等于核心大小(poolSize >= corePoolSize) 且任务队列满时；
+3、如果任务队列满(先是队列满，然后是判断最大线程数有没有达到)且当前线程池的线程数大于或等于核心大小(poolSize >= corePoolSize)时；
 
     3.1、当前poolSize<maximumPoolSize，那么就新增线程来处理任务；
 
@@ -180,11 +180,11 @@ public ThreadPoolExecutor(int corePoolSize,
 
 ## 拒绝策略
 
-线程池的拒绝策略:是指<font color='red'>当任务添加到线程池中被拒绝而采取的处理措施</font>
+**线程池的拒绝策略**是指<font color='red'>当任务添加到线程池中被拒绝而采取的处理措施</font>
 
 ### 线程添加到线程池中被拒绝的原因
 
-当任务添加到线程池中之所以被拒绝，可能是由于：第一线程池异常关闭。第二，任务数量超过线程池的最大限制,并设置有界的`workeQueue`
+当任务添加到线程池中之所以被拒绝，可能是由于：第一线程池异常关闭；第二，任务数量超过线程池的最大限制,并设置有界的`workeQueue`
 
 ### 常见的几种拒绝策略
 
@@ -278,9 +278,20 @@ A pool that is no longer referenced in a program and has no remaining threads wi
 
 如果程序中不再持有线程池的引用，并且线程池中没有线程时，线程池将会自动关闭。
 
-注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡。然而我们常用的`FixedThreadPool`的核心线程没有超时策略，所以并不会自动关闭。</small>
+注：<small>线程池中没有线程是指线程池中的所有线程都已运行完自动消亡，然而我们常用的`FixedThreadPool`的核心线程没有超时策略，所以并不会自动关闭。</small>
 
-#### 固定线程池
+#### newFixedThreadPool
+
+创建一个可重用固定线程数的线程池，以共享的无界队列方式来运行这些线程
+
+```java
+// 核心和最大线程数都是固定数，使用`LinkedBlockingQueue`队列
+public static ExecutorService newFixedThreadPool(int nThreads) {
+        return new ThreadPoolExecutor(nThreads, nThreads,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>());
+    }
+```
 
 ```java
 static void testFixPool(){
@@ -335,7 +346,123 @@ public static void main(String[] args){
 }
 ```
 
-* CachedThreadPool 的线程 keepAliveTime 默认为 60s ，核心线程数量为 0 ，所以不会有核心线程存活阻止线程池自动关闭。 详见 线程池之ThreadPoolExecutor构造 ；为了更快的模拟，构造后将 keepAliveTime 修改为1纳秒，相当于线程执行完马上会消亡，所以线程池可以被回收。实际开发中，如果CachedThreadPool确实忘记关闭，在一定时间后是可以被回收的。但仍然建议显示关闭。
+* 创建一个可根据需要创建新线程的线程池，但是在以前构造的线程可用时将重用它们，并在需要时使用提供的 ThreadFactory 创建新线程
+* 线程池中数量没有固定，可达到最大值（Interger. MAX_VALUE）
+* CachedThreadPool 的线程 keepAliveTime 默认为 60s，核心线程数量为 0 ，所以不会有核心线程存活阻止线程池自动关闭。详见 线程池之ThreadPoolExecutor构造；为了更快的模拟，构造后将 keepAliveTime 修改为1纳秒，相当于线程执行完马上会消亡，所以线程池可以被回收。实际开发中，如果CachedThreadPool确实忘记关闭，在一定时间后是可以被回收的，但仍然建议显示关闭。
+
+```java
+// 核心线程数为0，每次都必须新建线程，无法线程复用（空闲后会在60s后销毁)
+// SynchronousQueue没有容量，是无缓冲等待队列，是一个不存储元素的阻塞队列，会直接将任务交给消费者，必须等队列中的添加元素被消费后才能继续添加新的元素。
+public static ExecutorService newCachedThreadPool() {
+        return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                                      60L, TimeUnit.SECONDS,
+                                      new SynchronousQueue<Runnable>());
+    }
+```
+
+#### newSingleThreadExecutor 单一无界顺序线程
+
+作用：创建一个使用单个 worker 线程的 Executor，以无界队列方式来运行该线程。（注意，如果因为在关闭前的执行期间出现失败而终止了此单个线程，那么如果需要，一个新线程将代替它执行后续的任务）。可保证顺序地执行各个任务，并且在任意给定的时间不会有多个线程是活动的。
+
+```java
+// 核心，最大线程数都是1，使用`LinkedBlockingQueue`阻塞无界(这里指队列大小是Integer.MAX_VALUE)队列
+public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
+        return new FinalizableDelegatedExecutorService
+            (new ThreadPoolExecutor(1, 1,
+                                    0L, TimeUnit.MILLISECONDS,
+                                    new LinkedBlockingQueue<Runnable>(),
+                                    threadFactory));
+    }
+```
+
+#### newScheduleThreadPool 延时/定期调度线程池
+
+作用：创建一个线程池，它可安排在给定延迟后运行命令或者定期地执行。
+
+特征：
+    * 线程池中具有指定数量的线程，即便是空线程也将保留
+    * 可定时或者延迟执行线程活动
+
+创建方式：
+    * Executors.newScheduledThreadPool(int corePoolSize)；// corePoolSize线程的个数
+    * newScheduledThreadPool(int corePoolSize, ThreadFactory threadFactory)；// corePoolSize线程的个数，threadFactory创建线程的工厂
+
+#### newSingleThreadScheduledExecutor
+
+作用：创建一个单线程执行程序，它可安排在给定延迟后运行命令或者定期地执行。
+
+特征：
+    * 线程池中最多执行1个线程，之后提交的线程活动将会排在队列中以此执行
+    * 可定时或者延迟执行线程活动
+
+创建方式：
+    * Executors.newSingleThreadScheduledExecutor() ；
+    * Executors.newSingleThreadScheduledExecutor(ThreadFactory threadFactory) ；//threadFactory创建线程的工厂
+
+代码例子eg:
+
+```java
+public class HookTest {
+
+    static volatile boolean flag = true;
+
+    static AtomicInteger i = new AtomicInteger(0);
+
+    static ScheduledExecutorService service;
+
+    public static void main(String[] args) throws Exception{
+
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    int curVal = i.get();
+                    System.out.println(curVal + "：" + flag);
+                    if(curVal >= 10){
+                        flag = false;
+                    }else {
+                        i.addAndGet(1);
+                    }
+                } catch (Exception e) {
+                    System.out.println("发生异常");
+                }
+
+            }
+        };
+
+        service = Executors.newSingleThreadScheduledExecutor();
+        // TimeUnit.SECONDS 延时单位为秒
+        service.scheduleAtFixedRate(runnable, 0, 1, TimeUnit.SECONDS);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (flag) {
+
+                }
+                service.shutdown();
+                System.out.println("end:" + flag);
+            }
+        }).start();
+    }
+
+}
+/*
+0：true
+1：true
+2：true
+3：true
+4：true
+5：true
+6：true
+7：true
+8：true
+9：true
+10：true
+end:false
+*/
+```
 
 #### 线程池`shutdown`，`shutdownNow`
 

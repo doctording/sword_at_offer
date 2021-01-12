@@ -12,7 +12,7 @@ date: 2018-11-24 00:00
 
 * String是个`Final`类
 
-Final类的对象是只读的，可以在多线程环境下安全的共享，不用额外的同步开销等。
+Final类的对象是只读的，可以在多线程环境下安全的共享，不用额外的同步开销等。<font color='red'>安全、高效</a>
 
 ```java
 public final class String
@@ -46,7 +46,7 @@ public final class String
     }
 ```
 
-* charAt方法,throw `StringIndexOutOfBoundsException`
+* charAt方法，throw `StringIndexOutOfBoundsException`
 
 ```java
 public char charAt(int index) {
@@ -169,6 +169,17 @@ public String concat(String str) {
 }
 ```
 
+### split方法
+
+```java
+String s = "aa.a..ccc.b"; // "aa" "a" "" "ccc" "b"
+String[] arr = s.split("\\.");// `.`必须转义, 如果连续`.`,则会split空格出来
+System.out.println(arr);
+```
+
+* 根据java指定的字符，分割字符串的方法是：String temp[]=result.split(",");
+* "."和"|"都是转义字符，必须得加"\\";
+
 ## new String("xx") 和 = "xx"的区别
 
 ```java
@@ -222,7 +233,7 @@ public class Main {
 1. 如果String常量池中，已经创建了"xyz"，则不会继续创建，此时只创建了一个对象new String("xyz")；
 2. 如果String常量池中，没有创建"xyz"，则会创建两个对象：一个对象是常量池中的"xyz"，一个对象是堆中new String("xyz")。
 
-## StringBuffer
+## StringBuffer（synchronized修饰）
 
 final类，继承了`AbstractStringBuilder`
 
@@ -400,7 +411,17 @@ static void testStringBuilderAdd(){
 }
 ```
 
+### reverse方法
+
+```java
+StringBuilder sb = new StringBuilder("abc");
+String revSb = sb.reverse().toString();
+System.out.println(revSb); // cba
+```
+
 ## Java String类为什么是final的？
+
+* value，offset和count这三个变量都是private的，并且没有提供setValue， setOffset和setCount等公共方法来修改这些值，所以在String类的外部无法修改String
 
 1. 为了实现字符串池
 
@@ -408,8 +429,20 @@ static void testStringBuilderAdd(){
 
 2. 为了安全 & 线程安全
 
-final不可变,安全
+final不可变，确保线程安全
 
 3. 为了实现String可以创建HashCode不可变性，提高效率
 
 因为字符串是不可变的，所以在它创建的时候HashCode就被缓存了，不需要重新计算。这就使得字符串很适合作为Map中的键，字符串的处理速度要快过其它的键对象。这就是HashMap中的键往往都使用字符串。
+
+## final的底层JVM实现
+
+对于final域，编译器和处理器要遵守两个重排序规则：
+
+1. 在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序。
+
+（先写入final变量，后调用该对象引用）；原因：编译器会在final域的写之后，插入一个`StoreStore`屏障
+
+2. 初次读一个包含final域的对象的引用，与随后初次读这个final域，这两个操作之间不能重排序。
+
+（先读对象的引用，后读final变量）；编译器会在读final域操作的前面插入一个`LoadLoad`屏障

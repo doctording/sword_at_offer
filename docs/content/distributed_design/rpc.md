@@ -10,6 +10,16 @@ date: 2020-05-18 00:00
 
 Remote Procedure Call (RPC) is a powerful technique for constructing distributed, client-server based applications. It is based on extending the conventional local procedure calling so that the called procedure need not exist in the same address space as the calling procedure. The two processes may be on the same system, or they may be on different systems with a network connecting them.
 
+## rpc架构
+
+![](../../content/distributed_design/imgs/rpc_frame.png)
+
+* 客户端(Client)：服务调用方
+* 客户端存根(Client Stub)：存放服务端地址信息，将客户端的请求参数数据信息打包成网络消息（序列化），再通过网络传输发送给服务端
+* Network Service：底层传输，可以是 TCP 或 HTTP，或其它网络协议
+* 服务端存根(Server Stub)：接收客户端发送过来的请求消息并进行解包（反序列化），然后再调用本地服务进行处理
+* 服务端(Server)：服务的真正提供者
+
 ## rpc 问题引入
 
 两台不同的主机进程要进行通信？
@@ -263,7 +273,7 @@ public class Stub {
 
 ## 反射 + 动态代理
 
-既然服务端 和 客户端都知道约定的方法，那么 Stub 直接把调用传递的方法，参数什么的直接给服务端；服务端通过反射执行，把结果返回给 Stub 就行了; Stub 把服务端执行的service类代理给客户端；
+既然服务端 和 客户端都知道约定的方法，那么 Stub 直接把调用传递的方法，参数什么的直接给服务端；服务端通过反射执行，把结果返回给 Stub 就行了；Stub 把服务端执行的service类代理给客户端；
 
 这样：客户端的调用，就很简单：得到service对象，直接调用service的方法就好了；service增加方法，客户端也是直接调用
 
@@ -944,7 +954,7 @@ RPC多用于服务器集群间的通信
 
 ![](../../content/distributed_design/imgs/rpc.png)
 
-## 为什么需要服务注册与发现
+### 为什么需要服务注册与发现
 
 随着服务数量的增多，各个服务之间的调用变得错综复杂，一个服务可能依赖外部多个服务，当一个服务的域名或IP地址改变了之后如何通知依赖方，或者依赖方如何快速的发现服务提供方的地址变化。
 
@@ -983,3 +993,9 @@ The server‑side discovery pattern has several benefits and drawbacks. One grea
 #### 服务注册中心（Service Registry）
 
 It is a database containing the network locations of service instances. A service registry needs to be highly available and up to date. Clients can cache network locations obtained from the service registry. However, that information eventually becomes out of date and clients become unable to discover service instances. Consequently, a service registry consists of a cluster of servers that use a replication protocol to maintain consistency.
+
+## 附：dubbo架构
+
+![](../../content/distributed_design/imgs/dubbo_frame.png)
+
+![](../../content/distributed_design/imgs/dubbo.png)

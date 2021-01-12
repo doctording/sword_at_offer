@@ -1,5 +1,5 @@
 ---
-title: "CAS(Conmpare And Swap/Exchange) & unsafe"
+title: "CAS(Conmpare And Swap/Exchange) & 原子变量"
 layout: page
 date: 2019-03-24 00:00
 ---
@@ -40,11 +40,48 @@ CAS通过调用JNI(java native interface)的代码来操作底层指令来实现
 
 （取出内存中某时刻的数据并在当下时刻比较并替换，那么在这个时间差异类会导致数据的变化，内存是变化过的，有中间这个过程）
 
-2. 自旋问题。循环时间长开销大:自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。如果JVM能支持处理器提供的pause指令那么效率会有一定的提升，pause指令有两个作用，第一:它可以延迟流水线执行指令（de-pipeline）,使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零。第二:它可以避免在退出循环的时候因内存顺序冲突（memory order violation）而引起CPU流水线被清空（CPU pipeline flush），从而提高CPU的执行效率
+2. 自旋问题。循环时间长开销大:自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。如果JVM能支持处理器提供的pause指令那么效率会有一定的提升，pause指令有两个作用，第一:它可以延迟流水线执行指令（de-pipeline），使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零。第二:它可以避免在退出循环的时候因内存顺序冲突（memory order violation）而引起CPU流水线被清空（CPU pipeline flush），从而提高CPU的执行效率
 
 3. 只能保证一个共享变量的原子操作。当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁，或者有一个取巧的办法，就是把多个共享变量合并成一个共享变量来操作。比如有两个共享变量i＝2,j=a，合并一下ij=2a，然后用CAS来操作ij。从Java1.5开始JDK提供了AtomicReference类来保证引用对象之间的原子性，你可以把多个变量放在一个对象里来进行CAS操作
 
-## AtomicInteger 使用 CAS
+4. 不公平的锁机制：处于阻塞状态的线程，无法立即竞争被释放的锁；而处于自旋状态的线程，很有可能优先获得锁。即CAS无法实现公平锁机制，而Lock体系可以。
+
+## AtomicInteger 使用 volatile + CAS（保证线程安全）
+
+AtomicInteger内部维持着一个`volatile`的全局变量，且各方法是基于`CAS`操作，确保是线程安全的
+
+```java
+public class AtomicInteger extends Number implements java.io.Serializable {
+    private static final long serialVersionUID = 6214790243416807050L;
+
+    // setup to use Unsafe.compareAndSwapInt for updates
+    private static final Unsafe unsafe = Unsafe.getUnsafe();
+    private static final long valueOffset;
+
+    static {
+        try {
+            valueOffset = unsafe.objectFieldOffset
+                (AtomicInteger.class.getDeclaredField("value"));
+        } catch (Exception ex) { throw new Error(ex); }
+    }
+
+    private volatile int value;
+
+    /**
+     * Creates a new AtomicInteger with the given initial value.
+     *
+     * @param initialValue the initial value
+     */
+    public AtomicInteger(int initialValue) {
+        value = initialValue;
+    }
+
+    /**
+     * Creates a new AtomicInteger with initial value {@code 0}.
+     */
+    public AtomicInteger() {
+    }
+```
 
 ### volatile 非原子性
 
@@ -111,8 +148,8 @@ public class Main {
 
     static SimpleDateFormat ft = new SimpleDateFormat ("yyyy.MM.dd HH:mm:ss SSS");
 
-    public  static int num = 0;
-    public  static AtomicInteger atomicInteger = new AtomicInteger(0);
+    public static int num = 0;
+    public static AtomicInteger atomicInteger = new AtomicInteger(0);
     public static void atomicAdd() {
         atomicInteger.incrementAndGet();
     }
@@ -470,6 +507,6 @@ t1 true 3
 t2 false 3
 ```
 
-t1,t2某时候同一版本
+t1，t2某时候同一版本
 然后t1执行 A->B->A, 不过加上了版本
 然后t2判断是有版本变更的，所以CAS操作失败

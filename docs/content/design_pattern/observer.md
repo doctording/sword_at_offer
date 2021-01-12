@@ -8,15 +8,13 @@ date: 2019-03-20 00:00
 
 # 观察者模式
 
-观察者模式使用三个类: Subject(被观察的主体)、Observer(观察者) 和 Client
+观察者模式使用三个类: Subject(被观察的主体)、Observer(观察者) 和 测试类
 
-Subject的操作会通知所有注册的Observer,Subject可以添加删除Observer
+Subject的操作会通知所有注册的Observer，Subject可以添加删除Observer
 
 * Subject
 
 ```java
-package design;
-
 import java.util.List;
 import java.util.Vector;
 
@@ -56,9 +54,7 @@ public class Subject {
 
 * Observer 抽象类
 
-```java
-package design;
-
+``` java
 /**
  * @Author mubi
  * @Date 2020/6/17 09:27
@@ -73,8 +69,6 @@ public abstract class Observer {
 * 具体的Observer类
 
 ```java
-package design;
-
 /**
  * @Author mubi
  * @Date 2020/6/17 09:27
@@ -93,8 +87,6 @@ public class BinaryObserver extends Observer {
 ```
 
 ```java
-package design;
-
 /**
  * @Author mubi
  * @Date 2020/6/17 09:28
@@ -115,8 +107,6 @@ public class OctalObserver extends Observer {
 * 测试
 
 ```java
-package design;
-
 /**
  * @Author mubi
  * @Date 2020/6/17 09:32
@@ -155,5 +145,5 @@ Octal String: 12
 Binary String: 1100
 Octal String: 14
 
-Octal String: 15 // 此前删除了 BinaryObserver
+Octal String: 15 // 因为此前删除了 BinaryObserver
 ```

@@ -10,6 +10,8 @@ date: 2020-05-19 00:00
 
 LongAdder内部将一个long分成多个cell，每个线程可以对一个cell操作，如果需要取出long数据则求和即可，这样增强了在高并发情况下的效率
 
+![](../../content/java_thread_concurrent/imgs/longAdder.jpg)
+
 ```java
 /**
  * One or more variables that together maintain an initially zero
@@ -45,7 +47,7 @@ LongAdder内部将一个long分成多个cell，每个线程可以对一个cell�
 
 ### Cell 对象(`Striped64`类的静态内部类)
 
-* 使用了`@sun.misc.Contended`注解(**缓存行**使用,解决伪共享)
+* 使用了`@sun.misc.Contended`注解(**缓存行**使用,解决**伪共享**问题)
 
 ```java
 /**

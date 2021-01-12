@@ -191,10 +191,9 @@ redis get结果会是最终的`70`
 
 ![](../../content/distributed_design/imgs/lock-06.png)
 
-问题：
-
-1. 超时时间是个问题：业务时常不确定
-2. 其它线程可能删除别的线程的锁
+机器宕机可能finally释放锁失败，所以必须为redis key设置一个过期时间，但是设置的过期时间是多少是个问题？
+* 超时时间是个问题：因为业务时长不确定的；如果设置短了而业务执行很长，那么会由于过期时间删除了可以，那么锁会被其它业务线程给抢了
+* 其它线程可能删除别的线程的锁，因为锁没有什么标记
 
 * 改进1
 
@@ -226,17 +225,16 @@ public String deductStockLock() throws Exception {
 }
 ```
 
-* 超时不够，不断的定时设置，给锁续命
-
-开启线程，每隔一段时间，判断锁还在不在，然后重新设置过期时间
+* 过期时间短不够的问题：<font color='red'>可以不断的定时设置，给锁续命: 看门狗</font>；开启新线程，每隔一段时间，判断锁还在不在，然后重新设置过期时间
+* set key,value的时候，value设置为当前线程id，然后删除的时候判断下，确保删除正确
 
 #### 附：redis命令和分布式锁
 
 1. setnx（SET if Not eXists）
 
-2. EXPIRE key seconds：设置key 的生存时间,当key过期(生存时间为0),会自动删除
+2. EXPIRE key seconds：设置key 的生存时间，当key过期(生存时间为0)，会自动删除
 
-如下，一个原子操作设置key:value,并设置10秒的超时
+如下，一个原子操作设置key:value，并设置10秒的超时
 
 ![](../../content/distributed_design/imgs/redis_setnx.png)
 
@@ -300,11 +298,33 @@ public String deductStockRedisson() throws Exception {
 * key设置成功默认30s，则有后台线程每10秒(1/3的原始过期时间定时检查)检查判断，延长过期时间
 * 未获取到锁的线程会自旋，直到那个获取到锁的线程将锁释放
 
+###### 实现可重入锁
+
+value中多存储全局信息，可重入次数相关信息
+
+```java
+{
+    "count":1,
+    "expireAt":147506817232,
+    "jvmPid":22224, // jvm进程ID
+    "mac":"28-D2-44-0E-0D-9A", // MAC地址
+    "threadId":14 // 线程Id
+}
+```
+
+###### redis分布式锁的问题？
+
+Redis分布式锁会有个缺陷，就是在Redis哨兵模式下:
+
+`客户端1`对某个master节点写入了redisson锁，此时会异步复制给对应的slave节点。但是这个过程中一旦发生master节点宕机，主备切换，slave节点从变为了master节点（但是锁信息是没有的）。这时`客户端2`来尝试加锁的时候，在新的master节点上也能加锁，此时就会导致多个客户端对同一个分布式锁完成了加锁。
+
+这时系统在业务语义上一定会出现问题，导致各种脏数据的产生。缺陷在哨兵模式或者主从模式下，如果master实例宕机的时候，可能导致多个客户端同时完成加锁。
+
 ###### redis主从架构问题？
 
 补充知识：redis单机qps支持：10w级别
 
-redis主从架构是主同步到从，如果`主`设置key成功，但是同步到`从`还没结束，就挂了；这样`从`成为主，但是是没有key存在的，那么另一个线程又能够加锁成功。（<font color='red'>redis主从架构锁失效问题？</font>）
+redis主从架构是主同步到从，如果`主`设置key成功，但是同步到`从`还没结束就挂了；这样`从`成为主，但是是没有key存在的，那么另一个线程又能够加锁成功。(<font color='red'>redis主从架构锁失效问题？</font>)
 
 redis无法保证强一致性？zookeeper解决，但是zk性能不如redis
 
@@ -331,7 +351,7 @@ redis无法保证强一致性？zookeeper解决，但是zk性能不如redis
 
 2. EPHEMERAL-临时节点
 
-临时节点的生命周期与客户端会话绑定，一旦客户端会话失效（客户端与zookeeper 连接断开不一定会话失效），那么这个客户端创建的所有临时节点都会被移除。
+临时节点的生命周期与客户端会话绑定，一旦客户端会话失效（客户端与zookeeper连接断开不一定会话失效），那么这个客户端创建的所有临时节点都会被移除。
 
 3. PERSISTENT_SEQUENTIAL-持久顺序节点
 
@@ -391,7 +411,6 @@ public class CuratorConfiguration {
                 "127.0.0.1:2181", retryPolicy);
         return client;
     }
-
 }
 ```
 

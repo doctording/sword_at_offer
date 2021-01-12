@@ -9,19 +9,27 @@ date: 2019-02-15 00:00
 # JVM规范
 
 JVM组成：
-* 类加载子系统（.class -> loading -> linking -> Initailization）
+* 类加载子系统（`.class -> loading -> linking -> Initailization`）
 * 运行时数据区(方法区，堆，thread stack, native statck, pc registor)
 * 执行引擎(interpreter, jit compiler, garbage collector; native method interface/Library)
 
 <a href='https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html'>jvm oracale官方文档</a>
 
-# Class 文件
+参考图：<a href='https://www.processon.com/view/5f4254f163768956ffb78006?fromnew=1'>https://www.processon.com/view/5f4254f163768956ffb78006?fromnew=1</a>
+
+# `.Class`字节码文件分析
 
 Class文件是一组以8位字节为基础单位的`二进制流`，任何一个Class文件都对应唯一一个类或接口的定义信息
 
+![Java字节码增强探秘](https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA%3D%3D&chksm=bd1259af8a65d0b97809a6a8ff5afaff1be4a4232bd8527ef9d95bb7a2e768bd7d9fdc768211&idx=1&mid=2651750626&scene=21&sn=3e1ac6c41d6e1803abb32285daf0244a#wechat_redirect)
+
+![](../../content/java_jvm/imgs/java_byte_enhance.webp)
+
 ## Class 对象
 
-每一个类都有一个Class对象，每当加载一个新类就产生一个Class对象，基本类型 (boolean, byte, char, short, int, long, float, and double)有Class对象，数组有Class对象，就连关键字void也有Class对象（void.class）。Class对象对应着java.lang.Class类，如果说类是对象抽象的集合的话，那么Class类就是对类的抽象的集合。Class类没有公共的构造方法，Class对象是在类加载的时候由**Java虚拟机**以及通过调用类加载器中的 defineClass 方法自动构造的，因此不能显式地声明一个Class对象
+每一个类都有一个Class对象，每当加载一个新类就产生一个Class对象，基本类型 (boolean, byte, char, short, int, long, float, double)有Class对象，数组有Class对象，就连关键字void也有Class对象（void.class）。Class对象对应着java.lang.Class类，如果说类是对象抽象的集合的话，那么Class类就是对类的抽象的集合。Class类没有公共的构造方法，Class对象是在类加载的时候由**Java虚拟机**以及通过调用类加载器中的 defineClass 方法自动构造的，因此不能显式地声明一个Class对象
+
+![](../../content/java_jvm/imgs/java_class.png)
 
 ## 魔数与Class文件的版本
 
@@ -45,7 +53,7 @@ Class文件中不会保存各个方法、字段的最终内存布局信息；因
 
 用来描述接口或者类中声明的变量， 可以包括的信息有：
 
-字段的作用域(public,private,protected修饰符)，是实例变量还是类变量（static修饰符），可变性（final）,并发可见性（volatile修饰符,是否强制从主内存读写），可否被序列化（transient修饰符），字段数据类型（基本类型，对象，数组），字段名称。
+字段的作用域(public,private,protected修饰符)，是实例变量还是类变量（static修饰符），可变性（final），并发可见性（volatile修饰符,是否强制从主内存读写），可否被序列化（transient修饰符），字段数据类型（基本类型，对象，数组），字段名称。
 
 ## 方法表
 
@@ -72,7 +80,7 @@ Class文件中不会保存各个方法、字段的最终内存布局信息；因
 * 指向下一条需要执行的字节码；记录当前线程的位置便于线程切换与恢复；
 * 唯一 一个不会出现 `OOM` 的区域
 
-## 虚拟机栈（线程stack）
+## 虚拟机栈（线程stack，计算逻辑）
 
 描述了Java方法执行的内存模型，创建栈帧，保存该本地方法的局部变量表、操作数栈、动态链接、出口信息。
 
@@ -88,13 +96,13 @@ Class文件中不会保存各个方法、字段的最终内存布局信息；因
 
 ### 操作数栈（运算中的操作数，暂存空间）
 
-操作数栈（Operand Stack）也常被成为操作栈，是一个后入先出栈，**用于保存计算过程中的中间结果，同时作为计算过程中变量临时的存储空间**
+操作数栈（Operand Stack）也常被称为操作栈，是一个后入先出栈，**用于保存计算过程中的中间结果，同时作为计算过程中变量临时的存储空间**
 
 ### 动态链接
 
 动态链接：程序运行期间，符号引用转化为直接引用
 
-例如`Object o = new Object()`,堆中对象的指针地址放到【局部变量表】中，这个指针指向了堆中的对象，这种称为<font color='red'>直接引用</font>;运行时常量池，比如类的**全限定名**字符串，这些都是<font color='red'>符号引用</font>
+例如`Object o = new Object()`，堆中对象的指针地址放到【局部变量表】中，这个指针指向了堆中的对象，这种称为<font color='red'>直接引用</font>；运行时常量池，比如类的**全限定名**字符串，这些都是<font color='red'>符号引用</font>
 
 * 符号引用以一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能够无歧义的定位到目标即可
 * 直接引用是和虚拟机的布局相关的，同一个符号引用在不同的虚拟机实例上翻译出来的直接引用一般不会相同；如果有了直接引用，那引用的目标必定已经被加载入内存中了。
@@ -164,7 +172,7 @@ public static void main(java.lang.String[]);
 
 * 一种是执行引擎遇到任意一个方法返回的字节码指令，这时候可能会有返回值传递给上层方法的调用者，是否有返回值和返回值的类型将根据遇到何种方法返回指令来决定，这种退出方法的方式称为正常完成出口
 
-* 另一种退出方式是，在方法执行过程中遇到了异常，并且这个异常没有在方法体内得到处理，无论是 Java 虚拟机内部产生的异常，还是代码中使用 athrow 字节码指令产生的异常，只要在本方法的异常表中没有搜索到匹配的异常处理器，就会导致方法退出。这种称为异常完成出口。一个方法使用异常完成出口的方式退出，是不会给上层调用者产生任何返回值的。
+* 另一种退出方式是，在方法执行过程中遇到了异常，并且这个异常没有在方法体内得到处理，无论是 Java 虚拟机内部产生的异常，还是代码中使用 athrow 字节码指令产生的异常，只要在本方法的异常表中没有搜索到匹配的异常处理器，就会导致方法退出。这种称为异常完成出口，一个方法使用异常完成出口的方式退出，是不会给上层调用者产生任何返回值的。
 
 方法退出的过程实际上就等同于把当前栈帧出栈，因此退出时可能执行的操作有：恢复上次方法的局部变量表和操作数栈，把返回值（如果有的话）压入调用者栈帧的操作数栈中，调整 PC 计数器的值以指向方法调用指令后面的一条指令等。
 
@@ -172,46 +180,58 @@ public static void main(java.lang.String[]);
 
 * 如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出`StackOverflowError`异常，方法**递归**调用产生这种结果。
 
-* 如果Java虚拟机栈可以动态扩展，并且扩展的动作已经尝试过，但是无法申请到足够的内存去完成扩展，或者在新建立线程的时候没有足够的内存去创建对应的虚拟机栈，那么Java虚拟机将抛出一个OutOfMemory 异常。(**线程启动过多**)
+* 如果Java虚拟机栈可以动态扩展，并且扩展的动作已经尝试过，但是无法申请到足够的内存去完成扩展，或者在新建立线程的时候没有足够的内存去创建对应的虚拟机栈(**虚拟机栈是每个线程必须要有的，完成计算逻辑**)，那么Java虚拟机将抛出一个`OutOfMemory`异常。(**线程启动过多**)
 
-* 参数 -Xss 去调整JVM栈的大小
+* 参数`-Xss`去调整JVM栈的大小
 
-## 本地方法栈(native stack)
+## 本地方法栈(native method stack)
 
-描述`native`方法执行，会创建栈帧:也保存了该本地方法的局部变量表、操作数栈、动态链接、出口信息。
+描述`native`方法执行，会创建栈帧（本地方法栈）:也保存了该本地方法的局部变量表、操作数栈、动态链接、出口信息。
 
-## 堆(heap)
+native会调用本地方法库的本地方法接口（JNI：Java Native Interface）
+
+能允许JAVA程序调用C/C++写的程序，扩展性功能
+
+## 堆(heap)（存储功能）
 
 主要用于存放`对象`；Java8之前有【方法区】的大部分被移到堆中了，所以，堆中还放有：`运行时常量池`,`字符串常量池`
 
 ### JVM里`new`对象时，堆会发生抢占吗？怎么去设计JVM的堆的线程安全?
 
-会，假设JVM虚拟机上，每一次new 对象时，指针就会向右移动一个对象size的距离，一个线程正在给A对象分配内存，指针还没有来的及修改，另一个为B对象分配内存的线程，引用这之前的指针指向，这就发生了抢占，也被称为指针碰撞.
+会，假设JVM虚拟机上，每一次new 对象时，指针就会向右移动一个对象size的距离，一个线程正在给A对象分配内存，指针还没有来的及修改，另一个为B对象分配内存的线程，引用这之前的指针指向，这就发生了抢占，也被称为指针碰撞。
 
 解决方案：
 
 1. 对分配内存空间的动作做同步处理，采用CAS机制，配合失败重试的方式保证更新操作的原子性。（低效率）
 2. 每个线程在Java堆中预先分配一小块内存，然后再给对象分配内存的时候，直接在自己这块"私有"内存中分配，当这部分区域用完之后，再分配新的"私有"内存。
 
-* Thread Local Allocation Buffer，线程本地分配缓存
+#### Thread Local Allocation Buffer，线程本地分配缓存
 
 JVM在内存新生代Eden Space中开辟了一小块线程私有的区域TLAB（Thread-local allocation buffer），TLAB也仅作用于新生代的Eden Space。在Java程序中很多对象都是小对象且用过即丢，它们不存在线程共享也适合被快速GC，所以对于小对象通常JVM会优先分配在TLAB上，并且TLAB上的分配由于是线程私有，所以没有锁开销。也就是说，Java中每个线程都会有自己的缓冲区称作TLAB，在对象分配的时候不用锁住整个堆，而只需要在自己的缓冲区分配即可。
+
+## 方法区
+
+静态变量，常量，类信息（构造方法，接口定义），运行时的常量池存在方法区中，但是实例变量存在堆内存中，和方法区无关
+
+static,final,Class,常量池
 
 ## 元空间(metaspace)（不属于JVM，使用堆外内存）
 
 类的元数据：如方法、字段、类、包的描述信息，这些信息可以用于创建文档、跟踪代码中的依赖性、执行编译时检查
+
+线程栈中要new对象，从元空间能获取到class信息，然后在堆中分配内存，并与栈中变量建立引用关系
 
 **Metaspace**由两大部分组成：Klass Metaspace和NoKlass Metaspace。
 
 1. klass Metaspace就是用来存klass的，就是class文件在jvm里的运行时数据结构，是一块连续的内存区域，紧接着Heap
 2. NoKlass Metaspace专门来存klass相关的其它的内容，比如method，constantPool等，可以由多块不连续的内存组成
 
-### 为什么去掉方法区，元空间用非堆的机器内存？
+### 为什么去掉永久代，元空间用非堆的机器内存？
 
-gc问题, OOM, 应用越来越大(调优不友好)
+gc问题，OOM，应用越来越大(调优不友好)
 
-* JVM加载的class的总数，方法的大小等都很难确定，因此对永久代大小的指定难以确定。太小的永久代容易导致永久代内存溢出，太大的永久代则容易导致虚拟机内存紧张。
-* ASM,Cglib动态生成，也导致永久代大小的指定难以确定
+* JVM加载的Class的总数，方法的大小等都很难确定，因此对永久代大小的指定难以确定。太小的永久代容易导致永久代内存溢出，太大的永久代则容易导致虚拟机内存紧张。
+* ASM，Cglib动态生成，也导致永久代大小的指定难以确定
 
 ### 元空间调优？
 
@@ -221,7 +241,7 @@ gc问题, OOM, 应用越来越大(调优不友好)
 
 ![](../../content/java_jvm/imgs/method_area.png)
 
-Java8中`O.class`在堆中，其中c++对象在方法区中
+Java8中`O.class`在堆中，其中`C++对象`在方法区中
 
 ## 常量池
 
@@ -248,9 +268,9 @@ String的`intern()`方法会查找在常量池中是否存在一份equal相等�
 
 ## Java7的方法区(method area) & 永久代(Perm Space)
 
-在JDK1.6及之前，运行时常量池是方法区的一个部分，同时方法区里面存储了类的元数据信息、静态变量、即时编译器编译后的代码（比如spring 使用IOC或者AOP创建bean时，或者使用cglib，反射的形式动态生成class信息等）等。
+在JDK1.6及之前，运行时常量池是方法区的一个部分，同时方法区里面存储了类的元数据信息、静态变量、即时编译器编译后的代码（比如Spring使用IOC或者AOP创建bean时，或者使用cglib，反射的形式动态生成class信息等）等。
 
-在JDK1.7及以后，JVM已经将运行时常量池从方法区中移了出来：部分堆、部分jvm外的元空间。
+在JDK1.7及以后，JVM已经将运行时常量池从方法区中移了出来：部分堆、部分JVM外的元空间。
 
 # HotSpot对象存储
 
@@ -267,12 +287,14 @@ klass pointer | The second word of every object header. Points to another object
 
 ## 对象布局
 
+插件：
+
 ```java
 // https://mvnrepository.com/artifact/org.openjdk.jol/jol-core
 compile group: 'org.openjdk.jol', name: 'jol-core', version: '0.10'
 ```
 
-### `new Object()` 占用多少字节？
+### `new Object()`占用多少字节？16字节？
 
 ```java
 java -XX:+PrintCommandLineFlags -version
@@ -313,9 +335,9 @@ _kclass:4个字节
 */
 ```
 
-### 对象头 & markword
+### 对象头之markword
 
-markword 8个字节，64bit，包括：**锁信息**，**gc信息**，**identity hashcode**
+markword共8个字节，64bit，包括：**锁信息**，**gc信息**，**identity hashcode**
 
 ![](../../content/java_jvm/imgs/hotspot_markword.png)
 
@@ -459,6 +481,51 @@ public static final int value = 123;
 * `<init>`方法的首行是super()或super(实参)，对应父类的`<init>`方法，即先执行父类实例初始化
 * 实例创建了几次，初始化就执行了几次
 
+#### 附：static执行时机？
+
+static块的执行发生在"初始化"的阶段。初始化阶段，jvm会完成对静态变量的初始化，静态块执行等工作。
+
+是否执行static块的几种情况：
+
+* 第一次`new A()`会；因为这个过程包括了初始化
+
+* 第一次`Class.forName("A")`会；因为这个过程相当于`Class.forName("A",true,this.getClass().getClassLoader())`;
+
+```java
+@CallerSensitive
+public static Class<?> forName(String className)
+            throws ClassNotFoundException {
+    Class<?> caller = Reflection.getCallerClass();
+    return forName0(className, true, ClassLoader.getClassLoader(caller), caller);
+}
+```
+
+* 第一次`Class.forName("A",false,this.getClass().getClassLoader())`不会。因为false指明了装载类的过程中，不进行初始化。不初始化则不会执行static块。
+
+* 类似`getSystemClassLoader().loadClass("com.other.Hello");`也不会。
+
+```java
+/**
+    * Loads the class with the specified <a href="#name">binary name</a>.
+    * This method searches for classes in the same manner as the {@link
+    * #loadClass(String, boolean)} method.  It is invoked by the Java virtual
+    * machine to resolve class references.  Invoking this method is equivalent
+    * to invoking {@link #loadClass(String, boolean) <tt>loadClass(name,
+    * false)</tt>}.
+    *
+    * @param  name
+    *         The <a href="#name">binary name</a> of the class
+    *
+    * @return  The resulting <tt>Class</tt> object
+    *
+    * @throws  ClassNotFoundException
+    *          If the class was not found
+    */
+public Class<?> loadClass(String name) throws ClassNotFoundException {
+    return loadClass(name, false);
+}
+```
+
 ### 类加载器分类
 
 加载动作放到JVM外部实现，以便让应用程序决定如何获取所需的类, 类加载器大致可以分为以下3部分：
@@ -471,15 +538,15 @@ public static final int value = 123;
 
 #### 2. 扩展类加载器`Extension ClassLoader`
 
- 扩展类加载器的父加载器是根加载器，纯Java语言实现，将`<JAVA_HOME>\lib\ext`目录下的，或者被java.ext.dirs系统变量所指定的路径中的所有类库加载。开发者可以直接使用扩展类加载器。
+扩展类加载器的父加载器是根加载器，纯Java语言实现，将`<JAVA_HOME>\lib\ext`目录下的，或者被java.ext.dirs系统变量所指定的路径中的所有类库加载。开发者可以直接使用扩展类加载器。
 
-#### 3. 系统类加载器`Application ClassLoader`
+#### 3. 系统类加载器`System ClassLoader`(或应用类加载器`Application ClassLoader`)
 
-负责加载用户类路径(ClassPath)上所指定的类库,开发者可直接使用。
+负责加载用户类路径(ClassPath)上所指定的类库，通常我们自己写的类就是由其加载的
 
 #### 4. 自定义类加载器`Custom CLassLoader`
 
-所有自定义类加载器都是`CLassLoader`的直接子类或者间接子类（java.lang.ClassLoader是一个抽象类）
+所有自定义类加载器都是`ClassLoader`的直接子类或者间接子类（java.lang.ClassLoader是一个抽象类）
 
 #### 双亲委派模型（*）
 
@@ -511,7 +578,7 @@ protected synchronized Class loadClass(String name, boolean resolve)
 }
 ```
 
-##### 双亲委派优势
+##### 为什么使用双亲委派？
 
 1. 采用双亲委派模式的是好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关可以**避免类的重复加载**，当父亲已经加载了该类时，就没有必要让子类ClassLoader再加载一次
 
@@ -520,7 +587,6 @@ protected synchronized Class loadClass(String name, boolean resolve)
 #### 类加载题目例子（Java7环境）
 
 ```java
-
 class Singleton{
     private static Singleton singleton = new Singleton();
     static {
@@ -766,7 +832,7 @@ Singleton1 value3:11
 
 1. 继承`ClassLoader`
 
-2. 重写`loadClass()`方法
+2. 重写`loadClass()`方法（可能会打破双亲委派模型）
 
 3. 重写`findClass()`方法
     * class文件路径判断和获取
@@ -780,12 +846,17 @@ Singleton1 value3:11
 ```java
 package com.other;
 
+/**
+ * @Author mubi
+ * @Date 2020/12/25 07:21
+ */
 public class Hello {
-
-    public void test() {
+    public String test() {
         System.out.println("Loader Class is:" + getClass().getClassLoader().getClass());
+        return "hello";
     }
 }
+
 ```
 
 * MyComOtherClassLoader
@@ -875,7 +946,8 @@ public class MyComOtherClassLoader extends ClassLoader{
 //        System.out.println("findClass param name: " + name);
         byte [] b = this.getClassBytes();
 //        System.out.println("b len:" + b.length);
-        clazz=defineClass(null, b, 0, b.length);
+        // 把字节码转化为Class
+        clazz = defineClass(null, b, 0, b.length);
         return clazz;
     }
     public byte[] getClassBytes() {
@@ -895,9 +967,8 @@ public class MyComOtherClassLoader extends ClassLoader{
         return null;
     }
 
-
     static void testMyClassLoaderHello() throws Exception{
-        String path = "/Users/mubi/IdeaProjects/untitled/out/production/untitled";
+        String path = "/Users/mubi/git_workspace/test/build/classes/java/main";
         MyComOtherClassLoader myClassLoader = new MyComOtherClassLoader();
         myClassLoader.path = path;
         Class clazz = myClassLoader.loadClass("com.other.Hello");
@@ -906,9 +977,9 @@ public class MyComOtherClassLoader extends ClassLoader{
         Method method = clazz.getDeclaredMethod("test", null);
         Object c = method.invoke(obj, null);
         if(c != null){
-            System.out.println("method return: " + c.getClass());
+            System.out.println("method return: " + c.getClass() + ": " + c);
         }else {
-            System.out.println("method return:" + c);
+            System.out.println("null method return:" + c);
         }
     }
 
@@ -916,13 +987,13 @@ public class MyComOtherClassLoader extends ClassLoader{
         MyComOtherClassLoader myClassLoader = new MyComOtherClassLoader();
         Class clazz = myClassLoader.loadClass("java.lang.String");
         Object obj = clazz.newInstance();
-        System.out.println("===" + obj.getClass());
+        System.out.println("----" + obj.getClass());
         Method method = clazz.getDeclaredMethod("length", null);
         Object c = method.invoke(obj, null);
         if(c != null){
-            System.out.println("method return: " + c.getClass());
-        }else {
-            System.out.println("method return:" + c);
+            System.out.println("method return: " + c.getClass() + ": " + c);
+        } else {
+            System.out.println("null method return:" + c);
         }
     }
 
@@ -934,11 +1005,65 @@ public class MyComOtherClassLoader extends ClassLoader{
 }
 /*
 ===class com.other.Hello
-Loader Class is:class com.thread.MyClassLoader2
-method return:null
-===class java.lang.String
-method return: class java.lang.Integer
-*/
+Loader Class is:class com.mb.MyComOtherClassLoader
+method return: class java.lang.String: hello
+----class java.lang.String
+method return: class java.lang.Integer: 0
+ */
+```
+
+### 用不同类加载器实现类多次加载
+
+* Hello.java
+
+```java
+package com.other;
+
+/**
+ * @Author mubi
+ * @Date 2020/12/25 07:21
+ */
+public class Hello {
+
+    static {
+        System.out.println("---------Hello static");
+    }
+
+    public String test() {
+        System.out.println("Loader Class is:" + getClass().getClassLoader().getClass());
+        return "hello";
+    }
+}
+```
+
+* 测试程序
+
+```java
+public static void main(String[] args) throws Exception {
+    testMyClassLoaderHello();
+
+    Hello hello = new Hello();
+    String rs = hello.test();
+    System.out.println("hello test:" + rs);
+
+    Hello hello2 = new Hello();
+    String rs2 = hello2.test();
+    System.out.println("hello test2:" + rs2);
+}
+```
+
+* 程序输出
+
+```java
+---------Hello static
+===class com.other.Hello
+Loader Class is:class com.mb.MyComOtherClassLoader
+method return: class java.lang.String: hello
+---------Hello static
+Loader Class is:class sun.misc.Launcher$AppClassLoader
+hello test:hello
+Loader Class is:class sun.misc.Launcher$AppClassLoader
+hello test2:hello
 ```
 
 ### MyClassLoader实现热加载
@@ -1157,3 +1282,64 @@ private static boolean isDriverAllowed(Driver driver, ClassLoader classLoader) {
 数据库驱动加载接口被作为JDK核心标准类库的一部分，由于JVM类加载的双亲委托(`parents delegate`)机制的限制，启动类加载器不可能加载得到第三方厂商提供的具体实现。如何解决？
 
 自定义类加载器，线程上下文类加载器：有了线程上下文类加载器，启动类加载器(根加载器)反倒需要委托子类加载器去加载厂商提供的对JDK定义的SPI(Service Provider Interface)的实现
+
+## Java类加载机制：到底能不能自己自定义java.lang.String类
+
+* 不可以加载自定义的java.开头的任何类。
+* 因为JDK已经在loadClass方法中帮我们实现了ClassLoader搜索类的算法，当在loadClass方法中搜索不到类时，loadClass方法就会调用findClass方法来搜索类，所以我们只需重写该方法即可。如没有特殊的要求，一般不建议重写loadClass搜索类的算法。
+* 如果不想打破双亲委派模型，那么只需要重写findClass方法即可
+* 如果想打破双亲委派模型，那么就重写整个loadClass方法
+
+### defineClass?
+
+不论自定义类加载器怎么写，都会调用defineClass方法
+
+```java
+protected final Class<?> defineClass(String name, byte[] b, int off, int len,
+                                         ProtectionDomain protectionDomain)
+        throws ClassFormatError
+{
+    protectionDomain = preDefineClass(name, protectionDomain);
+    String source = defineClassSourceLocation(protectionDomain);
+    Class<?> c = defineClass1(this, name, b, off, len, protectionDomain, source);
+    postDefineClass(c, protectionDomain);
+    return c;
+}
+
+
+private ProtectionDomain preDefineClass(String name,
+                                            ProtectionDomain pd)
+{
+    if (!checkName(name))
+        throw new NoClassDefFoundError("IllegalName: " + name);
+
+    // Note:  Checking logic in java.lang.invoke.MemberName.checkForTypeAlias
+    // relies on the fact that spoofing is impossible if a class has a name
+    // of the form "java.*"
+    if ((name != null) && name.startsWith("java.")
+            && this != getBuiltinPlatformClassLoader()) {
+        throw new SecurityException
+            ("Prohibited package name: " +
+                name.substring(0, name.lastIndexOf('.')));
+    }
+    if (pd == null) {
+        pd = defaultDomain;
+    }
+
+    if (name != null) {
+        checkCerts(name, pd.getCodeSource());
+    }
+
+    return pd;
+}
+```
+
+从上面代码中可以看到，如果全限定名中是`java.`开头，则直接报错：Prohibited package name。
+
+# Java安全模型--沙箱(sandbox)
+
+沙箱是一个限制程序运行的环境。沙箱机制就是将 Java 代码限定在虚拟机(JVM)特定的运行范围中，并且严格限制代码对本地系统资源访问，通过这样的措施来保证对代码的有效隔离，防止对本地系统造成破坏。沙箱主要限制系统资源访问，那系统资源包括什么？——CPU、内存、文件系统、网络。不同级别的沙箱对这些资源访问的限制也可以不一样。
+
+所有的Java程序运行都可以指定沙箱，可以定制安全策略。
+
+<a href='https://developer.ibm.com/zh/articles/j-lo-javasecurity/'>ibm:Java中的安全模型</a>

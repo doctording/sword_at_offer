@@ -217,6 +217,8 @@ native方法`start0()`:调用JVM方法创建一个本地线程，并处于可运
 
 `start0()` method: is responsible for low processing (stack creation for a thread and allocating thread in processor queue) at this point we have a thread in Ready/Runnable state.
 
+`start0`在linux下本质会进行 `pthread_create` 的调用
+
 ## stackSize(线程所需栈空间)
 
 ```java
@@ -232,7 +234,7 @@ private long stackSize;
 
 * 虚拟机栈是线程私有的，即每个线程都会占有指定大小的内存(`-Xss`，默认1M)
 
-* JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些； 线程数目还与操作系统的一些内核配置有很大的关系；生产上要监控线程数量，可能会由于bug导致线程数异常增多，引发心跳,OutOfMemory告警
+* JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些；线程数目还与操作系统的一些内核配置有很大的关系；生产上要监控线程数量，可能会由于bug导致线程数异常增多，引发心跳、OutOfMemory告警
 
 # 线程安全
 
@@ -356,7 +358,11 @@ private long stackSize;
     }
 ```
 
+* 线程状态图
+
 ![](../../content/java_thread_concurrent/imgs/thread_state.jpg)
+
+* 当线程调用`sleep(time)`或者`wait(time)`时，会进入`TIMED_WAITING`状态
 
 * 阻塞(blocked)：阻塞状态是指线程因为某种原因放弃了cpu使用权，也即让出了cpu时间片，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu时间片，转到运行(running)状态。阻塞的情况分三种：
 
@@ -441,9 +447,9 @@ public class Main {
 t1 status:NEW
 t2 status:RUNNABLE
 t3 status:TERMINATED
-t4 status:TIMED_WAITING
-t5 status:WAITING
-t6 status:BLOCKED
+t4 status:TIMED_WAITING // 有限时间等待，入sleep
+t5 status:WAITING // 无限等待条件，join
+t6 status:BLOCKED // 阻塞，抢锁抢不到
 ```
 
 #### `jvisualvm`的线程状态
@@ -467,9 +473,9 @@ t6 status:BLOCKED
 3. 有比该线程更高优先级的线程需要运行
 4. 线程调用了sleep,yield,wait,join,park,synchronized,lock等方法导致等待/阻塞等
 
-当`Context Switch`发生时，需要有操作系统保存当前线程的状态，并恢复另一个线程的状态；每个线程都有一个程序计数器（Program Counter Register）,它的作用是记住下一条JVM指令的地址，这个程序计数器是线程独有的
+当`Context Switch`发生时，需要有操作系统保存当前线程的状态，并恢复另一个线程的状态；每个线程都有一个程序计数器（Program Counter Register），它的作用是记住下一条JVM指令的地址，这个程序计数器是线程独有的
 
-1. 状态包括程序计数器，虚拟机栈中每个线程栈帧的信息，如局部变量，操作数栈，返回地址等
+1. 状态包括程序计数器，虚拟机栈中每个线程栈帧的信息，如局部变量表、动态链接、操作数栈、返回地址等
 2. `Context Switch`频繁发生会影响性能
 
 # Monitor
@@ -642,23 +648,29 @@ public final native void wait(long timeout) throws InterruptedException;
 public final native void notify();
 ```
 
-* Java中每一个对象都可以成为一个监视器（Monitor）, 该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒调度), 一个入口队列(EntryQueue,要去竞争获取锁).
+* Java中每一个对象都可以成为一个监视器(Monitor)，该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒，不占用CPU), 一个入口队列(EntryQueue，要去竞争获取锁).
 * `waiting`进入`_waitSet`等待中(底层通过执行`thread_ParkEvent->park`来挂起线程)，等待被唤醒，**不会占用CPU**
-* `waiting`被唤醒后，不是直接执行，而是进入`_EntryList`(没有获取到锁的Blocking状态，要继续竞争锁)，去竞争`monitor`来获得机会去执行
+* `waiting`被唤醒后，不是直接执行，而是进入`_EntryList`(没有获取到锁的一个Blocking状态，要继续竞争锁)，去竞争`monitor`来获得机会去执行
 
 ![](../../content/java_thread_concurrent/imgs/wait_set.png)
 
-## `wait` 和 `sleep` 的区别？
+## wait和sleep的区别？
 
-1. wait()方法属于Object类,sleep()属于Thread类；
+1. wait()方法属于Object类；sleep()属于Thread类；
 
-2. wait()方法让自己**让出锁**资源进入等待池等待，会让出CPU；sleep是继续占用锁(依赖于系统时钟和CPU调度机制)，处于阻塞状态，会让出CPU；
+2. wait()方法让自己**让出锁**资源进入等待池等待，直接让出CPU，后续要竞争monitor锁；sleep是继续占用锁(依赖于系统时钟和CPU调度机制)，处于阻塞状态，也会让出CPU；
 
 3. sleep()必须指定时间，wait()可以指定时间也可以不指定；sleep()时间到，线程处于阻塞或可运行状态；
 
-4. wait()方法会释放持有的锁，调用notify(),notifyAll()方法来唤醒线程；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的，超时或者`interrupt()`能唤醒
+4. wait()方法会释放持有的锁，调用notify(),notifyAll()方法来唤醒线程；sleep方法不会释放持有的锁，设置sleep的时间是确定的会按时执行的，`超时`或者`interrupt()`能唤醒
 
 5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用`notify()`来唤醒；而`sleep()`能在任何地方调用；
+
+### wait为什么必须在同步块中？
+
+原因是避免CPU切换到其它线程，而其它线程又提前执行了notify方法，那这样就达不到我们的预期（先wait再由其它线程来notify）,所以需要一个同步锁来保护。
+
+wait是对象的方法，java锁是对象级别的，而不是线程级别的；同步代码块中，使用对象锁来实现互斥效果
 
 # `ThreadGroup`线程组
 
@@ -914,10 +926,10 @@ id:1
 Main thread finished
 ```
 
-### `sleep`与`yield`的区别
+### sleep与yield`的区别？
 
 * `yield`会使`RUNNING`状态的线程进入`Runnable`状态（如果CPU调度器没有忽略这个提示的话）
-* 一个线程`sleep`,另一个线程调用`interrupt`会捕获到中断信号，而`yield`则不会
+* 一个线程`sleep`，另一个线程调用`interrupt`会捕获到中断信号，而`yield`则不会
 
 ## 线程的优先级
 
@@ -1009,7 +1021,7 @@ public ClassLoader getContextClassLoader()
 
 线程上下文类加载器破坏了`双亲委派模型`，例如`com.mysql.jdbc.Driver`
 
-## 线程`interrupt` 和 `可中断方法`
+## 线程interrupt 和 可中断方法
 
 如下方法的调用会使得当前线程进入阻塞状态，而另外的一个线程调用被阻塞线程的`interrupt`方法，可以打断这种阻塞。这些方法有时会被称为`可中断方法`
 
@@ -1097,14 +1109,16 @@ public class Main {
 
 在线程B中执行`A.join()`，会使得`当前线程B进入等待`，直到`线程A结束生命周期`或者`到达给定的时间`，在此期间B线程是处于`Blocked`的
 
+`join`方法必须在线程start方法调用之后调用才有意义。这个也很容易理解：如果一个线程都没有start，那它也就无法同步了。因为执行完start方法才会创建线程。
+
 ### join源码分析
 
 判断线程是否alive,否则一直`wait()`
 
 ```java
 public final void join() throws InterruptedException {
-        join(0);
-    }
+    join(0);
+}
 
 public final synchronized void join(long millis)
     throws InterruptedException {
@@ -1132,13 +1146,15 @@ public final synchronized void join(long millis)
     }
 ```
 
-## 关闭一个线程
+## 如何关闭一个线程？
 
-### 正常结束
+注：`stop()`方法以及作废，因为如果强制让线程停止有可能使一些清理性的工作得不到完成。另外一个情况就是对锁定的对象进行了解锁，导致数据得不到同步的处理，出现数据不一致的问题。
 
-### 捕获中断信号关闭线程
+### 正常结束（run方法执行完成）
 
-### 使用volatile开关控制
+### 捕获中断信号关闭线程（中端间接控制run方法）
+
+### 使用volatile开关控制（开关控制run方法）
 
 ```java
 public class Main {

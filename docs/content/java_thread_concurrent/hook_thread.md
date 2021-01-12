@@ -64,7 +64,6 @@ public class CaptureThreadException {
         System.out.println(mainGroup.getParent());
         System.out.println(mainGroup.getParent().getParent());
 
-
 //        Thread.setDefaultUncaughtExceptionHandler((t,e)->{
 //            System.out.println("thread:" + t.getName() + " occur exception");
 //            e.printStackTrace();

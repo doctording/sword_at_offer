@@ -19,11 +19,18 @@ Java的反射（`reflection`）机制是指在程序的运行状态中，可以�
 * 在运行时判断任意一个类所具有的成员变量和方法，包括私有变量，也可以设置访问属性。
 * 在运行时调用任意一个对象的任意一个方法。
 
+一个类中包含的信息有： 构造器，字段，方法
+
+* Class ： 描述类
+* Method ： 描述方法
+* Constructor ：描述构造器
+* Field ：描述字段
+
 ## 获得`Class对象`的方式
 
-* Class.forName(“类的全限定名”)
+* Class.forName("类的全限定名")
 * 实例对象.getClass()
-* 类名.class （类字面常量）
+* 类名.class（类字面常量）
 
 ### 获得`Class对象`的例子代码
 
@@ -282,7 +289,7 @@ public static Class<?> forName(String className)
 
 将类的`.class`文件加载到jvm中之外，还会对类进行解释，即会执行类中的`static`块(静态成员初始化，静态代码块)
 
-### ClassLoader.loadClass
+### ClassLoader.loadClass(仅加载生成class对象,不进行链接)
 
 ```java
 /**
@@ -310,7 +317,7 @@ public Class<?> loadClass(String name) throws ClassNotFoundException {
 
 ## 反射机制会不会有性能问题？
 
-<a href='https://docs.oracle.com/javase/tutorial/reflect/index.html'>Drawbacks of Reflection
+Oracle官方文档：<a href='https://docs.oracle.com/javase/tutorial/reflect/index.html'>Drawbacks of Reflection
 </a>
 
 Reflection is powerful, but should not be used indiscriminately. If it is possible to perform an operation without using reflection, then it is preferable to avoid using it. The following concerns should be kept in mind when accessing code via reflection.
@@ -333,13 +340,12 @@ Reflection requires a runtime permission which may not be present when running u
 
 Since reflection allows code to perform operations that would be illegal in non-reflective code, such as accessing private fields and methods, the use of reflection can result in unexpected side-effects, which may render code dysfunctional and may destroy portability. Reflective code breaks abstractions and therefore may change behavior with upgrades of the platform.
 
-由于反射允许代码执行一些在正常情况下不被允许的操作（比如访问私有的属性和方法），所以使用反射可能会导致意料之外的副作用－－代码有功能上的错误，降低可移植性。反射代码破坏了抽象性，因此当平台发生改变的时候，代码的行为就有可能也随着变化。
+由于反射允许代码执行一些在正常情况下不被允许的操作（比如访问私有的属性和方法），所以使用反射可能会导致意料之外的副作用：代码有功能上的错误，降低可移植性。反射代码破坏了抽象性，因此当平台发生改变的时候，代码的行为就有可能也随着变化。
 
 ### 反射实例化和普通new的效率对比
 
 ```java
-
-class A{
+class A {
     public void doSomeThing(){
 
     }

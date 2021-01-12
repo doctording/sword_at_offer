@@ -247,13 +247,56 @@ B end
 main end
 ```
 
-## lock 对比 synchronized
+## lock和synchronized的对比
 
 * Lock是一个接口，而synchronized是Java中的关键字，synchronized是内置的语言实现。
 * synchronized在发生异常时，会自动释放线程占有的锁，因此不会导致死锁现象发生。Lock在发生异常时，如果没有主动通过unLock()方法去释放锁，则很可能造成死锁的现象，因此使用Lock时需要在finally块中释放锁。
 * Lock可以让等待锁的线程响应中断，而synchronized却不行，使用synchronized时，等待的线程会一直等待下去，不能够响应中断。
 * 通过Lock可以知道有没有成功获取锁，而synchronized却无法办到。
 * Lock可以提高多个线程进行读操作的效率。
+* synchronized是可重入,不可中断,非公平；lock则可以做到
+
+### 锁可以中断
+
+```java
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+
+public class Hello extends Thread{
+
+    final static Lock lock = new ReentrantLock();
+
+    @Override
+    public void run() {
+        try {
+            lock.lockInterruptibly();
+            System.out.println("thread start sleep");
+            // sleep（可中断方法）使得线程进入阻塞状态
+            TimeUnit.MINUTES.sleep(2);
+            System.out.println("thread sleep over");
+        }catch (InterruptedException e){
+            // lock.lockInterruptibly(); 会判断是否又终端
+            // lock.lock(); 不会判断中断，抢不到就park一直等待
+            System.out.println("Interrupted");
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        Hello hello = new Hello();
+        lock.lock();
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println("====start");
+        hello.start();
+        TimeUnit.SECONDS.sleep(2);
+        new Thread(()->{
+            hello.interrupt();
+        }).start();
+    }
+
+}
+```
 
 ## 线程同步概念
 
@@ -265,17 +308,17 @@ main end
 
 ### 乐观锁
 
-乐观锁是一种乐观思想，即认为读多写少，遇到并发竞争写的可能性很低，每次去`读`数据的时候都认为别人不会修改，所以**不会上锁**，但是在`写`操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据。
+乐观锁是一种乐观思想，即认为`读多写少`，遇到并发竞争写的可能性很低，每次去`读`数据的时候都认为别人不会修改，所以**不会上锁**，但是在`写`操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据。
 
-* 在此期间：是指 拿到数据到更新数据的这段时间。因为没有加锁，所以别的线程可能会更改。还有一点那就是乐观锁其实是不加锁的。
+* 在此期间：是指 拿到数据到更新数据的这段时间。因为没有加锁，所以别的线程可能会更改。还有就是乐观锁其实是不加锁的。
 
 * 如何判断：采取在写时先读出当前版本号，比较跟上一次的版本号，如果一样则进行写操作，如果失败则要重复`读-比较-写`的操作(不断CAS操作，CAS就是典型的乐观锁)。
 
 ### 悲观锁
 
-悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性很高，每次去拿数据的时候都认为别人会修改，所以每次在`读/写`数据的时候**都会上锁**，这样别人想读/写这个数据就会被`Block`住，直到锁释放且自己抢到锁。Java中的悲观锁如`synchronized`,AQS框架下的锁则一般是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁
+悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性很高，每次去拿数据的时候都认为别人会修改，所以每次在`读/写`数据的时候**都会上锁**，这样别人想读/写这个数据就会被`Block`住，直到锁释放且自己抢到锁。Java中的悲观锁如`synchronized`，AQS框架下的锁则一般是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁
 
-悲观并发控制实际上是“先取锁再访问”的保守策略，为数据处理的安全提供了保证。数据库里面也用到了这种悲观锁的机制,比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。这样其它的线程就不能同步操作，必须要等到锁释放才可以。
+悲观并发控制实际上是"先取锁再访问"的保守策略，为数据处理的安全提供了保证。数据库里面也用到了这种悲观锁的机制,比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。这样其它的线程就不能同步操作，必须要等到锁释放才可以。
 
 ## 自旋锁
 
@@ -382,7 +425,7 @@ class SpinLock{
 }
 ```
 
-### 得不到锁，线程sleep, 睡眠时间不确定？
+### 得不到锁，线程sleep，睡眠时间不确定？
 
 ```java
 class SpinLock{
@@ -467,7 +510,7 @@ class SpinLock{
 
 * 自旋时会适当放弃线程优先级之间的差异
 
-## ReentrantLock (可重入锁，AQS独占锁)
+## ReentrantLock (可重入锁,AQS独占锁,默认非公平）
 
 附：**独占锁**被某个线程持有时，其它线程只能等待当前线程释放后才能去竞争锁，而且只有一个线程能竞争锁成功。
 
@@ -488,7 +531,7 @@ class SpinLock{
 
 #### 公平锁
 
-表示线程获取锁的顺序是按照线程申请锁的顺序来分配的，即`FIFO`, 队列结构； 回先判断是否有前驱Node，没有才进行CAS操作，不是一上来就CAS开始抢占锁
+表示线程获取锁的顺序是按照线程申请锁的顺序来分配的，即`FIFO`, 队列结构；会先判断是否有前驱Node，没有才进行CAS操作，不是一上来就CAS开始抢占锁
 
 ##### 加锁过程
 
@@ -553,7 +596,7 @@ public final void acquire(int arg) {
 }
 ```
 
-第一个线程执行lock()方法,tryAcquire执行的时候，hasQueuedPredecessors()返回false,那么直接执行如下语句并返回，lock()返回,则表示获取锁成功，这样线程能继续执行获取锁之后的代码了
+第一个线程执行`lock()`方法，tryAcquire执行的时候，hasQueuedPredecessors()返回false,那么直接执行如下语句并返回，lock()返回,则表示获取锁成功，这样线程能继续执行获取锁之后的代码了
 
 ```java
 // unsafe.compareAndSwapInt操作设置state变量为1
@@ -700,9 +743,9 @@ public final boolean release(int arg) {
 
 就是一种获取锁的`抢占`机制，是随机获得锁的，和公平锁不一样的就是先来的不一定先得到锁，这个方式可能造成某些线程一直拿不到锁，结果也就是不公平。尝试抢占失败，就再采用公平锁的那种方式，`吞吐量`大于公平锁
 
-##### 获取锁（区别非公平锁）
+##### 获取锁（区别公平锁）
 
-1. 直接先进行的CAS操作:`compareAndSetState(0, 1)`(即是可抢占锁的)，获取到就设置`exclusiveOwnerThread`
+1. 非公平直接先进行的是CAS操作:`compareAndSetState(0, 1)`(即是可抢占锁的)，获取到就设置`exclusiveOwnerThread`
 2. 如果CAS操作失败，再进行`acquire(1)`操作
 
 只要state=0(即锁是空闲的了)，就直接CAS尝试获取，而不需要判断是否CLH队列中前驱节点
@@ -787,6 +830,8 @@ final boolean nonfairTryAcquire(int acquires) {
 同一个线程可以反复获取锁多次，然后需要释放多次
 
 同一个线程在外层函数获得锁之后，内层递归函数仍能获取该锁的代码，在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁，即：**线程可以进入任何一个它已经拥有的锁所同步的代码块**，防止死锁
+
+重入锁实现可重入性原理或机制是：每一个锁关联一个线程持有者和计数器，当计数器为 0 时表示该锁没有被任何线程持有，那么任何线程都可能获得该锁而调用相应的方法；当某一线程请求成功后，JVM会记下锁的持有线程，并且将计数器置为 1；此时其它线程请求该锁，则必须等待；而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增；当线程退出同步代码块时，计数器会递减，如果计数器为 0，则释放该锁。
 
 * synchronized是可重入锁
 
@@ -916,19 +961,19 @@ ReentrantLock继承父类AQS（AQS内部维护了一个同步状态status来计�
 
 ![](../../content/java_thread_concurrent/imgs/lock_sync_state_3.png)
 
-### 对比`synchronized`, `ReentrantLock`的一些高级功能
+### 对比synchronized, ReentrantLock的一些高级功能
 
-* 等待可中断
+* 等待可中断，可以设置等待超时
 
 持有锁的线程长期不释放的时候，正在等待的线程可以选择放弃等待，这相当于Synchronized来说可以避免出现死锁的情况。
 
-* 公平锁
+* 可以实现公平锁
 
 `ReentrantLock`默认的构造函数是创建的`非公平锁`，可以通过参数`true`设为`公平锁`，但公平锁表现的性能不是很好。
 
 `synchronized`是非公平锁（因为`synchronized`是不公平竞争，后来的线程可能先得到锁，进而可能导致先到的线程持续饥饿，非公平竞争在很大程度上提升了`synchronized`吞吐率）；`synchronized`是可以重入的。
 
-* 锁绑定多个条件
+* 锁绑定多个条件，`Condition`更加的灵活
 
 一个`ReentrantLock`对象可以同时绑定对个对象。
 
@@ -979,7 +1024,7 @@ public class Main {
             } catch (Exception e) {
                 System.out.println("B Exception");
                 e.printStackTrace();
-            }finally {
+            } finally {
                 if ( ((ReentrantLock) lock).isHeldByCurrentThread()) {
                     lock.unlock();
                 }
@@ -998,7 +1043,7 @@ public class Main {
 }
 ```
 
-## 读写锁(例:`ReentrantReadWriteLock`，Aqs共享)
+## 读写锁(例:ReentrantReadWriteLock，Aqs共享)
 
 读写锁实际是一种特殊的`自旋锁`，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。
 
@@ -1035,7 +1080,7 @@ static final class FairSync extends Sync {
 }
 ```
 
-### 伪代码
+### 读写锁伪代码
 
 ```cpp
 count_mutex = mutex_init();

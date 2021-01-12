@@ -94,6 +94,8 @@ while(true){
 
 ## Callable 接口
 
+类似`Runnable`接口(都是由另外的线程去执行)，但是Runnable就是线程执行，不能返回结果，也无法抛出一个`checked exception`,Callable则可以
+
 ```java
 /**
  * A task that returns a result and may throw an exception.
@@ -128,7 +130,7 @@ public interface Callable<V> {
 
 ## Future 接口
 
-`Future`就是对于具体的`Runnable`或者`Callable`任务的执行结果进行取消、查询是否完成、获取结果。
+`Future`就是对于具体的`Runnable`或者`Callable`任务的执行结果能进行取消、查询是否完成、获取结果。
 
 主要是将一些耗时的操作交给一个线程去执行，从而达到异步的目的；在提交线程在提交任务和获得任务结果的过程中可以进行其它任务操作，而不是傻傻的等待
 

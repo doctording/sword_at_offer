@@ -10,9 +10,61 @@ date: 2020-08-30 00:00
 
 ![](../../content/java_utils/imgs/spi.png)
 
-实现原理步骤
+## 回顾双亲委派模型
 
-1. 读取META-INF/services/下的配置文件，获得所有能被实例化的类的名称(ServiceLoader可以跨越jar包获取META-INF下的配置文件，具体加载配置的实现代码如下)
+```java
+Bootstrap class loader
+    Extension class loader
+        System class loader
+            ClassLoader A
+```
+
+双亲委派中下层的类加载器可以使用上层父加载器加载的对象，但是上层父类的加载器不可以使用子类的加载器加载的对象）
+
+比如上方`System class loader`想要使用`ClassLoader A`则是做不到的
+
+```java
+public class MainClass {
+    public static void main(String[] args) {
+        System.out.println(Integer.class.getClassLoader());
+        System.out.println(Logging.class.getClassLoader());
+        System.out.println(MainClass.class.getClassLoader());
+    }
+}
+/*
+null # Bootstrap类加载器
+sun.misc.Launcher$ExtClassLoader@5e2de80c # Extension类加载器
+sun.misc.Launcher$AppClassLoader@18b4aac2 # System类加载器
+*/
+```
+
+## 线程上下文加载器
+
+* 通过java.lang.Thread类的setContextClassLoader()设置当前线程的上下文类加载器（如果没有设置，默认会从父线程中继承，如果程序没有设置过，则默认是System类加载器）
+
+* 有了线程上下文类加载器，应用程序就可以通过java.lang.Thread.setContextClassLoader()将应用程序使用的类加载器传递给使用更顶层类加载器的代码。
+
+<font color='red'>可以打破双亲委派机制，实现逆向调用类加载器来加载当前线程中类加载器加载不到的类</font>
+
+## SPI实现原理
+
+1. 读取`META-INF/services/`下的配置文件，获得所有能被实例化的类的名称(ServiceLoader可以跨越jar包获取META-INF下的配置文件，具体加载配置的实现代码如下)
+
+```java
+public static <S> ServiceLoader<S> load(Class<S> service) {
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    return ServiceLoader.load(service, cl);
+}
+
+private ServiceLoader(Class<S> svc, ClassLoader cl) {
+    service = Objects.requireNonNull(svc, "Service interface cannot be null");
+    loader = (cl == null) ? ClassLoader.getSystemClassLoader() : cl;
+    acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
+    reload();
+}
+```
+
+* java.util.ServiceLoader.LazyIterator
 
 ```java
 try {
@@ -26,7 +78,7 @@ try {
 }
 ```
 
-2. 通过反射方法Class.forName()加载类对象，并将类实例化
+2. 通过反射方法`Class.forName()`加载类对象，并将类实例化
 
 ```java
 class SystemClassLoaderAction

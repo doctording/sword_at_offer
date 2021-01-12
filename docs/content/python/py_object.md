@@ -18,7 +18,7 @@ Python在heap中分配的对象分成两类：**可变对象**(对象的内容�
 
 对象所指向的内存中的值可以被改变。变量（准确的说是引用）改变后，实际上是其所指的值直接发生改变，并没有发生复制行为，也没有开辟新的出地址，通俗点说就是原地改变。
 
-* id() 函数用于获取对象的内存地址
+* `id()`函数用于获取对象的内存地址
 
 ```python
 i = 1   # i -> [地址1]
@@ -84,9 +84,7 @@ if __name__ == '__main__':
 如下图，**在函数中改变[可变对象的引用]是无效的**， **改变[可变对象的内容]是OK的**
 
 <div align="center">
-<img  style="border:1px solid #000;"  src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_01.png"
+<img  style="border:1px solid #000;"  src="../../content/python/imgs/py_01.png"
 height="400" width="340" >
-<img style="border:1px solid #000;"   src="https://raw.githubusercontent.com/doctording/sword_at_offer/master/imgs/py_02.png" height="400" width="340" >
+<img style="border:1px solid #000;"   src="../../content/python/imgs/py_02.png" height="400" width="340" >
 </div>
-
----

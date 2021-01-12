@@ -6,11 +6,54 @@ date: 2019-06-07 00:00
 
 [TOC]
 
-# nginx reverse proxy（反向代理）
+# nginx
 
-<a href="https://www.nginx.com/resources/glossary/reverse-proxy-server/" target="_blank">nginx reverse proxy docs</a>
+Nginx是一个轻量级、高性能、稳定性高、并发性好的HTTP和反向代理服务器。由俄罗斯的程序设计师Igor Sysoev所开发，官方测试nginx能够支支撑5万并发链接，并且cpu、内存等资源消耗却非常低，运行非常稳定。
+
+Nginx的应用场景
+
+1. http服务器。Nginx是一个http服务可以独立提供http服务，可以做网页静态服务器。
+2. 虚拟主机。可以实现在一台服务器虚拟出多个网站。例如个人网站使用的虚拟主机。
+    * 基于端口的，不同的端口
+    * 基于域名的，不同域名
+3. 反向代理，负载均衡。当网站的访问量达到一定程度后，单台服务器不能满足用户的请求时，需要用多台服务器集群可以使用nginx做反向代理。并且多台服务器可以平均分担负载，不会因为某台服务器负载高宕机而某台服务器闲置的情况。
+
+## 正向代理&反向代理
+
+- | 正向代理 | 反向代理
+-|-|-
+代理服务器位置 | 客户端与服务都能连接的们位置 | 目标服务器内部
+主要作用 | 屏蔽客户端IP、集中式缓存、解决客户端不能直连服务端的问题。| 屏蔽服务端内部实现、负载均衡、缓存。
+应用场景 | 爬虫、翻墙、maven 的nexus 服务 | Nginx 、Apache负载均衡应用
+
+### 正向代理
+
+其实是"代理服务器"代理了"客户端"，去和"目标服务器"进行交互；正向代理的用途如下
+
+* 突破访问限制
+
+通过代理服务器，可以突破自身IP访问限制，访问国外网站，教育网等。即，租客可以通过中介，来解决无法联系上房东的问题。
+
+* 提高访问速度
+
+通常代理服务器都设置一个较大的硬盘缓冲区，会将部分请求的响应保存到缓冲区中，当其他用户再访问相同的信息时， 则直接由缓冲区中取出信息，传给用户，以提高访问速度。即，中介手里留存了很多房源信息和钥匙，可以直接带租客去看房。
+
+* 隐藏客户端真实IP
+
+上网者也可以通过这种方法隐藏自己的IP，免受攻击。即，房东并不知道租客的真实身份。PS：但是中介知道了，可能骚扰更多….
+
+## 反向代理
+
+其实是"代理服务器"代理了"目标服务器"，去和"客户端"进行交互。要点如下
+
+* 隐藏服务器真实IP
+* 负载均衡
+* 提高访问速度：反向代理服务器可以对于静态内容及短时间内有大量访问请求的动态内容提供缓存服务，提高访问速度。
+* 提供安全保障
 
 ## What Is a Reverse Proxy Server?
+
+<a href="https://www.nginx.com/resources/glossary/reverse-proxy-server/" target="_blank">nginx reverse proxy docs</a>
 
 A proxy server is a go‑between or intermediary server that forwards requests for content from multiple clients to different servers across the Internet. A **reverse proxy server** is a type of proxy server that typically sits behind the firewall in a private network and directs client requests to the appropriate backend server. A reverse proxy provides an additional level of abstraction and control to ensure the smooth flow of network traffic between clients and servers.
 
@@ -151,11 +194,11 @@ In NGINX Plus Release 9 and later, NGINX Plus can proxy and load balance UDP tra
 
 HTTP的设计者有意利用这种特点将协议设计为请求时建连接、请求完释放连接，以尽快将资源释放出来服务其他客户端。随着时间的推移，网页变得越来越复杂，里面可能嵌入了很多图片，这时候每次访问图片都需要建立一次 TCP 连接就显得很低效。后来，Keep-Alive 被提出用来解决这效率低的问题。
 
-我们知道HTTP协议采用“请求-应答”模式，当使用非KeepAlive模式时，每个请求/应答客户和服务器都要新建一个连接，完成之后立即断开连接；当使用Keep-Alive模式时，Keep-Alive功能使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。
+我们知道HTTP协议采用"请求-应答"模式，当使用非KeepAlive模式时，每个请求/应答客户和服务器都要新建一个连接，完成之后立即断开连接；当使用Keep-Alive模式时，Keep-Alive功能使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。
 
 http 1.0中默认是关闭的，需要在http头加入”Connection: Keep-Alive”，才能启用Keep-Alive；
 
-http 1.1中默认启用Keep-Alive，如果加入”Connection: close“，才关闭，目前大部分浏览器都是用http1.1协议，也就是说默认都会发起Keep-Alive的连接请求了。Keep-Alive不会永久保持连接，它有一个保持时间。
+http 1.1中默认启用Keep-Alive，如果加入"Connection: close"，才关闭，目前大部分浏览器都是用http1.1协议，也就是说默认都会发起Keep-Alive的连接请求了。Keep-Alive不会永久保持连接，它有一个保持时间。
 
 ### Session
 

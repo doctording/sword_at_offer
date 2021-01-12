@@ -17,9 +17,9 @@ date: 2019-02-15 00:00
 3. 虚拟机启动时创建java堆
 4. Java堆的唯一目的就是存放对象实例。
 5. Java堆是垃圾收集器管理的主要区域。
-6. 从内存回收的角度来看， 由于现在收集器基本都采用分代收集算法， 所以Java堆可以细分为：新生代（`Young`）和老年代（`Old`）。 新生代又被划分为三个区域`Eden`、`From Survivor`， `To Survivor`等。无论怎么划分，最终存储的都是实例对象， 进一步划分的目的是为了更好的回收内存， 或者更快的分配内存。
-7. Java堆的大小是可扩展的， 通过`-Xms`和`-Xmx`控制。
-8. 如果堆内存不够分配实例对象， 并且对也无法在扩展时， 将会抛出outOfMemoryError异常。
+6. 从内存回收的角度来看，由于现在收集器基本都采用分代收集算法，所以Java堆可以细分为：新生代（`Young`）和老年代（`Old`）。新生代又被划分为三个区域`Eden`、`From Survivor`，`To Survivor`等。无论怎么划分，最终存储的都是实例对象，进一步划分的目的是为了更好的回收内存， 或者更快的分配内存。
+7. Java堆的大小是可扩展的，通过`-Xms`和`-Xmx`控制。
+8. 如果堆内存不够分配实例对象，并且对也无法在扩展时，将会抛出OutOfMemoryError异常。
 
 ## 堆区域与分代
 
@@ -29,6 +29,27 @@ date: 2019-02-15 00:00
 * 新生代实际可用的内存空间为 9/10 ( 即90% )的新生代空间。
 
 `jstat`查看gc相关的堆信息
+
+### 为什么要分代？分代所用的gc算法？
+
+* 基于假设：大部分的对象都是生命周期很短的，即"朝生夕死"
+* gc的工作过程中要"Stop-The-World"，gc部分
+
+基于假设，如果让新创建的对象都在young gen里创建，然后频繁收集young gen，则大部分垃圾都能在young GC中被收集掉。由于young gen的大小配置通常**只占整个GC堆的较小部分**，而且较高的对象死亡率（或者说较低的对象存活率）让它非常适合使用<font color='red'>copying算法</font>来收集，这样就不但能降低单次GC的时间长度，还可以提高GC的工作效率
+
+针对老年代对象(占用空间大)的特点，一般采用`标记-清理`（有的算法会带压缩）策略的算法。这部分如果采用复制算法的话，一方面没有额外空间给其担保，另一方面由于存活率高，复制的开销显著增大。
+
+![](../../content/java_jvm/imgs/gc1.png)
+
+#### JVM 老年代对象来源?
+
+1. 新生代对象每经历依次minor gc，年龄会加一，当达到年龄阀值会直接进入老年代。阀值大小一般为15
+
+2. Survivor空间中年龄所有对象大小的总和大于survivor空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代，而无需等到年龄阀值
+
+3. 大对象直接进入老年代
+
+4. 新生代复制算法需要一个survivor区进行轮换备份，如果出现大量对象在minor gc后仍然存活的情况时，就需要老年代进行分配担保，让survivor无法容纳的对象直接进入老年代
 
 ## Java7 堆的各区域
 
@@ -120,7 +141,14 @@ Class metadata, interned Strings and class static variables will be moved from t
 1. klass Metaspace就是用来存klass的，即class文件在jvm里的运行时数据结构，是一块连续的内存区域，紧接着Heap
 2. NoKlass Metaspace专门来存klass相关的其它的内容，比如method，ConstantPool等，可以由多块不连续的内存组成
 
-# 垃圾收集器
+# 垃圾收集
+
+![](../../content/java_jvm/imgs/gc_mem.jpeg)
+
+GC 主要工作在 Heap 区和 MetaSpace 区（上图蓝色部分），在 Direct Memory 中，如果使用的是 DirectByteBuffer，那么在分配内存不够时则是 GC 通过 Cleaner#clean 间接管理
+
+转自：<a href='https://blog.csdn.net/MeituanTech/article/details/109664525'>Java中9种常见的CMS GC问题分析与解决
+</a>
 
 ## 三个问题
 
@@ -142,7 +170,7 @@ JVM stack, native method stack, run-time constant pool, static references in met
 
 * 虚拟机栈（栈帧中的本地变量表）中引用的对象
 * 本地方法栈中JNI(即一般说的Native方法)引用的对象
-* 运行方法区中常量池引用的对象
+* 方法区中常量池引用的对象
 * 方法区中的类静态属性引用的对象
 * 加载的Clazz
 
@@ -374,7 +402,7 @@ public static void main(String[] args) throws Exception{
 =》没有GC Roots的引用链 =》 判断对象是否有必要执行 finalize() 方法
 ```
 
-**第一次**：通过GC roots遍历，找到不在引用链内的对象。并检查是否需要执行finalize()方法。（如果没重写finalize()则只需要标记一次，然后就可以进行gc掉）
+**第一次**：通过GC roots遍历，找到不在引用链内的对象，并检查是否需要执行finalize()方法。（如果没重写finalize()则只需要标记一次，然后就可以gc掉）
 
 在第一次标记中有`finalize()`需要被执行的对象，会被丢到一个优先级较低的队列(`F-Queue`:`java.lang.ref.Finalizer.ReferenceQueue`)中执行，但不保证能被执行(因为是由**低优先级**的`Finalizer线程`去处理的，试想低优先级线程不被执行到，那么重写了`finalize()`的对象就永久在堆中不能被gc掉，即`java.lang.ref.Finalizer`对象会占用很大的堆空间，甚至溢出)
 
@@ -455,7 +483,7 @@ no, i am dead
 
 堆中，新生代进行一次垃圾收集一般可以回收`70%-95%`的空间，而永久代的垃圾收集效率远低于此。
 
-永久代主要回收两部分内容：废弃常量和无用的类， 判断"无用的类"：
+永久代主要回收两部分内容：废弃常量和无用的类，判断"无用的类"：
 
 1. 该类所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例
 2. 加载该类的ClassLoader已经被回收
@@ -508,21 +536,21 @@ There is a term that you should know before learning about GC. The term is "stop
 
 ## GC收集器及其发展
 
-### (一) Serial （STW,单线程收集器）
+### (一) Serial（STW,单线程收集器）
 
 <font color='red'>a stop-the-world,coping collector which uses a single GC thread</font>
 
-使用Coping算法的单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其他所有的工作线程，直到收集结束**即`Stop The World`
+使用`Coping算法`的单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其它所有的工作线程，直到收集结束**即`Stop The World`
 
 #### ParNew (Serial的多线程版本)
 
-ParNew收集器除了多线程收集之外，其他与Serial收集器相比并没有太多创新之处，但它却是许多运行在Server模式下的虚拟机中首选的新生代收集器，其中有一个与性能无关但很重要的原因是，除了Serial收集器外，目前只有它能与`CMS`收集器配合工作。
+ParNew收集器除了多线程收集之外，其它与Serial收集器相比并没有太多创新之处，但它却是许多运行在Server模式下的虚拟机中首选的新生代收集器，其中有一个与性能无关但很重要的原因是，除了Serial收集器外，目前只有它能与`CMS`收集器配合工作。
 
 ### (二) Parallel Scavenge（STW,多线程收集器）
 
 <font color='red'>a stop-the-world,coping collector which uses multi GC threads</font>
 
-使用Coping算法的**并行多线程收集器**。Parallel Scavenge是`Java1.8`默认的收集器，特点是并行的多线程回收，以吞吐量（CPU用于运行用户代码的时间与CPU总消耗时间的比值，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)）优先
+使用`Coping算法`的**并行多线程收集器**。Parallel Scavenge是`Java1.8`默认的收集器，特点是并行的多线程回收，以吞吐量（CPU用于运行用户代码的时间与CPU总消耗时间的比值，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)）优先
 
 停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验，而高吞吐量则可以高效率地利用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务
 
@@ -597,6 +625,29 @@ CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:Max
   class space    used 371K, capacity 388K, committed 512K, reserved 1048576K
 ```
 
+### (五) ZGC
+
+<a href='https://blog.csdn.net/meituantech/article/details/107853015'>新一代垃圾回收器ZGC的探索与实践</a>
+
+ZGC（The Z Garbage Collector）是JDK 11中推出的一款低延迟垃圾回收器，它的设计目标包括：
+
+* 停顿时间不超过10ms；
+* 停顿时间不会随着堆的大小，或者活跃对象的大小而增加；
+* 支持8MB~4TB级别的堆（未来支持16TB）。
+
+#### ZGC原理
+
+与CMS中的ParNew和G1类似，ZGC也采用标记-复制算法，不过ZGC对该算法做了重大改进：ZGC在标记、转移和重定位阶段几乎都是并发的，这是ZGC实现停顿时间小于10ms目标的最关键原因。
+
+![](../../content/java_jvm/imgs/zgc.png)
+
+ZGC只有三个STW阶段：初始标记，再标记，初始转移。其中，初始标记和初始转移分别都只需要扫描所有GC Roots，其处理时间和GC Roots的数量成正比，一般情况耗时非常短；再标记阶段STW时间很短，最多1ms，超过1ms则再次进入并发标记阶段。即，ZGC几乎所有暂停都只依赖于GC Roots集合大小，停顿时间不会随着堆的大小或者活跃对象的大小而增加。与ZGC对比，G1的转移阶段完全STW的，且停顿时间随存活对象的大小增加而增加。
+
+ZGC通过**着色指针**和**读屏障**技术，解决了转移过程中准确访问对象的问题，实现了并发转移。大致原理描述如下：并发转移中"并发"意味着GC线程在转移对象的过程中，应用线程也在不停地访问对象。假设对象发生转移，但对象地址未及时更新，那么应用线程可能访问到旧地址，从而造成错误。而在ZGC中，应用线程访问对象将触发"读屏障"，如果发现对象被移动了，那么"读屏障"会把读出来的指针更新到对象的新地址上，这样应用线程始终访问的都是对象的新地址。那么，JVM是如何判断对象被移动过呢？就是利用对象引用的地址，即着色指针。
+
+* 着色指针是一种将信息存储在指针中的技术。
+* 读屏障是JVM向应用代码插入一小段代码的技术。当应用线程从堆中读取对象引用时，就会执行这段代码。需要注意的是，仅"从堆中读取对象引用"才会触发这段代码。
+
 ## Java垃圾回收的依据/假设
 
 * Most objects soon become unreachable.
@@ -630,7 +681,7 @@ mubi@mubideMacBook-Pro ~ $
 
 * 线程TLAB局部缓存区域（Thread Local Allocation Buffer）
 
-Sun Hotspot JVM为了提升对象内存分配的效率，对于所创建的线程都会分配一块独立的空间TLAB（Thread Local Allocation Buffer），其大小由JVM根据运行的情况计算而得，在TLAB上分配对象时不需要加锁，因此JVM在给线程的对象分配内存时会尽量的在TLAB上分配，在这种情况下JVM中分配对象内存的性能和C基本是一样高效的，但如果对象过大的话则仍然是直接使用堆空间分配（堆是JVM中所有线程共享的，因此在其上进行对象内存的分配均需要进行加锁，这也导致了new对象的开销是比较大的）
+Sun Hotspot JVM为了提升对象内存分配的效率，对于所创建的线程都会分配一块独立的空间TLAB（Thread Local Allocation Buffer），其大小由JVM根据运行的情况计算而得，在TLAB上分配对象时不需要加锁（基于 CAS 的独享线程（Mutator Threads)），因此JVM在给线程的对象分配内存时会尽量的在TLAB上分配，在这种情况下JVM中分配对象内存的性能和C基本是一样高效的，但如果对象过大的话则仍然是直接使用堆空间分配（堆是JVM中所有线程共享的，因此在其上进行对象内存的分配均需要进行加锁，这也导致了new对象的开销是比较大的）
 
 ## CMS(Concurrent Mark Sweep)垃圾回收器
 
@@ -652,7 +703,7 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 * 并发标记（CMS concurrent mark）
 
-这个阶段紧随`初始标记`阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。
+这个阶段紧随`初始标记`阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。(并发标记所有老年代)
 
 * 重新标记（CMS remark）正确标记，需要`Stop The World`
 
@@ -660,7 +711,7 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 * 并发清除（CMS concurrent sweep）
 
-清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行；会产生浮动垃圾
+清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行；会产生浮动垃圾（标记-清除算法）
 
 ### 缺点
 
@@ -766,9 +817,9 @@ objD.fieldG = G;     // 3.写，写屏障
 
 * 整个堆被分为一个大小相等的region集合，每个reagion是逻辑上连续的虚拟内存区域；
 
-* 这些region有eden,survivor,old的概念；G1的各代存储地址是不连续的，每一代都使用了n个不连续的大小相同的Region;年轻代（eden + survivor）,年老代（old + humongous）
+* 这些region有eden,survivor,old的概念；G1的各代存储地址是不连续的，每一代都使用了n个不连续的大小相同的Region；年轻代（eden + survivor），年老代（old + humongous）
 
-* Humongous区域：如果一个对象占用的空间超过了region容量(`region size`)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在`old`region，为了能找到连续的region来分配巨型对象，有时候不得不启动Full GC。
+* Humongous区域：如果一个对象占用的空间超过了region容量(`region size`)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在`old`region，为了能找到连续的region来分配巨型对象，有时候不得不启动Full GC
     1. H-obj直接分配到了old gen，防止了反复拷贝移动
     2. H-obj在`global concurrent marking`阶段的`cleanup` 和 `full GC`阶段回收
     3. 在分配H-obj之前先检查是否超过 `initiating heap occupancy percent`和`the marking threshold`, 如果超过的话，就启动`global concurrent marking`，为的是提早回收，防止 `evacuation failures` 和 `full GC`。
@@ -858,7 +909,7 @@ void HeapRegion::setup_heap_region_size(size_t initial_heap_size, size_t max_hea
 
 * region size: `1M-32M`,通过`-XX:G1HeapRegionSize`可指定
 
-* G1的每个`region`都有一个`Remember Set(RSet)`，用来保存别的region的对象对该region的对象的引用，通过`Remember Set`我们可以找到哪些对象引用了当前`region`的对象
+* G1的每个`region`都有一个`Remember Set(RSet)`，用来保存别的region的对象对该region的对象的引用，通过`Remember Set`可以找到哪些对象引用了当前`region`里面的对象
 
 This allows the GC to avoid collecting the entire heap at once, and instead approach the problem incrementally: only a subset of the regions, called the collection set will be considered at a time.（避免一次对整个堆的垃圾进行回收，而是一次回收称为`collection set`的部分，`collection set`就是垃圾比较多的那些region）
 
@@ -892,8 +943,8 @@ Phase | Description
 (2) Root Region Scanning | Scan survivor regions for references into the old generation. This happens while the application continues to run. The phase must be completed before a young GC can occur.
 (3) Concurrent Marking | Find live objects over the entire heap. This happens while the application is running. This phase can be interrupted by young generation garbage collections.
 (4) Remark(Stop the World Event) | Completes the marking of live object in the heap. Uses an algorithm called snapshot-at-the-beginning (SATB) which is much faster than what was used in the CMS collector.
-(5) Cleanup(Stop the World Event and Concurrent) | * Performs accounting on live objects and completely free regions. (Stop the world); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)
-(*) Copying (Stop the World Event) | These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].
+(5) Cleanup(Stop the World Event and Concurrent) | * Performs accounting on live objects and completely free regions. (Stop the World); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)
+(*) Copying (Stop the World) | These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].
 
 ##### Initial Marking Phase(初始标记，STW)
 
@@ -910,13 +961,13 @@ If empty regions are found (as denoted by the "X"), they are removed immediately
 
 困难点：在标记对象的过程中，引用关系也正发生着变化
 
-1. 白色： 没有被标记的对象
-2. 灰色： 自身被标记，成员未被标记
-3. 黑色： 自身被和成员都被标记完成了
+1. 白色：没有被标记的对象
+2. 灰色：自身被标记，成员未被标记
+3. 黑色：自身被和成员都被标记完成了
 
 ![](../../content/java_jvm/imgs/three_color.png)
 
-从左边变成右边的状态,两个变化
+从左边变成右边的状态，两个变化
 1. B->D 引用消失
 2. A->D 引用新增
 
@@ -960,9 +1011,36 @@ gc log: `GC pause (mixed)`
     * Young generation and old generation are reclaimed at the same time.（年轻代和老年代会同时被回收）
     * Old generation regions are selected based on their liveness.
 
+### G1停顿耗时的主要瓶颈
+
+G1中标记-复制算法过程（G1的Young GC和Mixed GC均采用该算法）
+
+![](../../content/java_jvm/imgs/gc_gc.png)
+
+G1的混合回收过程可以分为标记阶段、清理阶段和复制阶段
+
+* 标记阶段停顿分析
+    * 初始标记阶段：初始标记阶段是指从GC Roots出发标记全部直接子节点的过程，该阶段是STW的。由于GC Roots数量不多，通常该阶段耗时非常短。
+    * 并发标记阶段：并发标记阶段是指从GC Roots开始对堆中对象进行可达性分析，找出存活对象。该阶段是并发的，即应用线程和GC线程可以同时活动。并发标记耗时相对长很多，但因为不是STW，所以我们不太关心该阶段耗时的长短。
+    * 再标记阶段：重新标记那些在并发标记阶段发生变化的对象。该阶段是STW的。
+
+* 清点阶段停顿分析
+    * 清理阶段清点出有存活对象的分区和没有存活对象的分区，该阶段不会清理垃圾对象，也不会执行存活对象的复制。该阶段是STW的。
+
+* 复制阶段停顿分析
+    * 复制算法中的转移阶段需要**分配新内存和复制对象的成员变量**。转移阶段是STW的，其中内存分配通常耗时非常短，但对象成员变量的复制耗时有可能较长，这是因为复制耗时与存活对象数量与对象复杂度成正比。对象越复杂，复制耗时越长。
+
+四个STW过程中
+1. 初始标记因为只标记GC Roots，耗时较短。
+2. 再标记因为对象数少，耗时也较短。
+3. 清理阶段清点出有存活对象的分区和没有存活对象的分区，因为内存分区数量少，耗时也较短。
+4. 复制阶段的转移过程要处理所有存活的对象，耗时会较长。
+
+因此，G1停顿时间的瓶颈主要是标记-复制中的转移阶段STW。为什么转移阶段不能和标记阶段一样并发执行呢？主要是G1未能解决转移过程中准确定位对象地址的问题。
+
 ### G1的优势（为什么能够设置一个停留时间）
 
-G1的另一个显著特点他能够让用户设置应用的暂停时间，为什么G1能做到这一点呢？也许你已经注意到了，G1是**选择一些内存块，而不是整个代的内存来回收**，这是G1跟其它GC非常不同的一点，其它GC每次回收都会回收整个Generation的内存(Eden, Old), 而回收内存所需的时间就取决于内存的大小，以及实际垃圾的多少，所以垃圾回收时间是不可控的；而G1每次并不会回收整代内存，到底回收多少内存就看用户配置的暂停时间，配置的时间短就少回收点，配置的时间长就多回收点，伸缩自如。
+G1的另一个显著特点它能够让用户设置应用的暂停时间，为什么G1能做到这一点呢？也许你已经注意到了，G1是**选择一些内存块，而不是整个代的内存来回收**，这是G1跟其它GC非常不同的一点，其它GC每次回收都会回收整个Generation的内存(Eden, Old), 而回收内存所需的时间就取决于内存的大小，以及实际垃圾的多少，所以垃圾回收时间是不可控的；而G1每次并不会回收整代内存，到底回收多少内存就看用户配置的暂停时间，配置的时间短就少回收点，配置的时间长就多回收点，伸缩自如。
 
 由于内存被分成了很多小块，又带来了另外好处，由于内存块比较小，进行内存压缩整理的代价都比较小，相比其它GC算法，可以有效的规避内存碎片的问题。
 
@@ -1264,6 +1342,12 @@ Heap
 很多 NIO 框架 （如 netty，rpc） 会采用 Java 的 DirectByteBuffer 类来操作堆外内存，DirectByteBuffer 类对象本身位于 Java 内存模型的堆中，由 JVM 直接管控、操纵。DirectByteBuffer 中用于分配堆外内存的方法 unsafe.allocateMemory(size) 是个 native 方法，本质上是用 C 的 malloc 来进行分配的。
 
 **堆外内存并不直接控制于JVM，因此只能等到full GC的时候才能垃圾回收！**（direct buffer归属的的JAVA对象是在堆上且能够被GC回收的，一旦它被回收，JVM将释放direct buffer的堆外空间。前提是没有关闭DisableExplicitGC）。堆外内存包含线程栈，应用程序代码，NIO缓存，JNI调用等.例如`ByteBuffer bb = ByteBuffer.allocateDirect(1024)`，这段代码的执行会在堆外占用`1k`的内存，Java堆内只会占用一个对象的指针引用的大小，堆外的这1k的空间只有当bb对象被回收时，才会被回收，这里会发现一个明显的不对称现象，就是堆外可能占用了很多，而堆内没占用多少，导致还没触发GC，那就很容易出现**Direct Memory造成物理内存耗光**
+
+### DirectByteBuffer 如何回收
+
+JDK中使用DirectByteBuffer对象来表示堆外内存，每个DirectByteBuffer对象在初始化时，都会创建一个对应的`Cleaner`对象，这个Cleaner对象会在合适的时候执行`unsafe.freeMemory(address)`，从而回收这块堆外内存。
+
+Cleaner 继承了 PhantomReference（虚引用）
 
 ### 堆外内存溢出
 

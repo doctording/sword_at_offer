@@ -13,7 +13,7 @@ date: 2019-02-16 00:00
 1. 将原始类型转换为对应的引用类型的机制，这个机制叫做`装箱`。
 2. 将引用类型转换为对应的原始类型，叫做`拆箱`。
 
-java中装箱和拆箱是自动完成的, 但这在性能方面是要付出代价的，装箱的本质就是**将原始类型包裹起来，并保存在堆里**。因此装箱后的值**需要更多的内存**，并需要额外的内存搜索来获取被包裹的原始值。
+Java中装箱和拆箱是自动完成的, 但这在性能方面是要付出代价的，装箱的本质就是**将原始类型包裹起来，并保存在堆里**。因此装箱后的值**需要更多的内存**，并需要额外的内存搜索来获取被包裹的原始值。
 
 ```java
 List<Integer> list = new ArrayList<>();
@@ -43,7 +43,7 @@ public static long parallelSum(long n) {
 * 并行流用的线程是从哪来的?有多少个?怎么自定义这个过程呢?
 
 并行流内部使用了默认的`ForkJoinPool`，它默认的线程数量就是你的`处理器数量`，这个值是由`Runtime.getRuntime().availableProcessors()`得到的。
-但是你可以过系统性 `java.util.concurrent.ForkJoinPool.common. parallelism`来改变线程􏺕大小，如下所示:
+但是你可以过系统性`java.util.concurrent.ForkJoinPool.common.parallelism`来改变线程􏺕大小，如下所示:
 `System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism","12");`
 这是一个全局设置，因此它将影响代码中所有的并行流。反过来说，目前还无法专为某个并行流设定这个值。一般而言，让`ForkJoinPool`的大小等于处理器数量是个不错的默认值，除非你有很好的理由，否则我们强烈建议你不要修改它。
 
@@ -320,6 +320,198 @@ System.out.println("Sequential sum done in:" +
 这个性能看起来比用并行流的版本要差，但这只是因为必须先要把整个数字流都放进一个`long[]`，之后才能在`ForkJoinSumRecursiveTask`任务中使用它
 
 ![](../../content/java8/imgs/fork_join_2.png)
+
+#### 归并排序ForkJoin方式
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+
+public class ForkJoinMergeSort {
+    private static final ForkJoinPool forkJoinPool = new ForkJoinPool(4); // N 核心处理器
+
+    private static int[] merge; // 合并用
+
+    public static void main(String[] args) {
+        int len = 20_000_000;
+        int sortTimes = 10;
+        merge = new int[len];
+
+        long t1 = System.currentTimeMillis();
+        for (int t = 0; t < sortTimes; t++) {
+            int[] arr = genRandomArr(len);
+            commonMergeSortArr(arr);
+        }
+        long t2 = System.currentTimeMillis();
+        System.out.println("普通归并排序共耗时：" + (t2 - t1) / 1000.0 + " 秒");
+
+        t1 = System.currentTimeMillis();
+        for (int t = 0; t < sortTimes; t++) {
+            int[] arr = genRandomArr(len);
+            multiThreadMergeSort(arr);
+        }
+        t2 = System.currentTimeMillis();
+        System.out.println("ForkJoin多线程归并排序共耗时：" + (t2 - t1) / 1000.0 + " 秒");
+    }
+
+    private static int[] genRandomArr(int len) {
+        Random random = new Random(System.currentTimeMillis());
+        int[] a = new int[len];
+        for (int i = 0; i < len; i++){
+            a[i] = random.nextInt(10000);
+        }
+        return a;
+    }
+
+    // 普通排序
+    private static long commonMergeSortArr(int[] a) {
+        long t1 = System.currentTimeMillis();
+        commonMergeSort(a, 0, a.length - 1);
+        long t2 = System.currentTimeMillis();
+
+        // 检查是否排序成功
+        for (int i = 1; i < a.length; i++) {
+            if (a[i] < a[i - 1]){
+                System.out.println("error sort commonMergeSort");
+            }
+        }
+        return t2 - t1;
+    }
+
+    private static void commonMergeSort(int[] a, int start, int end) {
+        if (end <= start) {
+            return;
+        }
+        if (end - start == 1 && a[end] < a[start]) {
+            int k = a[end];
+            a[end] = a[start];
+            a[start] = k;
+            return;
+        }
+
+        int middle = (start + end) / 2;
+        commonMergeSort(a, start, middle);
+        commonMergeSort(a, middle + 1, end);
+
+        // 合并
+        merge2(a, start, end, middle);
+    }
+
+    // 多线程排序
+    private static long multiThreadMergeSort(int[] a) {
+        SortTask task = new SortTask(a, 0, a.length - 1);
+        long t1 = System.currentTimeMillis();
+        forkJoinPool.invoke(task);
+        long t2 = System.currentTimeMillis();
+
+        // 检查是否排序成功
+        for (int i = 1; i < a.length; i++) {
+            if (a[i] < a[i - 1]){
+                System.out.println("error sort multiThreadMergeSort");
+            }
+        }
+
+        return t2 - t1;
+    }
+
+    /**
+     * fork-join 框架实现归并排序
+     *
+     * RecursiveTask：有返回值的 ForkJoinTask
+     */
+    private static class SortTask extends RecursiveTask<int[]> {
+        private int[] val;
+        private int start;
+        private int end;
+        private int middle;
+
+        public SortTask(int[] a, int start, int end) {
+            val = a;
+            this.start = start;
+            this.end = end;
+
+            middle = (start + end) / 2;
+
+            if (merge == null){
+                merge = new int[a.length];
+            }
+        }
+
+        @Override
+        protected int[] compute() {
+            List<SortTask> moreActions = getMoreActions();
+            if (moreActions != null && moreActions.size() > 0) {
+                // 执行所有子线程
+                for (SortTask t : moreActions){
+                    t.fork();
+                }
+
+                // 等待所有子线程完成
+                for (SortTask t : moreActions){
+                    t.join();
+                }
+
+                // 合并
+                merge2(val, start, end, middle);
+            } else {
+                if (end - start == 1 && val[start] > val[end]){
+                    swap(start, end);
+                }
+            }
+            return val;
+        }
+
+        /**
+         * 分割任务
+         */
+        private List<SortTask> getMoreActions() {
+            if (end - start <= 1){
+                return null;
+            }
+            List<SortTask> moreActions = new ArrayList<>();
+            // 添加左右两部分的任务
+            moreActions.add(new SortTask(val, start, middle));
+            moreActions.add(new SortTask(val, middle + 1, end));
+            return moreActions;
+        }
+
+        private void swap(int i, int j) {
+            int a = val[i];
+            val[i] = val[j];
+            val[j] = a;
+        }
+    }
+
+
+    // 合并有序的两部分数组
+    private static void merge2(int[] val, int start, int end, int middle) {
+        int p1 = start;
+        int p2 = middle + 1;
+        int p = start;
+        while (p1 <= middle || p2 <= end) {
+            if (p1 > middle){
+                merge[p++] = val[p2++];
+            }
+            else if (p2 > end){
+                merge[p++] = val[p1++];
+            }
+            else if (val[p1] > val[p2]){
+                merge[p++] = val[p2++];
+            }
+            else{
+                merge[p++] = val[p1++];
+            }
+        }
+
+        for (int i = start; i <= end; i++){
+            val[i] = merge[i];
+        }
+    }
+}
+```
 
 #### 工作窃取算法（work stealing）
 

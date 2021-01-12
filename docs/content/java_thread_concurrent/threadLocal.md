@@ -10,11 +10,11 @@ date: 2019-02-15 00:00
 
 `ThreadLocal`并不是一个线程，而是线程的一个局部变量(属于线程)
 
-`ThreadLocal`用于保存某个线程共享变量：对于同一个static ThreadLocal，不同线程只能从中get，set，remove自己的变量，而不会影响其他线程的变量
+`ThreadLocal`用于保存某个线程共享变量：对于同一个static ThreadLocal，不同线程只能从中get，set，remove自己的变量，而不会影响其它线程的变量
 
 ## 实现思路
 
-* Thread类有一个类型为`ThreadLocal.ThreadLocalMap`的实例变量`threadLocals`，也就是说每个线程有一个自己的`ThreadLocalMap`(是线程自己拥有的一个map，ThreadLocalMap有个静态类Entry使用了弱引用`Entry extends WeakReference<ThreadLocal<?>>`)。
+* `Thread`类有一个类型为`ThreadLocal.ThreadLocalMap`的实例变量`threadLocals`，也就是说每个线程有一个自己的`ThreadLocalMap`(是线程自己拥有的一个map，ThreadLocalMap有个静态类Entry使用了弱引用`Entry extends WeakReference<ThreadLocal<?>>`)。
 
 * 使用例子
 
@@ -89,7 +89,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 1. 如果当定义出来的`ThreadLocal`对象tl1不用了，即指向`ThreadLocal`的引用没了，那么`ThreadLocal`对象要被回收
 2. 假如说this是个强引用，那么显然只要线程不结束，`ThreadLocalMap`就存在，引用关系就存在；那么`ThreadLocal`就永远不会被回收，即有内存泄漏了
 3. 所以this被设计成为一个弱引用，只要gc发现不用了，就会将`ThreadLocal`对象tl1进行回收；这样当`ThreadLocal`对象被回收后，`ThreadLocalMap`里面的key是个null被回收，这使得value就访问不到，但是value的引用是存在的，这就会导致内存泄漏
-5. 所以需要显示的remove掉value，即执行`tl1.remove();`
+4. 所以需要显示的remove掉value，即执行`tl1.remove();`
 
 ## 使用场景
 
@@ -101,9 +101,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 
 ### 自己项目中使用到的实际例子?
 
-比如一个查询，要经过一层一层处理，最后还有记录此次的查询记录；
-
-其中有个queryId，可以放到`ThreadLocal`中，这样打点&记录随时可以取出queryId
+比如一个查询，要经过一层一层处理，最后还要记录此次的查询记录；其中有个queryId，可以放到`ThreadLocal`中，这样打点&记录随时可以取出queryId
 
 ## ThreadLocal会产生内存泄漏吗?
 

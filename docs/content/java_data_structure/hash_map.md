@@ -8,6 +8,16 @@ date: 2020-03-08 11:00
 
 # Java8 HashMap
 
+## 使用和底层结构
+
+```java
+HashMap<String,String> hashMap = new HashMap(10);
+String oldValue = hashMap.put("1", "2");
+System.out.println(oldValue); // null
+oldValue = hashMap.put("1", "3");
+System.out.println(oldValue); // 2
+```
+
 * hash表 + 链表(拉链法) + 红黑树
 
 * hash冲突，拉链；链表过长，则转化为红黑树
@@ -16,117 +26,96 @@ date: 2020-03-08 11:00
 
 ## 链表结构和红黑树结构
 
-* 链表结构
+* 普通的单链表结构
 
 ```java
 /**
-     * Basic hash bin node, used for most entries.  (See below for
-     * TreeNode subclass, and in LinkedHashMap for its Entry subclass.)
-     */
-    static class Node<K,V> implements Map.Entry<K,V> {
-        final int hash;
-        final K key;
-        V value;
-        Node<K,V> next;
+    * Basic hash bin node, used for most entries.  (See below for
+    * TreeNode subclass, and in LinkedHashMap for its Entry subclass.)
+    */
+static class Node<K,V> implements Map.Entry<K,V> {
+    final int hash;
+    final K key;
+    V value;
+    Node<K,V> next;
 
-        Node(int hash, K key, V value, Node<K,V> next) {
-            this.hash = hash;
-            this.key = key;
-            this.value = value;
-            this.next = next;
-        }
-
-        public final K getKey()        { return key; }
-        public final V getValue()      { return value; }
-        public final String toString() { return key + "=" + value; }
-
-        public final int hashCode() {
-            return Objects.hashCode(key) ^ Objects.hashCode(value);
-        }
-
-        public final V setValue(V newValue) {
-            V oldValue = value;
-            value = newValue;
-            return oldValue;
-        }
-
-        public final boolean equals(Object o) {
-            if (o == this)
-                return true;
-            if (o instanceof Map.Entry) {
-                Map.Entry<?,?> e = (Map.Entry<?,?>)o;
-                if (Objects.equals(key, e.getKey()) &&
-                    Objects.equals(value, e.getValue()))
-                    return true;
-            }
-            return false;
-        }
+    Node(int hash, K key, V value, Node<K,V> next) {
+        this.hash = hash;
+        this.key = key;
+        this.value = value;
+        this.next = next;
     }
+
+    public final K getKey()        { return key; }
+    public final V getValue()      { return value; }
+    public final String toString() { return key + "=" + value; }
+
+    public final int hashCode() {
+        return Objects.hashCode(key) ^ Objects.hashCode(value);
+    }
+
+    public final V setValue(V newValue) {
+        V oldValue = value;
+        value = newValue;
+        return oldValue;
+    }
+
+    public final boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (o instanceof Map.Entry) {
+            Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+            if (Objects.equals(key, e.getKey()) &&
+                Objects.equals(value, e.getValue()))
+                return true;
+        }
+        return false;
+    }
+}
 ```
 
 * 红黑树结构
 
 ```java
 /**
-     * Entry for Tree bins. Extends LinkedHashMap.Entry (which in turn
-     * extends Node) so can be used as extension of either regular or
-     * linked node.
-     */
-    static final class TreeNode<K,V> extends LinkedHashMap.Entry<K,V> {
-        TreeNode<K,V> parent;  // red-black tree links
-        TreeNode<K,V> left;
-        TreeNode<K,V> right;
-        TreeNode<K,V> prev;    // needed to unlink next upon deletion
-        boolean red;
-        TreeNode(int hash, K key, V val, Node<K,V> next) {
-            super(hash, key, val, next);
-        }
-
-
-static class Node<K,V> implements Map.Entry<K,V> {
-        final int hash;
-        final K key;
-        V value;
-        Node<K,V> next;
-
-        Node(int hash, K key, V value, Node<K,V> next) {
-            this.hash = hash;
-            this.key = key;
-            this.value = value;
-            this.next = next;
-        }
-
-        public final K getKey()        { return key; }
-        public final V getValue()      { return value; }
-        public final String toString() { return key + "=" + value; }
-
-        public final int hashCode() {
-            return Objects.hashCode(key) ^ Objects.hashCode(value);
-        }
-
-        public final V setValue(V newValue) {
-            V oldValue = value;
-            value = newValue;
-            return oldValue;
-        }
-
-        public final boolean equals(Object o) {
-            if (o == this)
-                return true;
-            if (o instanceof Map.Entry) {
-                Map.Entry<?,?> e = (Map.Entry<?,?>)o;
-                if (Objects.equals(key, e.getKey()) &&
-                    Objects.equals(value, e.getValue()))
-                    return true;
-            }
-            return false;
-        }
+    * Entry for Tree bins. Extends LinkedHashMap.Entry (which in turn
+    * extends Node) so can be used as extension of either regular or
+    * linked node.
+    */
+static final class TreeNode<K,V> extends LinkedHashMap.Entry<K,V> {
+    TreeNode<K,V> parent;  // red-black tree links
+    TreeNode<K,V> left;
+    TreeNode<K,V> right;
+    TreeNode<K,V> prev;    // needed to unlink next upon deletion
+    boolean red;
+    TreeNode(int hash, K key, V val, Node<K,V> next) {
+        super(hash, key, val, next);
     }
+
 ```
+
+### 为什么使用红黑树？为什么有个8的阈值是链表和红黑树转换
 
 平衡二叉树查找很快但是插入/删除时因为保持平衡需要旋转的平均次数较多不适应于插入/删除频繁的场景，红黑树则是插入和查找都能兼顾的平衡方案
 
-## 为什么有链表和红黑树
+另外红黑树占用空间显然是比链表大的，所以拉链法在节点只有几个的时候（概率分布统计得出，冲突为8的概率是千万分之一，否则hash函数有很大问题），没有必要用红黑树，链表查找即便O(n)，时间复杂度也还好
+
+## 是否线程安全？
+
+非线程安全；put操作是有扩容机制的，并发可能产生`ConcurrentModificationException`异常
+
+```java
+/**
+    * The number of times this HashMap has been structurally modified
+    * Structural modifications are those that change the number of mappings in
+    * the HashMap or otherwise modify its internal structure (e.g.,
+    * rehash).  This field is used to make iterators on Collection-views of
+    * the HashMap fail-fast.  (See ConcurrentModificationException).
+    */
+transient int modCount;
+```
+
+## 为什么有链表和红黑树?
 
 * 时间和空间的综合考虑
 
@@ -146,7 +135,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 * factorial(k)). The first values are:
 ```
 
-## put方法
+## put方法（拉链尾插，转换红黑树）
 
 ```java
 public V put(K key, V value) {
@@ -160,6 +149,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
     if ((tab = table) == null || (n = tab.length) == 0)
         n = (tab = resize()).length;
     // 如果桶中不包含键值对节点引用，则将新键值对节点的引用存入桶中即可
+    // 在数组中的下标通过：(n - 1) & hash] 计算得到
     if ((p = tab[i = (n - 1) & hash]) == null)
         tab[i] = newNode(hash, key, value, null);
     else {
@@ -184,7 +174,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                     break;
                 }
 
-                // 条件为 true，表示当前链表包含要插入的键值对，终止遍历
+                // 链表遍历找到了碰撞节点：hash值完全相等的节点，则用新节点替换老节点
                 if (e.hash == hash &&
                     ((k = e.key) == key || (key != null && key.equals(k))))
                     break;
@@ -213,7 +203,93 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 
 * 拉链超过`TREEIFY_THRESHOLD=8`,则链表转化为红黑树
 
-## 扩容
+### 容量(resize方法)
+
+```java
+final Node<K,V>[] resize() {
+    Node<K,V>[] oldTab = table;
+    int oldCap = (oldTab == null) ? 0 : oldTab.length;
+    int oldThr = threshold;
+    int newCap, newThr = 0;
+    if (oldCap > 0) {
+        if (oldCap >= MAXIMUM_CAPACITY) {
+            threshold = Integer.MAX_VALUE;
+            return oldTab;
+        }
+        else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+                    oldCap >= DEFAULT_INITIAL_CAPACITY)
+            newThr = oldThr << 1; // double threshold
+    }
+    else if (oldThr > 0) // initial capacity was placed in threshold
+        newCap = oldThr;
+    else {               // zero initial threshold signifies using defaults
+        newCap = DEFAULT_INITIAL_CAPACITY; // 16，初始数组的实际大小
+        newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY); // 12 = 16 * 0.75
+    }
+    if (newThr == 0) {
+        float ft = (float)newCap * loadFactor;
+        newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                    (int)ft : Integer.MAX_VALUE);
+    }
+    threshold = newThr;
+    @SuppressWarnings({"rawtypes","unchecked"})
+        Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+    table = newTab;
+    if (oldTab != null) {
+        for (int j = 0; j < oldCap; ++j) {
+            Node<K,V> e;
+            if ((e = oldTab[j]) != null) {
+                oldTab[j] = null;
+                if (e.next == null)
+                    newTab[e.hash & (newCap - 1)] = e;
+                else if (e instanceof TreeNode)
+                    ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+                else { // preserve order
+                    Node<K,V> loHead = null, loTail = null;
+                    Node<K,V> hiHead = null, hiTail = null;
+                    Node<K,V> next;
+                    do {
+                        next = e.next;
+                        if ((e.hash & oldCap) == 0) {
+                            if (loTail == null)
+                                loHead = e;
+                            else
+                                loTail.next = e;
+                            loTail = e;
+                        }
+                        else {
+                            if (hiTail == null)
+                                hiHead = e;
+                            else
+                                hiTail.next = e;
+                            hiTail = e;
+                        }
+                    } while ((e = next) != null);
+                    if (loTail != null) {
+                        loTail.next = null;
+                        newTab[j] = loHead;
+                    }
+                    if (hiTail != null) {
+                        hiTail.next = null;
+                        newTab[j + oldCap] = hiHead;
+                    }
+                }
+            }
+        }
+    }
+    return newTab;
+}
+```
+
+### 扩容
+
+* 扩容前
+
+![](../../content/java_data_structure/imgs/hashmap_resize.png)
+
+* 扩容后：容量和阈值都扩大两倍，并且new了新的容量的Node数组
+
+![](../../content/java_data_structure/imgs/hashmap_resize2.png)
 
 ```java
 /**
@@ -317,8 +393,8 @@ final Node<K,V>[] resize() {
 ```
 
 * 计算新桶数组的容量 newCap 和新阈值 newThr
-* 根据计算出的 newCap 创建新的桶数组，桶数组 table 也是在这里进行初始化的(new新hash表，遍历重新设置)
-* 将键值对节点重新映射到新的桶数组里。如果节点是 TreeNode 类型，则需要拆分红黑树。如果是普通节点，则节点按原顺序进行分组
+* 根据计算出的 newCap `new`出新的桶数组，桶数组 table 也是在这里进行初始化的(new新hash表，遍历重新设置)
+* 将键值对节点重新映射到新的桶数组里。如果节点是 TreeNode 类型，则可能要**拆分红黑树**；如果是普通节点，则节点按原顺序进行分组，链表结构采用尾插
 
 ## 删除
 
@@ -389,8 +465,7 @@ HashMap 的桶数组 table 被申明为`transient`。`transient`表示易变的�
 static final float DEFAULT_LOAD_FACTOR = 0.75f;  
 ```
 
-加载因子是表示Hash表中元素的填满的程度。
-
+加载因子是表示Hash表中元素的填满的程度
 * 加载因子越大,填满的元素越多,空间利用率越高，但冲突的机会加大了。
 * 反之,加载因子越小,填满的元素越少,冲突的机会减小,但空间浪费多了。
 
@@ -434,4 +509,4 @@ public class TreeMap<K,V>
 {
 ```
 
-TreeMap 为大多数操作提供平均`logN`的性能，如add（），remove（）和contains（）
+TreeMap 为大多数操作提供平均`logN`的性能，如`add（）`，`remove（）`和`contains（）`

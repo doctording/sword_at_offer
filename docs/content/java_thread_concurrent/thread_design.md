@@ -107,13 +107,13 @@ void test(){
 
 * final 保证 引用不能修改，值是可更改的； String保护性的拷贝(`深拷贝`)
 
-矛盾： 对象会创建的比较多
+矛盾：对象会创建的比较多
 
 ## Flyweight pattern(享元模式)
 
 ### Integer.valueOf 例子
 
-Integer.valueOf 会有一个缓存，数字在一定范围内不会创建新的对象
+Integer.valueOf 会有一个缓存，数字在一定范围内(-128~127)不会创建新的对象
 
 ```java
 /**

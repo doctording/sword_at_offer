@@ -41,7 +41,7 @@ date: 2018-05-30 00:00
 
 * 利用变量,非递归，时间复杂度O(n)
 
-* 快速幂的做法  f(n) = f(n - 1) + f(n - 2), 二阶的快速幂，时间复杂度O(logn),需要推算一下矩阵公式
+* 快速幂的做法  f(n) = f(n - 1) + f(n - 2), 二阶的快速幂，时间复杂度O(logn)，需要推算一下矩阵公式
 
 # 8 跳台阶
 
@@ -151,6 +151,8 @@ next 和 random
 
 然后遍历改变`random`, 遍历改变`next`，最后输出即可
 
+且还要注意还原原来的链表
+
 # 26 二叉搜索树与双向链表
 
 * 二叉树的非递归遍历(可以使用辅助栈)
@@ -168,7 +170,7 @@ next 和 random
 
 * 快排思路
 
-* 堆排序思路 O(nlogk)时间复杂度，适合处理海量数据,采用红黑树（stl中的set,multiset都是基于红黑树的）
+* 堆排序思路`O(nlogk)`时间复杂度，适合处理海量数据，采用红黑树（stl中的set,multiset都是基于红黑树的）
 
 # 30 连续子数组的最大和
 
@@ -185,6 +187,8 @@ next 和 random
 * 两两组合排序，注意0
 
 # 33 丑数
+
+多指针移动
 
 # 34 第一个只出现一次的字符
 
@@ -263,13 +267,27 @@ next 和 random
 `f(N,M)`表示，`N`个人报数，每报到`M`时杀掉那个人，最终胜利者的编号
 `f(N−1,M)`表示，`N-1`个人报数，每报到M时杀掉那个人，最终胜利者的编号
 
-![](https://raw.githubusercontent.com/doctording/sword_at_offer/master/content/solved_by_java/imgs/joseph.png)
+![](../../content/thought_implement_by_java/imgs/joseph.png)
 
 `f(11, 3) = 7`, 可以看到`7`不断的往前面移动`3`即每杀掉一个人，其实就是把这个数组(环)向前移动了M位.
 
 假设：`n`个人，最后胜利者是`Pn`位置；则经过一轮以后:变成`n-1`个人，最后胜利者位置是`Pn-1`
 那么显然有： `Pn = ( Pn-1 + k ) % n`
 所以有：`f(N,M) = ( f(N−1, M ) + M ) % N`
+
+```java
+public class Solution {
+    public int LastRemaining_Solution(int n, int m) {
+        if(n <= 0){
+            return -1;
+        }
+        if(n == 1){
+            return 0;
+        }
+        return (LastRemaining_Solution(n-1, m) + m) % n;
+    }
+}
+```
 
 # 47 求1+2+3+...+n
 

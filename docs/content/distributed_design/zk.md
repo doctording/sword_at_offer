@@ -8,7 +8,7 @@ date: 2020-07-12 00:00
 
 # Zookeeper
 
-<a href='https://blog.csdn.net/qq_26437925/category_9176864.html'>zk blog笔记</a>
+![](http://assets.processon.com/chart_image/5f73dfca5653bb06efe7da35.png)
 
 ## 谈谈对zookeeper的认识？
 
@@ -39,7 +39,9 @@ ZAB 协议是为分布式协调服务 Zookeeper 专门设计的一种支持崩�
 
 ## 强一致性、弱一致性、最终一致性？
 
-一致性（Consistency）是指多副本（Replications）问题中的数据一致性。可以分为强一致性、顺序一致性与弱一致性。
+一致性（Consistency）是指多副本（Replications）问题中的数据一致性。可以分为强一致性、弱一致性。
+
+从复制主：主等待从同步完，然后返回，这是同步的，也是**强一致性**；如果主先直接返回，然后从慢慢同步，这是异步的，是**弱一致性**。
 
 * 强一致性（Strict Consistency）
 
@@ -49,31 +51,30 @@ ZAB 协议是为分布式协调服务 Zookeeper 专门设计的一种支持崩�
 
 * 最终一致性
 
-不保证在任意时刻任意节点上的同一份数据都是相同的，但是随着时间的迁移，不同节点上的同一份数据总是在向趋同的方向变化。
-简单说，就是在一段时间后，节点间的数据会最终达到一致状态。
+不保证在任意时刻任意节点上的同一份数据都是相同的，但是随着时间的迁移，不同节点上的同一份数据总是在向趋同的方向变化。简单说，就是在一段时间后，节点间的数据会最终达到一致状态。
 
 * 弱一致性
 
-数据更新后，如果能容忍后续的访问只能访问到部分或者全部访问不到，则是弱一致性
+数据更新后，如果能容忍后续的访问只能访问到部分或者全部访问不到，则是弱一致性；最终一致性就属于弱一致性
 
-最终一致性就属于弱一致性
+### 重试，补偿，幂等
 
 ## zk节点
 
 ### zk节点关联的stat结构
 
 ZooKeeper命名空间中的每个znode都有一个与之关联的stat结构，类似于Unix/Linux文件系统中文件的stat结构。 znode的stat结构中的字段显示如下，各自的含义如下：
-* cZxid：创建znode的事务ID。
-* mZxid：最后修改znode的事务ID。
-* pZxid：最后修改添加或删除子节点的事务ID。
-* ctime：表示从1970-01-01T00:00:00Z开始以毫秒为单位的znode创建时间。
-* mtime：表示从1970-01-01T00:00:00Z开始以毫秒为单位的znode最近修改时间。
-* dataVersion：表示对该znode的数据所做的更改次数。
-* cversion：这表示对此znode的子节点进行的更改次数。
-* aclVersion：表示对此znode的ACL进行更改的次数。
-* ephemeralOwner：如果znode是ephemeral类型节点，则这是znode所有者的 session ID。 如果znode不是ephemeral节点,则该字段设置为零。
-* dataLength：这是znode数据字段的长度。
-* numChildren：这表示znode的子节点的数量。
+* cZxid：创建znode的事务ID
+* mZxid：最后修改znode的事务ID
+* pZxid：最后修改添加或删除子节点的事务ID
+* ctime：表示从1970-01-01T00:00:00Z开始以毫秒为单位的znode创建时间
+* mtime：表示从1970-01-01T00:00:00Z开始以毫秒为单位的znode最近修改时间
+* dataVersion：表示对该znode的数据所做的更改次数
+* cversion：这表示对此znode的子节点进行的更改次数
+* aclVersion：表示对此znode的ACL进行更改的次数
+* ephemeralOwner：如果znode是ephemeral类型节点，则这是znode所有者的 session ID；如果znode不是ephemeral节点,则该字段设置为零0
+* dataLength：这是znode数据字段的长度
+* numChildren：这表示znode的子节点的数量
 
 eg1: 创建一个空的znode,并修改数据
 
@@ -110,7 +111,7 @@ lockdata
 [zk: 127.0.0.1:2181(CONNECTED) 8]
 ```
 
-eg2:创建子节点
+eg2: 创建子节点
 
 ```java
 [zk: 127.0.0.1:2181(CONNECTED) 8] create /mylock/son1 son1data
@@ -212,18 +213,18 @@ zk各种操作产生的事件
 -|-|-
 create(父节点) | NodeCreated |无
 delete(父节点) | NodeDeleted |无
-setData(父节点) |NodeDataChanged |无
+setData(父节点)| NodeDataChanged |无
 create(子节点) | NodeChildrenChanged | NodeCreated
-delete(子节点) | NodeChildrenChanged |NodeDeleted
-setData(子节点) |无| NodeDataChanged
+delete(子节点) | NodeChildrenChanged | NodeDeleted
+setData(子节点) | 无 | NodeDataChanged
 
 ## 通知(Watch)机制原理？
 
 ![](../../content/distributed_design/imgs/zk-04.webp)
 
-* zk客户端向zk服务器注册watcher的同时，会将watcher对象存储在客户端的WatchManager。
+* zk客户端向zk服务器注册watcher的同时，会将watcher对象存储在客户端的WatchManager
 
-* zk服务器触发watcher事件后，会向客户端发送通知，客户端线程从WatchManager中回调watcher执行相应的功能。
+* zk服务器触发watcher事件后，会向客户端发送通知，客户端线程从WatchManager中回调watcher执行相应的功能
 
 * Watch是轻量级的，其实就是本地JVM的Callback，服务器端只是存了是否有设置了Watcher的布尔类型
 
@@ -233,9 +234,9 @@ setData(子节点) |无| NodeDataChanged
 
 当创建一个Zookeeper实例的时候，会有两个线程被创建：`SendThread`和`EventThread`。所以当我们使用ZK Client端的时候应该尽量只创建一个Zookeeper实例并反复使用。大量的创建销毁Zookeeper实例不仅会反复的创建和销毁线程，而且会在Server端创建大量的Session。
 
-![](../../content/distributed_design/imgs/zk-06.jpg)
+![](../../content/distributed_design/imgs/zk-06.png)
 
-其中`SendThread`是真正处理网络IO的线程，所有通过网络发送和接受的数据包都在这个线程中处理,线程的主体是一个while循环；SendThread 负责将ZooKeeper的请求信息封装成一个Packet，发送给 Server，并维持同Server的心跳;`EventThread`负责解析通过通过SendThread得到的Response，之后发送给Watcher::processEvent进行详细的事件处理
+其中`SendThread`是真正处理网络IO的线程，所有通过网络发送和接受的数据包都在这个线程中处理，线程的主体是一个while循环；SendThread 负责将ZooKeeper的请求信息封装成一个Packet，发送给 Server，并维持同Server的心跳；`EventThread`负责解析通过SendThread得到的Response，之后发送给`Watcher::processEvent`进行详细的事件处理
 
 * SendThread
 
@@ -246,7 +247,7 @@ setData(子节点) |无| NodeDataChanged
     */
 class SendThread extends ZooKeeperThread {
 
-     @Override
+    @Override
     public void run() {
         clientCnxnSocket.introduce(this, sessionId, outgoingQueue);
         clientCnxnSocket.updateNow();
@@ -405,7 +406,7 @@ class SendThread extends ZooKeeperThread {
 
 * EnvetThread
 
-EventThread通过processEvent对队列中的事件进行消费，并分发给不同的Watcher
+EventThread通过从waitingEvents阻塞队列中获取事件，然后processEvent方法对取出来的事件进行处理
 
 ```java
 class EventThread extends ZooKeeperThread {

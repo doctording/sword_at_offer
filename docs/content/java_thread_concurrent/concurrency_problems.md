@@ -20,256 +20,378 @@ date: 2019-03-12 00:00
 
 ## 方法1: ReentrantLock & Condition（条件锁）
 
-```java
-package com.thread;
+* 具体是可重入锁 + 条件变量 wait/signal 机制
+* 代码中 count 必须是 static
+* for循环可以放在lock之前或之后都可以
 
+```java
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * @Author mubi
- * @Date 2019/3/12 10:34 AM
- * lock & condition 对比 synchronized wait notify
- */
-public class Main {
 
-    final static int N = 5;
-    static int count = 0;
-    static int flag = 1;
+public class Hello extends Thread{
 
-    public static void main(String[] args) throws Exception{
+    static final int N = 5; // 循环次数，打印多少次
+    // 必须有static，因为线程lambda表达式无法访问全局非静态变量
+    volatile static int count = 0;
 
+    public static void main(String[] args) throws Exception {
+        // 利用可重入锁，lock就是 state + 1， unlock 就是 state - 1
         ReentrantLock lock = new ReentrantLock();
-        Condition conditionA = lock.newCondition();
-        Condition conditionB = lock.newCondition();
-        Condition conditionC = lock.newCondition();
+        Condition con1 = lock.newCondition();
+        Condition con2 = lock.newCondition();
+        Condition con3 = lock.newCondition();
 
-        Thread threadA = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(count < N) {
-                    try {
-                        lock.lock();
-                        // 标志为1，A才能执行，否则阻塞自己
-                        while (flag != 1){
-                            conditionA.await();
-                        }
-                        System.out.print("A");
-                        // 因为A打印完应该打印B， 这里线程B唤醒，同时设置标记
-                        flag = 2;
-                        conditionB.signal();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        lock.unlock();
+        Thread t1 = new Thread(()->{
+            System.out.println("start t1");
+            try {
+                lock.lock();
+                for(int i=0;i<N;i++) {
+                    while (count % 3 != 0) {
+                        con1.await();
                     }
+                    System.out.print("A");
+                    count ++;
+                    con2.signal();
                 }
+            } catch (Exception e) {
+
+            } finally {
+                lock.unlock();
             }
         });
-
-        Thread threadB = new Thread(()-> {
-            while(count < N) {
-                try {
-                    lock.lock();
-                    while (flag != 2){
-                        conditionB.await();
+        Thread t2 = new Thread(()->{
+            System.out.println("start t2");
+            try {
+                lock.lock();
+                for(int i=0;i<N;i++) {
+                    while (count % 3 != 1) {
+                        con2.await();
                     }
                     System.out.print("B");
-                    flag = 3;
-                    conditionC.signal();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    lock.unlock();
+                    count ++;
+                    con3.signal();
                 }
+            } catch (Exception e) {
+
+            } finally {
+                lock.unlock();
             }
         });
-
-        Thread threadC = new Thread(()-> {
-            while (count <= N) {
-                try {
-                    lock.lock();
-                    while (flag != 3){
-                        conditionC.await();
+        Thread t3 = new Thread(()->{
+            System.out.println("start t3");
+            try {
+                lock.lock();
+                for(int i=0;i<N;i++) {
+                    while (count % 3 != 2) {
+                        con3.await();
                     }
-                    System.out.println("C" + count);
-                    flag = 1;
-                    count++;
-                    conditionA.signal();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    lock.unlock();
+                    System.out.print("C");
+                    count ++;
+                    con1.signal();
                 }
+            } catch (Exception e) {
+
+            } finally {
+                lock.unlock();
             }
         });
-
-        threadA.start();
-        threadB.start();
-        threadC.start();
-
-        threadA.join();
-        threadB.join();
-        threadC.join();
-        System.out.println("main end");
+        // 模拟线程的不同启动顺序，不过不影响本题结果
+        t2.start();
+        TimeUnit.SECONDS.sleep(1);
+        t3.start();
+        TimeUnit.SECONDS.sleep(1);
+        t1.start();
     }
+
 }
 ```
 
 ## 方法2: synchronized & wait() notify() notifyAll()（状态同步 + wait/notify）
 
 ```java
+import java.util.concurrent.TimeUnit;
 
-public class Main{
+public class Hello extends Thread{
 
-    static int N = 2;
-
-    static int flag = 3;
+    static final int N = 5; // 循环次数，打印多少次
+    // 必须有static，因为线程lambda表达式无法访问全局非静态变量
+    static int count = 0;
+    // synchronized 也是可重入锁
     static Object object = new Object();
 
     public static void main(String[] args) throws Exception {
 
-        Thread A = new Thread(()-> {
+        Thread t1 = new Thread(()-> {
+            System.out.println("start t1");
             synchronized (object) {
-                for(int i=0;i<N;i++){
-                    try {
-                        //等待前一个的打印处理
-                        while (flag != 3) {
+                try {
+                    for (int i = 0; i < N; i++) {
+                        while (count % 3 != 0) {
                             object.wait();
                         }
-                        System.out.print(Thread.currentThread().getName() + " ");
-                        flag = 1;
-                        // 唤醒其它线程
+                        System.out.print("A");
+                        count++;
                         object.notifyAll();
-                    }catch (Exception e){
-                        e.printStackTrace();
                     }
+                }catch (Exception e){
+
                 }
             }
-        }, "A");
-
-        Thread B = new Thread(()-> {
-            synchronized (object) {
-                for(int i=0;i<N;i++){
-                    try {
-                        //等待前一个的打印处理
-                        while (flag != 1) {
-                            object.wait();
-                        }
-                        System.out.print(Thread.currentThread().getName() + " ");
-                        flag = 2;
-                        // 唤醒其它线程
-                        object.notifyAll();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, "B");
-
-        Thread C = new Thread(()-> {
-            synchronized (object) {
-                for(int i=0;i<N;i++){
-                    try {
-                        //等待前一个的打印处理
-                        while (flag != 2) {
-                            object.wait();
-                        }
-                        System.out.print(Thread.currentThread().getName() + " ");
-                        flag = 3;
-                        // 唤醒其它线程
-                        object.notifyAll();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, "C");
-
-        A.start();
-        B.start();
-        C.start();
-
-        A.join();
-        B.join();
-        C.join();
-    }
-
-}
-```
-
-## 方法3: 信号量
-
-```java
-class FooBar {
-    private int n;
-    Semaphore fooSemaphore = new Semaphore(1);
-    Semaphore barSemaphore = new Semaphore(0);
-
-    public FooBar(int n) {
-        this.n = n;
-    }
-
-    public void foo(Runnable printFoo) throws InterruptedException {
-        for (int i = 0; i < n; i++) {
-            fooSemaphore.acquire();
-            // printFoo.run() outputs "foo". Do not change or remove this line.
-            printFoo.run();
-            barSemaphore.release();
-        }
-    }
-
-    public void bar(Runnable printBar) throws InterruptedException {
-        for (int i = 0; i < n; i++) {
-            barSemaphore.acquire(); // 初始为0, barSemaphore.acquire 会阻塞等待
-            // printBar.run() outputs "bar". Do not change or remove this line.
-            printBar.run();
-            fooSemaphore.release();
-        }
-    }
-}
-```
-
-# 现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？
-
-```java
-public class Main {
-
-    public static void main(String[] args) throws Exception{
-        Thread t1 = new Thread(()->{
-            System.out.println(Thread.currentThread().getName() + " running");
-        },"t1");
-
+        });
         Thread t2 = new Thread(()->{
+            System.out.println("start t2");
+            synchronized (object) {
+                try {
+                    for (int i = 0; i < N; i++) {
+                        while (count % 3 != 1) {
+                            object.wait();
+                        }
+                        System.out.print("B");
+                        count++;
+                        object.notifyAll();
+                    }
+                }catch (Exception e){
 
-            try{
-                t1.join();
-            }catch (Exception e){
+                }
             }
-
-            System.out.println(Thread.currentThread().getName() + " running");
-        },"t2");
-
+        });
         Thread t3 = new Thread(()->{
+            System.out.println("start t3");
+            synchronized (object) {
+                try {
+                    for (int i = 0; i < N; i++) {
+                        while (count % 3 != 2) {
+                            object.wait();
+                        }
+                        System.out.print("C");
+                        count++;
+                        object.notifyAll();
+                    }
+                }catch (Exception e){
 
-            try{
-                t2.join();
-            }catch (Exception e){
+                }
             }
-
-            System.out.println(Thread.currentThread().getName() + " running");
-        },"t3");
-
-        t1.start();
+        });
+        // 模拟线程的不同启动顺序,不过不影响本题结果
         t2.start();
-        t3.start();
-
         TimeUnit.SECONDS.sleep(1);
-
-        System.out.println("main end");
+        t3.start();
+        TimeUnit.SECONDS.sleep(1);
+        t1.start();
     }
 
+}
+```
+
+## 方法3: 信号量`Semaphore`
+
+```java
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+public class Hello extends Thread{
+
+    static final int N = 5; // 循环次数，打印多少次
+    // 必须有static，因为线程lambda表达式无法访问全局非静态变量
+    static int count = 0;
+
+//    static Semaphore semaphoreAB = new Semaphore(1);
+//    static Semaphore semaphoreBC = new Semaphore(0);
+//    static Semaphore semaphoreCA = new Semaphore(0);
+
+    public static void main(String[] args) throws Exception {
+
+        // 初始化 semaphoreAB 的permits为1,其它permits都是0,这样只有线程 t1 能够 acquire 成功
+        Semaphore semaphoreAB = new Semaphore(1);
+        Semaphore semaphoreBC = new Semaphore(0);
+        Semaphore semaphoreCA = new Semaphore(0);
+
+        Thread t1 = new Thread(()-> {
+            System.out.println("start t1");
+            for (int i = 0; i < N; i++) {
+                try {
+                    semaphoreAB.acquire();
+                    System.out.print("A");
+                    count++;
+                    semaphoreBC.release();
+                }catch (Exception e){
+
+                }
+            }
+        });
+        Thread t2 = new Thread(()->{
+            System.out.println("start t2");
+            for (int i = 0; i < N; i++) {
+                try {
+                    semaphoreBC.acquire();
+                    System.out.print("B");
+                    count++;
+                    semaphoreCA.release();
+                }catch (Exception e){
+
+                }
+            }
+        });
+        Thread t3 = new Thread(()->{
+            System.out.println("start t3");
+            for (int i = 0; i < N; i++) {
+                try {
+                    semaphoreCA.acquire();
+                    System.out.print("C");
+                    count++;
+                    semaphoreAB.release();
+                }catch (Exception e){
+
+                }
+            }
+        });
+        // 模拟线程的不同启动顺序,不过不影响本题结果
+        t2.start();
+        TimeUnit.SECONDS.sleep(1);
+        t3.start();
+        TimeUnit.SECONDS.sleep(1);
+        t1.start();
+    }
+
+}
+```
+
+# 按序打印：现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？
+
+同交替打印，如下信号量实现
+
+```java
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+
+public class Hello extends Thread{
+
+    public static void main(String[] args) throws Exception {
+
+        // 初始化 semaphoreAB 的permits为1,其它permits都是0,这样只有线程 t1 能够 acquire 成功
+        Semaphore semaphoreAB = new Semaphore(1);
+        Semaphore semaphoreBC = new Semaphore(0);
+        Semaphore semaphoreCA = new Semaphore(0);
+
+        Thread t1 = new Thread(()-> {
+            System.out.println("start t1");
+            try {
+                semaphoreAB.acquire();
+                // a logic
+                System.out.println("A");
+                semaphoreBC.release();
+            }catch (Exception e){
+
+            }
+        });
+        Thread t2 = new Thread(()->{
+            System.out.println("start t2");
+            try {
+                semaphoreBC.acquire();
+                // b logic
+                System.out.println("B");
+                semaphoreCA.release();
+            }catch (Exception e){
+
+            }
+        });
+        Thread t3 = new Thread(()->{
+            System.out.println("start t3");
+            try {
+                semaphoreCA.acquire();
+                // c logic
+                System.out.println("C");
+                semaphoreAB.release();
+            }catch (Exception e){
+
+            }
+        });
+        // 模拟线程的不同启动顺序,不过不影响本题结果
+        t2.start();
+        TimeUnit.SECONDS.sleep(1);
+        t3.start();
+        TimeUnit.SECONDS.sleep(1);
+        t1.start();
+    }
+
+}
+```
+
+# 多线程遍历数组打印（阿里社招）
+
+给定一个数组`[1,2,3,4,5,6,7,8,9....,15]`，要求遍历数组，遇到可以同时被3和5整除的数字，打印C；遇到仅能被5整除的数字，打印B；遇到仅能被3整除的数字，打印A；其他打印数字本身；
+
+要求四个线程，每一个线程执行一个打印方法。
+
+```java
+public class Hello implements Runnable {
+
+    private static final int[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
+    private static ReentrantLock lock = new ReentrantLock();
+    private static Condition condition = lock.newCondition();
+    private static volatile int currentCount = 0;
+
+    private int selfFlag;
+
+    public Hello(int flag) {
+        this.selfFlag = flag;
+    }
+
+    private int checkFlag(int n) {
+        if (n % 3 == 0 && n % 5 == 0) {
+            return 0;
+        } else if (n % 5 == 0) {
+            return 1;
+        } else if (n % 3 == 0) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            lock.lock();
+            try {
+                // 这里需要判断数组越界情况
+                while (currentCount < array.length && checkFlag(array[currentCount]) % 4 != selfFlag) {
+                    condition.await();
+                }
+                if (currentCount < array.length) {
+                    if(selfFlag == 0){
+                        System.out.print("C ");
+                    } else if(selfFlag == 1){
+                        System.out.print("B ");
+                    } else if(selfFlag == 2){
+                        System.out.print("A ");
+                    } else {
+                        System.out.print(array[currentCount] + " ");
+                    }
+                    currentCount++;
+                    // 注意这里是 signalAll，一个lock下的条件变量可以唤醒其它所有的
+                    condition.signalAll();
+                } else {
+                    return;
+                }
+            } catch (InterruptedException e) {
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new Thread(new Hello(0)).start();
+        new Thread(new Hello(1)).start();
+        new Thread(new Hello(2)).start();
+        new Thread(new Hello(3)).start();
+
+    }
 }
 ```
 
@@ -443,5 +565,209 @@ public class Main {
         }
     }
 
+}
+```
+
+# 生产者/消费者
+
+## synchonized + wait + notity + buffer
+
+```java
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
+
+
+public class Hello extends Thread {
+
+    // buffer 的总大小
+    private final int MAX_LEN = 10;
+    // buffer 队列
+    private Queue<Integer> buffer = new LinkedList<>();
+
+    class Producer extends Thread {
+        @Override
+        public void run() {
+            producer();
+        }
+        private void producer() {
+            while(true) {
+                synchronized (buffer) {
+                    while (buffer.size() == MAX_LEN) {
+                        System.out.println("当前队列满");
+                        try {
+                            buffer.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    buffer.add(1);
+                    System.out.println("生产者生产一条任务，当前队列长度为" + buffer.size());
+                    try {
+                        Thread.sleep(new Random().nextInt(200));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    buffer.notify();
+                }
+            }
+        }
+    }
+    class Consumer extends Thread {
+        @Override
+        public void run() {
+            consumer();
+        }
+        private void consumer() {
+            while (true) {
+                synchronized (buffer) {
+                    while (buffer.size() == 0) {
+                        System.out.println("当前队列为空");
+                        try {
+                            buffer.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    buffer.poll();
+                    System.out.println("消费者消费一条任务，当前队列长度为" + buffer.size());
+                    try {
+                        Thread.sleep(new Random().nextInt(200));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    buffer.notify();
+                }
+            }
+        }
+    }
+    public static void main(String[] args) {
+        Hello hello = new Hello();
+        Producer producer = hello.new Producer();
+        Consumer consumer = hello.new Consumer();
+        producer.start();
+        consumer.start();
+    }
+
+}
+```
+
+## 信号量伪代码
+
+```java
+Deposit(c)
+{
+    empty->P();//检查是否还有空缓冲区
+
+    mutex->P();
+    Add c;
+    mutex->V();
+
+    full->V();//生产者生成了数据，需要将满缓冲区个数加1
+}
+
+Remove(c)
+{
+    full->P();//检查缓冲区里面是否还有东西，若缓冲区为空，则阻塞自己
+
+    mutex->P();
+    Remove c;
+    mutex->V();
+
+    empty->V();//消费者读取一个数据，释放一个空缓冲区资源
+}
+```
+
+### Java Semaphore实现
+
+```java
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+
+
+public class Hello extends Thread {
+
+    // buffer 的总大小
+    private final int MAX_LEN = 10;
+    // buffer 队列
+    private Queue<Integer> buffer = new LinkedList<>();
+
+    // 作为一把互斥锁；直接用 ReentrantLock 也可以
+    Semaphore mutex = new Semaphore(1);
+    // 初始化为0的信号量
+    Semaphore semaphoreFull = new Semaphore(0);
+    // 初始化为 MAX_LEN 的信号量
+    Semaphore semaphoreEmpty = new Semaphore(MAX_LEN);
+
+    class Producer extends Thread {
+        @Override
+        public void run() {
+            producer();
+        }
+
+        private void producer() {
+            while(true) {
+                try {
+                    semaphoreEmpty.acquire(); // 信号量P操作，减少1
+
+                    try {
+                        mutex.acquire();
+
+                        buffer.add(1);
+                        System.out.println("生产者生产一条任务，当前队列长度为" + buffer.size());
+                        Thread.sleep(new Random().nextInt(200));
+
+                    } catch (Exception e) {
+                    } finally {
+                        mutex.release();
+                    }
+
+                    semaphoreFull.release(); // 信号量V操作，增加1
+                } catch (Exception e){
+
+                }
+            }
+        }
+    }
+
+    class Consumer extends Thread {
+        @Override
+        public void run() {
+            consumer();
+        }
+        private void consumer() {
+            while(true) {
+                try {
+                    semaphoreFull.acquire();
+
+                    try {
+                        mutex.acquire();
+
+                        buffer.poll();
+                        System.out.println("消费者消费一条任务，当前队列长度为" + buffer.size());
+                        Thread.sleep(new Random().nextInt(200));
+
+                    } catch (Exception e) {
+                    } finally {
+                        mutex.release();
+                    }
+
+                    semaphoreEmpty.release();
+                } catch (Exception e){
+
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Hello hello = new Hello();
+        Producer producer = hello.new Producer();
+        Consumer consumer = hello.new Consumer();
+        producer.start();
+        consumer.start();
+    }
 }
 ```

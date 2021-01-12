@@ -15,34 +15,32 @@ Python的`inspect`模块包含了大量的与反射、元数据相关的工具�
 ```python
 from inspect import isfunction
 
-  print type("aa") == str
-  print type([1,2]) == list
-  print type({"id":1}) == dict
-  print type((1,)) == tuple
-  print type(1.23) == float
-  print type(1) == int
-  a = None
-  print a == None
-  print isfunction(test1)
+print type("aa") == str
+print type([1,2]) == list
+print type({"id":1}) == dict
+print type((1,)) == tuple
+print type(1.23) == float
+print type(1) == int
+a = None
+print a == None
+print isfunction(test1)
 ```
 
 ### Numbers 数字
 
-	int, long, float, double
+int, long, float, double
 
 ### String 字符串
 
 读取顺序
-
-	* 从左到右索引默认0开始的，最大范围是字符串长度少1
-
+    * 从左到右索引默认0开始的，最大范围是字符串长度少1
 	* 从右到左索引默认-1开始的，最大范围是字符串开头
 
 转义字符用反斜杠 `\`
 
 操作符 & 格式化
 
-```
+```python
 +
 *
 []
@@ -69,7 +67,7 @@ python三引号\```允许一个字符串跨多行，字符串中可以包含换�
 
 ### List 列表
 
-用```[]```表示
+用`[]`表示
 
 #### 基础操作
 
@@ -134,7 +132,7 @@ if __name__ == '__main__':
 
 ### Dictionary 字典
 
-	用```{}```表示, ```key:value```, 通过key来读取,而非偏移
+用`{}`表示, `key:value`, 通过key来读取,而非偏移
 
 #### dict遍历
 
@@ -192,7 +190,7 @@ if __name__ == '__main__':
 
 ### 其它类型
 
-    True，False，None
+True，False，None
 
 #### False的情况
 
@@ -210,7 +208,7 @@ if __name__ == '__main__':
 
 ## 条件语句
 
-* 注意条件后面的冒号```:```，else后面的冒号```:```
+* 注意条件后面的冒号`:`，else后面的冒号`:`
 
 ```python
 if 判断条件：
@@ -567,7 +565,6 @@ if __name__ == '__main__':
     print(m.__class__)          # 对象来源于哪个类
     print(m.f)
 
-
 ```
 
 #### __new__ 与 __init__的区别
@@ -697,8 +694,8 @@ def run_twice(animal):
     """
     新增一个Animal的子类，不必对run_twice()做任何修改，
     实际上，任何依赖Animal作为参数的函数或者方法都可以不加修改地正常运行，原因就在于多态。
-    :param animal: 
-    :return: 
+    :param animal:
+    :return:
     """
     animal.run()
     animal.run()
@@ -717,6 +714,3 @@ if __name__ == '__main__':
 * 对扩展开放：允许新增Animal子类；
 
 * 对修改封闭：不需要修改依赖Animal类型的run_twice()等函数。
-
-
-## #

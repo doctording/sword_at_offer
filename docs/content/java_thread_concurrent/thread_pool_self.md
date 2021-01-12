@@ -123,7 +123,6 @@ class SelfBlockingQueue<T> {
         }
     }
 
-
     public int getSize(){
         lock.lock();
         try {

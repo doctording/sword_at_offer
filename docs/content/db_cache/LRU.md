@@ -13,7 +13,7 @@ date: 2020-03-08 18:00
 leetcode 146题，eg
 
 ```java
-LRUCache cache = new LRUCache( 2 /* 缓存容量 */ );
+LRUCache cache = new LRUCache( 2 );  /* 缓存容量 */ 
 
 cache.put(1, 1);
 cache.put(2, 2);
@@ -30,7 +30,7 @@ cache.get(4);       // 返回  4
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 ```
 
-## 双向链表(带头节点) + Map
+## 自己构造双向链表(带头节点) + Map
 
 ![](../../content/db_cache/imgs/lru.png)
 
@@ -38,126 +38,121 @@ cache.get(4);       // 返回  4
 
 ```java
 // 普通双向链表,有一个初始的dummyNode
-class DoubleList {
-    private DoubleNode head, tail; // 头尾虚节点
-    private int size; // 链表当前size
-
-    public DoubleList() {
-        head = new DoubleNode(0, 0);
-        tail = head;
-        head.next = tail;
-        tail.prev = head;
-        size = 0;
-    }
-
-    // O(1)
-    // 头插
-    public void addFirst(DoubleNode x) {
-        x.next = head.next;
-        x.prev = head;
-        head.next.prev = x;
-        head.next = x;
-        size++;
-    }
-
-    // O(1)
-    // 删除链表中的 x 节点（x 一定存在）
-    public void remove(DoubleNode x) {
-        x.prev.next = x.next;
-        x.next.prev = x.prev;
-        size--;
-    }
-
-    // O(1)
-    // 删除链表中最后一个节点，并返回该节点
-    public DoubleNode removeLast() {
-        if (tail.prev == head) {
-            return null;
-        }
-        DoubleNode last = tail.prev;
-        remove(last);
-        return last;
-    }
-
-    public DoubleNode getFirst() {
-        if (tail.prev == head) {
-            return null;
-        }
-        return head.next;
-    }
-
-    // O(1)
-    // 已存在元素移动到第一个位置
-    public DoubleNode moveFirst(DoubleNode node) {
-        remove(node);
-        addFirst(node);
-        return head.next;
-    }
-
-
-    // 返回链表长度
-    public int size() {
-        return size;
-    }
-
-    // 双向链表的节点
-    static class DoubleNode {
-        public int key, val;
-        public DoubleNode next, prev;
+class DoubleList{
+    class DoubleNode{
+        public int key;
+        public int val;
+        public DoubleNode pre;
+        public DoubleNode next;
         public DoubleNode(int k, int v) {
             this.key = k;
             this.val = v;
         }
     }
 
-    public static DoubleNode newNode(int key, int val){
+    DoubleNode head;
+    int size;
+
+    public DoubleList(){
+        head = new DoubleNode(-1,-1);
+        DoubleNode tail = head;
+        head.next = tail;
+        tail.pre = head;
+        size = 0;
+    }
+
+    DoubleNode getHead(){
+        if(size == 0){
+            return null;
+        }
+        return head.next;
+    }
+
+    void addHead(DoubleNode node){
+        head.next.pre = node;
+        node.next = head.next;
+        head.next = node;
+        node.pre = head;
+        size ++;
+    }
+
+    void removeNode(DoubleNode node){
+        node.next.pre = node.pre;
+        node.pre.next = node.next;
+        size --;
+    }
+
+    DoubleNode removeTailNode(){
+        if(isEmpty()){
+            return null;
+        }
+        DoubleNode node = head.pre;
+        node.next.pre = node.pre;
+        node.pre.next = node.next;
+        size --;
+        return node;
+    } 
+
+    int getSize(){
+        return size;
+    }
+
+    boolean isEmpty(){
+        return size == 0;
+    }
+  
+    public DoubleNode newDoubleNode(int key, int val){
         return new DoubleNode(key, val);
     }
 }
 
 class LRUCache {
 
-    DoubleList doubleList;
+    DoubleList doubleList; // 最近访问的加入到头部即可
     Map<Integer, DoubleList.DoubleNode> mp;
     int cap;
 
     public LRUCache(int capacity) {
         doubleList = new DoubleList();
-        mp = new HashMap<>();
         cap = capacity;
+        mp = new HashMap();
     }
 
     public int get(int key) {
-        if (!mp.containsKey(key)) {
-            return -1;
+        if(mp.containsKey(key)){
+            DoubleList.DoubleNode node = mp.get(key);
+            int val = node.val;
+
+            doubleList.removeNode(node);
+            doubleList.addHead(node);
+            mp.put(key, doubleList.getHead());
+
+            return val;
         }
-        DoubleList.DoubleNode node = mp.get(key);
-        int retVal = node.val;
-        // 移动node到链表头部,并重新设置mp
-        doubleList.moveFirst(node);
-        mp.put(key, doubleList.getFirst());
-        return retVal;
+        return -1;
     }
 
     public void put(int key, int value) {
-        if (mp.containsKey(key)) {
-            // 更新并移动到链表头部
+        if(mp.containsKey(key)){
             DoubleList.DoubleNode node = mp.get(key);
+
+            doubleList.removeNode(node);
+
             node.val = value;
-            // 移动node到链表头部,,并重新设置mp
-            doubleList.moveFirst(node);
-            mp.put(key, doubleList.getFirst());
-            return;
+            doubleList.addHead(node);
+            mp.put(key, doubleList.getHead());
+        }else{
+            if(doubleList.getSize() == cap){
+                DoubleList.DoubleNode tailNode = doubleList.removeTailNode();
+                mp.remove(tailNode.key);
+            }
+            DoubleList.DoubleNode node = doubleList.newDoubleNode(key, value);
+            doubleList.addHead(node);
+            mp.put(key, doubleList.getHead());
         }
-        // 要添加新元素，先判断是否已经超了，要删除链表尾部元素
-        if (doubleList.size() == cap) {
-            DoubleList.DoubleNode node = doubleList.removeLast();
-            mp.remove(node.key);
-        }
-        doubleList.addFirst(DoubleList.newNode(key, value));
-        mp.put(key, doubleList.getFirst());
     }
 }
+
 /**
  * Your LRUCache object will be instantiated and called as such:
  * LRUCache obj = new LRUCache(capacity);
@@ -166,49 +161,7 @@ class LRUCache {
  */
 ```
 
-## 使用LinkedHashMap实现一个LRU缓存(LeetCode)
-
-```java
-class BaseLRUCache<K,V> extends LinkedHashMap<K,V> {
-
-    private int cacheSize;
-
-    public BaseLRUCache(int cacheSize) {
-        super(16,0.75f,true);
-        this.cacheSize = cacheSize;
-    }
-
-    /**
-     * 判断元素个数是否超过缓存容量
-     */
-    @Override
-    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return size() > cacheSize;
-    }
-}
-
-class LRUCache {
-
-    BaseLRUCache<Integer, Integer> baseLRUCache;
-
-    public LRUCache(int capacity) {
-        baseLRUCache = new BaseLRUCache(capacity);
-    }
-
-    public int get(int key) {
-        if(baseLRUCache.get(key) == null){
-            return -1;
-        }
-        return baseLRUCache.get(key);
-    }
-
-    public void put(int key, int value) {
-        baseLRUCache.put(key, value);
-    }
-}
-```
-
-插入之后的removeEldestEntry方法(默认返回:false)，删除最久远的访问元素，LinkedHashMap默认直接返回false,即不会进行删除操作，可以重写该方法
+插入之后的`removeEldestEntry`方法(默认返回:false)，删除最久远的访问元素，LinkedHashMap默认直接返回false,即不会进行删除操作，可以重写该方法
 
 ```java
 /**

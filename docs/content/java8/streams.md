@@ -177,3 +177,81 @@ System.out.println("max2:"+ numberMax2);
 ![](../../content/java8/imgs/stream_operate2.png)
 
 注：如果能避开 有状态，选用无状态操作，就能获得更好的`并行`性能。
+
+### `List<Object>`的常见stream用法
+
+```java
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+
+class Dish{
+    String name;
+    int price;
+
+    public Dish(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+}
+
+class Dish2 {
+    String name;
+    int price;
+    public Dish2(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+}
+
+public class MyTest {
+
+    static Dish2 convert(Dish dish){
+        return new Dish2(dish.name, dish.price * 2);
+    }
+
+    public static void main(String[] args) throws Exception{
+        List<Dish> menu = Arrays.asList(
+            new Dish("pork",  800),
+            new Dish("beef",  700),
+            new Dish("chicken", 400)
+        );
+        // list转map
+        Map<String, Dish> dishNameMap = menu.stream().collect(Collectors.toMap(Dish::getName, m->m));
+        Map<Integer, Dish> dishPriceMap = menu.stream().collect(Collectors.toMap(m->m.getPrice(), m->m));
+
+        // list对象转换成另外一个对象
+        List<Dish2> dish2List = menu.stream().map(m->convert(m)).collect(Collectors.toList());
+
+        // 常见的list过滤操作，符合filter条件的被收集
+        List<Dish> dishList = menu.stream().filter(m->m.getName().equals("pork")).collect(Collectors.toList());
+
+        // 获取对象中某个属性列表
+        List<String> nameList = menu.stream().map(Dish::getName).collect(Collectors.toList());
+        Set<String> nameSet = menu.stream().map(Dish::getName).collect(Collectors.toSet());
+
+        // 过滤并统计计数
+        long count = menu.stream().filter(m->m.getPrice() < 800).count();
+        System.out.println(count);
+    }
+}
+```

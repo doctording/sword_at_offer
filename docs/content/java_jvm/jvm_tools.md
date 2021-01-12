@@ -134,9 +134,9 @@ GCT：垃圾回收消耗总时间
 ### 例2（jstat -gccapacity）
 
 ```js
- jstat -gccapacity 8207
- NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC       MCMN     MCMX      MC     CCSMN    CCSMX     CCSC    YGC    FGC
-     0.0 1048576.0  82944.0    0.0 7168.0  75776.0        0.0  1048576.0   965632.0   965632.0      0.0 1083392.0  40572.0      0.0 1048576.0   6320.0      6     0
+jstat -gccapacity 8207
+NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC       MCMN     MCMX      MC     CCSMN    CCSMX     CCSC    YGC    FGC
+0.0 1048576.0  82944.0    0.0 7168.0  75776.0        0.0  1048576.0   965632.0   965632.0      0.0 1083392.0  40572.0      0.0 1048576.0   6320.0      6     0
 ```
 
 NGCMN：年轻代(young)中初始化(最小)的大小(字节)
@@ -370,25 +370,25 @@ Virtual memory map:
     [0x0000000103380b80] Universe::reserve_heap(unsigned long, unsigned long)+0x84
     [0x000000010329fe27] ParallelScavengeHeap::initialize()+0x89
 
-	[0x00000006c4e80000 - 0x00000006c8800000] committed 58880KB from
+  [0x00000006c4e80000 - 0x00000006c8800000] committed 58880KB from
             [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
             [0x00000001032c35fa] PSOldGen::expand_by(unsigned long)+0x1c
             [0x00000001032c3724] PSOldGen::expand(unsigned long)+0xa8
             [0x00000001032c380a] PSOldGen::resize(unsigned long)+0xb4
 
-	[0x00000006c0000000 - 0x00000006c4e80000] committed 80384KB from
+  [0x00000006c0000000 - 0x00000006c4e80000] committed 80384KB from
             [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
             [0x00000001032c3d14] PSOldGen::initialize_virtual_space(ReservedSpace, unsigned long)+0x72
             [0x00000001032c3d85] PSOldGen::initialize(ReservedSpace, unsigned long, char const*, int)+0x49
             [0x0000000102ea09b2] AdjoiningGenerations::AdjoiningGenerations(ReservedSpace, GenerationSizer*, unsigned long)+0x36c
 
-	[0x0000000770000000 - 0x00000007c0000000] committed 1310720KB from
+  [0x0000000770000000 - 0x00000007c0000000] committed 1310720KB from
             [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
             [0x00000001032ce7f9] PSYoungGen::resize_generation(unsigned long, unsigned long)+0x57
             [0x00000001032cf032] PSYoungGen::resize(unsigned long, unsigned long)+0x24
             [0x00000001032cc81c] PSScavenge::invoke_no_policy()+0xfb2
 
-	[0x000000076ab00000 - 0x0000000770000000] committed 87040KB from
+  [0x000000076ab00000 - 0x0000000770000000] committed 87040KB from
             [0x00000001032ce10b] PSVirtualSpace::expand_by(unsigned long)+0x3d
             [0x00000001032cee37] PSYoungGen::initialize_virtual_space(ReservedSpace, unsigned long)+0x6f
             [0x00000001032cedb9] PSYoungGen::initialize(ReservedSpace, unsigned long)+0x41
@@ -412,14 +412,14 @@ The pmap command reports the memory map of a process or processes.
 
 * 字段说明
 
-1. Address:	start address of map
-2. Kbytes:	size of map in kilobytes
-3. RSS:	resident set size in kilobytes
-4. Dirty:	dirty pages (both shared and private) in kilobytes
-5. Mode:	permissions on map: read, write, execute, shared, private (copy on write)
-6. Mapping:	file backing the map, or '[ anon ]' for allocated memory, or '[ stack ]' for the program stack
-7. Offset:	offset into the file
-8. Device:	device name (major:minor)
+1. Address: start address of map
+2. Kbytes: size of map in kilobytes
+3. RSS: resident set size in kilobytes
+4. Dirty: dirty pages (both shared and private) in kilobytes
+5. Mode: permissions on map: read, write, execute, shared, private (copy on write)
+6. Mapping: file backing the map, or '[ anon ]' for allocated memory, or '[ stack ]' for the program stack
+7. Offset: offset into the file
+8. Device: device name (major:minor)
 
 ## linux strace 命令(追踪进程执行时的系统调用和所接收的信号)
 

@@ -179,7 +179,7 @@ public class Main {
 
 在GC准备释放对象所占用的内存空间之前，它将首先调用finalize()方法;
 
-**第一次GC遍历处理**：通过GC roots遍历，找到不在引用链内的对象。并检查是否需要执行finalize()方法。（如果没重写finalize()则只需要标记一次，然后就可以进行gc掉）
+**第一次GC遍历处理**：通过`GC roots`遍历，找到不在引用链内的对象。并检查是否需要执行`finalize()`方法。（如果没重写finalize()则只需要标记一次，然后就可以进行gc掉）
 
 在第一次标记中有`finalize()`需要被执行的对象，会被丢到一个优先级较低的队列(`F-Queue`:`java.lang.ref.Finalizer.ReferenceQueue`)中执行，但不保证能被执行(因为是由**低优先级**的`Finalizer线程`去处理的，试想低优先级线程不被执行到，那么重写了`finalize()`的对象就永久在堆中不能被gc掉，即`java.lang.ref.Finalizer`对象会占用很大的堆空间，甚至溢出)
 
@@ -191,9 +191,9 @@ public class Main {
 
 附，获取Class对象的几种方法：
 
-1. Class.forName(“类的全限定名”)
+1. Class.forName("类的全限定名")
 2. 实例对象.getClass()
-3. 类名.class （类字面常量）
+3. 类名.class（类字面常量）
 
 ## 附：Object类的源码
 

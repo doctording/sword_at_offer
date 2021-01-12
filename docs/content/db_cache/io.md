@@ -42,7 +42,7 @@ date: 2020-03-08 18:00
 
 因此在磁盘上读取扇区数据（一块数据）所需时间：
 
-`Ti/o=tseek +tla + n *twm`
+`Ti/o=tseek + tla + n * twm`
 
 * tseek 为寻道时间
 * tla为旋转时间

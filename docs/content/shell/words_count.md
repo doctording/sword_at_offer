@@ -38,4 +38,13 @@ day 1
 
 ## 解决2
 
+```java
+mubi@mubideMacBook-Pro tmp_work $ cat words.txt | xargs
+the day is sunny the the the sunny is is
+```
+
 `cat words.txt | xargs -n 1 | sort -r | uniq -c | sort -r | awk '{print $2,$1}'`
+
+取top3
+
+`cat words.txt | xargs -n 1 | sort | uniq -c | sort -r |  head -3 | awk '{print $2,$1}'`

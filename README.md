@@ -16,6 +16,16 @@
 
 Java 文档中心: <a href="https://docs.oracle.com/en/java/javase/14/" target="_blank">https://docs.oracle.com/en/</a>
 
+* 操作系统
+
+    1. 内存管理；页面置换算法：LRU, LFU
+    2. 内核，用户态
+    3. 虚拟内存； MMAP
+    4. 缓冲区
+    5. 进程，线程；进程间通信；同步机制
+    6. 局部性原理
+    7. IO复用
+
 * 基础
 
     1. ArrayList, List, Map, Set等数据结构
@@ -80,8 +90,6 @@ Java 文档中心: <a href="https://docs.oracle.com/en/java/javase/14/" target="
     2. Spring，Spring MVC
     3. SpringBoot
 
-<a href="https://github.com/doctording/spring-framework-5.1.3.RELEASE" target='_blank'>Spring & Mybatis</a>
-
 * 服务器
 
     1. Tomcat
@@ -99,29 +107,12 @@ Java 文档中心: <a href="https://docs.oracle.com/en/java/javase/14/" target="
     4. zookeeper
     5. 限流：缓存击穿，雪崩等
 
-* 操作系统
-
-    1. 内存管理；页面置换算法：LRU, LFU
-    2. 内核，用户态
-    3. 虚拟内存； MMAP
-    4. 缓冲区
-    5. 进程，线程；进程间通信；同步机制
-    6. 局部性原理
-    7. IO复用
-
 * 算法和相关题目手写
 
-    1. 手写单例模式
+    1. 手写模式
     2. 手写`String`
     3. 手写`HashMap`
     4. 手写`semaphore`
     5. 字典树
     6. 正则
     7. 各种排序：归并，快排，堆排
-
-# 大数据
-
-1. HDFS, Hadoop / Yarn, Hive, HBase
-2. Spark，Storm
-3. Flink
-4. Druid.io
