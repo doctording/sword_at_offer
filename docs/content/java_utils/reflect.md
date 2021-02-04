@@ -380,3 +380,51 @@ public class Main {
 
 }
 ```
+
+### 反射:私有属性设置
+
+```java
+
+import java.lang.reflect.Field;
+
+class A{
+    public int a;
+    private String b;
+
+    public A(int a, String b) {
+        this.a = a;
+        this.b = b;
+    }
+
+    @Override
+    public String toString() {
+        return "A{" +
+                "a=" + a +
+                ", b='" + b + '\'' +
+                '}';
+    }
+}
+
+public class ReflectTest {
+
+    public static void main(String[] args) throws Exception{
+        A a = new A(1, "aaa");
+        System.out.println(a);
+        a.a = 2;
+        System.out.println(a);
+
+        // 利用反射设置属性
+        Field field = a.getClass().getDeclaredField("b");   // 获取私有属性
+        field.setAccessible(true);  // 设置属性可访问
+        field.set(a, "bbb");    // 设置属性的值
+
+        System.out.println(a);
+    }
+
+}
+/*
+A{a=1, b='aaa'}
+A{a=2, b='aaa'}
+A{a=2, b='bbb'}
+ */
+```

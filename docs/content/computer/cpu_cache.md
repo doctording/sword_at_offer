@@ -10,13 +10,13 @@ date: 2019-03-09 00:00
 
 * while(true){}无任何操作，近乎占满一个CPU核
 
-![](../../content/java_thread_concurrent/imgs/whiletrue.png)
+![](../../content/java_thread_concurrent/imgs/whiletrue.png =100x80)
 
 ![](../../content/java_thread_concurrent/imgs/whiletrue3.png)
 
-* while(true){sleep},基本不暂用CPU
+* while(true){sleep},基本不占用CPU
 
-![](../../content/java_thread_concurrent/imgs/whiletrue2.png)
+![](../../content/java_thread_concurrent/imgs/whiletrue2.png =60x60)
 
 * while(true)和for(;;)无差异
 
