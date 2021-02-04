@@ -2473,6 +2473,7 @@
 <li><div><a href="#&#x53CD;&#x5C04;&#x673A;&#x5236;&#x4F1A;&#x4E0D;&#x4F1A;&#x6709;&#x6027;&#x80FD;&#x95EE;&#x9898;&#xFF1F;">&#x53CD;&#x5C04;&#x673A;&#x5236;&#x4F1A;&#x4E0D;&#x4F1A;&#x6709;&#x6027;&#x80FD;&#x95EE;&#x9898;&#xFF1F;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
 <li><div><a href="#&#x53CD;&#x5C04;&#x5B9E;&#x4F8B;&#x5316;&#x548C;&#x666E;&#x901A;new&#x7684;&#x6548;&#x7387;&#x5BF9;&#x6BD4;">&#x53CD;&#x5C04;&#x5B9E;&#x4F8B;&#x5316;&#x548C;&#x666E;&#x901A;new&#x7684;&#x6548;&#x7387;&#x5BF9;&#x6BD4;</a><i></i></div></li>
+<li><div><a href="#&#x53CD;&#x5C04;&#x79C1;&#x6709;&#x5C5E;&#x6027;&#x8BBE;&#x7F6E;">&#x53CD;&#x5C04;:&#x79C1;&#x6709;&#x5C5E;&#x6027;&#x8BBE;&#x7F6E;</a><i></i></div></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -2822,8 +2823,53 @@
 
 <span class="token punctuation">}</span>
 </code></pre>
+<h3 id="&#x53CD;&#x5C04;&#x79C1;&#x6709;&#x5C5E;&#x6027;&#x8BBE;&#x7F6E;">&#x53CD;&#x5C04;:&#x79C1;&#x6709;&#x5C5E;&#x6027;&#x8BBE;&#x7F6E;</h3>
+<pre class="language-"><code class="lang-java">
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect</span><span class="token punctuation">.</span><span class="token class-name">Field</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">A</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> a<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> b<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">A</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span> <span class="token class-name">String</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>a <span class="token operator">=</span> a<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>b <span class="token operator">=</span> b<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">&quot;A{&quot;</span> <span class="token operator">+</span>
+                <span class="token string">&quot;a=&quot;</span> <span class="token operator">+</span> a <span class="token operator">+</span>
+                <span class="token string">&quot;, b=&apos;&quot;</span> <span class="token operator">+</span> b <span class="token operator">+</span> <span class="token string">&apos;\&apos;&apos;</span> <span class="token operator">+</span>
+                <span class="token string">&apos;}&apos;</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReflectTest</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>
+        <span class="token class-name">A</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">A</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&quot;aaa&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        a<span class="token punctuation">.</span>a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// &#x5229;&#x7528;&#x53CD;&#x5C04;&#x8BBE;&#x7F6E;&#x5C5E;&#x6027;</span>
+        <span class="token class-name">Field</span> field <span class="token operator">=</span> a<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string">&quot;b&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// &#x83B7;&#x53D6;&#x79C1;&#x6709;&#x5C5E;&#x6027;</span>
+        field<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// &#x8BBE;&#x7F6E;&#x5C5E;&#x6027;&#x53EF;&#x8BBF;&#x95EE;</span>
+        field<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> <span class="token string">&quot;bbb&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// &#x8BBE;&#x7F6E;&#x5C5E;&#x6027;&#x7684;&#x503C;</span>
+
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+A{a=1, b=&apos;aaa&apos;}
+A{a=2, b=&apos;aaa&apos;}
+A{a=2, b=&apos;bbb&apos;}
+ */</span>
+</code></pre>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2021-01-10 17:44:16
+2021-02-04 21:55:20
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2868,7 +2914,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"反射机制","layout":"page","date":"2020-06-14 00:00","level":"1.9.12","depth":2,"next":{"title":"回调 & 事件机制","level":"1.9.13","depth":2,"path":"content/java_utils/call_back.md","ref":"./content/java_utils/call_back.md","articles":[]},"previous":{"title":"String,StringBuffer,StringBuilder","level":"1.9.11","depth":2,"path":"content/java_utils/String.md","ref":"./content/java_utils/String.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/reflect.md","mtime":"2021-01-10T09:44:16.183Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-01-13T15:13:09.028Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"反射机制","layout":"page","date":"2020-06-14 00:00","level":"1.9.12","depth":2,"next":{"title":"回调 & 事件机制","level":"1.9.13","depth":2,"path":"content/java_utils/call_back.md","ref":"./content/java_utils/call_back.md","articles":[]},"previous":{"title":"String,StringBuffer,StringBuilder","level":"1.9.11","depth":2,"path":"content/java_utils/String.md","ref":"./content/java_utils/String.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/reflect.md","mtime":"2021-02-04T13:55:20.734Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-02-04T13:57:09.751Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
