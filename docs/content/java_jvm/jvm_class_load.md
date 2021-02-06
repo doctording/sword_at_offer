@@ -1084,7 +1084,7 @@ public static void testHotDeploy() throws Exception{
 }
 ```
 
-只需要修改Test.class文件，即可自动加载，而不需要重新部署项目
+只需要修改`Test.class`文件，即可自动加载，而不需要重新部署项目
 
 ```java
 mubi@mubideMacBook-Pro hotload $ ll

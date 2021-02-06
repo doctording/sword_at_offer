@@ -428,3 +428,26 @@ A{a=2, b='aaa'}
 A{a=2, b='bbb'}
  */
 ```
+
+### 反射：通过构造器实例化对象
+
+```java
+ public static void main(String[] args) throws Exception{
+    Class c = Class.forName("com.A",false, ClassLoader.getSystemClassLoader());
+    Constructor<?>[] constructors = c.getConstructors();
+    Constructor constructor = constructors[0];
+    A a = (A)constructor.newInstance(1, "aaa");
+    System.out.println(a);
+}
+```
+
+```java
+public static void main(String[] args) throws Exception{
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    Class c = Class.forName("com.A",false, cl);
+    Constructor<?>[] constructors = c.getConstructors();
+    Constructor constructor = constructors[0];
+    A a = (A)constructor.newInstance(1, "aaa");
+    System.out.println(a);
+}
+```
