@@ -206,3 +206,7 @@ private S nextService() {
 2. 获取某个实现类的方式不够灵活，只能通过 Iterator 形式获取，不能根据某个参数来获取对应的实现类。
 3. 多个并发多线程使用 ServiceLoader 类的实例是不安全的。
 4. 加载不到实现类时抛出并不是真正原因的异常，错误很难定位。
+
+## dubbo spi
+
+<a href="https://github.com/doctording/dubbo/tree/spi/dubbo-spi-test">https://github.com/doctording/dubbo/tree/spi/dubbo-spi-test</a>
