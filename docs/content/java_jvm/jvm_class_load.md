@@ -832,7 +832,7 @@ Singleton1 value3:11
 
 1. 继承`ClassLoader`
 
-2. 重写`loadClass()`方法（可能会打破双亲委派模型）
+2. 重写`loadClass()`方法（默认是双亲委派，重写可能会打破双亲委派模型）
 
 3. 重写`findClass()`方法
     * class文件路径判断和获取
@@ -856,7 +856,6 @@ public class Hello {
         return "hello";
     }
 }
-
 ```
 
 * MyComOtherClassLoader
@@ -887,13 +886,12 @@ public class MyComOtherClassLoader extends ClassLoader{
     private String classNameToPath() {
         // 得到类文件的URL
         return path + "/" + packageName.replace('.', '/')
-                + "/"
-                + className + ".class";
+                + "/" + className + ".class";
     }
 
     @Override
     public Class loadClass(String name) throws ClassNotFoundException {
-        // 非 com.test package下面的类，都用默认的加载， 否则用自定义的加载方法
+        // 非 com.test package下面的类，都用默认的双亲委派模型去加载，否则用自定义的加载方法
         if (!name.contains("com.other")) {
             // 是否已经被加载
             Class loadedClass = findLoadedClass(name);
@@ -906,7 +904,7 @@ public class MyComOtherClassLoader extends ClassLoader{
             }
         }
 
-
+        // 自定义加载
         int i = name.lastIndexOf('.');
         packageName = "";
         if (i != -1) {
@@ -944,12 +942,16 @@ public class MyComOtherClassLoader extends ClassLoader{
         }
 
 //        System.out.println("findClass param name: " + name);
-        byte [] b = this.getClassBytes();
+        byte[] b = this.getClassBytes();
 //        System.out.println("b len:" + b.length);
-        // 把字节码转化为Class
+        // 把字节流转化为Class对象
         clazz = defineClass(null, b, 0, b.length);
         return clazz;
     }
+    
+    /**
+     * .class加载成byte数组，即获取到二进制数据流
+     */
     public byte[] getClassBytes() {
         String classPath = classNameToPath();
 //        System.out.println("classPath:" + classPath);
@@ -972,6 +974,7 @@ public class MyComOtherClassLoader extends ClassLoader{
         MyComOtherClassLoader myClassLoader = new MyComOtherClassLoader();
         myClassLoader.path = path;
         Class clazz = myClassLoader.loadClass("com.other.Hello");
+        // 通过自定义加载获取到Class对象，接着就能用反射进行各种操作了
         Object obj = clazz.newInstance();
         System.out.println("===" + obj.getClass());
         Method method = clazz.getDeclaredMethod("test", null);
