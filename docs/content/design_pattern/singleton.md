@@ -8,12 +8,13 @@ date: 2019-03-20 00:00
 
 # 单例模式
 
-* 单例类只能有一个实例
-* 单例类必须自己创建自己的唯一实例
-* 单例类必须给所有其他对象提供这一实例
+1. 单例类只能有一个实例
+2. 单例类必须自己创建自己的唯一实例
+3. 单例类必须给所有其它对象提供这一实例
+
+---
 
 * 懒汉：在初始化类的时候，不创建唯一的实例，而是等到真正需要用到的时候才创建。必须加上同步，否则有可能依然创建多个实例。
-
 * 饿汉：在初始化的时候，就创建了唯一的实例，不管是否需要用到。不需要自己加同步，一定产生唯一的实例。
 
 ## 如何保证单例不能被new出来？
@@ -114,7 +115,7 @@ final class Singleton{
 
 ## double-check + volatile（实现 懒汉 且 线程安全）
 
-`volatile`止指令重排，保证顺序性
+`volatile`保证顺序性，可见性，不保证原子性（非线程安全）
 
 ```java
 private volatile static Singleton instance = null;
@@ -198,11 +199,6 @@ final class Singleton {
 单例模式还要考虑的点：防止反射
 
 ```java
-/**
- * @description: 实现单例模式的最佳方案：单元素枚举类型
- * @date: 2019-06-03 13:27
- * @author huguanghui
- */
 public enum Singleton {
     /**
      * 单例
@@ -212,5 +208,67 @@ public enum Singleton {
     public void doSome(){
         System.out.println(INSTANCE.hashCode());
     }
+}
+```
+
+## 单例模式测试代码
+
+```java
+import java.lang.reflect.Constructor;
+
+final class Singleton {
+
+    private Singleton() {
+    }
+
+    private static class Holder {
+        private static Singleton singleton = new Singleton();
+    }
+
+    public static Singleton getInstance() {
+        return Holder.singleton;
+    }
+
+    public String say(String what){
+        return "single:" + what;
+    }
+
+}
+
+public class TestSingle {
+
+    public static void main(String[] args) throws Exception{
+        test3();
+    }
+
+    public static void test1() throws Exception{
+        Singleton singleton = Singleton.getInstance();
+        Singleton singleton1 = Singleton.getInstance();
+        System.out.println(singleton + "：" + singleton.say("hello"));
+        System.out.println(singleton1 + "：" + singleton1.say("hello1"));
+    }
+
+    public static void test2() throws Exception{
+        new Thread(()->{
+            Singleton singleton = Singleton.getInstance();
+            System.out.println(singleton + "：" + singleton.say("hello"));
+        }, "tA").start();
+
+        new Thread(()->{
+            Singleton singleton2 = Singleton.getInstance();
+            System.out.println(singleton2 + "：" + singleton2.say("hello"));
+        }, "tB").start();
+    }
+
+    public static void test3() throws Exception{
+        Class clazz = Singleton.class;
+        Constructor constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Singleton singleton = (Singleton) constructor.newInstance();
+        Singleton singleton2 = Singleton.getInstance();
+        System.out.println(singleton + "：" + singleton.say("hello"));
+        System.out.println(singleton2 + "：" + singleton2.say("hello"));
+    }
+
 }
 ```
