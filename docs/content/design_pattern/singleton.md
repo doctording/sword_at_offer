@@ -145,16 +145,16 @@ private volatile static Singleton instance = null;
 ## Holder方式（静态内部类：线程安全 & 懒汉式）
 
 ```java
-final class Singleton{
+final class Singleton {
 
-    private Singleton(){
+    private Singleton() {
     }
 
-    private static class Holder{
+    private static class Holder {
         private static Singleton singleton = new Singleton();
     }
 
-    public static Singleton getInstance(){
+    public static Singleton getInstance() {
         return Holder.singleton;
     }
 
@@ -192,3 +192,25 @@ final class Singleton{
 ## 枚举
 
 枚举类型不允许被继承，同样是线程安全的且只能被实例化一次，但是枚举类型不能够实现懒加载
+
+## 补充：防反射
+
+单例模式还要考虑的点：防止反射
+
+```java
+/**
+ * @description: 实现单例模式的最佳方案：单元素枚举类型
+ * @date: 2019-06-03 13:27
+ * @author huguanghui
+ */
+public enum Singleton {
+    /**
+     * 单例
+     */
+    INSTANCE;
+
+    public void doSome(){
+        System.out.println(INSTANCE.hashCode());
+    }
+}
+```
