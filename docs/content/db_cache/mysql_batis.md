@@ -60,15 +60,15 @@ Statement会被sql注入例子：
 
 ## JDBC操作基本流程
 
-1. 加载JDBC驱动程序
+### 1. 加载JDBC驱动程序
 
 `Class.forName("com.mysql.jdbc.Driver"); //反射`
 
-2. 建立连接
+### 2. 建立连接
 
 `Connection conn = riverManager.getConnection("jdbc:mysql://localhost:3306/数据库名称","用户名称","密码");`
 
-3. 构造sql，往数据库发出请求
+### 3. 构造sql，向数据库发出请求
 
 ```java
 String sql = "select id,username,pwd from t_user where id > ?";
@@ -77,11 +77,11 @@ ps.setObject(1, 2); //第一个"问号",传入2. -->把id大于2的记录都取�
 rs = ps.executeQuery();
 ```
 
-4. 返回查询结果
+### 4. 数据库返回查询结果
 
 `ResultSet rs=ps.executeQuery();`
 
-5. 关闭`RsultSet`，`PreparedStatement`，`connection`
+### 5. 关闭`RsultSet`，`PreparedStatement`，`connection`
 
 ```java
 if(rs!=null){ //RsultSet rs
@@ -99,9 +99,9 @@ if(conn!=null){ //connection conn
 
 * `#{}`是预编译处理(`动态解析 -> 预编译 -> 执行`)，`${}`是字符串替换(`动态解析 -> 编译 -> 执行`)
 
-* MyBatis在处理`#{}`时，会将sql中的`#{}`替换为?号，调用`PreparedStatement`的set方法来赋值；
+* MyBatis在处理`#{}`时，会将sql中的`#{}`替换为`?`号，调用`PreparedStatement`的set方法来赋值；
 
-* MyBatis在处理${}时，就是把${}替换成变量的值。
+* MyBatis在处理`${}`时，就是把`${}`替换成变量的值。
 
 * 使用`#{}`可以有效的防止SQL注入，提高系统安全性。
 

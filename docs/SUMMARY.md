@@ -22,9 +22,9 @@
 * [数据库]
     * [局部性原理&磁盘IO](./content/db_cache/io.md)
     * [MySQL](./content/db_cache/mysql.md)
+        * [MySQL连接 & MyBatis](./content/db_cache/mysql_batis.md)
         * [MySQL优化](./content/db_cache/mysql_opt.md)
         * [MySQL线上监控 & 指标](./content/db_cache/mysql_monitor.md)
-        * [MySQL & MyBatis](./content/db_cache/mysql_batis.md)
     * [Redis](./content/db_cache/redis.md)
         * [跳表&zset](./content/db_cache/redis_skip_list.md)
     * [rabbitmq](./content/db_cache/mq.md)
