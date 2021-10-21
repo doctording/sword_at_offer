@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>MySQL & MyBatis · java-note</title>
+        <title>MySQL连接 & MyBatis · java-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -93,10 +93,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="redis.html" />
+    <link rel="next" href="mysql_opt.html" />
     
     
-    <link rel="prev" href="mysql_monitor.html" />
+    <link rel="prev" href="mysql.html" />
     
 
     </head>
@@ -456,7 +456,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.2.1" data-path="mysql_opt.html">
+        <li class="chapter active" data-level="1.4.2.1" data-path="mysql_batis.html">
+            
+                <a href="mysql_batis.html">
+            
+                    
+                    MySQL连接 & MyBatis
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="mysql_opt.html">
             
                 <a href="mysql_opt.html">
             
@@ -469,25 +482,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.2" data-path="mysql_monitor.html">
+        <li class="chapter " data-level="1.4.2.3" data-path="mysql_monitor.html">
             
                 <a href="mysql_monitor.html">
             
                     
                     MySQL线上监控 & 指标
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="1.4.2.3" data-path="mysql_batis.html">
-            
-                <a href="mysql_batis.html">
-            
-                    
-                    MySQL & MyBatis
             
                 </a>
             
@@ -2440,7 +2440,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >MySQL & MyBatis</a>
+        <a href="../.." >MySQL连接 & MyBatis</a>
     </h1>
 </div>
 
@@ -2463,7 +2463,14 @@
 <li><div><a href="#&#x5982;&#x4F55;&#x9632;&#x5FA1;sql&#x6CE8;&#x5165;&#xFF1F;">&#x5982;&#x4F55;&#x9632;&#x5FA1;SQL&#x6CE8;&#x5165;&#xFF1F;</a><i></i></div></li>
 <li><div><a href="#&#x4EC0;&#x4E48;&#x662F;sql&#x9884;&#x7F16;&#x8BD1;">&#x4EC0;&#x4E48;&#x662F;sql&#x9884;&#x7F16;&#x8BD1;?</a><i></i></div></li>
 </ul></li>
-<li><div><a href="#jdbc&#x64CD;&#x4F5C;&#x57FA;&#x672C;&#x6D41;&#x7A0B;">JDBC&#x64CD;&#x4F5C;&#x57FA;&#x672C;&#x6D41;&#x7A0B;</a><i></i></div></li>
+<li><div><a href="#jdbc&#x64CD;&#x4F5C;&#x57FA;&#x672C;&#x6D41;&#x7A0B;">JDBC&#x64CD;&#x4F5C;&#x57FA;&#x672C;&#x6D41;&#x7A0B;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#1-&#x52A0;&#x8F7D;jdbc&#x9A71;&#x52A8;&#x7A0B;&#x5E8F;">1. &#x52A0;&#x8F7D;JDBC&#x9A71;&#x52A8;&#x7A0B;&#x5E8F;</a><i></i></div></li>
+<li><div><a href="#2-&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;">2. &#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;</a><i></i></div></li>
+<li><div><a href="#3-&#x6784;&#x9020;sql&#xFF0C;&#x5411;&#x6570;&#x636E;&#x5E93;&#x53D1;&#x51FA;&#x8BF7;&#x6C42;">3. &#x6784;&#x9020;sql&#xFF0C;&#x5411;&#x6570;&#x636E;&#x5E93;&#x53D1;&#x51FA;&#x8BF7;&#x6C42;</a><i></i></div></li>
+<li><div><a href="#4-&#x6570;&#x636E;&#x5E93;&#x8FD4;&#x56DE;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;">4. &#x6570;&#x636E;&#x5E93;&#x8FD4;&#x56DE;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;</a><i></i></div></li>
+<li><div><a href="#5-&#x5173;&#x95ED;rsultset&#xFF0C;preparedstatement&#xFF0C;connection">5. &#x5173;&#x95ED;RsultSet&#xFF0C;PreparedStatement&#xFF0C;connection</a><i></i></div></li>
+</ul></li>
 <li><div><a href="#mybatis-&#x7684;&#x533A;&#x522B;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;">MyBatis #{},${}&#x7684;&#x533A;&#x522B;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;</a><i></i></div></li>
 </ul></li>
 </ul>
@@ -2509,29 +2516,19 @@
 </code></pre>
 <p>&#x800C;&#x9884;&#x7F16;&#x8BD1;&#x4F1A;&#x53D8;&#x6210;<code>select * from tablename where username=? and password=?</code>&#xFF0C;&#x9632;&#x6B62;&#x4E86;&#x4E0A;&#x8FF0;&#x95EE;&#x9898;</p>
 <h2 id="jdbc&#x64CD;&#x4F5C;&#x57FA;&#x672C;&#x6D41;&#x7A0B;">JDBC&#x64CD;&#x4F5C;&#x57FA;&#x672C;&#x6D41;&#x7A0B;</h2>
-<ol>
-<li>&#x52A0;&#x8F7D;JDBC&#x9A71;&#x52A8;&#x7A0B;&#x5E8F;</li>
-</ol>
+<h3 id="1-&#x52A0;&#x8F7D;jdbc&#x9A71;&#x52A8;&#x7A0B;&#x5E8F;">1. &#x52A0;&#x8F7D;JDBC&#x9A71;&#x52A8;&#x7A0B;&#x5E8F;</h3>
 <p><code>Class.forName(&quot;com.mysql.jdbc.Driver&quot;); //&#x53CD;&#x5C04;</code></p>
-<ol>
-<li>&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;</li>
-</ol>
+<h3 id="2-&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;">2. &#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;</h3>
 <p><code>Connection conn = riverManager.getConnection(&quot;jdbc:mysql://localhost:3306/&#x6570;&#x636E;&#x5E93;&#x540D;&#x79F0;&quot;,&quot;&#x7528;&#x6237;&#x540D;&#x79F0;&quot;,&quot;&#x5BC6;&#x7801;&quot;);</code></p>
-<ol>
-<li>&#x6784;&#x9020;sql&#xFF0C;&#x5F80;&#x6570;&#x636E;&#x5E93;&#x53D1;&#x51FA;&#x8BF7;&#x6C42;</li>
-</ol>
+<h3 id="3-&#x6784;&#x9020;sql&#xFF0C;&#x5411;&#x6570;&#x636E;&#x5E93;&#x53D1;&#x51FA;&#x8BF7;&#x6C42;">3. &#x6784;&#x9020;sql&#xFF0C;&#x5411;&#x6570;&#x636E;&#x5E93;&#x53D1;&#x51FA;&#x8BF7;&#x6C42;</h3>
 <pre class="language-"><code class="lang-java"><span class="token class-name">String</span> sql <span class="token operator">=</span> <span class="token string">&quot;select id,username,pwd from t_user where id &gt; ?&quot;</span><span class="token punctuation">;</span>
 <span class="token class-name">PrepareStatement</span> ps <span class="token operator">=</span> conn<span class="token punctuation">.</span><span class="token function">prepareStatement</span><span class="token punctuation">(</span>sql<span class="token punctuation">)</span><span class="token punctuation">;</span>
 ps<span class="token punctuation">.</span><span class="token function">setObject</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//&#x7B2C;&#x4E00;&#x4E2A;&quot;&#x95EE;&#x53F7;&quot;,&#x4F20;&#x5165;2. --&gt;&#x628A;id&#x5927;&#x4E8E;2&#x7684;&#x8BB0;&#x5F55;&#x90FD;&#x53D6;&#x51FA;&#x6765;</span>
 rs <span class="token operator">=</span> ps<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<ol>
-<li>&#x8FD4;&#x56DE;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;</li>
-</ol>
+<h3 id="4-&#x6570;&#x636E;&#x5E93;&#x8FD4;&#x56DE;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;">4. &#x6570;&#x636E;&#x5E93;&#x8FD4;&#x56DE;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;</h3>
 <p><code>ResultSet rs=ps.executeQuery();</code></p>
-<ol>
-<li>&#x5173;&#x95ED;<code>RsultSet</code>&#xFF0C;<code>PreparedStatement</code>&#xFF0C;<code>connection</code></li>
-</ol>
+<h3 id="5-&#x5173;&#x95ED;rsultset&#xFF0C;preparedstatement&#xFF0C;connection">5. &#x5173;&#x95ED;<code>RsultSet</code>&#xFF0C;<code>PreparedStatement</code>&#xFF0C;<code>connection</code></h3>
 <pre class="language-"><code class="lang-java"><span class="token keyword">if</span><span class="token punctuation">(</span>rs<span class="token operator">!=</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">{</span> <span class="token comment">//RsultSet rs</span>
    rs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -2546,9 +2543,9 @@ rs <span class="token operator">=</span> ps<span class="token punctuation">.</sp
 <ul>
 <li><p><code>#{}</code>&#x662F;&#x9884;&#x7F16;&#x8BD1;&#x5904;&#x7406;(<code>&#x52A8;&#x6001;&#x89E3;&#x6790; -&gt; &#x9884;&#x7F16;&#x8BD1; -&gt; &#x6267;&#x884C;</code>)&#xFF0C;<code>${}</code>&#x662F;&#x5B57;&#x7B26;&#x4E32;&#x66FF;&#x6362;(<code>&#x52A8;&#x6001;&#x89E3;&#x6790; -&gt; &#x7F16;&#x8BD1; -&gt; &#x6267;&#x884C;</code>)</p>
 </li>
-<li><p>MyBatis&#x5728;&#x5904;&#x7406;<code>#{}</code>&#x65F6;&#xFF0C;&#x4F1A;&#x5C06;sql&#x4E2D;&#x7684;<code>#{}</code>&#x66FF;&#x6362;&#x4E3A;?&#x53F7;&#xFF0C;&#x8C03;&#x7528;<code>PreparedStatement</code>&#x7684;set&#x65B9;&#x6CD5;&#x6765;&#x8D4B;&#x503C;&#xFF1B;</p>
+<li><p>MyBatis&#x5728;&#x5904;&#x7406;<code>#{}</code>&#x65F6;&#xFF0C;&#x4F1A;&#x5C06;sql&#x4E2D;&#x7684;<code>#{}</code>&#x66FF;&#x6362;&#x4E3A;<code>?</code>&#x53F7;&#xFF0C;&#x8C03;&#x7528;<code>PreparedStatement</code>&#x7684;set&#x65B9;&#x6CD5;&#x6765;&#x8D4B;&#x503C;&#xFF1B;</p>
 </li>
-<li><p>MyBatis&#x5728;&#x5904;&#x7406;${}&#x65F6;&#xFF0C;&#x5C31;&#x662F;&#x628A;${}&#x66FF;&#x6362;&#x6210;&#x53D8;&#x91CF;&#x7684;&#x503C;&#x3002;</p>
+<li><p>MyBatis&#x5728;&#x5904;&#x7406;<code>${}</code>&#x65F6;&#xFF0C;&#x5C31;&#x662F;&#x628A;<code>${}</code>&#x66FF;&#x6362;&#x6210;&#x53D8;&#x91CF;&#x7684;&#x503C;&#x3002;</p>
 </li>
 <li><p>&#x4F7F;&#x7528;<code>#{}</code>&#x53EF;&#x4EE5;&#x6709;&#x6548;&#x7684;&#x9632;&#x6B62;SQL&#x6CE8;&#x5165;&#xFF0C;&#x63D0;&#x9AD8;&#x7CFB;&#x7EDF;&#x5B89;&#x5168;&#x6027;&#x3002;</p>
 </li>
@@ -2563,7 +2560,7 @@ rs <span class="token operator">=</span> ps<span class="token punctuation">.</sp
 ${}&#xFF1A;<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> t_user <span class="token keyword">where</span> uid<span class="token operator">=</span> <span class="token string">&apos;1&apos;</span>
 </code></pre>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-12-18 16:13:25
+2021-10-21 20:50:53
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2592,12 +2589,12 @@ ${}&#xFF1A;<span class="token keyword">select</span> <span class="token operator
 
             
                 
-                <a href="mysql_monitor.html" class="navigation navigation-prev " aria-label="Previous page: MySQL线上监控 & 指标">
+                <a href="mysql.html" class="navigation navigation-prev " aria-label="Previous page: MySQL">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="redis.html" class="navigation navigation-next " aria-label="Next page: Redis">
+                <a href="mysql_opt.html" class="navigation navigation-next " aria-label="Next page: MySQL优化">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2608,7 +2605,7 @@ ${}&#xFF1A;<span class="token keyword">select</span> <span class="token operator
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"MySQL & MyBatis","layout":"page","date":"2020-03-08 18:00","level":"1.4.2.3","depth":3,"next":{"title":"Redis","level":"1.4.3","depth":2,"path":"content/db_cache/redis.md","ref":"./content/db_cache/redis.md","articles":[{"title":"跳表&zset","level":"1.4.3.1","depth":3,"path":"content/db_cache/redis_skip_list.md","ref":"./content/db_cache/redis_skip_list.md","articles":[]}]},"previous":{"title":"MySQL线上监控 & 指标","level":"1.4.2.2","depth":3,"path":"content/db_cache/mysql_monitor.md","ref":"./content/db_cache/mysql_monitor.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql_batis.md","mtime":"2020-12-18T08:13:25.230Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-02-28T08:03:33.529Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MySQL连接 & MyBatis","layout":"page","date":"2020-03-08 18:00","level":"1.4.2.1","depth":3,"next":{"title":"MySQL优化","level":"1.4.2.2","depth":3,"path":"content/db_cache/mysql_opt.md","ref":"./content/db_cache/mysql_opt.md","articles":[]},"previous":{"title":"MySQL","level":"1.4.2","depth":2,"path":"content/db_cache/mysql.md","ref":"./content/db_cache/mysql.md","articles":[{"title":"MySQL连接 & MyBatis","level":"1.4.2.1","depth":3,"path":"content/db_cache/mysql_batis.md","ref":"./content/db_cache/mysql_batis.md","articles":[]},{"title":"MySQL优化","level":"1.4.2.2","depth":3,"path":"content/db_cache/mysql_opt.md","ref":"./content/db_cache/mysql_opt.md","articles":[]},{"title":"MySQL线上监控 & 指标","level":"1.4.2.3","depth":3,"path":"content/db_cache/mysql_monitor.md","ref":"./content/db_cache/mysql_monitor.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/db_cache/mysql_batis.md","mtime":"2021-10-21T12:50:53.005Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-21T13:29:18.172Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
