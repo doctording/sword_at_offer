@@ -41,6 +41,57 @@ eg:
                   plane  
 ```
 
+代码eg:
+
+```java
+interface BaseOutService{
+    void drive();
+}
+
+class CarServiceImpl implements BaseOutService{
+
+    @Override
+    public void drive() {
+        System.out.println("car drive");
+    }
+}
+
+class PlaneServiceImpl implements BaseOutService{
+
+    @Override
+    public void drive() {
+        System.out.println("plane drive");
+    }
+}
+
+class Factory {
+    public BaseOutService getBean(String beanName){
+        BaseOutService baseService = null;
+        if(beanName.equalsIgnoreCase("car")){
+            baseService = new CarServiceImpl();
+        }
+        if(beanName.equalsIgnoreCase("plane")){
+            baseService = new PlaneServiceImpl();
+        }
+        return baseService;
+    }
+}
+
+
+public class Solution {
+
+
+    public static void main(String[] args) throws InterruptedException {
+        Factory factory = new Factory();
+        BaseOutService carService = factory.getBean("car");
+        carService.drive();
+        BaseOutService planeService = factory.getBean("plane");
+        planeService.drive();
+    }
+
+}
+```
+
 ## 抽象工厂
 
 * 解决`开闭`问题（解耦）；不过增加了不少类，代码变多了
