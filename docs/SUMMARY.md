@@ -4,6 +4,7 @@
     * [CPU,缓存](./content/computer/cpu_cache.md)
     * [进程和线程](./content/computer/process_thread.md)
     * [物理内存管理算法](./content/computer/memory_manage.md)
+    * [CPU负载load](./content/computer/load.md)
 * [I/O & 网络]
     * [IO与中断](./content/java_io_net/io_interrupte.md)
     * [IO基础]
