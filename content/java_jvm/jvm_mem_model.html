@@ -93,7 +93,7 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="jvm_mem_gc.html" />
+    <link rel="next" href="jvm_hot.html" />
     
     
     <link rel="prev" href="jvm_class_load.html" />
@@ -184,6 +184,19 @@
             
                     
                     物理内存管理算法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../computer/load.html">
+            
+                <a href="../computer/load.html">
+            
+                    
+                    CPU负载load
             
                 </a>
             
@@ -1720,7 +1733,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="jvm_mem_gc.html">
+        <li class="chapter " data-level="1.10.4" data-path="jvm_hot.html">
+            
+                <a href="jvm_hot.html">
+            
+                    
+                    JVM预热
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="jvm_mem_gc.html">
             
                 <a href="jvm_mem_gc.html">
             
@@ -1733,7 +1759,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="jvm_params.html">
+        <li class="chapter " data-level="1.10.6" data-path="jvm_params.html">
             
                 <a href="jvm_params.html">
             
@@ -1746,7 +1772,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.6" data-path="jvm_tools.html">
+        <li class="chapter " data-level="1.10.7" data-path="jvm_tools.html">
             
                 <a href="jvm_tools.html">
             
@@ -2568,7 +2594,7 @@ num<span class="token operator">:</span><span class="token number">19763</span>
 <p>&#x5E76;&#x884C;&#xFF1A;&#x5F53;&#x7CFB;&#x7EDF;&#x6709;&#x4E00;&#x4E2A;&#x4EE5;&#x4E0A;CPU&#x65F6;&#xFF0C;&#x5219;&#x7EBF;&#x7A0B;&#x7684;&#x64CD;&#x4F5C;&#x6709;&#x53EF;&#x80FD;&#x975E;&#x5E76;&#x53D1;&#xFF0C;&#x800C;&#x53EF;&#x4EE5;&#x540C;&#x65F6;&#x8FDB;&#x884C;(&#x4E00;&#x4E2A;CPU&#x6267;&#x884C;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x65F6;&#xFF0C;&#x53E6;&#x4E00;&#x4E2A;CPU&#x53EF;&#x4EE5;&#x6267;&#x884C;&#x53E6;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;)&#xFF0C;&#x4E24;&#x4E2A;&#x7EBF;&#x7A0B;&#x4E92;&#x4E0D;&#x62A2;&#x5360;CPU&#x8D44;&#x6E90;&#xFF0C;&#x53EF;&#x4EE5;&#x540C;&#x65F6;&#x8FDB;&#x884C;&#xFF0C;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#x6211;&#x4EEC;&#x79F0;&#x4E4B;&#x4E3A;&#x5E76;&#x884C;(Parallel)&#x3002;</p>
 <p>&#x5E76;&#x53D1;&#xFF1A;&#x5F53;&#x6709;&#x591A;&#x4E2A;&#x7EBF;&#x7A0B;&#x5728;&#x64CD;&#x4F5C;&#x65F6;,&#x5982;&#x679C;&#x7CFB;&#x7EDF;&#x53EA;&#x6709;&#x4E00;&#x4E2A;CPU,&#x5219;&#x5B83;&#x6839;&#x672C;&#x4E0D;&#x53EF;&#x80FD;&#x771F;&#x6B63;&#x540C;&#x65F6;&#x8FDB;&#x884C;&#x4E00;&#x4E2A;&#x4EE5;&#x4E0A;&#x7684;&#x7EBF;&#x7A0B;&#xFF1B;&#x5B83;&#x53EA;&#x80FD;&#x628A;CPU&#x8FD0;&#x884C;&#x65F6;&#x95F4;&#x5212;&#x5206;&#x6210;&#x82E5;&#x5E72;&#x4E2A;&#x65F6;&#x95F4;&#x6BB5;,&#x518D;&#x5C06;&#x65F6;&#x95F4;&#x7247;&#x5206;&#x914D;&#x7ED9;&#x5404;&#x4E2A;&#x7EBF;&#x7A0B;&#x6267;&#x884C;&#xFF0C;&#x5728;&#x4E00;&#x4E2A;&#x65F6;&#x95F4;&#x6BB5;&#x7684;&#x7EBF;&#x7A0B;&#x4EE3;&#x7801;&#x8FD0;&#x884C;&#x65F6;&#xFF0C;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x5904;&#x4E8E;&#x6302;&#x8D77;&#x72B6;&#x6001;&#x3002;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#x6211;&#x4EEC;&#x79F0;&#x4E4B;&#x4E3A;&#x5E76;&#x53D1;(Concurrent)&#x3002;</p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-12-15 19:02:55
+2022-01-15 13:29:44
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2602,7 +2628,7 @@ num<span class="token operator">:</span><span class="token number">19763</span>
                 </a>
                 
                 
-                <a href="jvm_mem_gc.html" class="navigation navigation-next " aria-label="Next page: 堆栈 & GC">
+                <a href="jvm_hot.html" class="navigation navigation-next " aria-label="Next page: JVM预热">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2613,7 +2639,7 @@ num<span class="token operator">:</span><span class="token number">19763</span>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Java内存模型与线程","layout":"page","date":"2019-02-15 00:00","level":"1.10.3","depth":2,"next":{"title":"堆栈 & GC","level":"1.10.4","depth":2,"path":"content/java_jvm/jvm_mem_gc.md","ref":"./content/java_jvm/jvm_mem_gc.md","articles":[]},"previous":{"title":"类加载机制,运行时内存","level":"1.10.2","depth":2,"path":"content/java_jvm/jvm_class_load.md","ref":"./content/java_jvm/jvm_class_load.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_jvm/jvm_mem_model.md","mtime":"2020-12-15T11:02:55.408Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-24T04:35:19.386Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Java内存模型与线程","layout":"page","date":"2019-02-15 00:00","level":"1.10.3","depth":2,"next":{"title":"JVM预热","level":"1.10.4","depth":2,"path":"content/java_jvm/jvm_hot.md","ref":"./content/java_jvm/jvm_hot.md","articles":[]},"previous":{"title":"类加载机制,运行时内存","level":"1.10.2","depth":2,"path":"content/java_jvm/jvm_class_load.md","ref":"./content/java_jvm/jvm_class_load.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_jvm/jvm_mem_model.md","mtime":"2022-01-15T05:29:44.868Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-01-16T15:50:19.095Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
