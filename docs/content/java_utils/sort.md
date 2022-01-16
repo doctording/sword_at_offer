@@ -54,6 +54,8 @@ class Solution {
 
 ## 数组堆排序
 
+大根堆
+
 ```java
 class Solution {
     // leetcode 912. 排序数组
@@ -116,6 +118,57 @@ class Solution {
         arr[i] = arr[j];
         arr[j] = tmp;
     }
+}
+```
+
+## 数组归并排序
+
+地址：https://leetcode.com/problems/sort-an-array/， `O(n)`的空间复杂度
+
+```java
+class Solution {
+    public int[] sortArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return nums;
+        }
+        int n = nums.length;
+        int[] tmp = new int[n];
+        sortMerge(nums, 0, n-1, tmp);
+        return nums;
+    }
+    
+    void sortMerge(int[] nums, int left, int right, int[] tmp) {
+        if (left >= right) {
+            return;
+        }
+        int mid = (right - left) / 2 + left;
+        sortMerge(nums, left, mid, tmp);
+        sortMerge(nums, mid + 1, right, tmp);
+        merge(nums, left, mid, right, tmp);
+    }
+        
+    void merge(int[] nums , int left , int mid , int right , int[] tmp) {
+        int index = left;
+        int i = left;
+        int j = mid +1;
+        while (i <= mid && j <= right) {
+            if (nums[i] <= nums[j]) {
+                tmp[index ++] = nums[i ++];
+            } else {
+                tmp[index++] = nums[j ++];
+            }
+        }
+        while (i <= mid) {
+            tmp[index ++] = nums[i ++];
+        }
+        while (j <= right) {
+            tmp[index ++] = nums[j ++];
+        }
+        for (int k = left; k <= right; k ++) {
+            nums[k] = tmp[k];
+        }
+    }
+
 }
 ```
 

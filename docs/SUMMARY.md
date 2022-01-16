@@ -112,6 +112,7 @@
     * [JVM规范](./content/java_jvm/jvm.md)
     * [类加载机制,运行时内存](./content/java_jvm/jvm_class_load.md)
     * [Java内存模型与线程](./content/java_jvm/jvm_mem_model.md)
+    * [JVM预热](./content/java_jvm/jvm_hot.md)
     * [堆栈 & GC](./content/java_jvm/jvm_mem_gc.md)
     * [JVM参数](./content/java_jvm/jvm_params.md)
     * [JVM命令工具(jstack,jmap,jcmd...)](./content/java_jvm/jvm_tools.md)
