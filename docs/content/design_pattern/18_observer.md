@@ -8,6 +8,8 @@ date: 2019-03-20 00:00
 
 # 观察者模式
 
+也称为`订阅—发布模式`，在此模式中，一个目标对象管理所有相依于它的观察者对象，并且在它本身的状态改变时主动发出通知。这通常透过呼叫各观察者所提供的方法来实现。此种模式通常被用在事件处理系统。
+
 观察者模式使用三个类: Subject(被观察的主体)、Observer(观察者) 和 测试类
 
 Subject的操作会通知所有注册的Observer，Subject可以添加删除Observer
@@ -19,12 +21,14 @@ import java.util.List;
 import java.util.Vector;
 
 /**
+ * 被观察主体
  * @Author mubi
  * @Date 2020/6/17 09:27
  */
 public class Subject {
-
+    // 观察者
     private List<Observer> observers = new Vector<>();
+    // 观察主体的状态变化
     private int state;
 
     public int getState() {
@@ -45,6 +49,7 @@ public class Subject {
     }
 
     public void notifyAllObservers(){
+        // 通知观察者，不同观察者执行不同的事情
         for (Observer observer : observers) {
             observer.update();
         }

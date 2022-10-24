@@ -167,15 +167,15 @@ public ThreadPoolExecutor(int corePoolSize,
 ![](../../content/java8/imgs/thread_pool_flow.png)
 
 ```java
-1、如果当前线程池的线程数还没有达到核心大小(poolSize < corePoolSize)，无论是否有空闲的线程新增一个线程处理新提交的任务；
+1、如果当前线程池的线程数还没有达到核心大小(poolSize < corePoolSize)，无论是否有空闲的线程都创建一个新的线程来处理新提交的任务；
 
-2、如果当前线程池的线程数大于或等于核心大小(poolSize >= corePoolSize) 且任务队列未满时，就将新提交的任务提交到阻塞队列排队，等候处理workQueue.offer(command)；
+2、如果当前线程池的线程数等于核心大小了(poolSize === corePoolSize),即核心工作线程已经满了，但任务队列未满时，就将新提交的任务提交到阻塞队列排队，等候处理workQueue.offer(command)；
 
-3、如果任务队列满(先是队列满，然后是判断最大线程数有没有达到)且当前线程池的线程数大于或等于核心大小(poolSize >= corePoolSize)时；
+3、如果任务队列满(先是队列满，然后是判断最大线程数有没有达到)
 
-    3.1、当前poolSize<maximumPoolSize，那么就新增线程来处理任务；
+    3.1、当前poolSize<maximumPoolSize，那么就新增线程来处理任务；(这些新的线程在没有工作的时候，最长存活的最长时间为设置的keepAliveTime)
 
-    3.2、当前poolSize=maximumPoolSize，那么意味着线程池的处理能力已经达到了极限，此时需要拒绝新增加的任务。至于如何拒绝处理新增的任务，取决于线程池的饱和策略RejectedExecutionHandler。
+    3.2、当前poolSize=maximumPoolSize，那么意味着线程池的处理能力已经达到了极限，此时需要拒绝新增加的任务。至于如何拒绝处理新增的任务，取决于线程池的拒绝策略RejectedExecutionHandler。
 ```
 
 ## 拒绝策略
@@ -192,6 +192,11 @@ public ThreadPoolExecutor(int corePoolSize,
 2. `ThreadPoolExecutor.DiscardPolicy`：丢弃任务，但是不抛出异常。
 3. `ThreadPoolExecutor.DiscardOldestPolicy`：丢弃队列最前面的任务，然后重新提交被拒绝的任务
 4. `ThreadPoolExecutor.CallerRunsPolicy`：由调用线程（提交任务的线程）自己处理该任务
+
+## 线程异常处理
+
+<a href='https://blog.csdn.net/qq_26437925/article/details/127463372'>线程池中某个线程执行有异常，该如何处理？
+</a>
 
 ## ThreadPoolExecutor 的使用例子
 

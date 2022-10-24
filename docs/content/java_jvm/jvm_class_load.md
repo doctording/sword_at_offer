@@ -21,13 +21,13 @@ JVM组成：
 
 Class文件是一组以8位字节为基础单位的`二进制流`，任何一个Class文件都对应唯一一个类或接口的定义信息
 
-![Java字节码增强探秘](https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA%3D%3D&chksm=bd1259af8a65d0b97809a6a8ff5afaff1be4a4232bd8527ef9d95bb7a2e768bd7d9fdc768211&idx=1&mid=2651750626&scene=21&sn=3e1ac6c41d6e1803abb32285daf0244a#wechat_redirect)
+参考：![Java字节码增强探秘](https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA%3D%3D&chksm=bd1259af8a65d0b97809a6a8ff5afaff1be4a4232bd8527ef9d95bb7a2e768bd7d9fdc768211&idx=1&mid=2651750626&scene=21&sn=3e1ac6c41d6e1803abb32285daf0244a#wechat_redirect)
 
 ![](../../content/java_jvm/imgs/java_byte_enhance.webp)
 
 ## Class 对象
 
-每一个类都有一个Class对象，每当加载一个新类就产生一个Class对象，基本类型 (boolean, byte, char, short, int, long, float, double)有Class对象，数组有Class对象，就连关键字void也有Class对象（void.class）。Class对象对应着java.lang.Class类，如果说类是对象抽象的集合的话，那么Class类就是对类的抽象的集合。Class类没有公共的构造方法，Class对象是在类加载的时候由**Java虚拟机**以及通过调用类加载器中的 defineClass 方法自动构造的，因此不能显式地声明一个Class对象
+每一个类都有一个Class对象，每当加载一个新类就产生一个Class对象，基本类型 (boolean, byte, char, short, int, long, float, double)有Class对象，数组有Class对象，就连关键字void也有Class对象（void.class）。Class对象对应着`java.lang.Class`类，如果说类是对象抽象的集合的话，那么Class类就是对类的抽象的集合。Class类没有公共的构造方法，Class对象是在类加载的时候由**Java虚拟机**以及通过调用类加载器中的`defineClass`方法自动构造的，因此不能显式地声明一个Class对象
 
 ![](../../content/java_jvm/imgs/java_class.png)
 
@@ -227,6 +227,8 @@ static,final,Class,常量池
 2. NoKlass Metaspace专门来存klass相关的其它的内容，比如method，constantPool等，可以由多块不连续的内存组成
 
 ### 为什么去掉永久代，元空间用非堆的机器内存？
+
+永久代是方法区的实现，使用堆内存，不好分配大小。
 
 gc问题，OOM，应用越来越大(调优不友好)
 
@@ -469,7 +471,7 @@ public static final int value = 123;
 
 * JVM必须确保一个类在初始化的过程中，如果是多线程需要同时初始化它，**仅仅只能允许其中一个线程对其执行初始化操作**，其余线程必须等待，只有在活动线程执行完对类的初始化操作之后，才会通知正在等待的其它线程。(<font color='red'>所以可以利用静态内部类实现线程安全的单例模式</font>)
 
-* 如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类`<client>`方法；
+* 如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类`<clinit>`方法；
 
 #### 附：类实例初始化过程？
 
@@ -483,7 +485,7 @@ public static final int value = 123;
 
 #### 附：static执行时机？
 
-static块的执行发生在"初始化"的阶段。初始化阶段，jvm会完成对静态变量的初始化，静态块执行等工作。
+static块的执行发生在**类**"初始化"的阶段（注意不是**类实例**初始化过程）。类初始化阶段，jvm会完成对静态变量的初始化，静态块执行等工作。
 
 是否执行static块的几种情况：
 
@@ -500,7 +502,7 @@ public static Class<?> forName(String className)
 }
 ```
 
-* 第一次`Class.forName("A",false,this.getClass().getClassLoader())`不会。因为false指明了装载类的过程中，不进行初始化。不初始化则不会执行static块。
+* 第一次`Class.forName("A",false,this.getClass().getClassLoader())`不会。因为false指明了装载类的过程中，不进行类初始化；没有类初始化，则不会执行static块。
 
 * 类似`getSystemClassLoader().loadClass("com.other.Hello");`也不会。
 
@@ -578,6 +580,13 @@ protected synchronized Class loadClass(String name, boolean resolve)
 }
 ```
 
+##### 类加载器中findClass与loadClass的区别？
+
+findClass（）用于写类加载逻辑、loadClass（）方法的逻辑里如果父类加载器加载失败则会调用自己的findClass（）方法完成加载，保证了双亲委派规则。
+
+1. 如果不想打破双亲委派模型，那么只需要重写findClass方法即可
+2. 如果想打破双亲委派模型，那么就需要重写整个loadClass方法
+
 ##### 为什么使用双亲委派？
 
 1. 采用双亲委派模式的是好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关可以**避免类的重复加载**，当父亲已经加载了该类时，就没有必要让子类ClassLoader再加载一次
@@ -597,13 +606,11 @@ class Singleton{
     public static int value3 = 10;
 
     private Singleton(){
-        System.out.println(String.format("before Singleton constructor: value1:%d, value2:%d, value3:%d",
-                value1,value2,value3));
+        System.out.println(String.format("before Singleton constructor: value1:%d, value2:%d,value3:%d",value1,value2,value3));
         value1++;
         value2++;
         value3++;
-        System.out.println(String.format("after Singleton constructor: value1:%d, value2:%d, value3:%d",
-                value1,value2,value3));
+        System.out.println(String.format("after Singleton constructor: value1:%d, value2:%d, value3:%d",value1,value2,value3));
     }
 
     public static Singleton getInstance(){
@@ -614,8 +621,7 @@ class Singleton{
 
 class Singleton2{
     static{
-        System.out.println(String.format("after Singleton2 constructor: v1:%d, v2:%d, v3:%d",
-                v1,v2,v3));
+        System.out.println(String.format("after Singleton2 constructor: v1:%d, v2:%d, v3:%d",v1,v2,v3));
     }
     public static int v1;
     public static int v2 = 0;
@@ -626,13 +632,11 @@ class Singleton2{
     private static Singleton2 singleton2 = new Singleton2();
 
     private Singleton2(){
-        System.out.println(String.format("before Singleton2 constructor: v1:%d, v2:%d, v3:%d",
-                v1,v2,v3));
+        System.out.println(String.format("before Singleton2 constructor: v1:%d, v2:%d, v3:%d",v1,v2,v3));
         v1++;
         v2++;
         v3++;
-        System.out.println(String.format("after Singleton2 constructor: v1:%d, v2:%d, v3:%d",
-                v1,v2,v3));
+        System.out.println(String.format("after Singleton2 constructor: v1:%d, v2:%d, v3:%d",v1,v2,v3));
     }
 
     public static Singleton2 getInstance2(){
@@ -668,13 +672,18 @@ public class MainTest {
 
 ##### 结果分析
 
-```js
-before Singleton constructor: value1:0, value2:0, value3:0
+Singleton类初始化的时候，先要执行`private static Singleton singleton = new Singleton();`这句静态变量的初始化，必须new对象执行构造函数了，执行完后，接着执行静态代码块
+
+Singleton2类初始化的时候，从上往下，执行静态变量赋值，静态代码块，然后才执行`private static Singleton2 singleton2 = new Singleton2();`这句静态变量的初始化，然后new对象执行构造函数
+
+```java
+before Singleton constructor: value1:0, value2:0,value3:0
 after Singleton constructor: value1:1, value2:1, value3:1
 static block
 Singleton1 value1:1
 Singleton1 value2:0
 Singleton1 value3:10
+after Singleton2 constructor: v1:0, v2:0, v3:10
 static block
 before Singleton2 constructor: v1:0, v2:0, v3:10
 after Singleton2 constructor: v1:1, v2:1, v3:11
@@ -694,13 +703,13 @@ Singleton2 v3:11
 5. 执行所有出现于字段定义处的初始化动作（**非静态对象的初始化**）
 6. 执行构造器。
 
-###### Singleton 结果分析
+###### 附：Singleton 结果详细分析
 
 1. 首先执行main中的`Singleton singleton = Singleton.getInstance()`,
 
 2. 访问了静态方法`访问静态方法`, 开始加载类`Singleton`
 
-3. 随后：类的连接( 验证 =》 准备 =》 解析)
+3. 随后进行类的链接过程(验证 =》 准备 =》 解析)
 
 这里会将为singleton(引用类型)设置为null,value1,value2,value3（基本数据类型）设置默认值0 ）
 
@@ -737,31 +746,6 @@ public static int value3 = 10;  // 类初次赋值
 Singleton1 value1:1
 Singleton1 value2:0
 Singleton1 value3:10
-```
-
-###### Singleton2 分析
-
-与`Singleton`的初始化语句顺序不一样,`new`对象，是在类初始变量之后
-
-```java
-public static int v1;
-public static int v2 = 0;
-public static int v3 = 10;
-static {
-    System.out.println("static block");
-}
-private static Singleton2 singleton2 = new Singleton2();
-```
-
-* output，注意到构造函数执行之前是：v1:0, v2:0, v3:10
-
-```java
-static block
-before Singleton2 constructor: v1:0, v2:0, v3:10
-after Singleton2 constructor: v1:1, v2:1, v3:11
-Singleton2 v1:1
-Singleton2 v2:1
-Singleton2 v3:11
 ```
 
 ###### 静态初始化再次验证
@@ -891,7 +875,7 @@ public class MyComOtherClassLoader extends ClassLoader{
 
     @Override
     public Class loadClass(String name) throws ClassNotFoundException {
-        // 非 com.test package下面的类，都用默认的双亲委派模型去加载，否则用自定义的加载方法
+        // 非com.test package下面的类，都用默认的双亲委派模型去加载，否则用自定义的加载方法
         if (!name.contains("com.other")) {
             // 是否已经被加载
             Class loadedClass = findLoadedClass(name);

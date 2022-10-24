@@ -6,9 +6,11 @@ date: 2019-03-24 00:00
 
 [TOC]
 
-# CAS
+# CAS（比较并交换）
 
-* 用于实现`多线程同步`的`原子指令`，非阻塞算法，是由CPU硬件实现（**比较并交换**）
+* 用于实现`多线程同步`的`原子指令`，非阻塞算法，是由CPU硬件实现的（x86下cmpxchg指令;arm下LL/SC指令），无需用到内核的同步原语来实现
+
+----
 
 CAS通过调用JNI(java native interface)的代码来操作底层指令来实现。
 
@@ -28,7 +30,7 @@ CAS通过调用JNI(java native interface)的代码来操作底层指令来实现
 
 结论：cmpxchg = cas修改变量值， lock cmpxchg 指令；硬件层面：lcok指令在执行后面指令的时候会锁定一个北桥芯片（确保只有一个CPU访问内存）
 
-* 乐观锁
+* 乐观锁（无锁的乐观机制）
 
 ![](../../content/java8/imgs/cas.png)
 

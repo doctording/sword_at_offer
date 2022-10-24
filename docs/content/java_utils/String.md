@@ -146,7 +146,7 @@ public String concat(String str) {
 }
 ```
 
-* 比较字符串的大小`compareTo`
+* 比较字符串的大小`compareTo`
 
 ```java
  public int compareTo(String anotherString) {
@@ -232,6 +232,14 @@ public class Main {
 
 1. 如果String常量池中，已经创建了"xyz"，则不会继续创建，此时只创建了一个对象new String("xyz")；
 2. 如果String常量池中，没有创建"xyz"，则会创建两个对象：一个对象是常量池中的"xyz"，一个对象是堆中new String("xyz")。
+
+### 不可变类有什么好处？
+
+最主要的好处就是**安全**，因为知晓这个对象不可能会被修改，在多线程环境下也是线程安全的
+
+你想想看，你引用的对象是一个不可变的值，那么谁都无法修改它，那它永远就是不变的，别的线程也休息动它分毫，你可以放心大胆的用。
+
+然后，配合常量池可以节省内存空间，且获取效率也更高（如果常量池里面已经有这个字符串对象了，就不需要新建，直接返回即可）。
 
 ## StringBuffer（synchronized修饰）
 
