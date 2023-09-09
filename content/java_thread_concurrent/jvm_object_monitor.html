@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>策略模式 · java-note</title>
+        <title>ObjectMonitor · java-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -93,10 +93,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="decorator.html" />
+    <link rel="next" href="park_unpark.html" />
     
     
-    <link rel="prev" href="template.html" />
+    <link rel="prev" href="thread_basic.html" />
     
 
     </head>
@@ -827,23 +827,62 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7" >
+        <li class="chapter " data-level="1.7" data-path="../design_pattern/design_pattern.html">
             
-                <span>
+                <a href="../design_pattern/design_pattern.html">
             
                     
-                    [常见设计模式]
+                    常见设计模式
             
-                </span>
+                </a>
             
 
             
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1" data-path="proxy.html">
+        <li class="chapter " data-level="1.7.1" data-path="../design_pattern/1_singleton.html">
             
-                <a href="proxy.html">
+                <a href="../design_pattern/1_singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../design_pattern/2_prototype.html">
+            
+                <a href="../design_pattern/2_prototype.html">
+            
+                    
+                    原型模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../design_pattern/3_factory.html">
+            
+                <a href="../design_pattern/3_factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../design_pattern/6_proxy.html">
+            
+                <a href="../design_pattern/6_proxy.html">
             
                     
                     代理模式
@@ -855,9 +894,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1.1" data-path="asm.html">
+        <li class="chapter " data-level="1.7.4.1" data-path="../design_pattern/asm.html">
             
-                <a href="asm.html">
+                <a href="../design_pattern/asm.html">
             
                     
                     ASM字节码操纵
@@ -873,12 +912,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.2" data-path="singleton.html">
+        <li class="chapter " data-level="1.7.5" data-path="../design_pattern/7_adapter.html">
             
-                <a href="singleton.html">
+                <a href="../design_pattern/7_adapter.html">
             
                     
-                    单例模式
+                    适配器模式
             
                 </a>
             
@@ -886,48 +925,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.3" data-path="factory.html">
+        <li class="chapter " data-level="1.7.6" data-path="../design_pattern/9_decorator.html">
             
-                <a href="factory.html">
-            
-                    
-                    工厂模式
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.4" data-path="template.html">
-            
-                <a href="template.html">
-            
-                    
-                    模板方法
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="1.7.5" data-path="strategy.html">
-            
-                <a href="strategy.html">
-            
-                    
-                    策略模式
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.6" data-path="decorator.html">
-            
-                <a href="decorator.html">
+                <a href="../design_pattern/9_decorator.html">
             
                     
                     装饰器模式
@@ -938,9 +938,48 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.7" data-path="observer.html">
+        <li class="chapter " data-level="1.7.7" data-path="../design_pattern/10_facade.html">
             
-                <a href="observer.html">
+                <a href="../design_pattern/10_facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.8" data-path="../design_pattern/13_template.html">
+            
+                <a href="../design_pattern/13_template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.9" data-path="../design_pattern/14_strategy.html">
+            
+                <a href="../design_pattern/14_strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.10" data-path="../design_pattern/18_observer.html">
+            
+                <a href="../design_pattern/18_observer.html">
             
                     
                     观察者模式
@@ -949,11 +988,12 @@
             
 
             
-        </li>
+            <ul class="articles">
+                
     
-        <li class="chapter " data-level="1.7.8" data-path="publish.html">
+        <li class="chapter " data-level="1.7.10.1" data-path="../design_pattern/publish.html">
             
-                <a href="publish.html">
+                <a href="../design_pattern/publish.html">
             
                     
                     发布订阅模式
@@ -964,12 +1004,17 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.9" data-path="visitor.html">
+
+            </ul>
             
-                <a href="visitor.html">
+        </li>
+    
+        <li class="chapter " data-level="1.7.11" data-path="../design_pattern/19_listener.html">
+            
+                <a href="../design_pattern/19_listener.html">
             
                     
-                    访问者模式
+                    监听者模式
             
                 </a>
             
@@ -977,9 +1022,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.10" data-path="iterator.html">
+        <li class="chapter " data-level="1.7.12" data-path="../design_pattern/20_iterator.html">
             
-                <a href="iterator.html">
+                <a href="../design_pattern/20_iterator.html">
             
                     
                     迭代器模式
@@ -990,12 +1035,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.11" data-path="facade.html">
+        <li class="chapter " data-level="1.7.13" data-path="../design_pattern/21_visitor.html">
             
-                <a href="facade.html">
+                <a href="../design_pattern/21_visitor.html">
             
                     
-                    门面模式
+                    访问者模式
             
                 </a>
             
@@ -1465,6 +1510,38 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.11.1" data-path="../java_utils/swap_string.html">
+            
+                <a href="../java_utils/swap_string.html">
+            
+                    
+                    String交换问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.11.2" data-path="../java_utils/string_intern.html">
+            
+                <a href="../java_utils/string_intern.html">
+            
+                    
+                    String.intern()问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.9.12" data-path="../java_utils/reflect.html">
@@ -1707,7 +1784,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2" data-path="../java_jvm/jvm_class_load.html">
+        <li class="chapter " data-level="1.10.2" data-path="../java_jvm/jvm_instruct.html">
+            
+                <a href="../java_jvm/jvm_instruct.html">
+            
+                    
+                    JVM指令手册
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../java_jvm/jvm_class_load.html">
             
                 <a href="../java_jvm/jvm_class_load.html">
             
@@ -1720,12 +1810,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_jvm/jvm_mem_model.html">
+        <li class="chapter " data-level="1.10.4" data-path="../java_jvm/jvm_mem_model.html">
             
                 <a href="../java_jvm/jvm_mem_model.html">
             
                     
-                    Java内存模型与线程
+                    Java内存模型与多线程并发
             
                 </a>
             
@@ -1733,7 +1823,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../java_jvm/jvm_hot.html">
+        <li class="chapter " data-level="1.10.5" data-path="../java_jvm/jvm_hot.html">
             
                 <a href="../java_jvm/jvm_hot.html">
             
@@ -1746,7 +1836,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../java_jvm/jvm_mem_gc.html">
+        <li class="chapter " data-level="1.10.6" data-path="../java_jvm/jvm_mem_gc.html">
             
                 <a href="../java_jvm/jvm_mem_gc.html">
             
@@ -1759,7 +1849,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.6" data-path="../java_jvm/jvm_params.html">
+        <li class="chapter " data-level="1.10.7" data-path="../java_jvm/jvm_params.html">
             
                 <a href="../java_jvm/jvm_params.html">
             
@@ -1772,7 +1862,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.7" data-path="../java_jvm/jvm_tools.html">
+        <li class="chapter " data-level="1.10.8" data-path="../java_jvm/jvm_tools.html">
             
                 <a href="../java_jvm/jvm_tools.html">
             
@@ -1804,22 +1894,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.11.1" data-path="../java_thread_concurrent/aqs.html">
+        <li class="chapter " data-level="1.11.1" data-path="cas.html">
             
-                <a href="../java_thread_concurrent/aqs.html">
-            
-                    
-                    AQS
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.2" data-path="../java_thread_concurrent/cas.html">
-            
-                <a href="../java_thread_concurrent/cas.html">
+                <a href="cas.html">
             
                     
                     CAS & 原子变量
@@ -1830,9 +1907,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../java_thread_concurrent/volatile.html">
+        <li class="chapter " data-level="1.11.2" data-path="volatile.html">
             
-                <a href="../java_thread_concurrent/volatile.html">
+                <a href="volatile.html">
             
                     
                     volatile 关键字
@@ -1843,9 +1920,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.4" data-path="../java_thread_concurrent/synchronized.html">
+        <li class="chapter " data-level="1.11.3" data-path="synchronized.html">
             
-                <a href="../java_thread_concurrent/synchronized.html">
+                <a href="synchronized.html">
             
                     
                     synchronized 关键字
@@ -1856,26 +1933,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5" data-path="../java_thread_concurrent/thread_basic.html">
+        <li class="chapter " data-level="1.11.4" data-path="aqs.html">
             
-                <a href="../java_thread_concurrent/thread_basic.html">
-            
-                    
-                    线程基础
-            
-                </a>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.11.5.1" data-path="../java_thread_concurrent/park_unpark.html">
-            
-                <a href="../java_thread_concurrent/park_unpark.html">
+                <a href="aqs.html">
             
                     
-                    park unpark
+                    AQS
             
                 </a>
             
@@ -1883,9 +1946,88 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.2" data-path="../java_thread_concurrent/thread_condition.html">
+        <li class="chapter " data-level="1.11.5" data-path="thread_lock.html">
             
-                <a href="../java_thread_concurrent/thread_condition.html">
+                <a href="thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6" data-path="linux_lock.html">
+            
+                <a href="linux_lock.html">
+            
+                    
+                    Linux spin lock & mutex
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7" >
+            
+                <span>
+            
+                    
+                    [线程]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.7.1" data-path="thread_basic.html">
+            
+                <a href="thread_basic.html">
+            
+                    
+                    Java线程基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.11.7.2" data-path="jvm_object_monitor.html">
+            
+                <a href="jvm_object_monitor.html">
+            
+                    
+                    ObjectMonitor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.3" data-path="park_unpark.html">
+            
+                <a href="park_unpark.html">
+            
+                    
+                    park,unpark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.4" data-path="thread_condition.html">
+            
+                <a href="thread_condition.html">
             
                     
                     Condition
@@ -1896,9 +2038,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.3" data-path="../java_thread_concurrent/semaphore.html">
+        <li class="chapter " data-level="1.11.7.5" data-path="semaphore.html">
             
-                <a href="../java_thread_concurrent/semaphore.html">
+                <a href="semaphore.html">
             
                     
                     Semaphore
@@ -1909,9 +2051,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.4" data-path="../java_thread_concurrent/hook_thread.html">
+        <li class="chapter " data-level="1.11.7.6" data-path="hook_thread.html">
             
-                <a href="../java_thread_concurrent/hook_thread.html">
+                <a href="hook_thread.html">
             
                     
                     Hook线程
@@ -1922,9 +2064,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.5" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+        <li class="chapter " data-level="1.11.7.7" data-path="countdownlatch_cyclicBarrier.html">
             
-                <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+                <a href="countdownlatch_cyclicBarrier.html">
             
                     
                     CountDownLatch & CyclicBarrier
@@ -1935,9 +2077,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.6" data-path="../java_thread_concurrent/longAdder.html">
+        <li class="chapter " data-level="1.11.7.8" data-path="longAdder.html">
             
-                <a href="../java_thread_concurrent/longAdder.html">
+                <a href="longAdder.html">
             
                     
                     LongAdder
@@ -1948,9 +2090,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.7" data-path="../java_thread_concurrent/exchanger.html">
+        <li class="chapter " data-level="1.11.7.9" data-path="exchanger.html">
             
-                <a href="../java_thread_concurrent/exchanger.html">
+                <a href="exchanger.html">
             
                     
                     Exchanger
@@ -1961,9 +2103,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.8" data-path="../java_thread_concurrent/thread_design.html">
+        <li class="chapter " data-level="1.11.7.10" data-path="thread_design.html">
             
-                <a href="../java_thread_concurrent/thread_design.html">
+                <a href="thread_design.html">
             
                     
                     多线程设计模式
@@ -1979,7 +2121,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6" >
+        <li class="chapter " data-level="1.11.8" >
             
                 <span>
             
@@ -1993,9 +2135,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.11.6.1" data-path="../java_thread_concurrent/thread_pool.html">
+        <li class="chapter " data-level="1.11.8.1" data-path="thread_pool.html">
             
-                <a href="../java_thread_concurrent/thread_pool.html">
+                <a href="thread_pool.html">
             
                     
                     Java线程池
@@ -2006,9 +2148,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6.2" data-path="../java_thread_concurrent/concurrency_problems.html">
+        <li class="chapter " data-level="1.11.8.2" data-path="concurrency_problems.html">
             
-                <a href="../java_thread_concurrent/concurrency_problems.html">
+                <a href="concurrency_problems.html">
             
                     
                     常见的多线程题目
@@ -2019,9 +2161,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6.3" data-path="../java_thread_concurrent/thread_pool_self.html">
+        <li class="chapter " data-level="1.11.8.3" data-path="thread_pool_self.html">
             
-                <a href="../java_thread_concurrent/thread_pool_self.html">
+                <a href="thread_pool_self.html">
             
                     
                     自定义线程池
@@ -2037,35 +2179,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.7" data-path="../java_thread_concurrent/linux_lock.html">
+        <li class="chapter " data-level="1.11.9" data-path="thread_deadlock.html">
             
-                <a href="../java_thread_concurrent/linux_lock.html">
-            
-                    
-                    Linux spin lock & mutex
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.8" data-path="../java_thread_concurrent/thread_lock.html">
-            
-                <a href="../java_thread_concurrent/thread_lock.html">
-            
-                    
-                    Java Lock
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.9" data-path="../java_thread_concurrent/thread_deadlock.html">
-            
-                <a href="../java_thread_concurrent/thread_deadlock.html">
+                <a href="thread_deadlock.html">
             
                     
                     死锁问题
@@ -2076,9 +2192,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.10" data-path="../java_thread_concurrent/threadLocal.html">
+        <li class="chapter " data-level="1.11.10" data-path="threadLocal.html">
             
-                <a href="../java_thread_concurrent/threadLocal.html">
+                <a href="threadLocal.html">
             
                     
                     ThreadLocal对象
@@ -2280,7 +2396,7 @@
                 <span>
             
                     
-                    [脚本]
+                    [脚本&面试题]
             
                 </span>
             
@@ -2308,6 +2424,19 @@
             
                     
                     统计词频bash脚本
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14.3" data-path="../shell/big_data.html">
+            
+                <a href="../shell/big_data.html">
+            
+                    
+                    大数据量问题
             
                 </a>
             
@@ -2466,7 +2595,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >策略模式</a>
+        <a href="../.." >ObjectMonitor</a>
     </h1>
 </div>
 
@@ -2482,109 +2611,76 @@
                                 <section class="normal markdown-section">
                                 
                                 <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
-<li><div><a href="#&#x7B56;&#x7565;&#x6A21;&#x5F0F;">&#x7B56;&#x7565;&#x6A21;&#x5F0F;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<li><div><a href="#objectmonitor">ObjectMonitor</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
-<li><div><a href="#&#x5E94;&#x7528;">&#x5E94;&#x7528;</a><i></i></div></li>
+<li><div><a href="#java&#x7EBF;&#x7A0B;&#x56DE;&#x987E;">Java&#x7EBF;&#x7A0B;&#x56DE;&#x987E;</a><i></i></div></li>
+<li><div><a href="#objectmonitor&#x5BF9;&#x8C61;">ObjectMonitor&#x5BF9;&#x8C61;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<ul>
+<li><div><a href="#objectmonitor&#x4E3B;&#x8981;&#x5BF9;&#x8C61;&#x6210;&#x5458;">ObjectMonitor&#x4E3B;&#x8981;&#x5BF9;&#x8C61;&#x6210;&#x5458;</a><i></i></div></li>
+<li><div><a href="#objectwaiter">ObjectWaiter</a><i></i></div></li>
+<li><div><a href="#objectmonitor&#x7684;&#x57FA;&#x672C;&#x5DE5;&#x4F5C;&#x673A;&#x5236;">ObjectMonitor&#x7684;&#x57FA;&#x672C;&#x5DE5;&#x4F5C;&#x673A;&#x5236;</a><i></i></div></li>
+<li><div><a href="#&#x83B7;&#x53D6;&#x9501;-objectmonitorenter">&#x83B7;&#x53D6;&#x9501; ObjectMonitor::enter</a><i></i></div></li>
+<li><div><a href="#&#x91CA;&#x653E;&#x9501;-objectmonitorexit">&#x91CA;&#x653E;&#x9501; ObjectMonitor::exit</a><i></i></div></li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
 
 
 <p>[TOC]</p>
-<h1 id="&#x7B56;&#x7565;&#x6A21;&#x5F0F;">&#x7B56;&#x7565;&#x6A21;&#x5F0F;</h1>
-<p>eg:</p>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">MemberStrategy</span> <span class="token punctuation">{</span>
-    <span class="token comment">/**
-     * &#x8BA1;&#x7B97;&#x56FE;&#x4E66;&#x7684;&#x4EF7;&#x683C;
-     * @param booksPrice    &#x56FE;&#x4E66;&#x7684;&#x539F;&#x4EF7;
-     * @return    &#x8BA1;&#x7B97;&#x51FA;&#x6253;&#x6298;&#x540E;&#x7684;&#x4EF7;&#x683C;
-     */</span>
-    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">calcPrice</span><span class="token punctuation">(</span><span class="token keyword">double</span> booksPrice<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<h1 id="objectmonitor">ObjectMonitor</h1>
+<h2 id="java&#x7EBF;&#x7A0B;&#x56DE;&#x987E;">Java&#x7EBF;&#x7A0B;&#x56DE;&#x987E;</h2>
+<p>open jdk&#x6E90;&#x7801;&#x5730;&#x5740;&#xFF1A;<a href="https://github.com/openjdk/jdk" target="_blank">https://github.com/openjdk/jdk</a></p>
+<p>Java&#x7EBF;&#x7A0B;&#xFF08;Java Thread&#xFF09;&#x662F;&#x7531;Java&#x865A;&#x62DF;&#x673A;&#xFF08;JVM&#xFF09;&#x521B;&#x5EFA;&#x548C;&#x7BA1;&#x7406;&#x7684;&#xFF0C;&#x5B83;&#x662F;Java&#x7A0B;&#x5E8F;&#x4E2D;&#x6700;&#x57FA;&#x672C;&#x7684;&#x6267;&#x884C;&#x5355;&#x5143;&#x3002;Java&#x7EBF;&#x7A0B;&#x548C;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7EBF;&#x7A0B;&#xFF08;OS Thread&#xFF09;&#x662F;&#x4E0D;&#x540C;&#x7684;&#x6982;&#x5FF5;&#x3002;&#x5728;HotSpot&#x4E2D;&#xFF0C;Java&#x7EBF;&#x7A0B;&#x5B9E;&#x9645;&#x4E0A;&#x662F;&#x7531;JavaThread&#x7C7B;&#x8868;&#x793A;&#x7684;&#x3002;JavaThread&#x7C7B;&#x662F;Thread&#x7C7B;&#x7684;&#x5B50;&#x7C7B;&#xFF0C;&#x5B83;&#x7EE7;&#x627F;&#x4E86;Thread&#x7C7B;&#x7684;&#x4E00;&#x4E9B;&#x5C5E;&#x6027;&#x548C;&#x65B9;&#x6CD5;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x4E86;&#x4E00;&#x4E9B;&#x989D;&#x5916;&#x7684;&#x5C5E;&#x6027;&#x548C;&#x65B9;&#x6CD5;&#xFF0C;&#x7528;&#x4E8E;&#x5B9E;&#x73B0;Java&#x7EBF;&#x7A0B;&#x7684;&#x7279;&#x6027;&#xFF0C;&#x5982;&#x7EBF;&#x7A0B;&#x72B6;&#x6001;&#x3001;&#x8C03;&#x7528;&#x6808;&#x3001;&#x5F02;&#x5E38;&#x5904;&#x7406;&#x7B49;&#x3002;JavaThread&#x7C7B;&#x7684;&#x5B9E;&#x4F8B;&#x4EE3;&#x8868;&#x4E86;&#x4E00;&#x4E2A;Java&#x7EBF;&#x7A0B;&#x3002;</p>
+<p>&#x800C;OS Thread&#x7C7B;&#x5219;&#x662F;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#x7C7B;&#xFF0C;&#x5B83;&#x5C01;&#x88C5;&#x4E86;HotSpot&#x5BF9;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7EBF;&#x7A0B;&#x7684;&#x62BD;&#x8C61;&#x548C;&#x7BA1;&#x7406;&#xFF0C;&#x5982;&#x7EBF;&#x7A0B;ID&#x3001;&#x4F18;&#x5148;&#x7EA7;&#x3001;&#x8C03;&#x5EA6;&#x7B49;&#x3002;Java Thread&#x7C7B;&#x5305;&#x542B;&#x4E86;&#x4E00;&#x4E2A;OS Thread&#x7C7B;&#x7684;&#x6210;&#x5458;&#x53D8;&#x91CF;&#xFF0C;&#x7528;&#x4E8E;&#x8868;&#x793A;Java&#x7EBF;&#x7A0B;&#x6240;&#x5BF9;&#x5E94;&#x7684;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7EBF;&#x7A0B;&#x3002;<strong>Java&#x7EBF;&#x7A0B;&#x548C;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7EBF;&#x7A0B;&#x4E4B;&#x95F4;&#x7684;&#x5173;&#x7CFB;&#x662F;&#x4E00;&#x5BF9;&#x4E00;&#x7684;</strong>&#x3002;&#x6BCF;&#x4E2A;Java&#x7EBF;&#x7A0B;&#x90FD;&#x4F1A;&#x6709;&#x4E00;&#x4E2A;&#x5BF9;&#x5E94;&#x7684;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7EBF;&#x7A0B;&#x6765;&#x6267;&#x884C;&#x5B83;&#x7684;&#x4EFB;&#x52A1;&#x3002;&#x56E0;&#x6B64;&#xFF0C;Java&#x7EBF;&#x7A0B;&#x7684;&#x751F;&#x547D;&#x5468;&#x671F;&#x53D7;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x7EBF;&#x7A0B;&#x7684;&#x8C03;&#x5EA6;&#x548C;&#x7BA1;&#x7406;&#x3002;</p>
+<p>&#x5728;<code>/hotspot/src/share/vm/runtime/thread.cpp</code>&#x4E2D;&#xFF1A;Thread&#x5BF9;&#x8C61;&#x5185;&#x90E8;&#x5305;&#x542B;&#x4E86;&#x8BE5;&#x7EBF;&#x7A0B;&#x7684;&#x72B6;&#x6001;&#x3001;&#x8C03;&#x5EA6;&#x4F18;&#x5148;&#x7EA7;&#x3001;&#x6267;&#x884C;&#x6808;&#x3001;&#x6808;&#x5E27;&#x3001;&#x6301;&#x6709;&#x7684;&#x9501;&#x7B49;&#x4FE1;&#x606F;&#x3002;</p>
+<h2 id="objectmonitor&#x5BF9;&#x8C61;">ObjectMonitor&#x5BF9;&#x8C61;</h2>
+<p>&#x6BCF;&#x4E2A;Java&#x5BF9;&#x8C61;&#x4E2D;&#x90FD;&#x5177;&#x6709;&#x4E00;&#x4E2A;&#x4E00;&#x4E2A;<code>ObjectMonitor</code>&#x5BF9;&#x8C61;&#x3002;&#x5728;Java&#x4E2D;&#xFF0C;&#x6BCF;&#x4E2A;&#x5BF9;&#x8C61;&#x90FD;&#x53EF;&#x4EE5;&#x7528;&#x4F5C;&#x9501;&#x6765;&#x540C;&#x6B65;&#x591A;&#x4E2A;&#x7EBF;&#x7A0B;&#x7684;&#x8BBF;&#x95EE;&#x3002;&#x5F53;&#x7EBF;&#x7A0B;&#x83B7;&#x53D6;&#x67D0;&#x4E2A;&#x5BF9;&#x8C61;&#x7684;&#x9501;&#x65F6;&#xFF0C;&#x5B83;&#x5B9E;&#x9645;&#x4E0A;&#x662F;&#x83B7;&#x53D6;&#x8BE5;&#x5BF9;&#x8C61;&#x5173;&#x8054;&#x7684;ObjectMonitor&#x5BF9;&#x8C61;&#x7684;&#x9501;&#x3002;&#x56E0;&#x6B64;&#xFF0C;&#x6BCF;&#x4E2A;&#x5BF9;&#x8C61;&#x5728;Java&#x4E2D;&#x90FD;&#x6709;&#x4E00;&#x4E2A;&#x4E0E;&#x4E4B;&#x5173;&#x8054;&#x7684;<code>ObjectMonitor</code>&#x5BF9;&#x8C61;&#x6765;&#x63A7;&#x5236;&#x7EBF;&#x7A0B;&#x5BF9;&#x8BE5;&#x5BF9;&#x8C61;&#x7684;&#x8BBF;&#x95EE;&#x3002;</p>
+<h3 id="objectmonitor&#x4E3B;&#x8981;&#x5BF9;&#x8C61;&#x6210;&#x5458;">ObjectMonitor&#x4E3B;&#x8981;&#x5BF9;&#x8C61;&#x6210;&#x5458;</h3>
 <ul>
-<li>&#x7B56;&#x7565;1</li>
+<li>_object &#x6307;&#x5411;&#x88AB;&#x76D1;&#x89C6;&#x7684;&#x5BF9;&#x8C61;&#xFF0C;&#x5373; Java &#x5C42;&#x9762;&#x7684;&#x5BF9;&#x8C61;</li>
+<li>_owner &#x6307;&#x5411;&#x6301;&#x6709;ObjectMonitor&#x5BF9;&#x8C61;&#x7684;&#x7EBF;&#x7A0B;&#x5730;&#x5740;&#x3002;</li>
+<li>_WaitSet &#x4E00;&#x4E2A; ObjectWaiter &#x5BF9;&#x8C61;&#x7684;&#x94FE;&#x8868;&#xFF0C;&#x7528;&#x4E8E;&#x5B58;&#x50A8;&#x88AB;&#x963B;&#x585E;&#x7684;&#x7EBF;&#x7A0B;&#x7531;&#x4E8E; wait() &#x6216; join() &#x7B49;&#x5F85; monitor &#x7684;&#x72B6;&#x6001;</li>
+<li>_EntryList &#x4E00;&#x4E2A; ObjectWaiter &#x5BF9;&#x8C61;&#x7684;&#x94FE;&#x8868;&#xFF0C;&#x7528;&#x4E8E;&#x5B58;&#x50A8;&#x88AB;&#x963B;&#x585E;(block&#x4F4F;)&#x7684;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85; monitor &#x8FDB;&#x5165;</li>
+<li>_recursions &#x9501;&#x7684;&#x91CD;&#x5165;&#x6B21;&#x6570;&#x3002;</li>
+<li>_count &#x7EBF;&#x7A0B;&#x83B7;&#x53D6;&#x9501;&#x7684;&#x6B21;&#x6570;&#x3002;</li>
 </ul>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">PrimaryMemberStrategy</span> <span class="token keyword">implements</span> <span class="token class-name">MemberStrategy</span> <span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">calcPrice</span><span class="token punctuation">(</span><span class="token keyword">double</span> booksPrice<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;&#x5BF9;&#x4E8E;&#x521D;&#x7EA7;&#x4F1A;&#x5458;&#x7684;&#x6CA1;&#x6709;&#x6298;&#x6263;&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> booksPrice<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-<span class="token punctuation">}</span>
-</code></pre>
-<ul>
-<li>&#x7B56;&#x7565;2</li>
+<h3 id="objectwaiter">ObjectWaiter</h3>
+<p>ObjectWaiter&#x662F;&#x4E00;&#x4E2A;&#x7528;&#x4E8E;&#x7B49;&#x5F85;&#x5524;&#x9192;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x3002;&#x5728;Java&#x4E2D;&#xFF0C;Object.wait() &#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x540E;&#xFF0C;&#x7EBF;&#x7A0B;&#x4F1A;&#x88AB;&#x6302;&#x8D77;&#xFF0C;&#x76F4;&#x5230;&#x53E6;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x8C03;&#x7528;Object.notify() &#x6216; Object.notifyAll() &#x65B9;&#x6CD5;&#xFF0C;&#x6216;&#x8005;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;&#x65F6;&#x95F4;&#x5230;&#x671F;&#xFF0C;&#x6216;&#x8005;&#x7EBF;&#x7A0B;&#x88AB;&#x4E2D;&#x65AD;&#xFF0C;&#x624D;&#x4F1A;&#x88AB;&#x5524;&#x9192;&#x3002;&#x5F53;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x8C03;&#x7528;Object.wait() &#x65B9;&#x6CD5;&#x540E;&#xFF0C;&#x4F1A;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;ObjectWaiter&#x5BF9;&#x8C61;&#xFF0C;&#x8BE5;&#x5BF9;&#x8C61;&#x4F1A;&#x88AB;&#x52A0;&#x5165;&#x5230;&#x7B49;&#x5F85;&#x961F;&#x5217;&#x4E2D;&#x3002;&#x5F53;&#x53E6;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x8C03;&#x7528;Object.notify() &#x6216; Object.notifyAll() &#x65B9;&#x6CD5;&#x65F6;&#xFF0C;&#x4F1A;&#x4ECE;&#x7B49;&#x5F85;&#x961F;&#x5217;&#x4E2D;&#x53D6;&#x51FA;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;ObjectWaiter&#x5BF9;&#x8C61;&#xFF0C;&#x5E76;&#x5C06;&#x5B83;&#x4EEC;&#x52A0;&#x5165;&#x5230;&#x53EF;&#x7528;&#x961F;&#x5217;&#x4E2D;&#xFF0C;&#x4EE5;&#x4FBF;&#x5728;&#x4E0B;&#x4E00;&#x6B21;&#x7ADE;&#x4E89;&#x9501;&#x65F6;&#x5524;&#x9192;&#x8FD9;&#x4E9B;&#x7EBF;&#x7A0B;&#x3002;</p>
+<h3 id="objectmonitor&#x7684;&#x57FA;&#x672C;&#x5DE5;&#x4F5C;&#x673A;&#x5236;">ObjectMonitor&#x7684;&#x57FA;&#x672C;&#x5DE5;&#x4F5C;&#x673A;&#x5236;</h3>
+<ol>
+<li><p>&#x5F53;&#x591A;&#x4E2A;&#x7EBF;&#x7A0B;&#x540C;&#x65F6;&#x8BBF;&#x95EE;&#x4E00;&#x6BB5;&#x540C;&#x6B65;&#x4EE3;&#x7801;&#x65F6;&#xFF0C;&#x9996;&#x5148;&#x4F1A;&#x8FDB;&#x5165; _EntryList &#x961F;&#x5217;&#x4E2D;&#x3002;</p>
+</li>
+<li><p>&#x5F53;&#x67D0;&#x4E2A;&#x7EBF;&#x7A0B;&#x83B7;&#x53D6;&#x5230;&#x5BF9;&#x8C61;&#x7684;Monitor&#x540E;&#x8FDB;&#x5165;&#x4E34;&#x754C;&#x533A;&#x57DF;&#xFF0C;&#x5E76;&#x628A;Monitor&#x4E2D;&#x7684; _owner &#x53D8;&#x91CF;&#x8BBE;&#x7F6E;&#x4E3A;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#xFF0C;&#x540C;&#x65F6;Monitor&#x4E2D;&#x7684;&#x8BA1;&#x6570;&#x5668; _count &#x52A0;1&#x3002;&#x5373;&#x83B7;&#x5F97;&#x5BF9;&#x8C61;&#x9501;&#x3002;</p>
+</li>
+<li><p>&#x82E5;&#x6301;&#x6709;Monitor&#x7684;&#x7EBF;&#x7A0B;&#x8C03;&#x7528; wait() &#x65B9;&#x6CD5;&#xFF0C;&#x5C06;&#x91CA;&#x653E;&#x5F53;&#x524D;&#x6301;&#x6709;&#x7684;Monitor&#xFF0C;_owner&#x53D8;&#x91CF;&#x6062;&#x590D;&#x4E3A;null&#xFF0C;_count&#x81EA;&#x51CF;1&#xFF0C;&#x540C;&#x65F6;&#x8BE5;&#x7EBF;&#x7A0B;&#x8FDB;&#x5165; _WaitSet &#x96C6;&#x5408;&#x4E2D;&#x7B49;&#x5F85;&#x88AB;&#x5524;&#x9192;&#x3002;</p>
+</li>
+<li><p>&#x5728;_WaitSet &#x96C6;&#x5408;&#x4E2D;&#x7684;&#x7EBF;&#x7A0B;&#x4F1A;&#x88AB;&#x518D;&#x6B21;&#x653E;&#x5230;_EntryList &#x961F;&#x5217;&#x4E2D;&#xFF0C;&#x91CD;&#x65B0;&#x7ADE;&#x4E89;&#x83B7;&#x53D6;&#x9501;&#x3002;</p>
+</li>
+<li><p>&#x82E5;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x6267;&#x884C;&#x5B8C;&#x6BD5;&#x4E5F;&#x5C06;&#x91CA;&#x653E;Monitor&#x5E76;&#x590D;&#x4F4D;&#x53D8;&#x91CF;&#x7684;&#x503C;&#xFF0C;&#x4EE5;&#x4FBF;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x8FDB;&#x5165;&#x83B7;&#x53D6;&#x9501;</p>
+</li>
+</ol>
+<h3 id="&#x83B7;&#x53D6;&#x9501;-objectmonitorenter">&#x83B7;&#x53D6;&#x9501; ObjectMonitor::enter</h3>
+<ol>
+<li>&#x9996;&#x5148;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x7EBF;&#x7A0B;&#x4F7F;&#x7528;&#x8FD9;&#x4E2A;&#x9501;&#x5219;&#xFF0C;&#x76F4;&#x63A5;&#x83B7;&#x53D6;&#x9501;&#xFF0C;</li>
+<li>&#x82E5;&#x6709;&#x7EBF;&#x7A0B;&#x662F;&#x4F1A;&#x5C1D;&#x8BD5;&#x901A;&#x8FC7;&#x539F;&#x5B50;&#x64CD;&#x4F5C;&#x6765;&#x5C06;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x8BBE;&#x7F6E;&#x6210;&#x6B64;&#x5BF9;&#x8C61;&#x7684;&#x76D1;&#x89C6;&#x5668;&#x9501;&#x7684;&#x6301;&#x6709;&#x8005;&#x3002;<ul>
+<li>&#x5982;&#x679C;&#x539F;&#x6765;&#x7684;&#x6301;&#x6709;&#x8005;&#x662F; null&#xFF0C;&#x5219;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x6210;&#x529F;&#x83B7;&#x53D6;&#x5230;&#x4E86;&#x9501;&#x3002;</li>
+<li>&#x5982;&#x679C;&#x539F;&#x6765;&#x7684;&#x6301;&#x6709;&#x8005;&#x662F;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#xFF0C;&#x5219;&#x8BF4;&#x660E;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x5DF2;&#x7ECF;&#x6301;&#x6709;&#x8BE5;&#x9501;&#xFF0C;&#x5E76;&#x4E14;&#x5C06;<strong>&#x8BA1;&#x6570;&#x5668;&#x9012;&#x589E;</strong>&#xFF1B;</li>
+<li>&#x5982;&#x679C;&#x539F;&#x6765;&#x7684;&#x6301;&#x6709;&#x8005;&#x662F;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#xFF0C;&#x5219;&#x8BF4;&#x660E;&#x5B58;&#x5728;&#x591A;&#x7EBF;&#x7A0B;&#x7ADE;&#x4E89;&#xFF0C;&#x4EE3;&#x7801;&#x4F1A;&#x5C06;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x963B;&#x585E;&#xFF0C;&#x5E76;&#x4E14;&#x8FDB;&#x5165;&#x4E00;&#x4E2A;&#x7B49;&#x5F85;&#x961F;&#x5217;&#x4E2D;&#x7B49;&#x5F85;&#x88AB;&#x5524;&#x9192;&#x3002;&#x5982;&#x679C;&#x5F00;&#x542F;&#x4E86;&#x81EA;&#x65CB;&#x9501;&#xFF0C;&#x5219;&#x4F1A;&#x5C1D;&#x8BD5;&#x81EA;&#x65CB;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#xFF0C;&#x4EE5;&#x907F;&#x514D;&#x591A;&#x7EBF;&#x7A0B;&#x7ADE;&#x4E89;&#x5BFC;&#x81F4;&#x7684;&#x963B;&#x585E;&#x5F00;&#x9500;&#x8FC7;&#x5927;&#x3002;</li>
+<li>&#x5982;&#x679C;&#x81EA;&#x65CB;&#x540E;&#x4ECD;&#x672A;&#x83B7;&#x5F97;&#x9501;&#xFF0C;&#x5219;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x5C06;&#x8FDB;&#x5165;&#x4E00;&#x4E2A;&#x7B49;&#x5F85;&#x961F;&#x5217;&#x4E2D;&#xFF0C;&#x5E76;&#x4E14;&#x8BBE;&#x7F6E;&#x81EA;&#x5DF1;&#x4E3A;&#x961F;&#x5217;&#x7684;&#x5C3E;&#x90E8;&#x3002;&#x7B49;&#x5F85;&#x961F;&#x5217;&#x4E2D;&#x7684;&#x7EBF;&#x7A0B;&#x6309;&#x7167;LIFO&#xFF08;&#x907F;&#x514D;&#x5934;&#x90E8;&#x9965;&#x997F;&#xFF09;&#x7684;&#x987A;&#x5E8F;&#x8FDB;&#x884C;&#x6392;&#x961F;&#x3002;&#x5F53;&#x6301;&#x6709;&#x8005;&#x91CA;&#x653E;&#x9501;&#x65F6;&#xFF0C;&#x961F;&#x5217;&#x5934;&#x7684;&#x7EBF;&#x7A0B;&#x5C06;&#x88AB;&#x5524;&#x9192;&#x5E76;&#x5C1D;&#x8BD5;&#x91CD;&#x65B0;&#x83B7;&#x53D6;&#x9501;&#x3002;</li>
 </ul>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">IntermediateMemberStrategy</span> <span class="token keyword">implements</span> <span class="token class-name">MemberStrategy</span> <span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">calcPrice</span><span class="token punctuation">(</span><span class="token keyword">double</span> booksPrice<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;&#x5BF9;&#x4E8E;&#x4E2D;&#x7EA7;&#x4F1A;&#x5458;&#x7684;&#x6298;&#x6263;&#x4E3A;10%&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> booksPrice <span class="token operator">*</span> <span class="token number">0.9</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-<span class="token punctuation">}</span>
-</code></pre>
-<ul>
-<li>&#x7B56;&#x7565;3</li>
-</ul>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AdvancedMemberStrategy</span> <span class="token keyword">implements</span> <span class="token class-name">MemberStrategy</span> <span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">calcPrice</span><span class="token punctuation">(</span><span class="token keyword">double</span> booksPrice<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;&#x5BF9;&#x4E8E;&#x9AD8;&#x7EA7;&#x4F1A;&#x5458;&#x7684;&#x6298;&#x6263;&#x4E3A;20%&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> booksPrice <span class="token operator">*</span> <span class="token number">0.8</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>&#x4EF7;&#x683C;&#x7C7B;</p>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Price</span> <span class="token punctuation">{</span>
-    <span class="token comment">//&#x6301;&#x6709;&#x4E00;&#x4E2A;&#x5177;&#x4F53;&#x7684;&#x7B56;&#x7565;&#x5BF9;&#x8C61;</span>
-    <span class="token keyword">private</span> <span class="token class-name">MemberStrategy</span> strategy<span class="token punctuation">;</span>
-    <span class="token comment">/**
-     * &#x6784;&#x9020;&#x51FD;&#x6570;&#xFF0C;&#x4F20;&#x5165;&#x4E00;&#x4E2A;&#x5177;&#x4F53;&#x7684;&#x7B56;&#x7565;&#x5BF9;&#x8C61;
-     * @param strategy    &#x5177;&#x4F53;&#x7684;&#x7B56;&#x7565;&#x5BF9;&#x8C61;
-     */</span>
-    <span class="token keyword">public</span> <span class="token class-name">Price</span><span class="token punctuation">(</span><span class="token class-name">MemberStrategy</span> strategy<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>strategy <span class="token operator">=</span> strategy<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">/**
-     * &#x8BA1;&#x7B97;&#x56FE;&#x4E66;&#x7684;&#x4EF7;&#x683C;
-     * @param booksPrice    &#x56FE;&#x4E66;&#x7684;&#x539F;&#x4EF7;
-     * @return    &#x8BA1;&#x7B97;&#x51FA;&#x6253;&#x6298;&#x540E;&#x7684;&#x4EF7;&#x683C;
-     */</span>
-    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">quote</span><span class="token punctuation">(</span><span class="token keyword">double</span> booksPrice<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>strategy<span class="token punctuation">.</span><span class="token function">calcPrice</span><span class="token punctuation">(</span>booksPrice<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>&#x5BA2;&#x6237;&#x7AEF;&#x81EA;&#x4E3B;&#x9009;&#x62E9;&#x5408;&#x9002;&#x7684;&#x7B56;&#x7565;</p>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Client</span> <span class="token punctuation">{</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">//&#x9009;&#x62E9;&#x5E76;&#x521B;&#x5EFA;&#x9700;&#x8981;&#x4F7F;&#x7528;&#x7684;&#x7B56;&#x7565;&#x5BF9;&#x8C61;</span>
-        <span class="token class-name">MemberStrategy</span> strategy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AdvancedMemberStrategy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//&#x521B;&#x5EFA;&#x73AF;&#x5883;</span>
-        <span class="token class-name">Price</span> price <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Price</span><span class="token punctuation">(</span>strategy<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//&#x8BA1;&#x7B97;&#x4EF7;&#x683C;</span>
-        <span class="token keyword">double</span> quote <span class="token operator">=</span> price<span class="token punctuation">.</span><span class="token function">quote</span><span class="token punctuation">(</span><span class="token number">300</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;&#x56FE;&#x4E66;&#x7684;&#x6700;&#x7EC8;&#x4EF7;&#x683C;&#x4E3A;&#xFF1A;&quot;</span> <span class="token operator">+</span> quote<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-<span class="token punctuation">}</span>
-</code></pre>
-<h2 id="&#x5E94;&#x7528;">&#x5E94;&#x7528;</h2>
-<p>Java spi&#xFF08;Service Provider Interface&#xFF09;&#x673A;&#x5236;</p>
-<p><img src="imgs/spi.webp" alt=""></p>
-<p>Java SPI &#x5B9E;&#x9645;&#x4E0A;&#x662F;<font color="red">&#x201C;&#x57FA;&#x4E8E;&#x63A5;&#x53E3;&#x7684;&#x7F16;&#x7A0B;&#xFF0B;&#x7B56;&#x7565;&#x6A21;&#x5F0F;&#xFF0B;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x201D;</font>&#x7EC4;&#x5408;&#x5B9E;&#x73B0;&#x7684;&#x52A8;&#x6001;&#x52A0;&#x8F7D;&#x673A;&#x5236;&#x3002;</p>
+</li>
+</ol>
+<h3 id="&#x91CA;&#x653E;&#x9501;-objectmonitorexit">&#x91CA;&#x653E;&#x9501; ObjectMonitor::exit</h3>
+<p>&#x7528;&#x4E8E;&#x91CA;&#x653E;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x5360;&#x7528;&#x7684; monitor &#x5E76;&#x5524;&#x9192;&#x7B49;&#x5F85;&#x8BE5; monitor &#x7684;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;</p>
+<ol>
+<li>&#x68C0;&#x67E5;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x662F;&#x5426;&#x6301;&#x6709;&#x8BE5;&#x9501;&#x3002;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x6301;&#x6709;&#x8BE5;&#x9501;&#xFF0C;&#x4F1A;&#x5BF9;&#x5176;&#x8FDB;&#x884C;&#x4FEE;&#x590D;&#xFF08;&#x5047;&#x8BBE;&#x7EBF;&#x7A0B;&#x5B9E;&#x9645;&#x4E0A;&#x6301;&#x6709;&#x8BE5;&#x9501;&#xFF0C;&#x4F46;&#x662F;&#x7531;&#x4E8E;&#x67D0;&#x4E9B;&#x539F;&#x56E0;&#xFF0C;owner&#x5B57;&#x6BB5;&#x6CA1;&#x6709;&#x6B63;&#x786E;&#x66F4;&#x65B0;&#xFF09;&#x6216;&#x629B;&#x51FA;&#x5F02;&#x5E38;&#xFF08;&#x5982;&#x679C;&#x7EBF;&#x7A0B;&#x6CA1;&#x6709;&#x6B63;&#x786E;&#x5730;&#x83B7;&#x53D6;&#x8BE5;&#x9501;&#xFF0C;&#x5373;&#x4E0D;&#x5728;_owner&#x5B57;&#x6BB5;&#x4E2D;&#xFF09;&#x3002;</li>
+<li>&#x5982;&#x679C;&#x5F53;&#x524D;&#x7EBF;&#x7A0B;&#x662F;&#x591A;&#x6B21;&#x91CD;&#x5165;&#x8BE5;&#x9501;&#xFF0C;&#x5C06;&#x8BA1;&#x6570;&#x5668;&#x51CF;1&#xFF0C;&#x5E76;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;&#x3002;&#x8FD9;&#x662F;&#x56E0;&#x4E3A;&#x7EBF;&#x7A0B;&#x5B9E;&#x9645;&#x4E0A;&#x4ECD;&#x7136;&#x6301;&#x6709;&#x8BE5;&#x9501;&#x3002;</li>
+<li>&#x68C0;&#x67E5;&#x662F;&#x5426;&#x6709;&#x5176;&#x5B83;&#x7EBF;&#x7A0B;&#x7B49;&#x5F85;&#x8BE5;&#x9501;&#x3002;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x7B49;&#x5F85;&#x7EBF;&#x7A0B;&#xFF0C;&#x76F4;&#x63A5;&#x5C06;_owner&#x5B57;&#x6BB5;&#x8BBE;&#x7F6E;&#x4E3A;null&#x5E76;&#x8FD4;&#x56DE;&#x3002;&#x5982;&#x679C;&#x6709;&#x7B49;&#x5F85;&#x7EBF;&#x7A0B;&#xFF0C;&#x5219;&#x91CA;&#x653E;&#x8BE5;&#x9501;&#xFF0C;&#x5E76;&#x4F7F;&#x7B49;&#x5F85;&#x7EBF;&#x7A0B;&#x4E4B;&#x4E00;&#x6210;&#x4E3A;&#x65B0;&#x7684;owner&#x3002;</li>
+<li>&#x5982;&#x679C;&#x7B49;&#x5F85;&#x7EBF;&#x7A0B;&#x4E2D;&#x6709;&#x7EBF;&#x7A0B;&#x4F7F;&#x7528;&#x4E86;&#x516C;&#x5E73;&#x81EA;&#x65CB;&#xFF08;Ticket Spinlock&#x7B97;&#x6CD5;&#xFF09;&#xFF0C;&#x5219;&#x4F7F;&#x7528;&#x8BE5;&#x7B97;&#x6CD5;&#x6765;&#x91CA;&#x653E;&#x8BE5;&#x9501;&#x3002;&#x5426;&#x5219;&#xFF0C;&#x4F7F;&#x7528;&#x7B49;&#x5F85;&#x961F;&#x5217;&#x6216;Cache Exclusive Queue&#xFF08;CXQ&#xFF09;&#x7B97;&#x6CD5;&#x6765;&#x91CA;&#x653E;&#x8BE5;&#x9501;&#x3002;&#x8FD9;&#x4E9B;&#x7B97;&#x6CD5;&#x53EF;&#x4EE5;&#x66F4;&#x6709;&#x6548;&#x5730;&#x5904;&#x7406;&#x591A;&#x4E2A;&#x7EBF;&#x7A0B;&#x5BF9;&#x540C;&#x4E00;&#x5BF9;&#x8C61;&#x9501;&#x7684;&#x7ADE;&#x4E89;&#xFF0C;&#x4ECE;&#x800C;&#x63D0;&#x9AD8;&#x6027;&#x80FD;&#x3002;</li>
+</ol>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-12-24 10:14:32
+2023-08-16 23:26:45
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2613,12 +2709,12 @@
 
             
                 
-                <a href="template.html" class="navigation navigation-prev " aria-label="Previous page: 模板方法">
+                <a href="thread_basic.html" class="navigation navigation-prev " aria-label="Previous page: Java线程基础">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="decorator.html" class="navigation navigation-next " aria-label="Next page: 装饰器模式">
+                <a href="park_unpark.html" class="navigation navigation-next " aria-label="Next page: park,unpark">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2629,7 +2725,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"策略模式","layout":"page","date":"2019-03-20 00:00","level":"1.7.5","depth":2,"next":{"title":"装饰器模式","level":"1.7.6","depth":2,"path":"content/design_pattern/decorator.md","ref":"./content/design_pattern/decorator.md","articles":[]},"previous":{"title":"模板方法","level":"1.7.4","depth":2,"path":"content/design_pattern/template.md","ref":"./content/design_pattern/template.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/design_pattern/strategy.md","mtime":"2020-12-24T02:14:32.223Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-01-16T15:50:19.095Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"ObjectMonitor","layout":"page","date":"2019-02-15 00:00","level":"1.11.7.2","depth":3,"next":{"title":"park,unpark","level":"1.11.7.3","depth":3,"path":"content/java_thread_concurrent/park_unpark.md","ref":"./content/java_thread_concurrent/park_unpark.md","articles":[]},"previous":{"title":"Java线程基础","level":"1.11.7.1","depth":3,"path":"content/java_thread_concurrent/thread_basic.md","ref":"./content/java_thread_concurrent/thread_basic.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_thread_concurrent/jvm_object_monitor.md","mtime":"2023-08-16T15:26:45.353Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-09-09T05:44:40.932Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

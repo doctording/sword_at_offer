@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>工厂模式 · java-note</title>
+        <title>String.intern()问题 · java-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -93,10 +93,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="template.html" />
+    <link rel="next" href="reflect.html" />
     
     
-    <link rel="prev" href="singleton.html" />
+    <link rel="prev" href="swap_string.html" />
     
 
     </head>
@@ -827,23 +827,62 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7" >
+        <li class="chapter " data-level="1.7" data-path="../design_pattern/design_pattern.html">
             
-                <span>
+                <a href="../design_pattern/design_pattern.html">
             
                     
-                    [常见设计模式]
+                    常见设计模式
             
-                </span>
+                </a>
             
 
             
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1" data-path="proxy.html">
+        <li class="chapter " data-level="1.7.1" data-path="../design_pattern/1_singleton.html">
             
-                <a href="proxy.html">
+                <a href="../design_pattern/1_singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../design_pattern/2_prototype.html">
+            
+                <a href="../design_pattern/2_prototype.html">
+            
+                    
+                    原型模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../design_pattern/3_factory.html">
+            
+                <a href="../design_pattern/3_factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../design_pattern/6_proxy.html">
+            
+                <a href="../design_pattern/6_proxy.html">
             
                     
                     代理模式
@@ -855,9 +894,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1.1" data-path="asm.html">
+        <li class="chapter " data-level="1.7.4.1" data-path="../design_pattern/asm.html">
             
-                <a href="asm.html">
+                <a href="../design_pattern/asm.html">
             
                     
                     ASM字节码操纵
@@ -873,12 +912,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.2" data-path="singleton.html">
+        <li class="chapter " data-level="1.7.5" data-path="../design_pattern/7_adapter.html">
             
-                <a href="singleton.html">
+                <a href="../design_pattern/7_adapter.html">
             
                     
-                    单例模式
+                    适配器模式
             
                 </a>
             
@@ -886,48 +925,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.7.3" data-path="factory.html">
+        <li class="chapter " data-level="1.7.6" data-path="../design_pattern/9_decorator.html">
             
-                <a href="factory.html">
-            
-                    
-                    工厂模式
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.4" data-path="template.html">
-            
-                <a href="template.html">
-            
-                    
-                    模板方法
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.5" data-path="strategy.html">
-            
-                <a href="strategy.html">
-            
-                    
-                    策略模式
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.6" data-path="decorator.html">
-            
-                <a href="decorator.html">
+                <a href="../design_pattern/9_decorator.html">
             
                     
                     装饰器模式
@@ -938,9 +938,48 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.7" data-path="observer.html">
+        <li class="chapter " data-level="1.7.7" data-path="../design_pattern/10_facade.html">
             
-                <a href="observer.html">
+                <a href="../design_pattern/10_facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.8" data-path="../design_pattern/13_template.html">
+            
+                <a href="../design_pattern/13_template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.9" data-path="../design_pattern/14_strategy.html">
+            
+                <a href="../design_pattern/14_strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.10" data-path="../design_pattern/18_observer.html">
+            
+                <a href="../design_pattern/18_observer.html">
             
                     
                     观察者模式
@@ -949,11 +988,12 @@
             
 
             
-        </li>
+            <ul class="articles">
+                
     
-        <li class="chapter " data-level="1.7.8" data-path="publish.html">
+        <li class="chapter " data-level="1.7.10.1" data-path="../design_pattern/publish.html">
             
-                <a href="publish.html">
+                <a href="../design_pattern/publish.html">
             
                     
                     发布订阅模式
@@ -964,12 +1004,17 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.9" data-path="visitor.html">
+
+            </ul>
             
-                <a href="visitor.html">
+        </li>
+    
+        <li class="chapter " data-level="1.7.11" data-path="../design_pattern/19_listener.html">
+            
+                <a href="../design_pattern/19_listener.html">
             
                     
-                    访问者模式
+                    监听者模式
             
                 </a>
             
@@ -977,9 +1022,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.10" data-path="iterator.html">
+        <li class="chapter " data-level="1.7.12" data-path="../design_pattern/20_iterator.html">
             
-                <a href="iterator.html">
+                <a href="../design_pattern/20_iterator.html">
             
                     
                     迭代器模式
@@ -990,12 +1035,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.11" data-path="facade.html">
+        <li class="chapter " data-level="1.7.13" data-path="../design_pattern/21_visitor.html">
             
-                <a href="facade.html">
+                <a href="../design_pattern/21_visitor.html">
             
                     
-                    门面模式
+                    访问者模式
             
                 </a>
             
@@ -1036,9 +1081,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.8.1.1" data-path="../java_utils/sort.html">
+        <li class="chapter " data-level="1.8.1.1" data-path="sort.html">
             
-                <a href="../java_utils/sort.html">
+                <a href="sort.html">
             
                     
                     常见排序(没事手写写)
@@ -1337,9 +1382,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.2" data-path="../java_utils/spi.html">
+        <li class="chapter " data-level="1.9.2" data-path="spi.html">
             
-                <a href="../java_utils/spi.html">
+                <a href="spi.html">
             
                     
                     Java SPI机制
@@ -1350,9 +1395,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.3" data-path="../java_utils/synthetic.html">
+        <li class="chapter " data-level="1.9.3" data-path="synthetic.html">
             
-                <a href="../java_utils/synthetic.html">
+                <a href="synthetic.html">
             
                     
                     Java Synthetic
@@ -1363,9 +1408,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.4" data-path="../java_utils/object.html">
+        <li class="chapter " data-level="1.9.4" data-path="object.html">
             
-                <a href="../java_utils/object.html">
+                <a href="object.html">
             
                     
                     java.lang.Object
@@ -1389,9 +1434,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.6" data-path="../java_utils/equals_hashcode.html">
+        <li class="chapter " data-level="1.9.6" data-path="equals_hashcode.html">
             
-                <a href="../java_utils/equals_hashcode.html">
+                <a href="equals_hashcode.html">
             
                     
                     == & equals方法 & hashcode方法
@@ -1402,9 +1447,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.7" data-path="../java_utils/Calendar.html">
+        <li class="chapter " data-level="1.9.7" data-path="Calendar.html">
             
-                <a href="../java_utils/Calendar.html">
+                <a href="Calendar.html">
             
                     
                     Calendar & Date
@@ -1415,9 +1460,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.8" data-path="../java_utils/Compare.html">
+        <li class="chapter " data-level="1.9.8" data-path="Compare.html">
             
-                <a href="../java_utils/Compare.html">
+                <a href="Compare.html">
             
                     
                     Comparison method violates its general contract
@@ -1428,9 +1473,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.9" data-path="../java_utils/int_Integer.html">
+        <li class="chapter " data-level="1.9.9" data-path="int_Integer.html">
             
-                <a href="../java_utils/int_Integer.html">
+                <a href="int_Integer.html">
             
                     
                     int(基本类型) & Integer(包装类类型)
@@ -1441,9 +1486,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.10" data-path="../java_utils/exception.html">
+        <li class="chapter " data-level="1.9.10" data-path="exception.html">
             
-                <a href="../java_utils/exception.html">
+                <a href="exception.html">
             
                     
                     Java异常&错误
@@ -1454,9 +1499,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.11" data-path="../java_utils/String.html">
+        <li class="chapter " data-level="1.9.11" data-path="String.html">
             
-                <a href="../java_utils/String.html">
+                <a href="String.html">
             
                     
                     String,StringBuffer,StringBuilder
@@ -1465,11 +1510,43 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.11.1" data-path="swap_string.html">
+            
+                <a href="swap_string.html">
+            
+                    
+                    String交换问题
+            
+                </a>
+            
+
+            
         </li>
     
-        <li class="chapter " data-level="1.9.12" data-path="../java_utils/reflect.html">
+        <li class="chapter active" data-level="1.9.11.2" data-path="string_intern.html">
             
-                <a href="../java_utils/reflect.html">
+                <a href="string_intern.html">
+            
+                    
+                    String.intern()问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.12" data-path="reflect.html">
+            
+                <a href="reflect.html">
             
                     
                     反射机制
@@ -1480,9 +1557,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.13" data-path="../java_utils/call_back.html">
+        <li class="chapter " data-level="1.9.13" data-path="call_back.html">
             
-                <a href="../java_utils/call_back.html">
+                <a href="call_back.html">
             
                     
                     回调 & 事件机制
@@ -1493,9 +1570,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.14" data-path="../java_utils/array_collection.html">
+        <li class="chapter " data-level="1.9.14" data-path="array_collection.html">
             
-                <a href="../java_utils/array_collection.html">
+                <a href="array_collection.html">
             
                     
                     数组，集合转换等问题
@@ -1506,9 +1583,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.15" data-path="../java_utils/annotation.html">
+        <li class="chapter " data-level="1.9.15" data-path="annotation.html">
             
-                <a href="../java_utils/annotation.html">
+                <a href="annotation.html">
             
                     
                     注解 Annotation
@@ -1532,9 +1609,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.17" data-path="../java_utils/override_overload.html">
+        <li class="chapter " data-level="1.9.17" data-path="override_overload.html">
             
-                <a href="../java_utils/override_overload.html">
+                <a href="override_overload.html">
             
                     
                     重载和重写
@@ -1545,9 +1622,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.18" data-path="../java_utils/reg.html">
+        <li class="chapter " data-level="1.9.18" data-path="reg.html">
             
-                <a href="../java_utils/reg.html">
+                <a href="reg.html">
             
                     
                     正则
@@ -1571,9 +1648,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.20" data-path="../java_utils/val_static.html">
+        <li class="chapter " data-level="1.9.20" data-path="val_static.html">
             
-                <a href="../java_utils/val_static.html">
+                <a href="val_static.html">
             
                     
                     Java static关键字
@@ -1707,7 +1784,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2" data-path="../java_jvm/jvm_class_load.html">
+        <li class="chapter " data-level="1.10.2" data-path="../java_jvm/jvm_instruct.html">
+            
+                <a href="../java_jvm/jvm_instruct.html">
+            
+                    
+                    JVM指令手册
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../java_jvm/jvm_class_load.html">
             
                 <a href="../java_jvm/jvm_class_load.html">
             
@@ -1720,12 +1810,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_jvm/jvm_mem_model.html">
+        <li class="chapter " data-level="1.10.4" data-path="../java_jvm/jvm_mem_model.html">
             
                 <a href="../java_jvm/jvm_mem_model.html">
             
                     
-                    Java内存模型与线程
+                    Java内存模型与多线程并发
             
                 </a>
             
@@ -1733,7 +1823,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../java_jvm/jvm_hot.html">
+        <li class="chapter " data-level="1.10.5" data-path="../java_jvm/jvm_hot.html">
             
                 <a href="../java_jvm/jvm_hot.html">
             
@@ -1746,7 +1836,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../java_jvm/jvm_mem_gc.html">
+        <li class="chapter " data-level="1.10.6" data-path="../java_jvm/jvm_mem_gc.html">
             
                 <a href="../java_jvm/jvm_mem_gc.html">
             
@@ -1759,7 +1849,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.6" data-path="../java_jvm/jvm_params.html">
+        <li class="chapter " data-level="1.10.7" data-path="../java_jvm/jvm_params.html">
             
                 <a href="../java_jvm/jvm_params.html">
             
@@ -1772,7 +1862,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.7" data-path="../java_jvm/jvm_tools.html">
+        <li class="chapter " data-level="1.10.8" data-path="../java_jvm/jvm_tools.html">
             
                 <a href="../java_jvm/jvm_tools.html">
             
@@ -1804,20 +1894,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.11.1" data-path="../java_thread_concurrent/aqs.html">
-            
-                <a href="../java_thread_concurrent/aqs.html">
-            
-                    
-                    AQS
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.2" data-path="../java_thread_concurrent/cas.html">
+        <li class="chapter " data-level="1.11.1" data-path="../java_thread_concurrent/cas.html">
             
                 <a href="../java_thread_concurrent/cas.html">
             
@@ -1830,7 +1907,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../java_thread_concurrent/volatile.html">
+        <li class="chapter " data-level="1.11.2" data-path="../java_thread_concurrent/volatile.html">
             
                 <a href="../java_thread_concurrent/volatile.html">
             
@@ -1843,7 +1920,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.4" data-path="../java_thread_concurrent/synchronized.html">
+        <li class="chapter " data-level="1.11.3" data-path="../java_thread_concurrent/synchronized.html">
             
                 <a href="../java_thread_concurrent/synchronized.html">
             
@@ -1856,26 +1933,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5" data-path="../java_thread_concurrent/thread_basic.html">
+        <li class="chapter " data-level="1.11.4" data-path="../java_thread_concurrent/aqs.html">
             
-                <a href="../java_thread_concurrent/thread_basic.html">
-            
-                    
-                    线程基础
-            
-                </a>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.11.5.1" data-path="../java_thread_concurrent/park_unpark.html">
-            
-                <a href="../java_thread_concurrent/park_unpark.html">
+                <a href="../java_thread_concurrent/aqs.html">
             
                     
-                    park unpark
+                    AQS
             
                 </a>
             
@@ -1883,7 +1946,86 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.2" data-path="../java_thread_concurrent/thread_condition.html">
+        <li class="chapter " data-level="1.11.5" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6" data-path="../java_thread_concurrent/linux_lock.html">
+            
+                <a href="../java_thread_concurrent/linux_lock.html">
+            
+                    
+                    Linux spin lock & mutex
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7" >
+            
+                <span>
+            
+                    
+                    [线程]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.7.1" data-path="../java_thread_concurrent/thread_basic.html">
+            
+                <a href="../java_thread_concurrent/thread_basic.html">
+            
+                    
+                    Java线程基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.2" data-path="../java_thread_concurrent/jvm_object_monitor.html">
+            
+                <a href="../java_thread_concurrent/jvm_object_monitor.html">
+            
+                    
+                    ObjectMonitor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.3" data-path="../java_thread_concurrent/park_unpark.html">
+            
+                <a href="../java_thread_concurrent/park_unpark.html">
+            
+                    
+                    park,unpark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.4" data-path="../java_thread_concurrent/thread_condition.html">
             
                 <a href="../java_thread_concurrent/thread_condition.html">
             
@@ -1896,7 +2038,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.3" data-path="../java_thread_concurrent/semaphore.html">
+        <li class="chapter " data-level="1.11.7.5" data-path="../java_thread_concurrent/semaphore.html">
             
                 <a href="../java_thread_concurrent/semaphore.html">
             
@@ -1909,7 +2051,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.4" data-path="../java_thread_concurrent/hook_thread.html">
+        <li class="chapter " data-level="1.11.7.6" data-path="../java_thread_concurrent/hook_thread.html">
             
                 <a href="../java_thread_concurrent/hook_thread.html">
             
@@ -1922,7 +2064,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.5" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+        <li class="chapter " data-level="1.11.7.7" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
             
                 <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
             
@@ -1935,7 +2077,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.6" data-path="../java_thread_concurrent/longAdder.html">
+        <li class="chapter " data-level="1.11.7.8" data-path="../java_thread_concurrent/longAdder.html">
             
                 <a href="../java_thread_concurrent/longAdder.html">
             
@@ -1948,7 +2090,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.7" data-path="../java_thread_concurrent/exchanger.html">
+        <li class="chapter " data-level="1.11.7.9" data-path="../java_thread_concurrent/exchanger.html">
             
                 <a href="../java_thread_concurrent/exchanger.html">
             
@@ -1961,7 +2103,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.8" data-path="../java_thread_concurrent/thread_design.html">
+        <li class="chapter " data-level="1.11.7.10" data-path="../java_thread_concurrent/thread_design.html">
             
                 <a href="../java_thread_concurrent/thread_design.html">
             
@@ -1979,7 +2121,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6" >
+        <li class="chapter " data-level="1.11.8" >
             
                 <span>
             
@@ -1993,7 +2135,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.11.6.1" data-path="../java_thread_concurrent/thread_pool.html">
+        <li class="chapter " data-level="1.11.8.1" data-path="../java_thread_concurrent/thread_pool.html">
             
                 <a href="../java_thread_concurrent/thread_pool.html">
             
@@ -2006,7 +2148,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6.2" data-path="../java_thread_concurrent/concurrency_problems.html">
+        <li class="chapter " data-level="1.11.8.2" data-path="../java_thread_concurrent/concurrency_problems.html">
             
                 <a href="../java_thread_concurrent/concurrency_problems.html">
             
@@ -2019,7 +2161,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6.3" data-path="../java_thread_concurrent/thread_pool_self.html">
+        <li class="chapter " data-level="1.11.8.3" data-path="../java_thread_concurrent/thread_pool_self.html">
             
                 <a href="../java_thread_concurrent/thread_pool_self.html">
             
@@ -2034,32 +2176,6 @@
     
 
             </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.7" data-path="../java_thread_concurrent/linux_lock.html">
-            
-                <a href="../java_thread_concurrent/linux_lock.html">
-            
-                    
-                    Linux spin lock & mutex
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.8" data-path="../java_thread_concurrent/thread_lock.html">
-            
-                <a href="../java_thread_concurrent/thread_lock.html">
-            
-                    
-                    Java Lock
-            
-                </a>
-            
-
             
         </li>
     
@@ -2280,7 +2396,7 @@
                 <span>
             
                     
-                    [脚本]
+                    [脚本&面试题]
             
                 </span>
             
@@ -2308,6 +2424,19 @@
             
                     
                     统计词频bash脚本
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14.3" data-path="../shell/big_data.html">
+            
+                <a href="../shell/big_data.html">
+            
+                    
+                    大数据量问题
             
                 </a>
             
@@ -2466,7 +2595,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >工厂模式</a>
+        <a href="../.." >String.intern()问题</a>
     </h1>
 </div>
 
@@ -2482,163 +2611,77 @@
                                 <section class="normal markdown-section">
                                 
                                 <div class="treeview__container"><div class="treeview__container-title"><span class="treeview__main-title">Treeview</span><span class="treeview__copyright">Copyright @doctording all right reserved, powered by <a href="https://github.com/aleen42" target="_blank">aleen42</a></span></div><ul>
-<li><div><a href="#&#x5DE5;&#x5382;&#x6A21;&#x5F0F;">&#x5DE5;&#x5382;&#x6A21;&#x5F0F;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
+<li><div><a href="#java&#x5B57;&#x7B26;&#x4E32;&#x76F8;&#x5173;">Java&#x5B57;&#x7B26;&#x4E32;&#x76F8;&#x5173;</a><i class="level__parent level__item level__parent--opened" state="opened" onclick="var curState = this.getAttribute(&apos;state&apos;);var nextState = curState === &apos;opened&apos; ? &apos;hidden&apos; : &apos;opened&apos;;this.setAttribute(&apos;state&apos;, nextState);this.className = this.className.split(curState).join(nextState);var list = this.parentNode.nextElementSibling;if (nextState === &apos;hidden&apos;) {    list.style.display = &apos;none&apos;;} else {    list.style.display = &apos;block&apos;;}"></i></div>
 <ul>
-<li><div><a href="#&#x7B80;&#x5355;&#x5DE5;&#x5382;&#x6A21;&#x5F0F;">&#x7B80;&#x5355;&#x5DE5;&#x5382;&#x6A21;&#x5F0F;</a><i></i></div></li>
-<li><div><a href="#&#x62BD;&#x8C61;&#x5DE5;&#x5382;">&#x62BD;&#x8C61;&#x5DE5;&#x5382;</a><i></i></div></li>
+<li><div><a href="#intern&#x65B9;&#x6CD5;&#x4F8B;&#x5B50;">intern()&#x65B9;&#x6CD5;&#x4F8B;&#x5B50;</a><i></i></div></li>
 </ul></li>
 </ul>
 </div>
 
 
 <p>[TOC]</p>
-<h1 id="&#x5DE5;&#x5382;&#x6A21;&#x5F0F;">&#x5DE5;&#x5382;&#x6A21;&#x5F0F;</h1>
-<p><a href="https://refactoring.guru/design-patterns/factory-method" target="_blank">&#x5DE5;&#x5382;&#x6A21;&#x5F0F;</a></p>
-<p>Factory Method is a creational design pattern that provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created.&#xFF08;Factory&#x65B9;&#x6CD5;&#x662F;&#x4E00;&#x79CD;&#x521B;&#x9020;&#x6027;&#x7684;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;&#xFF0C;&#x5B83;&#x63D0;&#x4F9B;&#x4E86;&#x5728;&#x8D85;&#x7C7B;&#x4E2D;&#x521B;&#x5EFA;&#x5BF9;&#x8C61;&#x7684;&#x63A5;&#x53E3;&#xFF0C;&#x4F46;&#x5141;&#x8BB8;&#x5B50;&#x7C7B;&#x66F4;&#x6539;&#x5C06;&#x8981;&#x521B;&#x5EFA;&#x7684;&#x5BF9;&#x8C61;&#x7684;&#x7C7B;&#x578B;&#x3002;&#xFF09;</p>
-<ul>
-<li>&#x610F;&#x56FE;&#xFF1A;&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;&#x521B;&#x5EFA;&#x5BF9;&#x8C61;&#x7684;&#x63A5;&#x53E3;&#xFF0C;&#x8BA9;&#x5176;&#x5B50;&#x7C7B;&#x81EA;&#x5DF1;&#x51B3;&#x5B9A;&#x5B9E;&#x4F8B;&#x5316;&#x54EA;&#x4E00;&#x4E2A;&#x5DE5;&#x5382;&#x7C7B;&#xFF0C;&#x5DE5;&#x5382;&#x6A21;&#x5F0F;&#x4F7F;&#x5176;&#x521B;&#x5EFA;&#x8FC7;&#x7A0B;&#x5EF6;&#x8FDF;&#x5230;&#x5B50;&#x7C7B;&#x8FDB;&#x884C;&#x3002;</li>
-<li>&#x4E3B;&#x8981;&#x89E3;&#x51B3;&#xFF1A;&#x4E3B;&#x8981;&#x89E3;&#x51B3;&#x63A5;&#x53E3;&#x9009;&#x62E9;&#x7684;&#x95EE;&#x9898;&#x3002;</li>
-<li>&#x4F55;&#x65F6;&#x4F7F;&#x7528;&#xFF1A;&#x6211;&#x4EEC;&#x660E;&#x786E;&#x5730;&#x8BA1;&#x5212;&#x4E0D;&#x540C;&#x6761;&#x4EF6;&#x4E0B;&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x5B9E;&#x4F8B;&#x65F6;&#x3002;</li>
-<li>&#x5982;&#x4F55;&#x89E3;&#x51B3;&#xFF1A;&#x8BA9;&#x5176;&#x5B50;&#x7C7B;&#x5B9E;&#x73B0;&#x5DE5;&#x5382;&#x63A5;&#x53E3;&#xFF0C;&#x8FD4;&#x56DE;&#x7684;&#x4E5F;&#x662F;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#x7684;&#x4EA7;&#x54C1;&#x3002;</li>
-</ul>
-<h2 id="&#x7B80;&#x5355;&#x5DE5;&#x5382;&#x6A21;&#x5F0F;">&#x7B80;&#x5355;&#x5DE5;&#x5382;&#x6A21;&#x5F0F;</h2>
-<p>eg:</p>
-<pre class="language-"><code class="lang-java">                  car
-                <span class="token operator">/</span>  
-&#x51FA;&#x884C; <span class="token operator">-&gt;</span> &#x5DE5;&#x5382; <span class="token operator">-</span>  train
-                \
-                  ship
+<h1 id="java&#x5B57;&#x7B26;&#x4E32;&#x76F8;&#x5173;">Java&#x5B57;&#x7B26;&#x4E32;&#x76F8;&#x5173;</h1>
+<h2 id="intern&#x65B9;&#x6CD5;&#x4F8B;&#x5B50;">intern()&#x65B9;&#x6CD5;&#x4F8B;&#x5B50;</h2>
+<pre class="language-"><code class="lang-java"><span class="token class-name">String</span> yesA <span class="token operator">=</span> <span class="token string">&quot;aaabbb&quot;</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> yesB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">&quot;aaa&quot;</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">&quot;bbb&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> yesC <span class="token operator">=</span> yesB<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>yesA <span class="token operator">==</span> yesB<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// false</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>yesA <span class="token operator">==</span> yesC<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// ture</span>
 </code></pre>
-<p>&#x95EE;&#x9898;&#xFF1A;&#x7A81;&#x7136;&#x65B0;&#x589E;&#x4E86;&#x4E00;&#x4E2A;&#x4EA4;&#x901A;&#x65B9;&#x5F0F;(&#x6BD4;&#x5982;&#x4E24;&#x5730;&#x53EF;&#x4EE5;&#x76F4;&#x98DE;&#x4E86;); &#x5219;&#x5FC5;&#x987B;&#x65B0;&#x589E;&#x4E00;&#x4E2A;plane&#x7C7B;&#xFF0C;&#x540C;&#x65F6;&#x8FD8;&#x8981;&#x4FEE;&#x6539;&#x5DE5;&#x5382;&#x65B9;&#x6CD5;&#xFF08;&#x4E0D;&#x7B26;&#x5408;&#x5F00;&#x95ED;&#x539F;&#x5219;&#x4E86;&#xFF09;</p>
-<pre class="language-"><code class="lang-java">                  car
-                <span class="token operator">/</span>  
-&#x51FA;&#x884C; <span class="token operator">-&gt;</span>  &#x5DE5;&#x5382;   <span class="token operator">-</span>  train
-                \
-                  ship
-                \
-                  plane
+<p>intern &#x65B9;&#x6CD5;&#x7684;&#x4F5C;&#x7528;&#x662F;&#xFF0C;&#x5224;&#x65AD;&#x4E0B; yesB &#x5F15;&#x7528;&#x6307;&#x5411;&#x7684;&#x503C;&#x5728;&#x5B57;&#x7B26;&#x4E32;&#x5E38;&#x91CF;&#x91CC;&#x9762;&#x662F;&#x5426;&#x6709;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x5C31;&#x5728;&#x5B57;&#x7B26;&#x4E32;&#x5E38;&#x91CF;&#x6C60;&#x91CC;&#x9762;&#x65B0;&#x5EFA;&#x4E00;&#x4E2A; aaabbb &#x5BF9;&#x8C61;&#xFF0C;&#x8FD4;&#x56DE;&#x5176;&#x5F15;&#x7528;&#xFF0C;&#x5982;&#x679C;&#x6709;&#x5219;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;&#x5F15;&#x7528;&#x3002;</p>
+<pre class="language-"><code class="lang-java">  <span class="token comment">/**
+     * Returns a canonical representation for the string object.
+     * &lt;p&gt;
+     * A pool of strings, initially empty, is maintained privately by the
+     * class {@code String}.
+     * &lt;p&gt;
+     * When the intern method is invoked, if the pool already contains a
+     * string equal to this {@code String} object as determined by
+     * the {@link #equals(Object)} method, then the string from the pool is
+     * returned. Otherwise, this {@code String} object is added to the
+     * pool and a reference to this {@code String} object is returned.
+     * &lt;p&gt;
+     * It follows that for any two strings {@code s} and {@code t},
+     * {@code s.intern() == t.intern()} is {@code true}
+     * if and only if {@code s.equals(t)} is {@code true}.
+     * &lt;p&gt;
+     * All literal strings and string-valued constant expressions are
+     * interned. String literals are defined in section 3.10.5 of the
+     * &lt;cite&gt;The Java&amp;trade; Language Specification&lt;/cite&gt;.
+     *
+     * @return  a string that has the same contents as this string, but is
+     *          guaranteed to be from a pool of unique strings.
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token class-name">String</span> <span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p>&#x4EE3;&#x7801;eg:</p>
-<pre class="language-"><code class="lang-java"><span class="token keyword">interface</span> <span class="token class-name">BaseOutService</span><span class="token punctuation">{</span>
-    <span class="token keyword">void</span> <span class="token function">drive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">class</span> <span class="token class-name">CarServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">BaseOutService</span><span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">drive</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;car drive&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">class</span> <span class="token class-name">PlaneServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">BaseOutService</span><span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">drive</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;plane drive&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">class</span> <span class="token class-name">Factory</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token class-name">BaseOutService</span> <span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">String</span> beanName<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">BaseOutService</span> baseService <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>beanName<span class="token punctuation">.</span><span class="token function">equalsIgnoreCase</span><span class="token punctuation">(</span><span class="token string">&quot;car&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            baseService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CarServiceImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>beanName<span class="token punctuation">.</span><span class="token function">equalsIgnoreCase</span><span class="token punctuation">(</span><span class="token string">&quot;plane&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            baseService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PlaneServiceImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">return</span> baseService<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Solution</span> <span class="token punctuation">{</span>
-
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Factory</span> factory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Factory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">BaseOutService</span> carService <span class="token operator">=</span> factory<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">&quot;car&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        carService<span class="token punctuation">.</span><span class="token function">drive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">BaseOutService</span> planeService <span class="token operator">=</span> factory<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">&quot;plane&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        planeService<span class="token punctuation">.</span><span class="token function">drive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-<span class="token punctuation">}</span>
+<hr>
+<pre class="language-"><code class="lang-java"><span class="token class-name">String</span> yesB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">&quot;aaa&quot;</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">&quot;bbb&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> yesC <span class="token operator">=</span> yesB<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> yesA <span class="token operator">=</span> <span class="token string">&quot;aaabbb&quot;</span><span class="token punctuation">;</span> 
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>yesA <span class="token operator">==</span> yesB<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// true</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>yesA <span class="token operator">==</span> yesC<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// true</span>
 </code></pre>
-<h2 id="&#x62BD;&#x8C61;&#x5DE5;&#x5382;">&#x62BD;&#x8C61;&#x5DE5;&#x5382;</h2>
-<ul>
-<li>&#x89E3;&#x51B3;<code>&#x5F00;&#x95ED;</code>&#x95EE;&#x9898;&#xFF08;&#x89E3;&#x8026;&#xFF09;&#xFF1B;&#x4E0D;&#x8FC7;&#x589E;&#x52A0;&#x4E86;&#x4E0D;&#x5C11;&#x7C7B;&#xFF0C;&#x4EE3;&#x7801;&#x53D8;&#x591A;&#x4E86;</li>
-</ul>
-<pre class="language-"><code class="lang-java">                    &#x5DE5;&#x5382;       car
-                             <span class="token operator">/</span>  
-&#x51FA;&#x884C;  <span class="token operator">-&gt;</span> &#x62BD;&#x8C61;&#x5DE5;&#x5382; <span class="token operator">-&gt;</span>  &#x5DE5;&#x5382;  <span class="token operator">-</span>    train
-                             \
-                    &#x5DE5;&#x5382;       ship
-                             \
-                    &#x5DE5;&#x5382;       plane
-</code></pre>
-<p>&#x8FD9;&#x6837;:&#x589E;&#x52A0;&#x4E00;&#x79CD;&#x65B0;&#x7684;plane&#x65B9;&#x5F0F;,&#x540C;&#x65F6;&#x518D;&#x65B0;&#x589E;&#x4E00;&#x4E2A;plane&#x5DE5;&#x5382;&#x5373;&#x53EF;&#xFF1B;&#x539F;&#x6709;&#x4EE3;&#x7801;&#x4E0D;&#x9700;&#x8981;&#x4FEE;&#x6539;</p>
-<pre class="language-"><code class="lang-java"><span class="token keyword">package</span> factory<span class="token punctuation">;</span>
-
-<span class="token keyword">interface</span> <span class="token class-name">Phone</span><span class="token punctuation">{</span>
-    <span class="token keyword">void</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">class</span> <span class="token class-name">XiaoMiPhone</span> <span class="token keyword">implements</span> <span class="token class-name">Phone</span><span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Xiaomi call&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">class</span> <span class="token class-name">HuaweiPhone</span> <span class="token keyword">implements</span> <span class="token class-name">Phone</span><span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Huawei call&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">/**
- * &#x62BD;&#x8C61;&#x5DE5;&#x5382;
- */</span>
-<span class="token keyword">interface</span> <span class="token class-name">PhoneFactory</span><span class="token punctuation">{</span>
-    <span class="token class-name">Phone</span> <span class="token function">genPhone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">class</span> <span class="token class-name">XiaomiPhoneFactory</span> <span class="token keyword">implements</span> <span class="token class-name">PhoneFactory</span><span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token class-name">Phone</span> <span class="token function">genPhone</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">XiaoMiPhone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">class</span> <span class="token class-name">HuaweiPhoneFactory</span> <span class="token keyword">implements</span> <span class="token class-name">PhoneFactory</span><span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token class-name">Phone</span> <span class="token function">genPhone</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">HuaweiPhone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FactoryTest</span> <span class="token punctuation">{</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">PhoneFactory</span> phoneXiaomiFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">XiaomiPhoneFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Phone</span> xiaomiPhone <span class="token operator">=</span> phoneXiaomiFactory<span class="token punctuation">.</span><span class="token function">genPhone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        xiaomiPhone<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token class-name">PhoneFactory</span> phoneHuaweiFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HuaweiPhoneFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Phone</span> huaweiPhone <span class="token operator">=</span> phoneHuaweiFactory<span class="token punctuation">.</span><span class="token function">genPhone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        huaweiPhone<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<ol>
+<li>String yesB = new String(&quot;aaa&quot;) + new String(&quot;bbb&quot;);</li>
+</ol>
+<p>&#x6B64;&#x65F6;&#xFF0C;&#x5806;&#x5185;&#x4F1A;&#x65B0;&#x5EFA;&#x4E00;&#x4E2A; aaabbb &#x5BF9;&#x8C61;(&#x5BF9;&#x4E8E; aaa &#x548C; bbb &#x7684;&#x5BF9;&#x8C61;&#x8BA8;&#x8BBA;&#x5FFD;&#x7565;)&#xFF0C;&#x5B57;&#x7B26;&#x4E32;&#x5E38;&#x91CF;&#x6C60;&#x91CC;&#x4E0D;&#x4F1A;&#x521B;&#x5EFA;&#xFF0C;&#x56E0;&#x4E3A;&#x5E76;&#x6CA1;&#x6709;&#x51FA;&#x73B0; aaabbb &#x8FD9;&#x4E2A;&#x5B57;&#x9762;&#x91CF;&#x3002;</p>
+<ol>
+<li>String yesC = yesB.intern();</li>
+</ol>
+<p>&#x6B64;&#x65F6;&#xFF0C;&#x4F1A;&#x5728;&#x5B57;&#x7B26;&#x4E32;&#x5E38;&#x91CF;&#x6C60;&#x5185;&#x90E8;&#x521B;&#x5EFA; aaabbb &#x5BF9;&#x8C61;&#xFF1F;&#x5173;&#x952E;&#x70B9;&#x6765;&#x4E86;&#x3002;
+&#x5728; JDK 1.6 &#x65F6;&#xFF0C;&#x5B57;&#x7B26;&#x4E32;&#x5E38;&#x91CF;&#x6C60;&#x662F;&#x653E;&#x7F6E;&#x5728;<strong>&#x6C38;&#x4E45;&#x4EE3;</strong>(&#x975E;&#x5806;&#xFF0C;&#x5806;&#x540E;&#x9762;&#x7684;&#x4E00;&#x5757;&#x533A;&#x57DF;)&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x5FC5;&#x987B;&#x65B0;&#x5EFA;&#x4E00;&#x4E2A;&#x5BF9;&#x8C61;&#x653E;&#x5728;&#x5E38;&#x91CF;&#x6C60;&#x4E2D;&#x3002;
+&#x4F46; JDK 1.7 &#x4E4B;&#x540E;&#x5B57;&#x7B26;&#x4E32;&#x5E38;&#x91CF;&#x6C60;&#x662F;&#x653E;&#x5728;<strong>&#x5806;&#x5185;</strong>&#x7684;&#xFF0C;&#x800C;&#x5806;&#x91CC;&#x5DF2;&#x7ECF;&#x6709;&#x4E86;&#x521A;&#x624D; new &#x8FC7;&#x7684; aaabbb &#x5BF9;&#x8C61;&#xFF0C;&#x6240;&#x4EE5;&#x6CA1;&#x5FC5;&#x8981;&#x6D6A;&#x8D39;&#x8D44;&#x6E90;&#xFF0C;&#x4E0D;&#x7528;&#x518D;&#x5B58;&#x50A8;&#x4E00;&#x4EFD;&#x5BF9;&#x8C61;&#xFF0C;&#x76F4;&#x63A5;&#x5B58;&#x50A8;&#x5806;&#x4E2D;&#x7684;&#x5F15;&#x7528;&#x5373;&#x53EF;&#x3002;</p>
+<p>&#x6240;&#x4EE5; yesC &#x8FD9;&#x4E2A;&#x5E38;&#x91CF;&#x5B58;&#x50A8;&#x7684;&#x5F15;&#x7528;&#x548C; yesB &#x4E00;&#x6837;&#x3002;</p>
+<ol>
+<li>String yesA = &quot;aaabbb&quot;;</li>
+</ol>
+<p>&#x540C;&#x7406;&#xFF0C;&#x5728; 1.7 &#x4E2D; yesA &#x5F97;&#x5230;&#x7684;&#x5F15;&#x7528;&#x4E0E; yesC &#x548C; yesB &#x4E00;&#x81F4;&#xFF0C;&#x90FD;&#x6307;&#x5411;&#x5806;&#x5185;&#x7684; aaabbb &#x5BF9;&#x8C61;&#x3002;</p>
+<ol>
+<li>&#x6700;&#x7EC8;&#x7684;&#x7B54;&#x6848;&#x90FD;&#x662F; true</li>
+</ol>
+<p><font color="red">&#x5F97;&#x7AD9;&#x5728;&#x4E0D;&#x540C;&#x7684; JDK &#x7248;&#x672C;&#x6765;&#x56DE;&#x7B54;&#xFF0C;&#x4E0D;&#x7136;&#x5C31;&#x662F;&#x9519;&#x7684;<font></font></font></p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2021-10-24 13:52:53
+2022-03-07 23:43:20
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2667,12 +2710,12 @@
 
             
                 
-                <a href="singleton.html" class="navigation navigation-prev " aria-label="Previous page: 单例模式">
+                <a href="swap_string.html" class="navigation navigation-prev " aria-label="Previous page: String交换问题">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="template.html" class="navigation navigation-next " aria-label="Next page: 模板方法">
+                <a href="reflect.html" class="navigation navigation-next " aria-label="Next page: 反射机制">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2683,7 +2726,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"工厂模式","layout":"page","date":"2020-05-10 00:00","level":"1.7.3","depth":2,"next":{"title":"模板方法","level":"1.7.4","depth":2,"path":"content/design_pattern/template.md","ref":"./content/design_pattern/template.md","articles":[]},"previous":{"title":"单例模式","level":"1.7.2","depth":2,"path":"content/design_pattern/singleton.md","ref":"./content/design_pattern/singleton.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/design_pattern/factory.md","mtime":"2021-10-24T05:52:53.846Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-01-16T15:50:19.095Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"String.intern()问题","layout":"page","date":"2018-11-24 00:00","level":"1.9.11.2","depth":3,"next":{"title":"反射机制","level":"1.9.12","depth":2,"path":"content/java_utils/reflect.md","ref":"./content/java_utils/reflect.md","articles":[]},"previous":{"title":"String交换问题","level":"1.9.11.1","depth":3,"path":"content/java_utils/swap_string.md","ref":"./content/java_utils/swap_string.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_utils/string_intern.md","mtime":"2022-03-07T15:43:20.993Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-09-09T05:44:40.932Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

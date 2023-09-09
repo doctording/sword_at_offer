@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>模板方法 · java-note</title>
+        <title>JVM指令手册 · java-note</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -93,10 +93,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="strategy.html" />
+    <link rel="next" href="jvm_class_load.html" />
     
     
-    <link rel="prev" href="factory.html" />
+    <link rel="prev" href="jvm.html" />
     
 
     </head>
@@ -827,23 +827,62 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7" >
+        <li class="chapter " data-level="1.7" data-path="../design_pattern/design_pattern.html">
             
-                <span>
+                <a href="../design_pattern/design_pattern.html">
             
                     
-                    [常见设计模式]
+                    常见设计模式
             
-                </span>
+                </a>
             
 
             
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1" data-path="proxy.html">
+        <li class="chapter " data-level="1.7.1" data-path="../design_pattern/1_singleton.html">
             
-                <a href="proxy.html">
+                <a href="../design_pattern/1_singleton.html">
+            
+                    
+                    单例模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../design_pattern/2_prototype.html">
+            
+                <a href="../design_pattern/2_prototype.html">
+            
+                    
+                    原型模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../design_pattern/3_factory.html">
+            
+                <a href="../design_pattern/3_factory.html">
+            
+                    
+                    工厂模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../design_pattern/6_proxy.html">
+            
+                <a href="../design_pattern/6_proxy.html">
             
                     
                     代理模式
@@ -855,9 +894,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1.1" data-path="asm.html">
+        <li class="chapter " data-level="1.7.4.1" data-path="../design_pattern/asm.html">
             
-                <a href="asm.html">
+                <a href="../design_pattern/asm.html">
             
                     
                     ASM字节码操纵
@@ -873,12 +912,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.2" data-path="singleton.html">
+        <li class="chapter " data-level="1.7.5" data-path="../design_pattern/7_adapter.html">
             
-                <a href="singleton.html">
+                <a href="../design_pattern/7_adapter.html">
             
                     
-                    单例模式
+                    适配器模式
             
                 </a>
             
@@ -886,48 +925,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.3" data-path="factory.html">
+        <li class="chapter " data-level="1.7.6" data-path="../design_pattern/9_decorator.html">
             
-                <a href="factory.html">
-            
-                    
-                    工厂模式
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="1.7.4" data-path="template.html">
-            
-                <a href="template.html">
-            
-                    
-                    模板方法
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.5" data-path="strategy.html">
-            
-                <a href="strategy.html">
-            
-                    
-                    策略模式
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.6" data-path="decorator.html">
-            
-                <a href="decorator.html">
+                <a href="../design_pattern/9_decorator.html">
             
                     
                     装饰器模式
@@ -938,9 +938,48 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.7" data-path="observer.html">
+        <li class="chapter " data-level="1.7.7" data-path="../design_pattern/10_facade.html">
             
-                <a href="observer.html">
+                <a href="../design_pattern/10_facade.html">
+            
+                    
+                    门面模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.8" data-path="../design_pattern/13_template.html">
+            
+                <a href="../design_pattern/13_template.html">
+            
+                    
+                    模板方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.9" data-path="../design_pattern/14_strategy.html">
+            
+                <a href="../design_pattern/14_strategy.html">
+            
+                    
+                    策略模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.10" data-path="../design_pattern/18_observer.html">
+            
+                <a href="../design_pattern/18_observer.html">
             
                     
                     观察者模式
@@ -949,11 +988,12 @@
             
 
             
-        </li>
+            <ul class="articles">
+                
     
-        <li class="chapter " data-level="1.7.8" data-path="publish.html">
+        <li class="chapter " data-level="1.7.10.1" data-path="../design_pattern/publish.html">
             
-                <a href="publish.html">
+                <a href="../design_pattern/publish.html">
             
                     
                     发布订阅模式
@@ -964,12 +1004,17 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.9" data-path="visitor.html">
+
+            </ul>
             
-                <a href="visitor.html">
+        </li>
+    
+        <li class="chapter " data-level="1.7.11" data-path="../design_pattern/19_listener.html">
+            
+                <a href="../design_pattern/19_listener.html">
             
                     
-                    访问者模式
+                    监听者模式
             
                 </a>
             
@@ -977,9 +1022,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.10" data-path="iterator.html">
+        <li class="chapter " data-level="1.7.12" data-path="../design_pattern/20_iterator.html">
             
-                <a href="iterator.html">
+                <a href="../design_pattern/20_iterator.html">
             
                     
                     迭代器模式
@@ -990,12 +1035,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.11" data-path="facade.html">
+        <li class="chapter " data-level="1.7.13" data-path="../design_pattern/21_visitor.html">
             
-                <a href="facade.html">
+                <a href="../design_pattern/21_visitor.html">
             
                     
-                    门面模式
+                    访问者模式
             
                 </a>
             
@@ -1465,6 +1510,38 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.11.1" data-path="../java_utils/swap_string.html">
+            
+                <a href="../java_utils/swap_string.html">
+            
+                    
+                    String交换问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.11.2" data-path="../java_utils/string_intern.html">
+            
+                <a href="../java_utils/string_intern.html">
+            
+                    
+                    String.intern()问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.9.12" data-path="../java_utils/reflect.html">
@@ -1519,9 +1596,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.16" data-path="../java_jvm/jvm_runtime.html">
+        <li class="chapter " data-level="1.9.16" data-path="jvm_runtime.html">
             
-                <a href="../java_jvm/jvm_runtime.html">
+                <a href="jvm_runtime.html">
             
                     
                     Runtime类
@@ -1694,9 +1771,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.1" data-path="../java_jvm/jvm.html">
+        <li class="chapter " data-level="1.10.1" data-path="jvm.html">
             
-                <a href="../java_jvm/jvm.html">
+                <a href="jvm.html">
             
                     
                     JVM规范
@@ -1707,9 +1784,22 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.2" data-path="../java_jvm/jvm_class_load.html">
+        <li class="chapter active" data-level="1.10.2" data-path="jvm_instruct.html">
             
-                <a href="../java_jvm/jvm_class_load.html">
+                <a href="jvm_instruct.html">
+            
+                    
+                    JVM指令手册
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="jvm_class_load.html">
+            
+                <a href="jvm_class_load.html">
             
                     
                     类加载机制,运行时内存
@@ -1720,12 +1810,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.3" data-path="../java_jvm/jvm_mem_model.html">
+        <li class="chapter " data-level="1.10.4" data-path="jvm_mem_model.html">
             
-                <a href="../java_jvm/jvm_mem_model.html">
+                <a href="jvm_mem_model.html">
             
                     
-                    Java内存模型与线程
+                    Java内存模型与多线程并发
             
                 </a>
             
@@ -1733,9 +1823,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.4" data-path="../java_jvm/jvm_hot.html">
+        <li class="chapter " data-level="1.10.5" data-path="jvm_hot.html">
             
-                <a href="../java_jvm/jvm_hot.html">
+                <a href="jvm_hot.html">
             
                     
                     JVM预热
@@ -1746,9 +1836,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.5" data-path="../java_jvm/jvm_mem_gc.html">
+        <li class="chapter " data-level="1.10.6" data-path="jvm_mem_gc.html">
             
-                <a href="../java_jvm/jvm_mem_gc.html">
+                <a href="jvm_mem_gc.html">
             
                     
                     堆栈 & GC
@@ -1759,9 +1849,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.6" data-path="../java_jvm/jvm_params.html">
+        <li class="chapter " data-level="1.10.7" data-path="jvm_params.html">
             
-                <a href="../java_jvm/jvm_params.html">
+                <a href="jvm_params.html">
             
                     
                     JVM参数
@@ -1772,9 +1862,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10.7" data-path="../java_jvm/jvm_tools.html">
+        <li class="chapter " data-level="1.10.8" data-path="jvm_tools.html">
             
-                <a href="../java_jvm/jvm_tools.html">
+                <a href="jvm_tools.html">
             
                     
                     JVM命令工具(jstack,jmap,jcmd...)
@@ -1804,20 +1894,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.11.1" data-path="../java_thread_concurrent/aqs.html">
-            
-                <a href="../java_thread_concurrent/aqs.html">
-            
-                    
-                    AQS
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.2" data-path="../java_thread_concurrent/cas.html">
+        <li class="chapter " data-level="1.11.1" data-path="../java_thread_concurrent/cas.html">
             
                 <a href="../java_thread_concurrent/cas.html">
             
@@ -1830,7 +1907,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.3" data-path="../java_thread_concurrent/volatile.html">
+        <li class="chapter " data-level="1.11.2" data-path="../java_thread_concurrent/volatile.html">
             
                 <a href="../java_thread_concurrent/volatile.html">
             
@@ -1843,7 +1920,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.4" data-path="../java_thread_concurrent/synchronized.html">
+        <li class="chapter " data-level="1.11.3" data-path="../java_thread_concurrent/synchronized.html">
             
                 <a href="../java_thread_concurrent/synchronized.html">
             
@@ -1856,26 +1933,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5" data-path="../java_thread_concurrent/thread_basic.html">
+        <li class="chapter " data-level="1.11.4" data-path="../java_thread_concurrent/aqs.html">
             
-                <a href="../java_thread_concurrent/thread_basic.html">
-            
-                    
-                    线程基础
-            
-                </a>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.11.5.1" data-path="../java_thread_concurrent/park_unpark.html">
-            
-                <a href="../java_thread_concurrent/park_unpark.html">
+                <a href="../java_thread_concurrent/aqs.html">
             
                     
-                    park unpark
+                    AQS
             
                 </a>
             
@@ -1883,7 +1946,86 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.2" data-path="../java_thread_concurrent/thread_condition.html">
+        <li class="chapter " data-level="1.11.5" data-path="../java_thread_concurrent/thread_lock.html">
+            
+                <a href="../java_thread_concurrent/thread_lock.html">
+            
+                    
+                    Java Lock
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6" data-path="../java_thread_concurrent/linux_lock.html">
+            
+                <a href="../java_thread_concurrent/linux_lock.html">
+            
+                    
+                    Linux spin lock & mutex
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7" >
+            
+                <span>
+            
+                    
+                    [线程]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.7.1" data-path="../java_thread_concurrent/thread_basic.html">
+            
+                <a href="../java_thread_concurrent/thread_basic.html">
+            
+                    
+                    Java线程基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.2" data-path="../java_thread_concurrent/jvm_object_monitor.html">
+            
+                <a href="../java_thread_concurrent/jvm_object_monitor.html">
+            
+                    
+                    ObjectMonitor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.3" data-path="../java_thread_concurrent/park_unpark.html">
+            
+                <a href="../java_thread_concurrent/park_unpark.html">
+            
+                    
+                    park,unpark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.7.4" data-path="../java_thread_concurrent/thread_condition.html">
             
                 <a href="../java_thread_concurrent/thread_condition.html">
             
@@ -1896,7 +2038,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.3" data-path="../java_thread_concurrent/semaphore.html">
+        <li class="chapter " data-level="1.11.7.5" data-path="../java_thread_concurrent/semaphore.html">
             
                 <a href="../java_thread_concurrent/semaphore.html">
             
@@ -1909,7 +2051,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.4" data-path="../java_thread_concurrent/hook_thread.html">
+        <li class="chapter " data-level="1.11.7.6" data-path="../java_thread_concurrent/hook_thread.html">
             
                 <a href="../java_thread_concurrent/hook_thread.html">
             
@@ -1922,7 +2064,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.5" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
+        <li class="chapter " data-level="1.11.7.7" data-path="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
             
                 <a href="../java_thread_concurrent/countdownlatch_cyclicBarrier.html">
             
@@ -1935,7 +2077,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.6" data-path="../java_thread_concurrent/longAdder.html">
+        <li class="chapter " data-level="1.11.7.8" data-path="../java_thread_concurrent/longAdder.html">
             
                 <a href="../java_thread_concurrent/longAdder.html">
             
@@ -1948,7 +2090,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.7" data-path="../java_thread_concurrent/exchanger.html">
+        <li class="chapter " data-level="1.11.7.9" data-path="../java_thread_concurrent/exchanger.html">
             
                 <a href="../java_thread_concurrent/exchanger.html">
             
@@ -1961,7 +2103,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.5.8" data-path="../java_thread_concurrent/thread_design.html">
+        <li class="chapter " data-level="1.11.7.10" data-path="../java_thread_concurrent/thread_design.html">
             
                 <a href="../java_thread_concurrent/thread_design.html">
             
@@ -1979,7 +2121,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6" >
+        <li class="chapter " data-level="1.11.8" >
             
                 <span>
             
@@ -1993,7 +2135,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.11.6.1" data-path="../java_thread_concurrent/thread_pool.html">
+        <li class="chapter " data-level="1.11.8.1" data-path="../java_thread_concurrent/thread_pool.html">
             
                 <a href="../java_thread_concurrent/thread_pool.html">
             
@@ -2006,7 +2148,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6.2" data-path="../java_thread_concurrent/concurrency_problems.html">
+        <li class="chapter " data-level="1.11.8.2" data-path="../java_thread_concurrent/concurrency_problems.html">
             
                 <a href="../java_thread_concurrent/concurrency_problems.html">
             
@@ -2019,7 +2161,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.11.6.3" data-path="../java_thread_concurrent/thread_pool_self.html">
+        <li class="chapter " data-level="1.11.8.3" data-path="../java_thread_concurrent/thread_pool_self.html">
             
                 <a href="../java_thread_concurrent/thread_pool_self.html">
             
@@ -2034,32 +2176,6 @@
     
 
             </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.7" data-path="../java_thread_concurrent/linux_lock.html">
-            
-                <a href="../java_thread_concurrent/linux_lock.html">
-            
-                    
-                    Linux spin lock & mutex
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.11.8" data-path="../java_thread_concurrent/thread_lock.html">
-            
-                <a href="../java_thread_concurrent/thread_lock.html">
-            
-                    
-                    Java Lock
-            
-                </a>
-            
-
             
         </li>
     
@@ -2280,7 +2396,7 @@
                 <span>
             
                     
-                    [脚本]
+                    [脚本&面试题]
             
                 </span>
             
@@ -2308,6 +2424,19 @@
             
                     
                     统计词频bash脚本
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14.3" data-path="../shell/big_data.html">
+            
+                <a href="../shell/big_data.html">
+            
+                    
+                    大数据量问题
             
                 </a>
             
@@ -2466,7 +2595,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >模板方法</a>
+        <a href="../.." >JVM指令手册</a>
     </h1>
 </div>
 
@@ -2482,71 +2611,10 @@
                                 <section class="normal markdown-section">
                                 
                                 <p>[TOC]</p>
-<h1 id="&#x6A21;&#x677F;&#x65B9;&#x6CD5;">&#x6A21;&#x677F;&#x65B9;&#x6CD5;</h1>
-<p>&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;&#x64CD;&#x4F5C;&#x4E2D;&#x7684;&#x7B97;&#x6CD5;&#x7684;&#x9AA8;&#x67B6;&#xFF0C;&#x800C;&#x5C06;&#x4E00;&#x4E9B;&#x6B65;&#x9AA4;&#x5EF6;&#x8FDF;&#x5230;&#x5B50;&#x7C7B;&#x4E2D;&#x3002;&#x6A21;&#x677F;&#x65B9;&#x6CD5;&#x4F7F;&#x5F97;&#x5B50;&#x7C7B;&#x53EF;&#x4EE5;&#x4E0D;&#x6539;&#x53D8;&#x4E00;&#x4E2A;&#x7B97;&#x6CD5;&#x7684;&#x7ED3;&#x6784;&#x5373;&#x53EF;&#x91CD;&#x5B9A;&#x4E49;&#x8BE5;&#x7B97;&#x6CD5;&#x7684;&#x67D0;&#x4E9B;&#x7279;&#x5B9A;&#x6B65;&#x9AA4;&#x3002;</p>
-<ul>
-<li>&#x6A21;&#x677F;</li>
-</ul>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">Game</span> <span class="token punctuation">{</span>
-   <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">startPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">endPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-   <span class="token comment">//&#x6A21;&#x677F;</span>
-   <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">play</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-      <span class="token comment">//&#x521D;&#x59CB;&#x5316;&#x6E38;&#x620F;</span>
-      <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">//&#x5F00;&#x59CB;&#x6E38;&#x620F;</span>
-      <span class="token function">startPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">//&#x7ED3;&#x675F;&#x6E38;&#x620F;</span>
-      <span class="token function">endPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<ul>
-<li>&#x6A21;&#x677F;&#x7684;&#x5B9E;&#x73B0;</li>
-</ul>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Cricket</span> <span class="token keyword">extends</span> <span class="token class-name">Game</span> <span class="token punctuation">{</span>
-
-   <span class="token annotation punctuation">@Override</span>
-   <span class="token keyword">void</span> <span class="token function">endPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Cricket Game Finished!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span>
-
-   <span class="token annotation punctuation">@Override</span>
-   <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Cricket Game Initialized! Start playing.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span>
-
-   <span class="token annotation punctuation">@Override</span>
-   <span class="token keyword">void</span> <span class="token function">startPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Cricket Game Started. Enjoy the game!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<pre class="language-"><code class="lang-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Football</span> <span class="token keyword">extends</span> <span class="token class-name">Game</span> <span class="token punctuation">{</span>
-
-   <span class="token annotation punctuation">@Override</span>
-   <span class="token keyword">void</span> <span class="token function">endPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Football Game Finished!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span>
-
-   <span class="token annotation punctuation">@Override</span>
-   <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Football Game Initialized! Start playing.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span>
-
-   <span class="token annotation punctuation">@Override</span>
-   <span class="token keyword">void</span> <span class="token function">startPlay</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Football Game Started. Enjoy the game!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<h1 id="jvm&#x6307;&#x4EE4;">JVM&#x6307;&#x4EE4;</h1>
+<p>todo </p>
 <p><footer class="page-footer"><span class="copyright">Copyright @doctording all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x6539;&#x65F6;&#x95F4;&#xFF1A;
-2020-11-30 15:14:12
+2023-09-03 15:51:28
 </span></footer><div id="gitalk-container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script></p>
 
                                 
@@ -2575,12 +2643,12 @@
 
             
                 
-                <a href="factory.html" class="navigation navigation-prev " aria-label="Previous page: 工厂模式">
+                <a href="jvm.html" class="navigation navigation-prev " aria-label="Previous page: JVM规范">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="strategy.html" class="navigation navigation-next " aria-label="Next page: 策略模式">
+                <a href="jvm_class_load.html" class="navigation navigation-next " aria-label="Next page: 类加载机制,运行时内存">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2591,7 +2659,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"模板方法","layout":"page","date":"2019-03-20 00:00","level":"1.7.4","depth":2,"next":{"title":"策略模式","level":"1.7.5","depth":2,"path":"content/design_pattern/strategy.md","ref":"./content/design_pattern/strategy.md","articles":[]},"previous":{"title":"工厂模式","level":"1.7.3","depth":2,"path":"content/design_pattern/factory.md","ref":"./content/design_pattern/factory.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/design_pattern/template.md","mtime":"2020-11-30T07:14:12.168Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-01-16T15:50:19.095Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"JVM指令手册","layout":"page","date":"2019-02-15 00:00","level":"1.10.2","depth":2,"next":{"title":"类加载机制,运行时内存","level":"1.10.3","depth":2,"path":"content/java_jvm/jvm_class_load.md","ref":"./content/java_jvm/jvm_class_load.md","articles":[]},"previous":{"title":"JVM规范","level":"1.10.1","depth":2,"path":"content/java_jvm/jvm.md","ref":"./content/java_jvm/jvm.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","-lunr","-search","-sharing","ace","codeblock-filename","search-plus","sectionx","splitter","tbfed-pagefooter","expandable-chapters","back-to-top-button","code","copy-code-button","uml","page-treeview","gittalk","advanced-emoji","todo","github"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright @doctording","modify_label":"该文件修改时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"page-treeview":{"collapsed":false,"copyright":"Copyright @doctording","minHeaderCount":"2","minHeaderDeep":"2"},"prism":{},"ace":{},"github":{"url":"https://github.com/doctording"},"todo":{},"splitter":{},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{},"uml":{"format":"svg"},"codeblock-filename":{},"back-to-top-button":{},"copy-code-button":{},"advanced-emoji":{"embedEmojis":false},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"gittalk":{"clientID":"094729e19245d3fe84aa","clientSecret":"6c4cf7b48e7ae41c20d453c24eb9d5469e4d19fb","repo":"sword_at_offer","owner":"doctording","admin":["doctording"],"distractionFreeMode":false},"expandable-chapters":{},"search-plus":{}},"theme":"default","author":"doctording","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"java-note","language":"zh-hans","gitbook":"*","description":"Java开发"},"file":{"path":"content/java_jvm/jvm_instruct.md","mtime":"2023-09-03T07:51:28.415Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-09-09T05:44:40.932Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
