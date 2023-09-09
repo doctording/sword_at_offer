@@ -67,7 +67,7 @@ public class Main {
 * 禁止屏障前后的指令重排序
 * 强制把写缓冲区的的数据写入主内存
 
-程序执行的顺序按照代码的先后顺序执行，**内存屏障**（JVM规范要求）
+程序执行的顺序按照代码的先后顺序执行，**内存屏障**（JVM规范要求，也即happends before原则，保证前后指令不乱序）,jvm屏障逻辑上分为如下4个：
 
 1. 每个volatile写操作的前面插入一个`StoreStore`屏障；
 2. 在每个volatile写操作的后面插入一个`StoreLoad`屏障（**全能屏障**）；
@@ -77,8 +77,13 @@ public class Main {
 即如下
 
 ```java
-StoreStore Barrier =》 写操作 =》 StoreLoad Barrier
-LoadLoad Barrier =》 读操作 =》 LoadStore Barrier
+StoreStore Barrier
+    volatile 写操作 
+StoreLoad Barrier
+
+LoadLoad Barrier
+    volatile 读操作
+LoadStore Barrier
 ```
 
 屏障类型|指令示例|说明
@@ -162,7 +167,7 @@ public class Main {
 
 隐含一个对象创建的过程：(记住3步)
 
-1. 堆内存中申请了一块内存 （new指令）【半初始化状态，成员变量初始化为默认值】
+1. 堆内存中申请了一块内存（new指令）【半初始化状态，成员变量初始化为默认值】
 2. 这块内存的构造方法执行（invokespecial指令）
 3. 栈中变量建立连接到这块内存（astore_1指令）
 
@@ -191,11 +196,13 @@ CPU -> 缓存 -> 主存 -> 线程工作内存
 
 虚拟机实现必须保证上面的每一种操作都是原子的
 
+cpu级别上：hotspot x86平台上的内存屏障的实现依赖于lock指令(sfence,ifence,mfence)，而Intel的lock指令的实现依赖于缓存一致性协议（eg:MESI）
+
 ## volatile 使用场景
 
 volatile 无`原子性`，需要充分利用其的`可见性`和`顺序性`
 
-### 利用可见性 进行开关控制
+### 利用可见性-进行开关控制
 
 一个线程改变共享遍历，其它线程立刻能感知到，并根据其值执行各自的逻辑
 

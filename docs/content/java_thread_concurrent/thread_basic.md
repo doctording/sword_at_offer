@@ -148,7 +148,7 @@ private void init(ThreadGroup g, Runnable target, String name,
 }
 ```
 
-### Thread 的 `start()` & run()
+### Thread 的 `start()` & `run()`
 
 * run()
 
@@ -236,11 +236,17 @@ private long stackSize;
 
 * JVM能创建多少个线程，与堆内存，栈内存的大小有直接的关系，只不过栈内存更明显一些；线程数目还与操作系统的一些内核配置有很大的关系；生产上要监控线程数量，可能会由于bug导致线程数异常增多，引发心跳、OutOfMemory告警
 
+举例：
+
+32位操作系统的最大寻址空间是2^32个字节≈4G，一个32位进程最大可使用内存一般为2G（操作系统预留2G）;
+
+JVMMemory 代表JVM的堆内存占用，此处也包含一些JVM堆外内存占用，如code-cache、 direct-memory-buffer 、class-compess-space等；假设取1.5G,还有一部分必须用于系统dll的加载。假设剩下400MB，每个线程栈所需1M，那么最多可以创建400个线程
+
 # 线程安全
 
 * 什么是线程安全问题？
 
-当多个线程共享同一个全局变量，做写的时候，可能会收到其它线程的干扰，导致数据有问题，这中现象叫做线程安全问题
+当多个线程共享同一个全局变量，做写的时候，可能会受到其它线程的干扰，导致数据有问题，这中现象叫做线程安全问题
 
 关键词：共享数据，多线程，并发写操作
 
@@ -358,21 +364,21 @@ private long stackSize;
     }
 ```
 
-* 线程状态图
+### 6种线程状态转换图
 
 ![](../../content/java_thread_concurrent/imgs/thread_state.jpg)
 
-* 当线程调用`sleep(time)`或者`wait(time)`时，会进入`TIMED_WAITING`状态
+* 阻塞状态是线程阻塞在进入synchronized关键字修饰的方法或代码块(获取锁)时的状态。
 
-* 阻塞(blocked)：阻塞状态是指线程因为某种原因放弃了cpu使用权，也即让出了cpu时间片，暂时停止运行。直到线程进入可运行(runnable)状态，才有机会再次获得cpu时间片，转到运行(running)状态。阻塞的情况分三种：
+* TIMED_WAITING: A thread that is waiting for another thread to perform an action for up to a specified waiting time is in this state.
 
-1. 等待阻塞：运行(running)的线程执行`o.wait()`方法，JVM会把该线程放入等待队列(waitting queue)中。
+1. Thread.sleep
+2. Object.wait with timeout
+3. Thread.join with timeout
+4. LockSupport.parkNanos
+5. LockSupport.parkUntil
 
-2. 同步阻塞：运行(running)的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入锁池(lock pool)中。
-
-3. 其它阻塞：运行(running)的线程执行`Thread.sleep(long ms)`或`t.join()`方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。当`sleep()`状态超时、`join()`等待线程终止或者超时、或者I/O处理完毕时，线程重新转入可运行(runnable)状态。
-
-### 验证6种状态
+### 验证线程的6种状态
 
 ```java
 public class Main {
@@ -487,8 +493,8 @@ t6 status:BLOCKED // 阻塞，抢锁抢不到
 ## wait, notify的简单使用
 
 * wait: 在其它线程调用此对象的`notify()`方法或`notifyAll()`方法前，导致当前线程等待
-* notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。
-* `sleep`方法没有释放锁，而`wait`方法释放了锁，使得其它线程可以使用同步控制块或方法；sleep是让出CPU给其它线程
+* notify: 唤醒在此对象监视器上等待的单个线程,如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是**任意性的**，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。如果用`obj.notifyAll()`，则会唤醒所有线程
+* wait方法释放了锁，使得其它线程可以使用同步控制块或方法；而`sleep`方法没有释放锁，只是让出CPU给其它线程
 
 ```java
 参考文档： https://www.baeldung.com/java-wait-notify
@@ -610,6 +616,10 @@ public final void wait() throws InterruptedException {
 public final native void wait(long timeout) throws InterruptedException;
 ```
 
+1. 将当前线程封装成ObjectWaiter对象node；
+2. 通过`ObjectMonitor::AddWaiter`方法将node添加到`_WaitSet`列表中；
+3. 通过`ObjectMonitor::exit`方法释放当前的ObjectMonitor对象，这样其它竞争线程就可以获取该ObjectMonitor对象。
+
 ### notify java源码
 
 ```java
@@ -648,9 +658,9 @@ public final native void wait(long timeout) throws InterruptedException;
 public final native void notify();
 ```
 
-* Java中每一个对象都可以成为一个监视器(Monitor)，该Monitor由一个锁(lock), 一个等待队列(WaitingQueue，阻塞状态，等待被唤醒，不占用CPU), 一个入口队列(EntryQueue，要去竞争获取锁).
-* `waiting`进入`_waitSet`等待中(底层通过执行`thread_ParkEvent->park`来挂起线程)，等待被唤醒，**不会占用CPU**
-* `waiting`被唤醒后，不是直接执行，而是进入`_EntryList`(没有获取到锁的一个Blocking状态，要继续竞争锁)，去竞争`monitor`来获得机会去执行
+* 在Java中每一个对象都可以成为一个监视器(Monitor)，该Monitor有一个锁(lock), 一个等待队列(WaitingSet，阻塞状态，等待被唤醒，不占用CPU), 一个入口队列(EntryList，要去竞争获取锁).
+* `wait`进入`_waitSet`等待中(底层通过执行`thread_ParkEvent->park`来挂起线程)，等待被唤醒，**不会占用CPU**
+* `wait`被唤醒后，不是直接执行，而是进入`_EntryList`(Entrylist是没有获取到锁的一个Blocking状态，要继续竞争锁)，去竞争`monitor`来获得机会去执行
 
 ![](../../content/java_thread_concurrent/imgs/wait_set.png)
 
@@ -666,9 +676,9 @@ public final native void notify();
 
 5. wait()方法只能在同步方法或同步代码块中调用，否则会报`illegalMonitorStateException`异常，如果没有设定时间，使用`notify()`来唤醒；而`sleep()`能在任何地方调用；
 
-### wait为什么必须在同步块中？
+### wait()方法为什么必须在同步块中？
 
-原因是避免CPU切换到其它线程，而其它线程又提前执行了notify方法，那这样就达不到我们的预期（先wait再由其它线程来notify）,所以需要一个同步锁来保护。
+原因是避免CPU切换到其它线程，而其它线程又提前执行了notify方法，那这样就达不到我们的预期（先wait，再由其它线程来notify）,所以需要一个同步锁来保护。
 
 wait是对象的方法，java锁是对象级别的，而不是线程级别的；同步代码块中，使用对象锁来实现互斥效果
 
@@ -926,10 +936,10 @@ id:1
 Main thread finished
 ```
 
-### sleep与yield`的区别？
+### sleep与yield的区别？
 
-* `yield`会使`RUNNING`状态的线程进入`Runnable`状态（如果CPU调度器没有忽略这个提示的话）
-* 一个线程`sleep`，另一个线程调用`interrupt`会捕获到中断信号，而`yield`则不会
+* `yield`会使`RUNNING`状态的线程进入`Runnable`状态（前提是：如果CPU调度器没有忽略这个提示的话）
+* 一个线程`sleep`，另一个线程调用`interrupt`会捕获到中断信号；而`yield`则不会
 
 ## 线程的优先级
 
@@ -1152,7 +1162,13 @@ public final synchronized void join(long millis)
 
 ### 正常结束（run方法执行完成）
 
-### 捕获中断信号关闭线程（中端间接控制run方法）
+### 捕获中断信号关闭线程（终端间接控制run方法）
+
+interrupt是Thread类的实例方法，它的主要作用是给目标线程发送一个通知
+
+1. 第一种是打断正在运行的线程。如下所示，主线程休眠100ms后，中断t1线程，并将t1线程的中断标志设置为true。当线程发现自己的打断标志为true时，就自动退出
+
+2. 第二种情况是，打断正在休眠的线程，比如目标线程调用了sleep方法而处于阻塞状态，这时候如果打断他，就会抛出InterruptedException异常。
 
 ### 使用volatile开关控制（开关控制run方法）
 
@@ -1165,7 +1181,7 @@ public class Main {
         @Override
         public void run() {
             System.out.println("start");
-            while(!close && ! isInterrupted()){
+            while(!close && !isInterrupted()){
                 System.out.println("running...");
             }
             System.out.println("end");

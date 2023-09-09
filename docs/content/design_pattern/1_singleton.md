@@ -119,6 +119,18 @@ final class Singleton{
 
 ```java
 private volatile static Singleton instance = null;
+
+public static Singleton getInstance(){
+    if(null == instance){  // check 1
+        synchronized (Singleton.class) {
+            if(null == instance) { // check 2
+                System.out.println("new Singleton");
+                instance = new Singleton(); // new 对象 可能会指令重排, 获取到的实例是个半成品
+            }
+        }
+    }
+    return instance;
+}
 ```
 
 ### double check 单例模式需要 volatile 吗？
@@ -174,7 +186,7 @@ final class Singleton {
 
 以上情况称为对一个类进行主动引用，且有且只要以上几种情况是需要对类进行初始化：
 
-* 所有类变量初始化语句和静态代码块都会在编译时被前端编译器放在收集器里头，存放到一个特殊的方法中，这个方法就是`<clinit>`方法，即类/接口初始化方法，该方法只能在类加载的过程中由JVM调用。
+* 所有`类变量`初始化语句和`静态代码块`都会在编译时被前端编译器放在收集器里头，存放到一个特殊的方法中，这个方法就是`<clinit>`方法，即类/接口初始化方法，该方法只能在类加载的过程中由JVM调用。
 
 * 编译器收集的顺序是由语句在源文件中出现的顺序所决定的，静态语句块中只能访问到定义在静态语句块之前的变量；
 
@@ -184,11 +196,17 @@ final class Singleton {
 
 * 如果一个类没有声明任何的类变量，也没有静态代码块，那么可以没有类`<clinit>`方法。
 
-### 懒加载+线程安全的说明
+### 懒加载+线程安全的说明以及缺点
 
-* Singleton初始化的时候不会创建Holder实例；
+* Singleton构造函数是私有的，其初始化的时候必须调用`getInstance`方法，否则不会被类加载
 
-* 当调用`getInstance`时，才会初始化Holder实例；而在Java程序类加载的编译时期`<clinit>()`方法中，该方法是一个同步方法；类里面的静态变量是初始化一次放在常量池中的
+* 当调用`getInstance`时，会初始化Holder实例；而在Java程序类加载的编译时期`<clinit>()`方法中，该方法是一个同步方法；类里面的静态变量是初始化一次后放在常量池中的
+
+缺点：
+
+1. 可能会增加类的数量，因为需要一个静态内部类来保存单例对象
+2. 第一次加载时可能会略微增加启动时间
+3. 无法传递参数到静态内部类中
 
 ## 枚举
 

@@ -1,5 +1,5 @@
 ---
-title: "重写&重载"
+title: "重写(override)&重载(overload)"
 layout: page
 date: 2020-10-22 00:00
 ---

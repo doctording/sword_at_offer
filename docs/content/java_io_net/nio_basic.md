@@ -6,7 +6,7 @@ date: 2019-04-07 00:00
 
 [TOC]
 
-# NIO(非阻塞IO)
+# NIO(非阻塞/Non-blocking IO)
 
 ## BIO问题
 

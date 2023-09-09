@@ -178,6 +178,83 @@ public ThreadPoolExecutor(int corePoolSize,
     3.2、当前poolSize=maximumPoolSize，那么意味着线程池的处理能力已经达到了极限，此时需要拒绝新增加的任务。至于如何拒绝处理新增的任务，取决于线程池的拒绝策略RejectedExecutionHandler。
 ```
 
+## prestartAllCoreThreads 提前启动核心线程
+
+```java
+/**
+ * Starts all core threads, causing them to idly wait for work. This
+ * overrides the default policy of starting core threads only when
+ * new tasks are executed.
+ *
+ * @return the number of threads started
+ */
+public int prestartAllCoreThreads() {
+    int n = 0;
+    while (addWorker(null, true))
+        ++n;
+    return n;
+}
+```
+
+```java
+/**
+ * Starts a core thread, causing it to idly wait for work. This
+ * overrides the default policy of starting core threads only when
+ * new tasks are executed. This method will return {@code false}
+ * if all core threads have already been started.
+ *
+ * @return {@code true} if a thread was started
+ */
+public boolean prestartCoreThread() {
+    return workerCountOf(ctl.get()) < corePoolSize &&
+        addWorker(null, true);
+}
+```
+
+## 关闭线程池
+
+### 手动调用shutdown方法
+
+1. shutdown() 执行后停止接受新任务，会把队列的任务执行完毕。
+2. shutdownNow() 也是停止接受新任务，但会中断所有的任务，将线程池状态变为stop。
+
+### 线程池的自动关闭
+
+1. 自动关闭线程池：核心线程数为 0 并指定线程存活时间
+
+2. 通过 allowCoreThreadTimeOut 控制核心线程存活时间
+
+```java
+/**
+    * Sets the policy governing whether core threads may time out and
+    * terminate if no tasks arrive within the keep-alive time, being
+    * replaced if needed when new tasks arrive. When false, core
+    * threads are never terminated due to lack of incoming
+    * tasks. When true, the same keep-alive policy applying to
+    * non-core threads applies also to core threads. To avoid
+    * continual thread replacement, the keep-alive time must be
+    * greater than zero when setting {@code true}. This method
+    * should in general be called before the pool is actively used.
+    *
+    * @param value {@code true} if should time out, else {@code false}
+    * @throws IllegalArgumentException if value is {@code true}
+    *         and the current keep-alive time is not greater than zero
+    *
+    * @since 1.6
+    */
+public void allowCoreThreadTimeOut(boolean value) {
+    if (value && keepAliveTime <= 0)
+        throw new IllegalArgumentException("Core threads must have nonzero keep alive times");
+    if (value != allowCoreThreadTimeOut) {
+        allowCoreThreadTimeOut = value;
+        if (value)
+            interruptIdleWorkers();
+    }
+}
+```
+
+3. 线程池中的线程设置为守护线程
+
 ## 拒绝策略
 
 **线程池的拒绝策略**是指<font color='red'>当任务添加到线程池中被拒绝而采取的处理措施</font>
@@ -437,7 +514,6 @@ public class HookTest {
         };
 
         service = Executors.newSingleThreadScheduledExecutor();
-        // TimeUnit.SECONDS 延时单位为秒
         service.scheduleAtFixedRate(runnable, 0, 1, TimeUnit.SECONDS);
 
         new Thread(new Runnable() {
@@ -840,7 +916,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
 
 Abstract base class for tasks that run within a `ForkJoinPool`. A `ForkJoinTask` is a thread-like entity that is much lighter weight than a normal thread. Huge numbers of tasks and subtasks may be hosted by a small number of actual threads in a ForkJoinPool, at the price of some usage limitations.
 
-### 使用例子
+### 例子代码
 
 ```java
 public class ForkJoinTaskExample extends RecursiveTask<Integer> {

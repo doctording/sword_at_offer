@@ -277,7 +277,7 @@ public class Hello extends Thread{
             TimeUnit.MINUTES.sleep(2);
             System.out.println("thread sleep over");
         }catch (InterruptedException e){
-            // lock.lockInterruptibly(); 会判断是否又终端
+            // lock.lockInterruptibly(); 会判断是否有中断
             // lock.lock(); 不会判断中断，抢不到就park一直等待
             System.out.println("Interrupted");
         }
@@ -298,29 +298,40 @@ public class Hello extends Thread{
 }
 ```
 
+输出： 有中断捕获，结束线程
+
+```java
+====start
+Interrupted
+```
+
 ## 线程同步概念
 
-多线程对共享资源的操作按照一定次序，避免出现不可预知的结局
+**多线程**对**共享资源**的操作按照一定次序，避免出现不可预知的结局
 
 <a href="https://en.wikipedia.org/wiki/Synchronization_(computer_science)">Synchronization_(computer_science)</a>
 
 ## 乐观锁&悲观锁
 
+悲观锁和乐观锁并不是某个具体的“锁”，而是一种并发编程的基本概念
+
 ### 乐观锁
 
 乐观锁在操作数据时候非常乐观，认为别的线程不会同时修改数据，所以不会上锁。
 
-乐观锁是一种乐观思想，即认为`读多写少`，遇到并发竞争写的可能性很低，每次去`读`数据的时候都认为别人不会修改，所以**不会上锁**，实现上：在`写`操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据。
+乐观锁是一种乐观思想，即认为`读多写少`，遇到并发竞争写的可能性很低，每次去`读`数据的时候都认为别人不会修改，所以**不会上锁**，实现上：在`写`操作的时候会判断一下在此期间别人有没有去更新(写操作)这个数据，通常是通过在表中增加一个版本(version)或时间戳(timestamp)来实现
 
-* 在此期间：是指 拿到数据到更新数据的这段时间。因为没有加锁，所以别的线程可能会更改。还有就是乐观锁其实是不加锁的。
+* 在此期间：是指拿到数据到更新数据的这段时间。因为没有加锁，所以别的线程可能会更改。还有就是乐观锁其实是不加锁的。
 
 * 如何判断：采取在写时先读出当前版本号，比较跟上一次的版本号，如果一样则进行写操作，如果失败则要重复`读-比较-写`的操作(不断CAS操作，CAS就是典型的乐观锁)。
 
 ### 悲观锁
 
-悲观锁是就是悲观思想，即认为写多，遇到并发写的可能性很高，每次去拿数据的时候都认为别人会修改，所以每次在`读/写`数据的时候**都会上锁**，这样别人想读/写这个数据就会被`Block`住，直到锁释放且自己抢到锁。Java中的悲观锁如`synchronized`，AQS框架下的锁则一般是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁
+悲观锁是就是悲观思想，即认为`写多`，遇到并发写的可能性很高，每次去拿数据的时候都认为别人会修改，所以每次在`读/写`数据的时候**都会上锁**，这样别人想读/写这个数据就会被`Block`住，直到锁释放且自己抢到锁。Java中的悲观锁如synchronized 关键字和 Lock 相关类等；AQS框架下的锁则一般是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁
 
 悲观并发控制实际上是"先取锁再访问"的保守策略，为数据处理的安全提供了保证。数据库里面也用到了这种悲观锁的机制,比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。这样其它的线程就不能同步操作，必须要等到锁释放才可以。
+
+数据库中的行锁，表锁，读锁，写锁，以及syncronized实现的锁均为悲观锁。
 
 ## 自旋锁
 
@@ -512,6 +523,220 @@ class SpinLock{
 
 * 自旋时会适当放弃线程优先级之间的差异
 
+## 可重入锁
+
+指同一个线程可以反复获取锁多次，然后需要释放多次；又因该锁通过线程独占共享资源的方式确保并发安全，又称为**独占锁**
+
+同一个线程在外层函数获得锁之后，内层递归函数仍能获取该锁的代码，在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁，即：**线程可以进入任何一个它已经拥有的锁所同步的代码块**，防止死锁。
+
+如下：synchronize是内置的隐式的可重入锁，例子中的两个方法使用的是同一把锁，只要能执行testB()也就说明线程拿到了锁，所以执行testA()方法就不用被阻塞等待获取锁了；如果不是同一把锁或非可重入锁，就会在执行testA()时被阻塞等待。
+
+```java
+class Demo {
+    public synchronized void testA(){
+        System.out.println( Thread.currentThread().getName() + "执行测试A");
+    }
+
+    public synchronized void testB(){
+        System.out.println( Thread.currentThread().getName() + "执行测试B");
+        testA();
+    }
+}
+```
+
+重入锁实现可重入性原理或机制是：每一个锁关联一个线程持有者和计数器，当计数器为 0 时表示该锁没有被任何线程持有，那么任何线程都可能获得该锁而调用相应的方法；当某一线程请求成功后，JVM会记下锁的持有线程，并且将计数器置为 1；此时其它线程请求该锁，则必须等待；而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增；当线程退出同步代码块时，计数器会递减，如果计数器为 0，则释放该锁。
+
+### 不可重入的例子代码
+
+```java
+
+class UnReLock {
+    private volatile  boolean isLocked = false;
+    Thread lockedBy = null; //记录当前获取锁线程
+
+    public synchronized void lock() throws InterruptedException {
+        Thread thread = Thread.currentThread();
+        while (isLocked) {
+            // 锁状态下，不管哪个线程都继续加锁则等待
+            wait();
+        }
+        isLocked = true;
+        lockedBy = thread;
+    }
+
+    public synchronized void unlock() {
+        // 当前线程解锁
+        if (Thread.currentThread() == this.lockedBy) {
+            isLocked = false;
+            lockedBy = null;
+            notify();
+        }
+    }
+}
+
+class Demo {
+
+    private UnReLock lock = new UnReLock();
+
+    public void getd() {
+        try {
+            lock.lock();
+            System.out.println(Thread.currentThread().getName() + "\t invoked getd()");
+            setd();
+        } catch (Exception e){
+        }  finally {
+            lock.unlock();
+        }
+    }
+
+    public void setd() {
+        try {
+            lock.lock();
+            System.out.println(Thread.currentThread().getName() + "\t ### invoked setd()");
+        } catch (Exception e){
+        }  finally {
+            lock.unlock();
+        }
+    }
+}
+
+public class MainTest {
+
+    public static void main(String[] args) {
+        Demo demo = new Demo();
+        new Thread(()->demo.getd()).start();
+    }
+}
+```
+
+### synchronized&ReentrantLock是可重入锁
+
+```java
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class Phone implements Runnable {
+
+    public synchronized void sendSMS() {
+        System.out.println(Thread.currentThread().getName()+ "\t invoked sendSMS()");
+        sendEmail();
+    }
+
+    public synchronized void sendEmail(){
+        System.out.println(Thread.currentThread().getName()+ "\t #####invoked sendEmail()");
+    }
+
+    // ==============================================================
+    /**
+     *  可重入锁底层原理：公平锁和非公平锁(默认)
+     *  公平锁：是指多个线程按照申请锁的顺序来获取锁，类似排队打饭，先来后到。
+     *  非公平锁：是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁
+     *            在高并发的情况下，有可能会造成优先级反转或者饥饿现象。优点：吞吐量比公平锁大。
+     */
+    private Lock lock = new ReentrantLock(false);
+
+    @Override
+    public void run() {
+        getd();
+    }
+
+    private void getd() {
+        lock.lock();
+        try {
+            System.out.println(Thread.currentThread().getName()+ "\t invoked getd()");
+            setd();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void setd() {
+        lock.lock(); // 这里注释掉会出现：java.lang.IllegalMonitorStateException，所以锁一定要配对
+        try {
+            System.out.println(Thread.currentThread().getName()+ "\t ### invoked setd()");
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+/**
+ * @author doinb
+ * 可重入锁（也叫做递归锁） 作用：避免死锁
+ *
+ * 指的是同一线程外层函数获得锁之后，内层函数仍然能获取该锁代码，
+ * 在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁
+ *
+ * 也就是说，线程可以进入任何一个它已经拥有的锁所同步的代码块。
+ *
+ *  case 1 Synchronized就是一个典型的可重入锁
+ * t1	 invoked sendSMS()          t1线程在外层方法获取锁的时候
+ * t1	 #####invoked sendEmail()   t1在进入内层方法会自动获取锁
+ * t2	 invoked sendSMS()
+ * t2	 #####invoked sendEmail()
+ *
+ *  case 2 ReentrantLock也是一个典型的可重入锁
+ * t3	 invoked getd()
+ * t3	 ### invoked setd()
+ * t4	 invoked getd()
+ * t4	 ### invoked setd()
+ *
+ */
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        Phone phone = new Phone();
+
+        new Thread(() -> {
+            try {
+                phone.sendSMS();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "t1").start();
+
+        new Thread(() -> {
+            try {
+                phone.sendSMS();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "t2").start();
+
+        // 暂停一会
+        TimeUnit.SECONDS.sleep(1);
+        System.out.println();
+        System.out.println();
+        System.out.println("### lock的启动方式，因为实现了Runnable接口 ###");
+
+        // lock的启动方式，因为实现了Runnable接口
+        Thread t3 = new Thread(phone, "t3");
+        Thread t4 = new Thread(phone, "t4");
+        t3.start();
+        t4.start();
+    }
+
+}
+```
+
+ReentrantLock继承父类AQS（AQS内部维护了一个同步状态status来计数重入次数，初始为0）
+
+* 当线程尝试获取锁时，可重入锁先尝试获取并更新`state`值，如果`state == 0`表示没有其它线程在执行同步代码，则将`state`设置为1,当前线程开始执行；非可重入锁同
+* 如果`state > 0`，则判断当前线程是否是获取到这个锁的线程，如果是则`state = state + 1`；如果是非重入锁，则直接去获取并更新当前status，此时如果`state > 0`则会导致其获取锁失败，当前线程会阻塞
+
+* 可重入前`state == 1`
+
+![](../../content/java_thread_concurrent/imgs/lock_sync_state.png)
+
+* 可重入操作，`state = state + 1`
+
+![](../../content/java_thread_concurrent/imgs/lock_sync_state_2.png)
+
+* 可重入之后再 `state = state - 1`
+
+![](../../content/java_thread_concurrent/imgs/lock_sync_state_3.png)
+
 ## ReentrantLock (可重入锁,AQS独占锁,默认非公平）
 
 附：**独占锁**被某个线程持有时，其它线程只能等待当前线程释放后才能去竞争锁，而且只有一个线程能竞争锁成功。
@@ -529,7 +754,13 @@ class SpinLock{
 
 * 公平锁每次获取到锁为同步队列中的第一个节点，保证请求资源时间上的绝对顺序，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其他线程永远无法获取到锁，造成`饥饿`现象。
 
-* 公平锁为了保证时间上的绝对顺序，需要频繁的上下文切换，而非公平锁会降低了一定的上下文切换，降低性能开销。
+1. 优点：所有的线程都能得到资源，不会饿死在队列中。
+2. 缺点：吞吐量会下降很多，队列里面除了第一个线程，其它的线程都会阻塞，cpu唤醒阻塞线程的开销会很大。
+
+* 非公平锁：多个线程去获取锁的时候，会直接去尝试获取，获取不到，再去进入等待队列，如果能获取到，就直接获取到锁。
+
+1. 优点：可以减少CPU唤醒线程的开销，整体的吞吐效率会高点，CPU也不必取唤醒所有线程，会减少唤起线程的数量。
+2. 缺点：可能导致队列中间的线程一直获取不到锁或者长时间获取不到锁，导致饿死。
 
 #### 公平锁
 
@@ -826,142 +1057,6 @@ final boolean nonfairTryAcquire(int acquires) {
     return false;
 }
 ```
-
-### 什么是可重入？
-
-同一个线程可以反复获取锁多次，然后需要释放多次
-
-同一个线程在外层函数获得锁之后，内层递归函数仍能获取该锁的代码，在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁，即：**线程可以进入任何一个它已经拥有的锁所同步的代码块**，防止死锁
-
-重入锁实现可重入性原理或机制是：每一个锁关联一个线程持有者和计数器，当计数器为 0 时表示该锁没有被任何线程持有，那么任何线程都可能获得该锁而调用相应的方法；当某一线程请求成功后，JVM会记下锁的持有线程，并且将计数器置为 1；此时其它线程请求该锁，则必须等待；而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增；当线程退出同步代码块时，计数器会递减，如果计数器为 0，则释放该锁。
-
-* synchronized是可重入锁
-
-```java
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-class Phone implements Runnable {
-
-    public synchronized void sendSMS() {
-        System.out.println(Thread.currentThread().getName()+ "\t invoked sendSMS()");
-        sendEmail();
-    }
-
-    public synchronized void sendEmail(){
-        System.out.println(Thread.currentThread().getName()+ "\t #####invoked sendEmail()");
-    }
-
-    // ==============================================================
-    /**
-     *  可重入锁底层原理：公平锁和非公平锁(默认)
-     *  公平锁：是指多个线程按照申请锁的顺序来获取锁，类似排队打饭，先来后到。
-     *  非公平锁：是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁
-     *            在高并发的情况下，有可能会造成优先级反转或者饥饿现象。优点：吞吐量比公平锁大。
-     */
-    private Lock lock = new ReentrantLock(false);
-
-    @Override
-    public void run() {
-        getd();
-    }
-
-    private void getd() {
-        lock.lock();
-        try {
-            System.out.println(Thread.currentThread().getName()+ "\t invoked getd()");
-            setd();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private void setd() {
-        lock.lock(); // 这里注释掉会出现：java.lang.IllegalMonitorStateException，所以锁一定要配对
-        try {
-            System.out.println(Thread.currentThread().getName()+ "\t ### invoked setd()");
-        } finally {
-            lock.unlock();
-        }
-    }
-}
-
-/**
- * @author doinb
- * 可重入锁（也叫做递归锁） 作用：避免死锁
- *
- * 指的是同一线程外层函数获得锁之后，内层函数仍然能获取该锁代码，
- * 在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁
- *
- * 也就是说，线程可以进入任何一个它已经拥有的锁所同步的代码块。
- *
- *  case 1 Synchronized就是一个典型的可重入锁
- * t1	 invoked sendSMS()          t1线程在外层方法获取锁的时候
- * t1	 #####invoked sendEmail()   t1在进入内层方法会自动获取锁
- * t2	 invoked sendSMS()
- * t2	 #####invoked sendEmail()
- *
- *  case 2 ReentrantLock也是一个典型的可重入锁
- * t3	 invoked getd()
- * t3	 ### invoked setd()
- * t4	 invoked getd()
- * t4	 ### invoked setd()
- *
- */
-public class Main {
-
-    public static void main(String[] args) throws Exception {
-        Phone phone = new Phone();
-
-        new Thread(() -> {
-            try {
-                phone.sendSMS();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, "t1").start();
-
-        new Thread(() -> {
-            try {
-                phone.sendSMS();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, "t2").start();
-
-        // 暂停一会
-        TimeUnit.SECONDS.sleep(1);
-        System.out.println();
-        System.out.println();
-        System.out.println("### lock的启动方式，因为实现了Runnable接口 ###");
-
-        // lock的启动方式，因为实现了Runnable接口
-        Thread t3 = new Thread(phone, "t3");
-        Thread t4 = new Thread(phone, "t4");
-        t3.start();
-        t4.start();
-    }
-
-}
-```
-
-ReentrantLock继承父类AQS（AQS内部维护了一个同步状态status来计数重入次数，初始为0）
-
-* 当线程尝试获取锁时，可重入锁先尝试获取并更新`state`值，如果`state == 0`表示没有其它线程在执行同步代码，则将`state`设置为1,当前线程开始执行；非可重入锁同
-* 如果`state > 0`，则判断当前线程是否是获取到这个锁的线程，如果是则`state = state + 1`；如果是非重入锁，则直接去获取并更新当前status，此时如果`state > 0`则会导致其获取锁失败，当前线程会阻塞
-
-* 可重前`state == 1`
-
-![](../../content/java_thread_concurrent/imgs/lock_sync_state.png)
-
-* 可重入操作，`state = state + 1`
-
-![](../../content/java_thread_concurrent/imgs/lock_sync_state_2.png)
-
-* 可重入之后再 `state = state - 1`
-
-![](../../content/java_thread_concurrent/imgs/lock_sync_state_3.png)
 
 ### 对比synchronized, ReentrantLock的一些高级功能
 
@@ -1281,13 +1376,13 @@ A shared lock on a resource can be owned by several tasks at the same time. Howe
     2. 每次进入/退出同步块都需要CAS更新对象头
     3. 争夺轻量级锁失败时，自旋尝试抢占锁
 
-可以看到轻量锁适合在竞争情况下使用，其自旋锁可以保证响应速度快，但自旋操作会占用CPU，所以一些计算时间长的操作不适合使用轻量级锁。当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。
+可以看到轻量锁适合在竞争情况下使用，其自旋锁可以保证响应速度快，但自旋操作会占用CPU，所以一些计算时间长的操作不适合使用轻量级锁。当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒它。
 
 ## 重量级锁（内核控制）
 
 当竞争线程尝试占用轻量级锁失败多次之后，轻量级锁就会膨胀为重量级锁，重量级线程指针指向竞争线程，竞争线程也会阻塞，等待轻量级线程释放锁后唤醒他。
 
-重量级锁是依赖对象内部的monitor锁来实现的，而monitor又依赖**操作系统的MutexLock(互斥锁)**来实现的，所以重量级锁也被成为互斥锁。（带wait队列，把没有获取锁的线程放队列，冷冻着，不占用CPU；内核让执行了，用户态/内核态切换，然后执行）
+重量级锁是依赖对象内部的monitor锁来实现的，而monitor又依赖**操作系统的MutexLock(互斥锁)**来实现的，所以重量级锁也被称为互斥锁。（有wait队列，把没有获取锁的线程放队列，冷冻着，不占用CPU；内核让执行了，用户态/内核态切换，然后执行）
 
 ### 为什么说重量级锁开销大呢？
 

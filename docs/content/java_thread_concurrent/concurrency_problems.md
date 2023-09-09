@@ -20,8 +20,8 @@ date: 2019-03-12 00:00
 
 ## 方法1: ReentrantLock & Condition（条件锁）
 
-* 具体是可重入锁 + 条件变量 wait/signal 机制
-* 代码中 count 必须是 static
+* 具体是可重入锁 + 条件变量 wait/signal 机制: condition.await(), signal()
+* 代码中 count 必须是 static + volatile
 * for循环可以放在lock之前或之后都可以
 
 ```java
@@ -103,6 +103,10 @@ public class Hello extends Thread{
         t3.start();
         TimeUnit.SECONDS.sleep(1);
         t1.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
     }
 
 }
@@ -123,17 +127,19 @@ public class Hello extends Thread{
 
     public static void main(String[] args) throws Exception {
 
+        System.out.println("main Start");
+
         Thread t1 = new Thread(()-> {
             System.out.println("start t1");
-            synchronized (object) {
+            synchronized (object) { // 竞争得到锁
                 try {
                     for (int i = 0; i < N; i++) {
                         while (count % 3 != 0) {
-                            object.wait();
+                            object.wait(); // 在wait()所在的代码行处暂停执行，进入wait队列，并释放锁，直到接到通知或中断。
                         }
                         System.out.print("A");
                         count++;
-                        object.notifyAll();
+                        object.notifyAll(); // 使所有正在等待队列中线程退出等待队列，进入就绪状态。执行notify方法后，当前线程并不会立即释放锁，要等到程序执行完，即退出synchronized同步区域后。
                     }
                 }catch (Exception e){
 
@@ -180,6 +186,13 @@ public class Hello extends Thread{
         t3.start();
         TimeUnit.SECONDS.sleep(1);
         t1.start();
+
+        tA.join();
+        tB.join();
+        tC.join();
+        System.out.println();
+
+        System.out.println("main End");
     }
 
 }

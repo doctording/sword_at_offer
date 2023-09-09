@@ -172,6 +172,10 @@ public static void main(String[] args) throws Exception {
 }
 ```
 
+## Java复习重写equals方法必须重写hashcode方法
+
+<a href='https://blog.csdn.net/qq_26437925/article/details/132380782'>https://blog.csdn.net/qq_26437925/article/details/132380782</a>
+
 ### hash函数及其特点
 
 特点

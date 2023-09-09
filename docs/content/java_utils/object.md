@@ -8,7 +8,7 @@ date: 2020-08-30 00:00
 
 # java.lang.Object
 
-## 9类(种)方法(非9个)
+## 9类(种)方法
 
 ```java
 // 注册本地方法
@@ -164,7 +164,7 @@ public class Main {
         System.out.println(m1);
         System.out.println(m3);
         System.out.println(m1 == m3);
-        System.out.println(m1.getCar());
+        System.out.println(m1.getCar()); // clone方法没有重写，这两个car会是同一个
         System.out.println(m3.getCar());
 
         m3.getCar().name = "m3";

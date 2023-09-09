@@ -30,7 +30,7 @@ Java的反射（`reflection`）机制是指在程序的运行状态中，可以�
 
 * Class.forName("类的全限定名")
 * 实例对象.getClass()
-* 类名.class（类字面常量）
+* 类名.class（类的字面常量）
 
 ### 获得`Class对象`的例子代码
 
@@ -243,7 +243,7 @@ userController的`userService`属性不是自己new出来，而是通过反射�
     1. 校验：检查导入类或接口的二进制数据的正确性；（文件格式验证，元数据验证，字节码验证，符号引用验证）
     2. 准备：给类的静态变量分配并初始化存储空间；
     3. 解析：将常量池中的符号引用转成直接引用；
-* 初始化：激活类的静态变量的初始化Java代码和静态Java代码块，并初始化程序员设置的变量值。
+* 初始化：激活类的静态变量的初始化代码和静态码块，并初始化成设置的变量值。
 
 ### Class.forName()
 
@@ -287,7 +287,7 @@ public static Class<?> forName(String className)
 }
 ```
 
-将类的`.class`文件加载到jvm中之外，还会对类进行解释，即会执行类中的`static`块(静态成员初始化，静态代码块)
+将类的`.class`文件加载到jvm中之外，还会对类进行**解释**，即会执行类中的`static`块(静态成员初始化，静态代码块)
 
 ### ClassLoader.loadClass(仅加载生成class对象,不进行链接)
 
@@ -356,8 +356,8 @@ public class Main {
     static int N = 1_000_000;
 
     public static void main(String[] args) throws Exception {
-        doRegular(); // 8,6 几毫秒
-        doReflection(); // 421,391，几百毫秒
+        doRegular(); // 打印8、6 几毫秒
+        doReflection(); // 打印421、391，几百毫秒
     }
 
     public static void doRegular() {

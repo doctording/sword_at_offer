@@ -60,6 +60,7 @@
     * [策略模式](./content/design_pattern/14_strategy.md)
     * [观察者模式](./content/design_pattern/18_observer.md)
         * [发布订阅模式](./content/design_pattern/publish.md)
+    * [监听者模式](./content/design_pattern/19_listener.md)
     * [迭代器模式](./content/design_pattern/20_iterator.md)
     * [访问者模式](./content/design_pattern/21_visitor.md)
 * [数据结构和算法基础]
@@ -114,8 +115,9 @@
     * [《Java编程思想》第10章：内部类](./content/java_thinking_in_Java/innner_class.md)
 * [JVM]
     * [JVM规范](./content/java_jvm/jvm.md)
+    * [JVM指令手册](./content/java_jvm/jvm_instruct.md)
     * [类加载机制,运行时内存](./content/java_jvm/jvm_class_load.md)
-    * [Java内存模型与线程](./content/java_jvm/jvm_mem_model.md)
+    * [Java内存模型与多线程并发](./content/java_jvm/jvm_mem_model.md)
     * [JVM预热](./content/java_jvm/jvm_hot.md)
     * [堆栈 & GC](./content/java_jvm/jvm_mem_gc.md)
     * [JVM参数](./content/java_jvm/jvm_params.md)
@@ -127,7 +129,9 @@
     * [AQS](./content/java_thread_concurrent/aqs.md)
     * [Java Lock](./content/java_thread_concurrent/thread_lock.md)
     * [Linux spin lock & mutex](./content/java_thread_concurrent/linux_lock.md)
-    * [线程基础](./content/java_thread_concurrent/thread_basic.md)
+    * [线程]
+        * [Java线程基础](./content/java_thread_concurrent/thread_basic.md)
+        * [ObjectMonitor](./content/java_thread_concurrent/jvm_object_monitor.md)
         * [park,unpark](./content/java_thread_concurrent/park_unpark.md)
         * [Condition](./content/java_thread_concurrent/thread_condition.md)
         * [Semaphore](./content/java_thread_concurrent/semaphore.md)
@@ -155,9 +159,10 @@
     * [系统设计](./content/system_design/seckill.md)
     * [10亿级订单系统分库分表](./content/system_design/db_split.md)
     * [个人项目介绍](./content/system_design/pdd.md)
-* [脚本]
+* [脚本&面试题]
     * [awk](./content/shell/awk.md)
     * [统计词频bash脚本](./content/shell/words_count.md)
+    * [大数据量问题](./content/shell/big_data.md)
 * [python]
     * [python基础](./content/python/py.md)
     * [python协程gevent](./content/python/py_coroutine.md)

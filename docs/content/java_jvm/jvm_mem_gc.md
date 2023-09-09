@@ -32,7 +32,7 @@ date: 2019-02-15 00:00
 
 ### 为什么要分代？分代所用的gc算法？
 
-* 基于假设：大部分的对象都是生命周期很短的，即"朝生夕死"
+* 基于假设：大部分的对象(90%左右)都是生命周期很短的，即很快会被回收掉
 * gc的工作过程中要"Stop-The-World"，gc部分
 
 基于假设，如果让新创建的对象都在young gen里创建，然后频繁收集young gen，则大部分垃圾都能在young GC中被收集掉。由于young gen的大小配置通常**只占整个GC堆的较小部分**，而且较高的对象死亡率（或者说较低的对象存活率）让它非常适合使用<font color='red'>copying算法</font>来收集，这样就不但能降低单次GC的时间长度，还可以提高GC的工作效率
@@ -523,8 +523,8 @@ There is a term that you should know before learning about GC. The term is "stop
 :---: | :---:
 引用计数法(Referenc Counting) | 无法处理循环引用
 标记-清除算法(Mark-Sweep)算法 | 扫描并标记垃圾，然后将垃圾清理掉；能解决循环引用，会产生内存碎片
-标记-缩并（Mark-Compact)算法 | 类似mark-sweep,不过最后是：1.压缩使用的内存，规整下到一起，2.清除剩下全部空间；可解决内存碎片；存活对象越多，耗时就越大
-拷贝(Copying)算法 | 堆空间分两半，有用的拷贝到另一半，把当前这一半直接全部清除，解决内部碎片，但浪费空间
+标记-缩并（Mark-Compact)算法 | 类似Mark-Sweep,不过最后是：1.压缩使用的内存，规整下到一起，2.清除剩下全部空间；可解决内存碎片；显然一次回收后，存活对象越多，则耗时就越大
+拷贝(Copying)算法 | 堆空间分两半，有用的拷贝到另一半，把当前这一半直接全部清除，能解决内部碎片，但浪费空间，不过内存拷贝是很快的
 
 # 垃圾收集器发展和介绍
 
@@ -532,9 +532,11 @@ There is a term that you should know before learning about GC. The term is "stop
 
 * 并行(Parallel)：指多条垃圾收集线程并行工作，但此时用户线程仍是被阻塞的等待状态
 
-* 并发(Concurrent): 只用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上
+* 并发(Concurrent): 用户线程能与垃圾收集线程同时执行：即用户程序在一个CPU上继续运行，而垃圾收集程序运行于另一个CPU上
 
 ## GC收集器及其发展
+
+随着内存大小的不断增长而演进
 
 ### (一) Serial（STW,单线程收集器）
 
@@ -542,9 +544,9 @@ There is a term that you should know before learning about GC. The term is "stop
 
 使用`Coping算法`的单线程的收集器，但是它的"单线程"的意义并不仅仅说明它只会使用**一个CPU**或者**一条收集线程**去完成垃圾收集工作，更重要的是它进行垃圾收集时，**必须暂停其它所有的工作线程，直到收集结束**即`Stop The World`
 
-#### ParNew (Serial的多线程版本)
+#### Serial Old
 
-ParNew收集器除了多线程收集之外，其它与Serial收集器相比并没有太多创新之处，但它却是许多运行在Server模式下的虚拟机中首选的新生代收集器，其中有一个与性能无关但很重要的原因是，除了Serial收集器外，目前只有它能与`CMS`收集器配合工作。
+a stop-the-world, mark-sweep-compact collector which uses a single GC thread
 
 ### (二) Parallel Scavenge（STW,多线程收集器）
 
@@ -556,9 +558,13 @@ ParNew收集器除了多线程收集之外，其它与Serial收集器相比并�
 
 #### Parallel old
 
-<font color='red'>a compacting collector that uses multi GC threads</font>
+<font color='red'>a stop-the-world, mark-sweep-compact collector that uses multi GC threads</font>
 
-### (三) CMS收集器
+#### ParNew (Parallel Scavenge的增强版)
+
+同Parallel Scavenge，但是是工作在年轻代的；且能与`CMS`收集器配合工作。
+
+### (三) CMS收集器（并发的垃圾回收器）
 
 * concurret mark sweep
 * a mostly concurrent, low-pause collector
@@ -571,6 +577,8 @@ ParNew收集器除了多线程收集之外，其它与Serial收集器相比并�
 4. concurrent sweep
 
 CMS收集器在Minor GC时会暂停所有的应用线程，并以多线程的方式进行垃圾回收。在Full GC时不再暂停应用线程，而是使用若干个后台线程定期的对老年代空间进行扫描，及时回收其中不再使用的对象
+
+分代算法中，一般Serial或ParNew用于年轻代、CMS作为老年代垃圾回收器
 
 ### (四) G1
 
@@ -669,7 +677,7 @@ mubi@mubideMacBook-Pro ~ $
 -|年轻代(别名)|老年代|JVM 参数
 :---:|:---:|:---:|:---:
 组合一|Serial (DefNew) | Serial Old(PSOldGen) | -XX:+UseSerialGC
-组合二|Parallel Scavenge | (PSYoungGen) | Serial Old(PSOldGen) | -XX:+UseParallelGC
+组合二|Parallel Scavenge (PSYoungGen) | Serial Old(PSOldGen) | -XX:+UseParallelGC
 组合三(*)|Parallel Scavenge (PSYoungGen) | Parallel Old (ParOldGen) | -XX:+UseParallelOldGC
 组合四|ParNew (ParNew) | Serial Old(PSOldGen) | -XX:-UseParNewGC
 组合五(*)|ParNew (ParNew) | CMS+Serial Old(PSOldGen) | -XX:+UseConcMarkSweepGC
@@ -697,11 +705,11 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 ![](../../content/java_jvm/imgs/cms_deal_flow.png)
 
-* 初始标记（CMS initial mark)，需要:`Stop The World`
+* 初始标记（CMS initial mark），需要短暂的`Stop The World`
 
 这个过程从垃圾回收的"根对象"开始，只扫描到能够和"根对象"直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。
 
-* 并发标记（CMS concurrent mark）
+* 并发标记（CMS concurrent mark）（一定会有错误标记）
 
 这个阶段紧随`初始标记`阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。(并发标记所有老年代)
 
@@ -711,21 +719,21 @@ The Concurrent Mark Sweep (CMS) collector is designed for applications that pref
 
 * 并发清除（CMS concurrent sweep）
 
-清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行；会产生浮动垃圾（标记-清除算法）
+清理垃圾对象，这个阶段收集器线程和应用程序线程**并发**执行；会产生浮动垃圾（使用标记-清除算法）
 
 ### 缺点
 
 1. CMS收集器对CPU资源非常敏感。在并发阶段，虽然不会导致用户线程停顿，但是<font color='red'>会因为占用了一部分线程，使应用程序变慢，总吞吐量会降低</font>，为了解决这种情况，虚拟机提供了一种"增量式并发收集器"(Incremental Concurrent Mark Sweep/i-CMS)的CMS收集器变种，所做的事情就是在`并发标记`和`并发清除`的时候让GC线程和用户线程交替运行，尽量减少GC线程独占资源的时间，这样整个垃圾收集的过程会变长，但是对用户程序的影响会减少。（效果不明显，已经不推荐）
 
-2. CMS处理器无法处理浮动垃圾（`Floating Garbage`）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"；因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
+2. CMS处理器无法处理浮动垃圾（`Floating Garbage`）。由于CMS在并发清除阶段**有用户线程还在运行着**，伴随着程序的运行自然也会产生新的垃圾，这一部分垃圾产生在标记过程之后，CMS无法在当次收集过程中处理掉它们，所以只有等到下次gc时候再清理掉，这一部分垃圾就称作"浮动垃圾"；因此CMS收集器不能像其它收集器那样等到老年代几乎完全被填满了再进行收集，而是需要预留一部分空间提高并发收集时的程序运作使用。
 
 3. <font color='red'>CMS是基于(`mark-sweep`)"标记-清除"算法实现的，所以在收集结束的时候会有大量的`空间碎片`产生</font>。空间碎片太多的时候，将会给大对象的分配带来很大的麻烦，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象的，只能提前触发`full gc`。
 
-为了解决这个问题，CMS提供了一个开关参数（`-XX: UseCMSCompactAtFullCollection`），用于在CMS顶不住要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(`-XX: CMSFullGCsBeforeCompaction`)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）
+为了解决这个问题，CMS提供了一个开关参数（`-XX: UseCMSCompactAtFullCollection`），用于在CMS要进行full gc的时候开启内存碎片的合并整理过程，内存整理的过程是无法并发的，空间碎片没有了，但是停顿的时间变长了。另外一个参数(`-XX: CMSFullGCsBeforeCompaction`)用于设置执行多少次不压缩的full gc后，跟着来一次带压缩的（默认值为0，表示每次进入full gc时都进行碎片整理）
 
 ### 三色标记（gc标记算法：dfs三色标记算法）
 
-把遍历对象图过程中遇到的对象，按“是否访问过”这个条件标记成以下三种颜色
+把遍历对象图过程中遇到的对象，按"是否访问过"这个条件标记成以下三种颜色
 
 * 白色：尚未访问过
 * 灰色：正在搜索的对象：自己标记完成，其Fields还没有标记完成
@@ -815,9 +823,9 @@ objD.fieldG = G;     // 3.写，写屏障
 
 ![](../../content/java_jvm/imgs/g1.png)
 
-* 整个堆被分为一个大小相等的region集合，每个reagion是逻辑上连续的虚拟内存区域；
+* 整个堆被分为一个大小相等的region集合，每个region是逻辑上连续的虚拟内存区域；
 
-* 这些region有eden,survivor,old的概念；G1的各代存储地址是不连续的，每一代都使用了n个不连续的大小相同的Region；年轻代（eden + survivor），年老代（old + humongous）
+* 这些region有eden,survivor,old的概念(即逻辑上是分代的，但是物理上不分代，是大小相等的region区域)；G1的各代存储地址是不连续的，每一代都使用了n个不连续的大小相同的Region；年轻代（eden + survivor），年老代（old + humongous）
 
 * Humongous区域：如果一个对象占用的空间超过了region容量(`region size`)50%以上，G1收集器就认为这是一个巨型对象。这些巨型对象，默认直接会被分配在`old`region，为了能找到连续的region来分配巨型对象，有时候不得不启动Full GC
     1. H-obj直接分配到了old gen，防止了反复拷贝移动
@@ -909,9 +917,9 @@ void HeapRegion::setup_heap_region_size(size_t initial_heap_size, size_t max_hea
 
 * region size: `1M-32M`,通过`-XX:G1HeapRegionSize`可指定
 
-* G1的每个`region`都有一个`Remember Set(RSet)`，用来保存别的region的对象对该region的对象的引用，通过`Remember Set`可以找到哪些对象引用了当前`region`里面的对象
+* G1的每个`region`都有一个`Remember Set(RSet)`，用来保存别的`region`的对象对该region的对象的引用，通过`Remember Set`可以找到哪些对象引用了当前`region`里面的对象；`Collection Set`则表示本次垃圾清理的region集合
 
-This allows the GC to avoid collecting the entire heap at once, and instead approach the problem incrementally: only a subset of the regions, called the collection set will be considered at a time.（避免一次对整个堆的垃圾进行回收，而是一次回收称为`collection set`的部分，`collection set`就是垃圾比较多的那些region）
+This allows the GC to avoid collecting the entire heap at once, and instead approach the problem incrementally: only a subset of the regions, called the collection set will be considered at a time.（避免一次对整个堆的垃圾进行回收，而是一次回收称为`collection set`的部分，`collection set`就是垃圾比较多的那些`region`）
 
 * 被回收的region可以复制到空的region,或者复制到survivor区域，同时可以进行压缩（复制效率高，并且减少了碎片）
 
@@ -923,7 +931,7 @@ This allows the GC to avoid collecting the entire heap at once, and instead appr
 
 **Note:** G1 has both concurrent (runs along with application threads, e.g., refinement, marking, cleanup) and parallel (multi-threaded, e.g., stop the world) phases. Full garbage collections are still single threaded, but if tuned properly your applications should avoid full GCs.
 
-#### young gc(对年轻代的GC)
+#### young gc/minor gc(对年轻代的GC)
 
 Live objects are evacuated to one or more survivor regions. If the aging threshold is met, some of the objects are promoted to old generation regions.
 
@@ -935,16 +943,22 @@ This approach makes it very easy to resize regions, making them bigger or smalle
 
 （这是一个stop the world的停顿,`eden`和`survivor`区域会重新计算分配，停顿时间是要考虑到的）
 
-#### mixed gc(对老年代的GC)
+#### mixed gc(young 和 old都gc)
+
+##### mix gc的过程
 
 Phase | Description
 :---:| :---:
-(1) Initial Mark (Stop the World Event) | This is a stop the world event. With G1, it is piggybacked on a normal young GC. Mark survivor regions (root regions) which may have references to objects in old generation.
+(1) Initial Mark (Stop the World) | This is a stop the world event. With G1, it is piggybacked on a normal young GC. Mark survivor regions (root regions) which may have references to objects in old generation.
 (2) Root Region Scanning | Scan survivor regions for references into the old generation. This happens while the application continues to run. The phase must be completed before a young GC can occur.
 (3) Concurrent Marking | Find live objects over the entire heap. This happens while the application is running. This phase can be interrupted by young generation garbage collections.
-(4) Remark(Stop the World Event) | Completes the marking of live object in the heap. Uses an algorithm called snapshot-at-the-beginning (SATB) which is much faster than what was used in the CMS collector.
+(4) Remark(Stop the World) | Completes the marking of live object in the heap. Uses an algorithm called snapshot-at-the-beginning (SATB) which is much faster than what was used in the CMS collector.
 (5) Cleanup(Stop the World Event and Concurrent) | * Performs accounting on live objects and completely free regions. (Stop the World); * Scrubs the Remembered Sets. (Stop the world); * Reset the empty regions and return them to the free list. (Concurrent)
 (*) Copying (Stop the World) | These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].
+
+* Concurrent Marking(并发标记)对比CMS，标记扫描的region不是所有的，因为上一步Root Region扫描排除了哪些有根对象应用的region
+* Remark(重新标记)对比CMS，使用更快的SATB
+* Cleanup(清理)，Stop-The-World，采用复制清理，只清理垃圾多的region
 
 ##### Initial Marking Phase(初始标记，STW)
 
@@ -990,7 +1004,11 @@ G1 selects the regions with the lowest "liveness", those regions which can be co
 
 gc log: `GC pause (mixed)`
 
-#### 对年轻代和老年代GC的总结
+#### serial old GC
+
+Mixed GC不是full GC，它只能回收部分老年代的Region，如果mixed GC实在无法跟上程序分配内存的速度，导致老年代填满无法继续进行Mixed GC(即mixed gc回收后检查老年代是否低于45%，如果8次mixed gc 还未达标，则粗饭Serial Old gc)，就会使用serial old GC（full GC）来收集整个GC heap。所以我们可以知道，G1是不提供full GC的。
+
+#### g1 gc总结
 
 * 对年轻代的GC
 

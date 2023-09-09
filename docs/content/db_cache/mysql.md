@@ -253,7 +253,7 @@ merge join操作本身是非常快的，但是merge join前进行的排序可能
 
 附：归并排序是稳定排序，最好，最坏，平均时间复杂度均为O(nlogn)。
 
-## Mysql优化
+## Mysql查询优化
 
 ### 开启优化器：`set profiling=1;`，粗粒度的要被废弃
 
@@ -366,7 +366,9 @@ mysql>
 
 ### 正确使用联合索引
 
-## InnoDb
+正确使用联合索引
+
+## innoDb
 
 <a href='https://dev.mysql.com/doc/refman/5.6/en/innodb-storage-engine.html' target="_blank">Mysql innodb refman</a>
 
@@ -647,7 +649,7 @@ infimum行记录的recorder header部分，最后2个字节位`00 20`表示下�
 
 InnoDB不是按行的来操作的，它可操作的最小粒度是页，页加载进内存后才会通过扫描页来获取行/记录，curd操作会产生**页合并**，**页分裂**操作。
 
-#### innodb数据的存储(.frm & .ibd)
+#### innodb数据的存储
 
 在 InnoDB 存储引擎中，所有的数据都被逻辑地存放在表空间中，表空间（tablespace）是存储引擎中最高的存储逻辑单位，在表空间的下面又包括段（segment）、区（extent）、页（page）, 页中存放实际的数据记录行
 
@@ -672,15 +674,15 @@ MySQL 使用 InnoDB 存储表时，会将表的定义和数据相关记录、索
 3. 移动记录行
 4. 重新定义页之间的关系
 
-例如：页#10没有足够空间去容纳新记录，页#11也同样满了, #10要分列为两列, 且页的前后指针关系要发生改变
-
 ```java
 #9 #10 #11 #12 #13 ...
 
 #8 #10 #14 #11 #12 #13 ...
 ```
 
-## 索引
+如上，页#10没有足够空间去容纳新记录，页#11也同样满了, #10要分列为两列, 且页的前后指针关系要发生改变
+
+## Myql索引
 
 ### MySql默认索引(`B+Tree`)
 
@@ -703,7 +705,7 @@ Current database: test
 mysql>
 ```
 
-### 为什么要用`B+ Tree`而不是`B Tree`?
+#### 为什么要用`B+ Tree`而不是`B Tree`?
 
 1行记录假如有1KB；如果用`B Tree`：其非叶子节点是要存储数据的，显然存储有限，为了存储大量数据，不得不提高树的高度，这样使用`B Tree`就会导致磁盘IO次数增多；所以有`B+ Tree`，降低树高度，减少磁盘IO
 
@@ -793,7 +795,7 @@ eg:
 * 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。
 * 唯一性索引列允许空值，而主键列不允许为空值。
 * 主键列在创建时，已经默认为空值 + 唯一索引了。
-* 主键可以被其他表引用为外键，而唯一索引不能。
+* 主键可以被其它表引用为外键，而唯一索引不能。
 * 一个表最多只能创建一个主键，但可以创建多个唯一索引。
 * 主键更适合那些不容易更改的唯一标识，如自动递增列、身份证号等。
 
@@ -805,7 +807,7 @@ eg:
 
 eg：对id列.name列.age列建立了一个联合索引 id_name_age_index，实际上相当于建立了三个索引（id）（id_name）（id_name_age）
 
-### 联合索引为什么是最左前缀匹配？
+### 联合索引为什么是最左前缀匹配
 
 数据结构底层决定（严格的按照第一个，第二个，第三个字段一个一个匹配），不符合最左匹配则需要全局扫描了；且最左匹配原则遇到**范围查询**就停止匹配
 
@@ -819,7 +821,6 @@ c int,
 KEY a(a,b,c)
 );
 
-```java
 mysql> show index from test;
 +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
 | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
@@ -830,49 +831,46 @@ mysql> show index from test;
 +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
 3 rows in set (0.01 sec)
 
-mysql>
 ```
 
-如下各种语句索引的使用情况
+如下各种语句索引的使用情况:
 
-```java
-where a = 3 用到索引 a
+`where a = 3` 用到索引 a
 
-where a = 3 and b = 3 用到索引 a,b
+`where a = 3 and b = 3` 用到索引 a,b
 
-where a = 3 and b = 4 and c = 5  用到索引 a,b,c
+`where a = 3 and b = 4 and c = 5` 用到索引 a,b,c
 
-where b = 3 或者 where b = 3 and c = 4 或者 where c = 4 索引失效
+`where b = 3` 或者 `where b = 3 and c = 4` 或者 `where c = 4` **索引失效**
 
-where a = 3 and c = 5 用到索引 a
+`where a = 3 and c = 5` 用到索引 a
 
-where a = 3 and b > 4 and c = 5 用到索引a和b（b的范围导致未用到所以c）
+`where a = 3 and b > 4 and c = 5` 用到索引a和b（b的范围导致未用到c）
 
-where a = 3 and b like 'kk%' and c = 4 用到索引a,b,c。
+`where a = 3 and b like 'kk%' and c = 4` 用到索引a,b,c
 
-where a = 3 and b like '%kk' and c = 4 只用索引a
+`where a = 3 and b like '%kk' and c = 4` 只用索引a
 
-where a = 3 and b like '%kk%' and c = 4 只用到索引a
+`where a = 3 and b like '%kk%' and c = 4` 只用到索引a
 
-where a = 3 and b like 'k%kk%' and c = 4 用到a,b,c
+`where a = 3 and b like 'k%kk%' and c = 4` 用到a,b,c
 
-where a > 1 and a < 3 and b > 1; 用到索引a，没有用到索引b
-```
+`where a > 1 and a < 3 and b > 1` 用到索引a，没有用到索引b
 
-### 联合索引优化例子
+#### 联合索引优化例子
 
 `select * from table where a = xxx and b = xxx;`占60%
 `select b from table where b = xxx;` 占39%；
 
 其它占1%；怎么优化？
 
-解答：将第一条sql语句改为`select * from table where b = xxx and a = xxx` ，然后建立ba的联合索引，因为ba的联合索引可以支持b和ba这两种组合的查找，这样就减少了开销
+解答：将第一条sql语句改为`select * from table where b = xxx and a = xxx`，然后建立ba的联合索引，因为ba的联合索引可以支持b和ba这两种组合的查找，这样就减少了开销
 
-## mysql中的like是否使用索引?
+### Mysql中的like是否使用索引
 
 通过`like '%XX%'`查询的时候会造成索引失效，一般采用`like 'XX%'`右边匹配的方式来索引。但是这样一定会使用索引吗？<font color='red'>否</font>
 
-#### MySql索引概述和分类
+### MySql索引概述和分类
 
 Most MySQL indexes (PRIMARY KEY, UNIQUE, INDEX, and FULLTEXT) are stored in B-trees. Exceptions: Indexes on spatial data types use R-trees; MEMORY tables also support hash indexes; InnoDB uses inverted lists for FULLTEXT indexes.
 
@@ -905,7 +903,7 @@ MySQL uses indexes for these operations:
 
 最后：Indexes are less important for queries on small tables, or big tables where report queries process most or all of the rows. When a query needs to access most of the rows, reading sequentially is faster than working through an index. Sequential reads minimize disk seeks, even if not all the rows are needed for the query.
 
-##### 非主键索引（回表：bookmark lookup）
+#### 非主键索引（回表：bookmark lookup）
 
 ![](../../content/db_cache/imgs/innodb-index.png)
 
@@ -927,7 +925,7 @@ MySQL uses indexes for these operations:
 
 6. 可以把相关数据保存在一起。例如实现电子邮箱时，可以根据用户 ID 来聚集数据，这样只需要从磁盘读取少数的数据页就能获取某个用户的全部邮件。如果没有使用聚簇索引，则每封邮件都可能导致一次磁盘 I/O
 
-##### 覆盖索引
+#### 覆盖索引
 
 如果一个索引包含(或覆盖)所有需要查询的字段的值，称为"覆盖索引"。即只需扫描索引而无须回表。
 
@@ -944,21 +942,41 @@ engine=innodb default character set=utf8;
 如下两个查询
 
 ```sql
-语句A： select id from t_user where name= '张三'
-语句B： select password from t_user where name= '张三' // 需要回表
+语句A： select id from t_user where name = '张三'
+语句B： select password from t_user where name = '张三' -- 需要回表
 ```
 
 当sql语句的所求查询字段（select列）和查询条件字段（where子句）全都包含在一个索引中（联合索引），可以直接使用索引查询而不需要回表。可以建立`(name,password)`的联合索引，这样，查询的时候就不需要再去回表操作了，可以提高查询效率。
 
+那么不用主键索引就一定需要回表吗？不一定：如果查询的列本身就存在于索引中，那么即使使用二级索引，一样也是不需要回表的。
+
 ##### 索引下推(index condition pushdown)
 
-索引下推（index condition pushdown ）简称ICP，在Mysql5.6的版本上推出，用于优化查询。
+索引下推（index condition pushdown ）简称ICP，在Mysql5.6的版本上推出，它能减少回表查询次数，提高查询效率。
 
 在不使用ICP的情况下，在使用非主键索引（又叫普通索引或者二级索引）进行查询时，存储引擎通过索引检索到数据，然后返回给MySQL服务器，服务器然后判断数据是否符合条件 。
 
 在使用ICP的情况下，如果存在某些被索引的列的判断条件时，MySQL服务器将这一部分判断条件传递给存储引擎，然后由存储引擎通过判断索引是否符合MySQL服务器传递的条件，只有当索引符合条件时才会将数据检索出来返回给MySQL服务器 。
 
 索引条件下推优化可以减少存储引擎查询基础表的次数，也可以减少MySQL服务器从存储引擎接收数据的次数。
+
+例子：
+
+使用一张用户表tuser，表里创建联合索引（name, age）
+
+`select * from tuser where name like '张%' and age=10;`按照最左匹配原则，这个语句在搜索索引树的时候，只能用`张`匹配，假设有2条记录符合，但是age=10的只有一条记录；
+
+没有使用ICP，假设主键id（1、4），逐一进行回表扫描，去聚簇索引找到完整的行记录，server层再对数据根据age=10进行筛选。
+
+使用ICP，存储引擎根据（name，age）联合索引，找到，由于联合索引中包含列，所以存储引擎直接再联合索引里按照age=10过滤；按照过滤后的数据再一一进行回表扫描。这样只回表了一次。
+
+查看和设置索引下推
+
+```sql
+select @@optimizer_switch
+set ="index_condition_pushdown=off";
+set ="index_condition_pushdown=on";
+```
 
 ## InnoDb锁
 
@@ -1128,7 +1146,7 @@ T1回滚会释放其获取到到排它锁，T2,T3都要请求排它锁，但是�
 适用场景 | 并发量大 | 并发量小
 类比Java | synchronized关键字 | CAS 算法
 
-## Innodb事务
+## innodb事务(Transaction)
 
 ### 事务4个特性：ACID
 
@@ -1139,13 +1157,15 @@ T1回滚会释放其获取到到排它锁，T2,T3都要请求排它锁，但是�
 * 事务的隔离性是通过(读写锁 + MVCC)来实现的，隔离性是要管理多个并发读写请求的访问顺序。这种顺序包括串行或者是并行
 * 事务的一致性是通过原子性，持久性，隔离性来实现的
 
-### 事务的隔离性
+### 事务的隔离性&隔离级别
 
 * 脏读：事务A修改了某个记录，然后事务B去读取，然后事务A撤销了事务，那么事务B就读取到了脏数据
 * 不可重复读：事务A前后两次读取到的内容不一样，因为读的过程中另一个事务B有修改操作，虽然B可能撤销事务
 * 幻读：事务A操作全表，然而事务B操作了数据库，比如新增一条记录，事务A本来修改了所有，但发现还有记录没有修改，产生幻觉一样
 
-隔离级别 | 脏读 | 不可重复读 | 幻读
+可重复读和脏读的区别是：脏读是某一事务读取了另一个事务未提交的脏数据，而可重复读则是读取了前一事务提交的数据。
+
+隔离级别 | 脏读 | 可重复读 | 幻读
 --- | --- | --- | ---
 Read uncommitted| √ | √ | √
 Read committed | × | √ | √
@@ -1161,11 +1181,13 @@ MySql隔离级别的实现方式
 1. LBCC: Lock-Based Concurrent Control
 2. MVCC: Multi-Version Concurrent Control
 
-### MVCC(Multiversion concurrency control)
+### mvcc(Multiversion concurrency control)
 
 MVCC全称是： Multiversion concurrency control，多版本并发控制，<font color='red'>一般在数据库管理系统中，多事务情况下，实现对数据库的并发访问；其主要是为了提高并发的读写性能，不用加锁就能让多个事物并发读写</font>
 
-即：<font color='red'>MVCC就是为了实现读-写冲突不加锁，而这个读指的就是快照读, 而非当前读(当前读实际上是一种加锁的操作)，是悲观锁的实现</font>
+即：<font color='red'>MVCC就是为了实现读-写冲突不加锁，而这个读指的就是快照读, 而非当前读(当前读实际上是一种加锁的操作)，是乐观锁的实现</font>
+
+MVCC 在读已提交（Read Committed）和可重复读（Repeatable Read）隔离级别下起作用
 
 ---
 
@@ -1174,12 +1196,28 @@ MVCC全称是： Multiversion concurrency control，多版本并发控制，<fon
 * 基于锁的并发控制：程序员B开始修改数据时，给这些数据加上锁，程序员A这时再读，就发现读取不了，处于等待情况，只能等B操作完才能读数据，这保证A不会读到一个不一致的数据，但是这个会影响程序的运行效率。
 * MVCC：每个用户连接数据库时，看到的都是某一特定时刻的数据库快照，在B的事务没有提交之前，A始终读到的是**某一特定时刻的数据库快照**，不会读到B事务中的数据修改情况，直到B事务提交，才会读取B的修改内容。
 
-mvcc核心实现（只在Read committed，Repeatable read两个隔离级别工作）：
-1. 表的隐藏列: 记录事物id以及上个版本数据地址（DB_TRX_ID，DB_ROLL_PTR）
+mvcc的核心实现（只在Read committed，Repeatable read两个隔离级别工作）：
+
+1. 表的隐藏列: 记录事务id以及上个版本数据地址（DB_TRX_ID，DB_ROLL_PTR）
 2. undo log: 记录数据各个版本修改历史
 3. read view: 读视图（【已提交事务】【未提交与已提交事务】【未开始事务】），用于判断哪些版本对当前事务是可见的
-    * 未提交的事务ID数组和最小、最大事务ID组成：
+    * 由未提交的事务ID数组，最小最大事务ID，最大事务ID组成：
     * 不在未提交的事务数组中，并且事务Id小于Max或者是自己，则对于当前事务是可见的
+
+* A 6-byte DB_TRX_ID field indicates the transaction identifier for the last transaction that inserted or updated the row. Also, a deletion is treated internally as an update where a special bit in the row is set to mark it as deleted.（DB_TRX_ID是该行记录当前的事务id）
+
+* A 7-byte DB_ROLL_PTR field called the roll pointer. The roll pointer points to an undo log record written to the rollback segment. If the row was updated, the undo log record contains the information necessary to rebuild the content of the row before it was updated.（DB_ROLL_PTR指向该行在undo log中的位置）
+
+* A 6-byte DB_ROW_ID field contains a row ID that increases monotonically as new rows are inserted. If InnoDB generates a clustered index automatically, the index contains row ID values. Otherwise, the DB_ROW_ID column does not appear in any index.
+
+![](../db_cache/imgs/mvcc_version.png)
+
+* m_ids：活跃的事务就是指还没有commit的事务
+* max_trx_id：例如m_ids中的事务id为（1，2，3），那么下一个应该分配的事务id就是4，max_trx_id就是4
+* creator_trx_id：执行select读这个操作的事务的id
+
+1. RC的隔离级别下，每个快照读都会生成并获取最新的readview。
+2. RR的隔离级别下，只有在同一个事务的第一个快照读才会创建readview，之后的每次快照读都使用的同一个readview，所以每次的查询结果都是一样的。
 
 #### 数据库之InnoDB可重复读隔离级别下如何避免幻读?
 
@@ -1249,7 +1287,9 @@ InnoDB的RR及以上级别避免幻读的内在是`next-key`锁(行锁和间隙�
 
 ### 原子性：undo log
 
-`undo log`是逻辑日志。可以理解为：只要有insert操作，就可以记录一条删除记录；有delete操作，就记录一条新增记录，有update操作，记录update前的数据update操作；这样恢复操作去执行，就能**回到事务之前的状态**
+An undo log is a collection of undo log records associated with a single read-write transaction. An undo log record contains information about how to undo the latest change by a transaction to a clustered index record. If another transaction needs to see the original data as part of a consistent read operation, the unmodified data is retrieved from undo log records. Undo logs exist within undo log segments, which are contained within rollback segments. Rollback segments reside in undo tablespaces and in the global temporary tablespace.
+
+`undo log`是逻辑日志。可以理解为：只要有insert操作，就可以记录一条delete记录；有delete操作，就记录一条insert记录，有update操作，则有一条记录能回到更新前数据的update操作；这样恢复操作直接去执行，就能**回到事务之前的状态**
 
 `undo log`是为了实现事务的原子性，在Mysql数据库Innodb存储引擎中，还用`undo log`来实现多版本并发控制(MVCC)
 
@@ -1303,13 +1343,17 @@ mysql>
 
 ### 持久性：redo log
 
-和`undo log`相反，`redo log`记录的是新数据的备份，<font color='red'>当事务提交前，只要将redo log持久化即可，不需要将数据持久化</font>，当系统崩溃时，虽然数据没有持久化，但是redo log已经持久化，系统可以根据redo log的内容，将所有数据恢复到最新的状态
+The redo log is a disk-based data structure used during crash recovery to correct data written by incomplete transactions. During normal operations, the redo log encodes requests to change table data that result from SQL statements or low-level API calls. Modifications that did not finish updating data files before an unexpected shutdown are replayed automatically during initialization and before connections are accepted.
+
+The redo log is physically represented on disk by redo log files. Data that is written to redo log files is encoded in terms of records affected, and this data is collectively referred to as redo. The passage of data through redo log files is represented by an ever-increasing LSN value. Redo log data is appended as data modifications occur, and the oldest data is truncated as the checkpoint progresses.
+
+和`undo log`相反，`redo log`记录的是新数据的备份，<font color='red'>当事务提交前，只要将redo log持久化即可，不需要将数据持久化</font>，当系统崩溃时，虽然数据没有持久化，但是redo log已经持久化，系统可以根据redo log的内容，将所有数据恢复到最新的状态。
 
 ![](../../content/db_cache/imgs/redo.png)
 
 redo log记录的物理格式日志，其记录的是对于每个页的修改，记录了事务的行为
 
-### undo / redo log文件操作
+有些操作会产生多条 redo 日志，并且还需要保证是原子的，比如在B+树二级索引中插入一条记录，可能会产生很多条redo日志（比如页分裂的情况），为了保证原子性，多条redo日志会以组的形式记录，在这组redo日志后面会加上一条特殊类型的redo日志，表示前面是一组完整的redo日志。如果是单个日志，在日志的type字段里会有一个比特位来表示是一条单一的redo日志。
 
 #### redo log持久化策略
 
@@ -1320,6 +1364,10 @@ mysql进程挂？机器挂？性能问题考虑？数据一致性考虑？
 * 0：只写redo log，每秒落地一次，性能最高，数据一致性最差，如果mysql奔溃可能丢失一秒的数据（master thread每隔1秒进行一次fsync系统调用操作）
 * 1：表示每次事务提交时进行写redo log file的操作，性能最差，一致性最高（mysql默认值）
 * 2：写redo log，buffer同时写入到os buffer，性能好，安全性也高，只要os不宕机就能保证数据一致性（不进行fsync操作）
+
+### 隔离性：通过加锁（当前读）&MVCC（快照读）实现
+
+### 一致性：通过undolog、redolog、隔离性共同实现
 
 ## 主从复制
 
@@ -1355,9 +1403,9 @@ mysql进程挂？机器挂？性能问题考虑？数据一致性考虑？
 show variables like 'log_bin';
 ```
 
-binlog是二进制日志文件，是由mysql server维护的,用于记录mysql的数据更新或者潜在更新(比如DELETE语句执行删除而实际并没有符合条件的数据)，在mysql主从复制中就是依靠的binlog；执行SELECT等不涉及数据更新的语句是不会记binlog的，而涉及到数据更新则会记录。要注意的是，对支持事务的引擎如innodb而言，必须要提交了事务才会记录binlog。
+binlog是二进制日志文件，是由mysql server维护的用于记录mysql的数据更新或者潜在更新(比如DELETE语句执行删除而实际并没有符合条件的数据)，在mysql主从复制中就是依靠的binlog；执行SELECT等不涉及数据更新的语句是不会记binlog的，而涉及到数据更新则会记录。要注意的是，对支持事务的引擎如innodb而言，必须要提交了事务才会记录binlog。
 
-<a href='https://dev.mysql.com/doc/internals/en/binary-log-overview.html' target='_blank'>binary-log</a>
+<a href='https://dev.mysql.com/doc/refman/8.0/en/binary-log.html' target='_blank'>binary-log</a>
 
 The binary log is a set of log files that contain information about data modifications made to a MySQL server instance. The log is enabled by starting the server with the --log-bin option.
 

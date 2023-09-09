@@ -32,6 +32,75 @@ CLH：Craig、Landin and Hagersten队列，链表结构，AQS中的队列是CLH�
 
 AQS使用一个`volatile`的int类型的成员变量state来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作，通过CAS完成对state值的修改。
 
+## 基于aqs实现锁的例子代码
+
+```java
+
+class LeeLock  {
+
+    private static class Sync extends AbstractQueuedSynchronizer {
+        @Override
+        protected boolean tryAcquire (int arg) {
+            return compareAndSetState(0, 1);
+        }
+
+        @Override
+        protected boolean tryRelease (int arg) {
+            setState(0);
+            return true;
+        }
+
+        @Override
+        protected boolean isHeldExclusively () {
+            return getState() == 1;
+        }
+    }
+
+    private Sync sync = new Sync();
+
+    public void lock () {
+        sync.acquire(1);
+    }
+
+    public void unlock () {
+        sync.release(1);
+    }
+}
+
+public class MainTest {
+
+    static int count = 0;
+    static LeeLock leeLock = new LeeLock();
+
+    public static void main (String[] args) throws InterruptedException {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run () {
+                try {
+                    leeLock.lock();
+                    for (int i = 0; i < 10000; i++) {
+                        count++;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    leeLock.unlock();
+                }
+
+            }
+        };
+        Thread thread1 = new Thread(runnable);
+        Thread thread2 = new Thread(runnable);
+        thread1.start();
+        thread2.start();
+        thread1.join();
+        thread2.join();
+        System.out.println(count); // 20000
+    }
+}
+```
+
 ## 同步器
 
 两个操作
@@ -214,86 +283,162 @@ private Node enq(final Node node) {
 
 通过`自旋`(CAS操作)来保证该节点能顺利的加入到队列尾部，只有加入成功才会退出循环，否则会一直自旋直到成功。
 
-### 自己实现AbstractQueuedSynchronizer抽象类和Lock接口
+## 回顾ReentrantLock非公平锁的加锁过程
 
 ```java
-class Sync extends AbstractQueuedSynchronizer {
-    // Reports whether in locked
-    @Override
-    protected boolean isHeldExclusively() {
-        return getState() == 1;
-    }
+// 非公平锁
+static final class NonfairSync extends Sync {
+	...
+	final void lock() {
+		if (compareAndSetState(0, 1))
+			setExclusiveOwnerThread(Thread.currentThread());
+		else
+			acquire(1);
+		}
+  ...
+}
+```
 
-    // status 为0能获取锁；自旋设置为1，表示获取到锁了
-    // Acquires the lock if state is zero
-    @Override
-    public boolean tryAcquire(int acquires) {
-        assert acquires == 1; // Otherwise unused
-        if (compareAndSetState(0, 1)) {
-            setExclusiveOwnerThread(Thread.currentThread());
-            return true;
-        }
-        return false;
-    }
+1. 若通过CAS设置变量State（同步状态）成功，也就是获取锁成功，则将当前线程设置为独占线程。
+2. 若通过CAS设置变量State（同步状态）失败，也就是获取锁失败，则进入Acquire方法进行后续处理。（Acquire方法：存在某种排队等候机制，让此线程继续等待，仍然保留此线程获取锁的可能，其获取锁流程仍在继续。这也是多线程并发处理的要求）
 
-    // 释放锁，要把状态设置为0
-    // Releases the lock by setting state to zero
-    @Override
-    protected boolean tryRelease(int releases) {
-        assert releases == 1; // Otherwise unused
-        if (getState() == 0) {
-            throw new IllegalMonitorStateException();
-        }
-        setExclusiveOwnerThread(null);
-        setState(0);
-        return true;
-    }
+```java
+public final void acquire(int arg) {
+    if (!tryAcquire(arg) &&
+        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        selfInterrupt();
+}
+```
 
-    // Provides a Condition
-    Condition newCondition() {
-        return new ConditionObject();
-    }
+1. 尝试获取锁成功什么都不做
+2. 尝试获取锁失败，则线程本身要加到等待队列中，并进入acquireQueued方法，对排队中的线程进行`获锁`操作(即自旋判断来尝试获取锁)
 
-    // Deserializes properly
-    private void readObject(ObjectInputStream s)
-            throws IOException, ClassNotFoundException {
-        s.defaultReadObject();
-        setState(0); // reset to unlocked state
-    }
+java.util.concurrent.locks.ReentrantLock.NonfairSync#tryAcquire实现如下
+
+```java
+protected final boolean tryAcquire(int acquires) {
+    return nonfairTryAcquire(acquires);
 }
 
-class SelfLock implements Lock{
-
-    private final Sync sync = new Sync();
-
-    @Override
-    public void lock() {
-        sync.acquire(1);
+/**
+    * Performs non-fair tryLock.  tryAcquire is implemented in
+    * subclasses, but both need nonfair try for trylock method.
+    */
+final boolean nonfairTryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    if (c == 0) { // 1. 没有线程持有锁，则如下3句还是加锁语句（注意：acquires=1）
+        if (compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
     }
-
-    @Override
-    public void lockInterruptibly() throws InterruptedException {
-        sync.acquireInterruptibly(1);
+    else if (current == getExclusiveOwnerThread()) { // 2. 否则是持有锁的，如果是自己持有锁则可重入加锁
+        int nextc = c + acquires;
+        if (nextc < 0) // overflow
+            throw new Error("Maximum lock count exceeded");
+        setState(nextc);
+        return true;
     }
+    return false; // 3.否则是别的线程正在持有锁，此次尝试获取锁是失败的
+}
+```
 
-    @Override
-    public boolean tryLock() {
-        return sync.tryAcquire(1);
-    }
+附：
 
-    @Override
-    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
-        return sync.tryAcquireNanos(1, unit.toNanos(time));
-    }
+1. State初始化的时候为0，表示没有任何线程持有锁。
+2. 当有线程持有该锁时，值就会在原来的基础上+1，同一个线程多次获得锁是，就会多次+1，这里就是可重入的概念。
+3. 解锁也是对这个字段-1，一直到0，此线程对锁释放。
 
-    @Override
-    public void unlock() {
-        sync.release(1);
-    }
+---
 
-    @Override
-    public Condition newCondition() {
-        return sync.newCondition();
+java.util.concurrent.locks.AbstractQueuedSynchronizer#acquireQueued
+
+acquireQueued是aqs中的方法，而其中tryAcquire则是具体实现类的方法，上文可见`java.util.concurrent.locks.ReentrantLock.NonfairSync#tryAcquire`
+
+```java
+/**
+    * Acquires in exclusive uninterruptible mode for thread already in
+    * queue. Used by condition wait methods as well as acquire.
+    *
+    * @param node the node
+    * @param arg the acquire argument
+    * @return {@code true} if interrupted while waiting
+    */
+final boolean acquireQueued(final Node node, int arg) {
+    boolean failed = true;
+    try {
+        boolean interrupted = false;
+        for (;;) { // 自旋
+            final Node p = node.predecessor(); // 当前线程的前驱节点p是头结点，说明当前线程节点在真实数据队列的首部，就尝试获取锁（别忘了头结点是虚节点），即FIFO机制
+            if (p == head && tryAcquire(arg)) {
+                setHead(node);
+                p.next = null; // help GC
+                failed = false;
+                return interrupted;
+            }
+            // 当前线程作为头节点但是没有获取到锁（可能是非公平锁被抢占了）或者本身不为头结点，这个时候就要判断当前node是否要被阻塞（被阻塞条件：前驱节点的waitStatus为-1），防止无限循环浪费资源。
+            if (shouldParkAfterFailedAcquire(p, node) &&
+                parkAndCheckInterrupt())
+                interrupted = true;
+        }
+    } finally {
+        if (failed)
+            cancelAcquire(node);
     }
 }
 ```
+
+### 释放锁过程
+
+java.util.concurrent.locks.ReentrantLock#unlock
+
+```java
+public void unlock() {
+    sync.release(1);
+}
+```
+
+调用的是aqs的release方法
+
+```java
+/**
+    * Releases in exclusive mode.  Implemented by unblocking one or
+    * more threads if {@link #tryRelease} returns true.
+    * This method can be used to implement method {@link Lock#unlock}.
+    *
+    * @param arg the release argument.  This value is conveyed to
+    *        {@link #tryRelease} but is otherwise uninterpreted and
+    *        can represent anything you like.
+    * @return the value returned from {@link #tryRelease}
+    */
+public final boolean release(int arg) {
+    if (tryRelease(arg)) {
+        Node h = head;
+        if (h != null && h.waitStatus != 0)
+            unparkSuccessor(h);
+        return true;
+    }
+    return false;
+}
+```
+
+回到：java.util.concurrent.locks.ReentrantLock.Sync#tryRelease，可重入锁的Sync的释放逻辑如下：
+
+```java
+protected final boolean tryRelease(int releases) {
+    int c = getState() - releases;
+    if (Thread.currentThread() != getExclusiveOwnerThread())
+        throw new IllegalMonitorStateException();
+    boolean free = false;
+    if (c == 0) {
+        free = true;
+        setExclusiveOwnerThread(null);
+    }
+    setState(c);
+    return free;
+}
+```
+
+1. 当前线程不是持有锁的，抛除异常
+2. 否则State-1，释放一次锁。如果完全释放锁了，那么锁的自由的了，当前锁没有占用了，进行相应设置

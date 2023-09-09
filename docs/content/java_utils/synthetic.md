@@ -8,6 +8,15 @@ date: 2018-11-24 00:00
 
 # Synthetic
 
+```bash
+英[sɪnˈθetɪk]
+美[sɪnˈθetɪk]
+adj. (人工)合成的; 人造的; 综合(型)的;
+n. 合成物; 合成纤维(织物); 合成剂;
+```
+
+有synthetic标记的field和method是class内部使用的；非static的inner class里面都会有一个`this$0`的字段保存它的父对象
+
 ```java
 /**
  * @Author mubi

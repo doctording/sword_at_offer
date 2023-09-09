@@ -55,6 +55,8 @@ false
 
 ## `valueOf(int i)` 源码（享元模式）
 
+`Integer`的内部类`IntegerCache`
+
 ```java
 /**
     * Cache to support the object identity semantics of autoboxing for values between
@@ -135,6 +137,12 @@ true
 false
 ```
 
+## Integer缓存说明
+
+* 缓存的最小值low为-128（不可变），缓存的最大值high默认为127，high可以通过启动应用程序时加上 -XX:AutoBoxCacheMax=<size> 选项来指定high的值，当第一次使用Integer类型数据时，会加载IntegerCache这个静态内部类对象，然后在执行类的静态初始化，这个初始化会获取JVM的属性设置。
+
+* Long类型也缓存[-128,127]的数据，但是返范围是固定的不可调整的，`-XX:AutoBoxCacheMax=<size>`参数设置对Long类型的缓存也不起作用。
+
 ## `equals(Object obj)`源码
 
 ```java
@@ -161,3 +169,11 @@ public boolean equals(Object obj) {
 * 使用方式的不同，比如与集合类合作使用时只能使用包装类型。
 
 * 什么时候该用包装类，什么时候该用基本类型，看基本的业务来定：这个字段允不允许null值，如果允许，则必然要用封装类；否则，基本类型就可以了。如果用到比如泛型和反射调用函数，就需要用包装类！
+
+## 为什么需要包装类型？
+
+1. 面向对象要求：面向对象要求数据类型有对象类型
+
+2. 范型，各种数据结构要求
+
+3. null值表示，表示"无"的含义
